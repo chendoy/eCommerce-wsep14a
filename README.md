@@ -1,5 +1,13 @@
-https://docs.google.com/document/d/1M502Vx5TxuQTj16r9w04SnjAGN6pvzvBHm3LmCXldtg/edit?usp=sharing
+# Workshop on Software Engineering Project - Group 14A
 
-# wsep_14a
+ Source code managment of Workshop on Software Engineering Project ,BGU 2020.
 
-Source code managment of Workshop on Software Engineering Project, Group 14A ,BGU 2020.
+[Google docs](https://docs.google.com/document/d/1M502Vx5TxuQTj16r9w04SnjAGN6pvzvBHm3LmCXldtg/edit?usp=sharing "Google docs") | [Course website](https://www.cs.bgu.ac.il/~wsep202/Main "Course website") | [Editor.md](https://pandao.github.io/editor.md/index.html "Editor.md")
+
+
+------------
+
+
+
+# Bugs :tw-1f41e:
+- 
