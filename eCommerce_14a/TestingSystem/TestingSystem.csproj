@@ -70,12 +70,17 @@
     <Compile Include="AcceptanceTests\ViewAllPurchaseHistoryStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewAndEditCartStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewHistoryStoryTest.cs" />
+    <Compile Include="AggregationTests\StubClass.cs" />
     <Compile Include="BridgeInterface.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
+    <Compile Include="RegressionTests\StubClass.cs" />
     <Compile Include="SystemTrackTest.cs" />
+    <Compile Include="UnitTests\AdministrationTests.cs" />
+    <Compile Include="UnitTests\StoreTests.cs" />
+    <Compile Include="UnitTests\UserTests.cs" />
     <Compile Include="UserGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,10 +89,6 @@
       <Name>eCommerce_14a</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AggregationTests\" />
-    <Folder Include="RegressionTests\" />
-    <Folder Include="UnitTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
