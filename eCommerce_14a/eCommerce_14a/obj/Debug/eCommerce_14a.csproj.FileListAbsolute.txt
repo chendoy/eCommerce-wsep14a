@@ -1,2 +1,7 @@
 C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.csprojAssemblyReference.cache
 C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.csproj.CoreCompileInputs.cache
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe.config
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.pdb
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.exe
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.pdb

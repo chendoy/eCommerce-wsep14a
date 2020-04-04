@@ -8,8 +8,16 @@ namespace TestingSystem
 {
     class ProxyBridge : BridgeInterface
     {
-        public Boolean Login(String username, String password) { return true; }
+        public ProxyBridge() { }
 
-        public Boolean Register(String username, String password) { return true; }
+        public new Boolean Login(String username, String password)
+        {
+            return true;
+        }
+
+        public new Boolean Register(String username, String password)
+        {
+            return true;
+        }
     }
 }
