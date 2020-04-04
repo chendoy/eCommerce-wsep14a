@@ -10,7 +10,7 @@ namespace eCommerce_14a
     {
         public static void Main()
         {
-            Console.WriteLine("hesssssllossssasdasssdsssssss");
+            Console.WriteLine("hello world ya nevelot\n");
             Console.ReadLine();
         }
 
