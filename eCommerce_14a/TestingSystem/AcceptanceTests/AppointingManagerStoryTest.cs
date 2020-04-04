@@ -13,7 +13,7 @@ namespace TestingSystem.AcceptanceTests
         [TestMethod]
         public void Test() 
         {
-            Assert.IsFalse(false);
+            Assert.IsTrue(true);
         }
     }
 }
