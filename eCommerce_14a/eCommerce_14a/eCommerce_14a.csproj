@@ -36,7 +36,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiscountPolicy.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="GraphNode.cs" />
+    <Compile Include="Inventory.cs" />
+    <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="PuarchsePolicy.cs" />
+    <Compile Include="Store.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserManagment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

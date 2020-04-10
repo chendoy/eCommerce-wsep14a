@@ -34,6 +34,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Codentia.Common.Membership, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Codentia.Common.Membership.dll.2.0.0.105\lib\Codentia.Common.Membership.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,6 +79,8 @@
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
     <Compile Include="SystemTrackTest.cs" />
+    <Compile Include="UnitTests\InventoryTest.cs" />
+    <Compile Include="UnitTests\StoreTest.cs" />
     <Compile Include="UserGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,7 +92,9 @@
   <ItemGroup>
     <Folder Include="AggregationTests\" />
     <Folder Include="RegressionTests\" />
-    <Folder Include="UnitTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
