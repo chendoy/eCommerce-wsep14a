@@ -8,11 +8,14 @@ namespace eCommerce_14a
 {
     class Program
     {
+        
         public static void Main()
         {
+            
             Console.WriteLine("hello world ya nevelot\n");
+            //System init phase
+            eSystem mysystem = new eSystem();
             Console.ReadLine();
         }
-
     }
 }
