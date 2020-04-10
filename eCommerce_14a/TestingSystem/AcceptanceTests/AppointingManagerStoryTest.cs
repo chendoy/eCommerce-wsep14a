@@ -8,8 +8,19 @@ using System.Threading.Tasks;
 namespace TestingSystem.AcceptanceTests
 {
     [TestClass]
-    class AppointingManagerStoryTest
+    public class AppointingManagerStoryTest : SystemTrackTest
     {
+        [TestInitialize]
+        public void SetUp()
+        {
+            // TODO: impl
+        }
+        [TestCleanup]
+        public void TearDown()
+        {
+            // TODO: impl
+        }
+
         [TestMethod]
         public void Test() 
         {

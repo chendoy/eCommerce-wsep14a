@@ -34,7 +34,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,11 +49,14 @@
   <ItemGroup>
     <Compile Include="AcceptanceTests\AppointingManagerStoryTest.cs" />
     <Compile Include="AcceptanceTests\AppointingOwnerStoryTest.cs" />
+    <Compile Include="AcceptanceTests\Basket.cs" />
     <Compile Include="AcceptanceTests\BuyingPolicyStoryTest.cs" />
+    <Compile Include="AcceptanceTests\Cart.cs" />
     <Compile Include="AcceptanceTests\ChangeManagerPermissionsStoryTest.cs" />
     <Compile Include="AcceptanceTests\check.cs" />
     <Compile Include="AcceptanceTests\DemoteManagerStroyTest.cs" />
     <Compile Include="AcceptanceTests\DiscountPolicyStoryTest.cs" />
+    <Compile Include="AcceptanceTests\InitSystemStoryTest.cs" />
     <Compile Include="AcceptanceTests\InventoryManagementStoryTest.cs" />
     <Compile Include="AcceptanceTests\LoginStoryTest.cs" />
     <Compile Include="AcceptanceTests\LogoutStoryTest.cs" />
@@ -59,6 +64,7 @@
     <Compile Include="AcceptanceTests\OverlookStoresProductsStoryTest.cs" />
     <Compile Include="AcceptanceTests\PaymentStoryTest.cs" />
     <Compile Include="AcceptanceTests\PaymentSystemStoryTest.cs" />
+    <Compile Include="AcceptanceTests\Product.cs" />
     <Compile Include="AcceptanceTests\PurchaseStoryTest.cs" />
     <Compile Include="AcceptanceTests\RegisterStoryTest.cs" />
     <Compile Include="AcceptanceTests\SearchProductsStoryTest.cs" />
@@ -70,13 +76,17 @@
     <Compile Include="AcceptanceTests\ViewAllPurchaseHistoryStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewAndEditCartStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewHistoryStoryTest.cs" />
-    <Compile Include="AggregationTests\StubClass.cs" />
+    <Compile Include="BasketGenerator.cs" />
+    <Compile Include="CartGenerator.cs" />
+    <Compile Include="IntegrationTests\StubClass.cs" />
     <Compile Include="BridgeInterface.cs" />
     <Compile Include="Driver.cs" />
+    <Compile Include="ProductGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
     <Compile Include="RegressionTests\StubClass.cs" />
+    <Compile Include="StoreGenerator.cs" />
     <Compile Include="SystemTrackTest.cs" />
     <Compile Include="UnitTests\AdministrationTests.cs" />
     <Compile Include="UnitTests\StoreTests.cs" />

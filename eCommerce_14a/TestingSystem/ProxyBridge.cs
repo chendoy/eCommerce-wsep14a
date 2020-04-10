@@ -10,14 +10,65 @@ namespace TestingSystem
     {
         public ProxyBridge() { }
 
-        public new Boolean Login(String username, String password)
+        public new bool Login(String username, String password)
         {
             return true;
         }
 
-        public new Boolean Register(String username, String password)
+        public new bool Register(String username, String password)
         {
             return true;
         }
+
+        public new bool Init()
+        {
+            return true;
+        }
+
+        public new void GetDetailsFromUser(){}
+
+        public new void UserLeft(){}
+
+        public new bool UserNotRegistered() 
+        {
+            return true;
+        }
+
+        public new bool UserNotLogin() 
+        {
+            return true;
+        }
+
+        public new bool ViewShopDetails()
+        {
+            return true;
+        }
+        public new bool ViewProductsByCategory(String InvalidCategory)
+        {
+            return true;
+        }
+        public new bool CloseShop()
+        {
+            return true;
+        }
+        public new bool ViewProductByName(String productName)
+        {
+            return true;
+        }
+
+        public new bool ChangeProductName(String anotherValidName)
+        {
+            return true;
+        }
+        public new bool ViewProductDetails()
+        {
+            return true;
+        }
+
+        public new String GetProductName()
+        {
+            return "bla";
+        }
+
     }
 }

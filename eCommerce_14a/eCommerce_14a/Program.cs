@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a
 {
-    class Program
+    public class Program
     {
         public static void Main()
         {

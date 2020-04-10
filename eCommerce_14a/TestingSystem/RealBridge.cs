@@ -19,5 +19,13 @@ namespace TestingSystem
         {
             return true;//sys.register(username, password)
         }
+        public new bool ViewShopDetails()
+        {
+            return true;
+        }
+        public new bool ViewProductsByCategory(String InvalidCategory)
+        {
+            return true;
+        }
     }
 }
