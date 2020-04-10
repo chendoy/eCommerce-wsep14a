@@ -8,6 +8,7 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class InventoryTest
     {
+        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_valid()
         {
@@ -17,6 +18,8 @@ namespace TestingSystem.UnitTests
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(inv);
             Assert.IsTrue(isValidAns.Item1);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_valid_empty()
         {
@@ -24,12 +27,16 @@ namespace TestingSystem.UnitTests
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(inv);
             Assert.IsTrue(isValidAns.Item1);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_null()
         {
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(null);
             Assert.IsFalse(isValidAns.Item1);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})"
         [TestMethod]
         public void TestValidInventory_negativeAmount()
         {
@@ -41,6 +48,8 @@ namespace TestingSystem.UnitTests
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(inv);
             Assert.IsFalse(isValidAns.Item1);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})"
         [TestMethod]
         public void TestValidInventory_notMatchingKeyAndProductId()
         {
@@ -53,12 +62,14 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(isValidAns.Item1);
         }
 
+
         private Tuple<bool, Exception> ValidInventoryDriver(Dictionary<int, Tuple<Product, int>> inv_dict)
         {
 
             return Inventory.isValidInventory(inv: inv_dict);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
         [TestMethod]
         public void TestAddProduct_aboveZeroAmount()
         {
@@ -67,6 +78,8 @@ namespace TestingSystem.UnitTests
             bool isAdded = AddProductDriver(inv, p, 10).Item1;
             Assert.IsTrue(isAdded);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
         [TestMethod]
         public void TestAddProduct_zeroAmount()
         {
@@ -75,6 +88,8 @@ namespace TestingSystem.UnitTests
             bool isAdded = AddProductDriver(inv, p, 0).Item1;
             Assert.IsTrue(isAdded);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
         [TestMethod]
         public void TestAddProduct_inValidAmount()
         {
@@ -83,6 +98,8 @@ namespace TestingSystem.UnitTests
             bool isAdded = AddProductDriver(inv, p, -10).Item1;
             Assert.IsFalse(isAdded);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
         [TestMethod]
         public void TestAddProduct_nonExistingProduct()
         {
@@ -91,6 +108,8 @@ namespace TestingSystem.UnitTests
             bool isAdded = AddProductDriver(inv, p, 5).Item1;
             Assert.IsTrue(isAdded);
         }
+
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
         [TestMethod]
         public void TestAddProduct_nullProduct()
         {
@@ -107,6 +126,7 @@ namespace TestingSystem.UnitTests
         }
 
 
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
         public void TestDecraseProduct_NegativeAmount()
         {
@@ -116,6 +136,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(isDecrased);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
         public void TestDecraseProduct_zeroAmount()
         {
@@ -125,6 +146,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(isDecrased);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
         public void TestDecraseProduct_postiveAmountValid()
         {
@@ -134,6 +156,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(isDecrased);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
         public void TestDecraseProduct_postiveAmountInValid()
         {
@@ -143,6 +166,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(isDecrased);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
         public void TestDecraseProduct_nullProduct()
         {
@@ -151,11 +175,13 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(isDecrased);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         private Tuple<bool, Exception> decraseProductDriver(Inventory inv, Product p, int amount)
         {
             return inv.DecraseProductAmount(p, amount);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.UpdateProductDetails(int, string)>
         [TestMethod]
         public void TestUpdateProductDetails_valid()
         {
@@ -164,6 +190,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(isUpdated);
         }
 
+        /// <test cref ="eCommerce_14a.Inventory.UpdateProductDetails(int, string)>
         [TestMethod]
         public void TestUpdateProductDetails_NonExitingProduct()
         {
@@ -173,6 +200,8 @@ namespace TestingSystem.UnitTests
             Assert.AreEqual(ex.Message, "this product not exists in the Inventory");
         }
 
+
+        /// <test cref ="eCommerce_14a.Inventory.UpdateProductDetails(int, string)>
         [TestMethod]
         public void TestUpdateProductDetails_nullNewDetails()
         {

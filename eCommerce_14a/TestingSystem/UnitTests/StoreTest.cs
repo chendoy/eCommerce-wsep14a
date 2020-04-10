@@ -12,6 +12,8 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class StoreTest
     {
+
+        /// <test cref ="eCommerce_14a.Store.changeStoreStatus(bool)"/>
         [TestMethod]
         public void TestChangeStoreStatus_notActiveStatus()
         {
@@ -22,6 +24,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(statusChanged);
         }
 
+        /// <test cref ="eCommerce_14a.Store.changeStoreStatus(bool)"/>
         [TestMethod]
         public void TestChangeStoreStatus_ActiveValid()
         {
@@ -32,6 +35,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(statusChanged);
         }
 
+        /// <test cref ="eCommerce_14a.Store.changeStoreStatus(bool)"/>
         [TestMethod]
         public void TestChangeStoreStatus_ActiveNoOwner()
         {
@@ -43,6 +47,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(statusChanged);
         }
 
+        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         [TestMethod]
         public void TestAddProductAmount_ValidUser()
         {
@@ -53,6 +58,7 @@ namespace TestingSystem.UnitTests
        
         }
 
+        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         [TestMethod]
         public void TestAddProductAmount_inValidUser()
         {
@@ -68,6 +74,7 @@ namespace TestingSystem.UnitTests
             Assert.AreEqual(ex.Message, "this user isn't a store owner, thus he can't update inventory" );
         }
 
+        /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)"/>
         [TestMethod]
         public void TestDecraseProductAmount_ValidUser()
         {
@@ -78,6 +85,7 @@ namespace TestingSystem.UnitTests
 
         }
 
+        /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)"/>
         [TestMethod]
         public void TestDecraseProductAmount_inValidUser()
         {
@@ -93,6 +101,7 @@ namespace TestingSystem.UnitTests
             Assert.AreEqual(ex.Message, "this user isn't a store owner, thus he can't update inventory");
         }
 
+        /// <test cref ="eCommerce_14a.Store.UpdatePrdocutDetails(int, int, string)">
         [TestMethod]
         public void TestUpdateProductDetails_Valid()
         {
@@ -103,6 +112,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(updateProdDetailsRes.Item1);
         }
 
+        /// <test cref ="eCommerce_14a.Store.UpdatePrdocutDetails(int, int, string)">
         [TestMethod]
         public void TestUpdateProductDetails_NonExistingUser()
         {
