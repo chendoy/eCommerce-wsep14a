@@ -76,6 +76,7 @@
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
     <Compile Include="SystemTrackTest.cs" />
+    <Compile Include="UnitTests\Appoitment_Test.cs" />
     <Compile Include="UnitTests\System_init.cs" />
     <Compile Include="UnitTests\User_test.cs" />
     <Compile Include="UserGenerator.cs" />

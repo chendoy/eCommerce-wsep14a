@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppoitmentManager.cs" />
+    <Compile Include="Appoitment_Service.cs" />
     <Compile Include="DeliveryHandler.cs" />
     <Compile Include="eSystem.cs" />
     <Compile Include="PaymentHandler.cs" />
@@ -45,6 +46,7 @@
     <Compile Include="User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="UserManager.cs" />
+    <Compile Include="UserService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

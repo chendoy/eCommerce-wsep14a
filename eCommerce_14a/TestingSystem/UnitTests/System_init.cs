@@ -37,7 +37,7 @@ namespace TestingSystem.UnitTests
         public void SecurityTest()
         {
             Security b = new Security();
-           Assert.IsNull(b.CalcSha1(""));
+            Assert.IsNull(b.CalcSha1(""));
             Assert.IsNull(b.CalcSha1(null));
             Assert.IsNotNull(b.CalcSha1("A"));
         }

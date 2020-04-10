@@ -16,6 +16,7 @@ namespace eCommerce_14a
         private bool isAdmin,isLoggedIn;
         private Dictionary<int, Store> Store_Ownership;
         private Dictionary<int, Store> Store_Managment;
+        private Dictionary<int, int[]> Store_options;
         //Contains the list of who appointed you to which store! not who you appointed to which store!
         private Dictionary<int, User> AppointedBy;
         //private List<PurchaseBasket> Cart;
@@ -32,6 +33,7 @@ namespace eCommerce_14a
             Store_Ownership = new Dictionary<int, Store>();
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int,User>();
+            Store_options = new Dictionary<int, int[]>();
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
         }
@@ -127,6 +129,17 @@ namespace eCommerce_14a
         public bool openStore(int v)
         {
             Store n = new Store(v);
+            return true;
+        }
+        public bool setPermmisions(int store_id,int[] permission_set)
+        {
+            if (store_id < 1 || permission_set == null)
+                return false;
+            if (!isStorManager(store_id))
+                return false;
+            if(Store_options.ContainsKey(store_id))
+                Store_options.Remove(store_id);
+            Store_options.Add(store_id, permission_set);
             return true;
         }
     }
