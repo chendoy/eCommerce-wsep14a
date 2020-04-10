@@ -13,11 +13,12 @@ namespace eCommerce_14a
         {
             UM = new UserManager();
         }
-
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-registration-22 </req>
         public bool Registration(string username,string password)
         {
             return UM.Register(username,password);
         }
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-login-23 </req>
         public bool Login(string username, string password)
         {
             return UM.Login(username, password);
@@ -26,6 +27,7 @@ namespace eCommerce_14a
         {
             return UM.Login("", "",true);
         }
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer-logout-31</req>
         public bool Logout(string user)
         {
             return UM.Logout(user);

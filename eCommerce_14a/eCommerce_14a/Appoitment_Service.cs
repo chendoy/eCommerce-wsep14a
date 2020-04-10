@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace eCommerce_14a
 {
     public class Appoitment_Service
@@ -13,19 +14,24 @@ namespace eCommerce_14a
         {
             AM = new AppoitmentManager();
         }
+        //Apoint user to be store owner by store owner
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-appointing-store-owner-43 </req>
         //Need to be store number but i need Liav
         public bool AppointStoreOwner(string owner,string appoint,Store store)
         {
             return AM.AppointStoreOwner(owner,appoint,store);
         }
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-appointing-a-store-manager-45 </req>        
         public bool AppointStoreManage(string owner, string appoint, Store store)
         {
             return AM.AppointStoreManager(owner, appoint, store);
         }
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-demote-store-manager-47 </req>
         public bool RemoveStoreManager(string owner, string appoint, Store store)
         {
             return AM.RemoveAppStoreManager(owner, appoint, store);
         }
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-change-store-managers-permissions-46- </req>
         public bool ChangePermissions(string owner, string appoint, Store store,int[] permissions)
         {
             return AM.ChangePermissions(owner, appoint, store,permissions);
