@@ -13,8 +13,8 @@ namespace TestingSystem.UnitTests
         public void TestValidInventory_valid()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:""), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:""), 100));
+            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:"", 100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:"", 100), 100));
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(inv);
             Assert.IsTrue(isValidAns.Item1);
         }
@@ -41,10 +41,10 @@ namespace TestingSystem.UnitTests
         public void TestValidInventory_negativeAmount()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:""), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:""), 100));
-            inv.Add(3, new Tuple<Product, int>(new Product(product_id: 3, details:""), 100));
-            inv.Add(4, new Tuple<Product, int>(new Product(product_id: 4, details:""), -1));
+            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:"", 100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:"", 100), 100));
+            inv.Add(3, new Tuple<Product, int>(new Product(product_id: 3, details:"", 100), 100));
+            inv.Add(4, new Tuple<Product, int>(new Product(product_id: 4, details:"", 100), -1));
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(inv);
             Assert.IsFalse(isValidAns.Item1);
         }
@@ -54,8 +54,8 @@ namespace TestingSystem.UnitTests
         public void TestValidInventory_notMatchingKeyAndProductId()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:""), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:""), 100));
+            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:"", 100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:"", 100), 100));
             inv.Add(3, new Tuple<Product, int>(new Product(product_id: 3, details:""), 100));
             inv.Add(4, new Tuple<Product, int>(new Product(product_id: 6, details:""), -1));
             Tuple<bool, Exception> isValidAns = ValidInventoryDriver(inv);

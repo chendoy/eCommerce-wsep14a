@@ -3,12 +3,25 @@ namespace eCommerce_14a
     public class Product
     {
         private int id;
+        private double price;
         private string details;
-        
-        public Product(int product_id, string details)
+        private int rank;
+        private string name;
+        private string category;
+        public Product(int product_id, string details, double price=100, string name="", int rank=3, string category="Electricity")
         {
             this.id = product_id;
             this.details = details;
+            this.price = price;
+            this.name = name;
+            this.rank = rank;
+            this.category = category;
+        }
+
+        public string Category
+        {
+            get { return category; }
+            set { category = value; }
         }
         public int  ProductID
         {
@@ -19,6 +32,24 @@ namespace eCommerce_14a
         {
             get { return details; }
             set { details = value; }
+        }
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public int Rank
+        {
+            get { return rank; }
+            set { rank = value; }
+        }
+
+        public double Price
+        {
+            get { return price; }
+            set { price = value; }
         }
     }
 }

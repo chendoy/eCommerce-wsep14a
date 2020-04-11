@@ -17,6 +17,7 @@ namespace eCommerce_14a
         private DiscountPolicy discountPolicy;
         private PuarchsePolicy puarchsePolicy;
         private bool isActive;
+        private int rank;
         public Store(Dictionary<string, object> store_params)
         {
             this.id = (int)store_params["Id"];
@@ -28,6 +29,7 @@ namespace eCommerce_14a
             this.discountPolicy = (DiscountPolicy)store_params["DiscountPolicy"];
             this.puarchsePolicy = (PuarchsePolicy)store_params["PuarchasePolicy"];
             this.isActive = true;
+            this.rank = (int)store_params["Rank"];
         }
 
         public bool ActiveStore
@@ -69,6 +71,20 @@ namespace eCommerce_14a
 
         }
 
+        public Dictionary<string, object> getSotoreInfo()
+        {
+            Dictionary<string, object> store_info = new Dictionary<string, object>();
+            store_info.Add("id", id);
+            store_info.Add("owners", owners);
+            store_info.Add("managers", managers);
+            store_info.Add("inventory", inv);
+            store_info.Add("discount_policy", discountPolicy);
+            store_info.Add("puarchse_policy", puarchsePolicy);
+            store_info.Add("is_active", isActive);
+            store_info.Add("rank", rank);
+            return store_info;
+        }
+
         public Tuple<bool,Exception> addProductAmount(int userId, Product product, int amount)
         {
 
@@ -87,11 +103,11 @@ namespace eCommerce_14a
             }
 
         }
-        public Tuple<bool, Exception> decrasePrdouct(int userId, Product p, int amount)
+        public Tuple<bool, Exception> decrasePrdouct(int userId, Product product, int amount)
         {
             if (!hasUser(owners, userId))
                 return new Tuple<bool, Exception>(false, new Exception("this user isn't a store owner, thus he can't update inventory"));
-            Tuple<bool, Exception> res = inv.DecraseProductAmount(p, amount);
+            Tuple<bool, Exception> res = inv.DecraseProductAmount(product, amount);
             bool decraseSucess = res.Item1;
             if (decraseSucess)
             {
@@ -126,6 +142,17 @@ namespace eCommerce_14a
             // we dont check for correctn's because it's appoitnment responsibility
             set { managers = value; }
             get { return managers; }
+        }
+
+        public int Id
+        {
+            get { return id; }
+        }
+
+        public int Rank
+        {
+            get { return rank; }
+            set { rank = value; }
         }
 
 

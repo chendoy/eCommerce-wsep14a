@@ -47,12 +47,13 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(statusChanged);
         }
 
+
         /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         [TestMethod]
         public void TestAddProductAmount_ValidUser()
         {
             Store s = getValidStore();
-            Product p = new Product(1, "");
+            Product p = new Product(1, "", 100);
             Tuple<bool, Exception> addProdRes = addProductDriver(s, 1, p, 100);
             Assert.IsTrue(addProdRes.Item1);
        
@@ -63,7 +64,7 @@ namespace TestingSystem.UnitTests
         public void TestAddProductAmount_inValidUser()
         {
             Store s = getValidStore();
-            Product p = new Product(1, "");
+            Product p = new Product(1, "", 100);
             Tuple<bool, Exception> addProdRes = addProductDriver(s, 2, p, 100);
             
             if (addProdRes.Item1)
@@ -79,7 +80,7 @@ namespace TestingSystem.UnitTests
         public void TestDecraseProductAmount_ValidUser()
         {
             Store s = getValidStore();
-            Product p = new Product(1, "");
+            Product p = new Product(1, "", 100);
             Tuple<bool, Exception> decraseProdRes = decraseProductDriver(s, 1, p, 100);
             Assert.IsTrue(decraseProdRes.Item1);
 
@@ -90,7 +91,7 @@ namespace TestingSystem.UnitTests
         public void TestDecraseProductAmount_inValidUser()
         {
             Store s = getValidStore();
-            Product p = new Product(1, "");
+            Product p = new Product(1, "", 100);
             Tuple<bool, Exception> decraseProdRes = decraseProductDriver(s, 2, p, 100);
 
             if (decraseProdRes.Item1)
