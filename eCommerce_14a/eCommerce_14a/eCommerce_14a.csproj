@@ -43,9 +43,10 @@
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="PuarchsePolicy.cs" />
+    <Compile Include="Searcher.cs" />
     <Compile Include="Store.cs" />
     <Compile Include="StoreManager.cs" />
-    <Compile Include="StoreManament.cs" />
+    <Compile Include="StoreManagment.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserManagment.cs" />
   </ItemGroup>

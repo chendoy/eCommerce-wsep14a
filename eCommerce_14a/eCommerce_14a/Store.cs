@@ -37,35 +37,35 @@ namespace eCommerce_14a
             get { return isActive; }
         }
 
-        public Tuple<bool,Exception> changeStoreStatus(bool newStatus)
+        public Tuple<bool,string> changeStoreStatus(bool newStatus)
         {
             if (newStatus)
             {
                 if(owners.Count == 0)
                 {
-                    return new Tuple<bool, Exception>(false, new Exception("Cann't change store status to active until store has at least one owner"));
+                    return new Tuple<bool, string>(false, "Cann't change store status to active until store has at least one owner");
                 }
             }
             isActive = newStatus;
-            return new Tuple<bool, Exception>(true, null);
+            return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, Exception> UpdatePrdocutDetails(int userId, int productId, string newDetails)
+        public Tuple<bool, string> UpdatePrdocutDetails(int userId, int productId, string newDetails)
         {
             if (!hasUser(owners, userId))
             {
-                return new Tuple<bool, Exception>(false, new Exception("this user isn't a store owner, thus he can't update inventory products details"));
+                return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory products details");
             }
-            Tuple<bool, Exception> res = inv.UpdateProductDetails(productId, newDetails);
+            Tuple<bool, string> res = inv.UpdateProductDetails(productId, newDetails);
             bool updateSucess = res.Item1;
             if (updateSucess)
             {
-                return new Tuple<bool, Exception>(true, null);
+                return new Tuple<bool, string>(true, "");
 
             }
             else
             {
-                return new Tuple<bool, Exception>(false, res.Item2);
+                return new Tuple<bool, string>(false, res.Item2);
             }
 
 
@@ -85,38 +85,38 @@ namespace eCommerce_14a
             return store_info;
         }
 
-        public Tuple<bool,Exception> addProductAmount(int userId, Product product, int amount)
+        public Tuple<bool,string> addProductAmount(int userId, Product product, int amount)
         {
 
             if (!hasUser(owners, userId))
-                return new Tuple<bool, Exception>(false, new Exception("this user isn't a store owner, thus he can't update inventory"));
-            Tuple<bool,Exception> res = inv.addProductAmount(product, amount);
+                return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory");
+            Tuple<bool,string> res = inv.addProductAmount(product, amount);
             bool addSucess = res.Item1;
             if (addSucess)
             {
-                return new Tuple<bool, Exception>(true, null);
+                return new Tuple<bool, string>(true, "");
 
             }
             else
             {
-                return new Tuple<bool, Exception>(false, res.Item2);
+                return new Tuple<bool, string>(false, res.Item2);
             }
 
         }
-        public Tuple<bool, Exception> decrasePrdouct(int userId, Product product, int amount)
+        public Tuple<bool, string> decrasePrdouct(int userId, Product product, int amount)
         {
             if (!hasUser(owners, userId))
-                return new Tuple<bool, Exception>(false, new Exception("this user isn't a store owner, thus he can't update inventory"));
-            Tuple<bool, Exception> res = inv.DecraseProductAmount(product, amount);
+                return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory");
+            Tuple<bool, string> res = inv.DecraseProductAmount(product, amount);
             bool decraseSucess = res.Item1;
             if (decraseSucess)
             {
-                return new Tuple<bool, Exception>(true, null);
+                return new Tuple<bool, string>(true, "");
 
             }
             else
             {
-                return new Tuple<bool, Exception>(false, res.Item2);
+                return new Tuple<bool, string>(false, res.Item2);
             }
 
         }
@@ -155,6 +155,10 @@ namespace eCommerce_14a
             set { rank = value; }
         }
 
+        public Inventory Inventory
+        {
+            get { return inv; }
+        }
 
     }
 }

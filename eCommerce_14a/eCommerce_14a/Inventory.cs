@@ -18,17 +18,17 @@ namespace eCommerce_14a
 
 
         
-        public Tuple<bool, Exception> addProductAmount(Product p, int amount)
+        public Tuple<bool, string> addProductAmount(Product p, int amount)
         {
             // purpose: add amount to the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
             if (amount < 0)
             {
-                return new Tuple<bool, Exception>(false, new Exception("amount must be greater than 0"));
+                return new Tuple<bool, string>(false, "amount must be greater than 0");
             }
             if (p == null)
             {
-                return new Tuple<bool, Exception>(false, new Exception("product cann't be null"));
+                return new Tuple<bool, string>(false, "product cann't be null");
             }
             else
             {
@@ -42,35 +42,35 @@ namespace eCommerce_14a
                 {
                     inv.Add(p.ProductID, new Tuple<Product, int>(p, currentAmount + amount));
                 }
-                return new Tuple<bool, Exception>(true, null);
+                return new Tuple<bool, string>(true, "");
             }
 
         }
 
-        public Tuple<bool, Exception> UpdateProductDetails(int productId, string newDetails)
+        public Tuple<bool, string> UpdateProductDetails(int productId, string newDetails)
         {
 
             if (newDetails == null)
-                return new Tuple<bool, Exception>(false, new Exception("details cann't b null"));
+                return new Tuple<bool, string>(false, "details cann't b null");
             if (!inv.ContainsKey(productId))
             {
-                return new Tuple<bool, Exception>(false, new Exception("this product not exists in the Inventory"));
+                return new Tuple<bool, string>(false, "this product not exists in the Inventory");
             }
             inv[productId].Item1.Details = newDetails;
-            return new Tuple<bool, Exception>(true, null);
+            return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, Exception> DecraseProductAmount(Product p, int amount)
+        public Tuple<bool, string> DecraseProductAmount(Product p, int amount)
         {
             // purpose: decrase amount from the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
             if (amount < 0)
             {
-                return new Tuple<bool, Exception>(false, new Exception("amount must be greater than 0"));
+                return new Tuple<bool, string>(false, "amount must be greater than 0");
             }
             if (p == null)
             {
-                return new Tuple<bool, Exception>(false, new Exception("product cann't be null"));
+                return new Tuple<bool, string>(false, "product cann't be null");
             }
             else
             {
@@ -80,39 +80,39 @@ namespace eCommerce_14a
                     int newAmount = currentAmount - amount;
                     if (newAmount < 0)
                     {
-                        return new Tuple<bool, Exception>(false, new Exception("by decrasing this amount the new amount is less than 0 and it's illegal!"));
+                        return new Tuple<bool, string>(false, "by decrasing this amount the new amount is less than 0 and it's illegal!");
                     }
                     inv[p.ProductID] = new Tuple<Product, int>(p, newAmount);
-                    return new Tuple<bool, Exception>(true, null);
+                    return new Tuple<bool, string>(true, "");
                 }
                 else
                 {
-                    return new Tuple<bool, Exception>(false, new Exception("you cann't decrase amount of non existing product"));
+                    return new Tuple<bool, string>(false, "you cann't decrase amount of non existing product");
                 }
             }
         }
 
-        public Tuple<bool, Exception> loadInventory(Dictionary<int, Tuple<Product, int>> otherInv)
+        public Tuple<bool, string> loadInventory(Dictionary<int, Tuple<Product, int>> otherInv)
         {
-            Tuple<bool, Exception> isValidAns = isValidInventory(otherInv);
+            Tuple<bool, string> isValidAns = isValidInventory(otherInv);
             bool isValid = isValidAns.Item1;
             if (isValid)
             {
                 inv = otherInv;
-                return new Tuple<bool, Exception>(true, null);
+                return new Tuple<bool, string>(true, null);
             }
             else
             {
-                return new Tuple<bool, Exception>(false, isValidAns.Item2);
+                return new Tuple<bool, string>(false, isValidAns.Item2);
             }
         }
 
 
-        public static Tuple <bool,Exception> isValidInventory(Dictionary<int, Tuple<Product, int>> inv)
+        public static Tuple <bool,string> isValidInventory(Dictionary<int, Tuple<Product, int>> inv)
         {
             if (inv == null)
             {
-                return new Tuple<bool, Exception>(false, new Exception("cann't set the current inventory to null"));
+                return new Tuple<bool, string>(false, "cann't set the current inventory to null");
             }
             //checking the amount of each product is not negative and each key matches the product id
             foreach (KeyValuePair<int, Tuple<Product, int>> entry in inv)
@@ -121,17 +121,17 @@ namespace eCommerce_14a
                 int productAmount = entry.Value.Item2;
                 if (productAmount < 0)
                 {
-                    return new Tuple<bool, Exception>(false, new Exception("product amount in inventroy can't be negative"));
+                    return new Tuple<bool, string>(false, "product amount in inventroy can't be negative");
 
                 }
                 if(productId != entry.Key)
                 {
-                    return new Tuple<bool, Exception>(false, new Exception("product id must match it's key"));
+                    return new Tuple<bool, string>(false, "product id must match it's key");
 
                 }
             }
 
-            return new Tuple<bool, Exception>(true, null);
+            return new Tuple<bool, string>(true, "");
         }
     }
 }
