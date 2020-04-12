@@ -1,0 +1,11 @@
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\bin\Debug\netcoreapp3.1\eCommerce_14a.exe
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\bin\Debug\netcoreapp3.1\eCommerce_14a.deps.json
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\bin\Debug\netcoreapp3.1\eCommerce_14a.runtimeconfig.json
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\bin\Debug\netcoreapp3.1\eCommerce_14a.runtimeconfig.dev.json
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\bin\Debug\netcoreapp3.1\eCommerce_14a.dll
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\bin\Debug\netcoreapp3.1\eCommerce_14a.pdb
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\obj\Debug\netcoreapp3.1\eCommerce_14a.csprojAssemblyReference.cache
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\obj\Debug\netcoreapp3.1\eCommerce_14a.AssemblyInfoInputs.cache
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\obj\Debug\netcoreapp3.1\eCommerce_14a.AssemblyInfo.cs
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\obj\Debug\netcoreapp3.1\eCommerce_14a.dll
+C:\Users\chend\source\repos\eCommerce_14a\eCommerce_14a\obj\Debug\netcoreapp3.1\eCommerce_14a.pdb
