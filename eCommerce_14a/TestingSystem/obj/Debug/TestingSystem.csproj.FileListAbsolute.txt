@@ -1,0 +1,31 @@
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\TestingSystem\obj\Debug\TestingSystem.csprojAssemblyReference.cache
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CoreCompileInputs.cache
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\TestingSystem\bin\Debug\TestingSystem.dll
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\TestingSystem\bin\Debug\TestingSystem.pdb
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\TestingSystem\obj\Debug\TestingSystem.dll
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\TestingSystem\obj\Debug\TestingSystem.pdb
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csprojAssemblyReference.cache
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CoreCompileInputs.cache
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.pdb
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\TestingSystem.pdb
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.pdb
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe.config
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CopyComplete
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\TestingSystem.exe
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.exe
+C:\Users\guyha\Desktop\Clones\Project_14a\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\log4net.config
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\TestingSystem.exe
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\TestingSystem.pdb
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\log4net.dll
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.pdb
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe.config
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\log4net.xml
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csprojAssemblyReference.cache
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CoreCompileInputs.cache
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CopyComplete
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.exe
+C:\Users\Niko\OneDrive - post.bgu.ac.il\Courses_F\Workshop\wsep_14a\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.pdb

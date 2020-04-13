@@ -39,6 +39,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Purchase\DomainLayer\Cart.cs" />
+    <Compile Include="Purchase\DomainLayer\External.cs" />
+    <Compile Include="Purchase\DomainLayer\PurchaseBasket.cs" />
+    <Compile Include="Purchase\DomainLayer\PurchaseFacade.cs" />
+    <Compile Include="Purchase\ServiceLayer\PurchaseManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
