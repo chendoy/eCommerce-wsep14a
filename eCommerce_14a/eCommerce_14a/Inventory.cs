@@ -6,6 +6,11 @@ namespace eCommerce_14a
     public class Inventory
     {
         private Dictionary<int, Tuple<Product, int>> inv;
+        string productPriceErrMessage = "product price invalid";
+        string productExistErrMessage = "this product already exists!, you can update it's amount!";
+        string productNotExistErrMessage = "prdouct not exist!";
+        string productAmountErrMessage = "amount must be greater than 0";
+        string nullProductErrMessage = "product cann't be null";
         public Inventory()
         {
             this.inv = new Dictionary<int, Tuple<Product, int>>();
@@ -18,34 +23,23 @@ namespace eCommerce_14a
 
 
         
-        public Tuple<bool, string> addProductAmount(Product p, int amount)
+        public Tuple<bool, string> addProductAmount(int productId, int amount)
         {
             // purpose: add amount to the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
             if (amount < 0)
-            {
-                return new Tuple<bool, string>(false, "amount must be greater than 0");
-            }
-            if (p == null)
-            {
-                return new Tuple<bool, string>(false, "product cann't be null");
-            }
-            else
-            {
-                int currentAmount = 0;
-                if (inv.ContainsKey(p.ProductID))
-                {
-                    currentAmount = inv[p.ProductID].Item2;
-                    inv[p.ProductID] = new Tuple<Product, int>(p, currentAmount + amount);
-                }
-                else
-                {
-                    inv.Add(p.ProductID, new Tuple<Product, int>(p, currentAmount + amount));
-                }
-                return new Tuple<bool, string>(true, "");
-            }
+                return new Tuple<bool, string>(false, productAmountErrMessage);
+             
+            if (!inv.ContainsKey(productId))
+                return new Tuple<bool, string>(false, productNotExistErrMessage);
 
+            int currentAmount = inv[productId].Item2;
+            inv[productId] = new Tuple<Product, int>(inv[productId].Item1, currentAmount + amount);
+
+            return new Tuple<bool, string>(true, "");
         }
+
+        
 
         public Tuple<bool, string> UpdateProductDetails(int productId, string newDetails)
         {
@@ -60,36 +54,78 @@ namespace eCommerce_14a
             return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, string> DecraseProductAmount(Product p, int amount)
+        public Tuple<bool, string> removeProduct(int productId)
+        {
+            if (!inv.ContainsKey(productId))
+                return new Tuple<bool, string>(false, productNotExistErrMessage);
+
+            inv.Remove(productId);
+            return new Tuple<bool, string>(true, "");
+        }
+
+        public Tuple<bool, string> DecraseProductAmount(int productId, int amount)
         {
             // purpose: decrase amount from the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
             if (amount < 0)
-            {
-                return new Tuple<bool, string>(false, "amount must be greater than 0");
-            }
-            if (p == null)
-            {
-                return new Tuple<bool, string>(false, "product cann't be null");
-            }
-            else
-            {
-                if (inv.ContainsKey(p.ProductID))
-                {
-                    int currentAmount = inv[p.ProductID].Item2;
-                    int newAmount = currentAmount - amount;
-                    if (newAmount < 0)
-                    {
-                        return new Tuple<bool, string>(false, "by decrasing this amount the new amount is less than 0 and it's illegal!");
-                    }
-                    inv[p.ProductID] = new Tuple<Product, int>(p, newAmount);
-                    return new Tuple<bool, string>(true, "");
-                }
-                else
-                {
-                    return new Tuple<bool, string>(false, "you cann't decrase amount of non existing product");
-                }
-            }
+                return new Tuple<bool, string>(false, productAmountErrMessage);
+
+            if(!inv.ContainsKey(productId))
+                return new Tuple<bool, string>(false, productNotExistErrMessage);
+
+            int currentAmount = inv[productId].Item2;
+            int newAmount = currentAmount - amount;
+            if (newAmount < 0)
+                return new Tuple<bool, string>(false, productAmountErrMessage);
+
+            inv[productId] = new Tuple<Product, int>(inv[productId].Item1, newAmount);
+
+            return new Tuple<bool, string>(true, "");
+        }
+
+        public Tuple<bool, string> UpdateProduct(Dictionary<string, object> productParams)
+        {
+            int productId = (int)productParams["Id"];
+            if (!inv.ContainsKey(productId))
+                return new Tuple<bool, string>(false, productNotExistErrMessage);
+
+            double price = (double)productParams["Price"];
+            if (price < 0)
+                return new Tuple<bool, string>(false, productPriceErrMessage);
+
+            Product product = inv[productId].Item1;
+            product.Details = (string)productParams["pDetails"];
+            product.Price = price;
+            product.Name = (string)productParams["pName"];
+            product.Category = (string)productParams["pCategory"];
+            int amount = inv[productId].Item2;
+
+            inv[productId] = new Tuple<Product, int>(product, amount);
+
+            return new Tuple<bool, string>(true, "");
+        }
+
+        public Tuple<bool,string> appendProduct(Dictionary<string, object> productParams, int amount)
+        {
+            if (amount < 0)
+                return new Tuple<bool, string>(false, productAmountErrMessage);
+
+            int pId = (int)productParams["Id"];
+            if (inv.ContainsKey(pId))
+                return new Tuple<bool, string>(false, productExistErrMessage);
+            
+            double pPrice = (double)productParams["Price"];
+            if (pPrice < 0)
+                return new Tuple<bool, string>(false, productPriceErrMessage);
+
+            string pDetails = (string)productParams["pDetails"];
+            string pName = (string)productParams["pName"];
+            string pCategory = (string)productParams["pCategory"];
+
+            Product product = new Product (product_id:pId, details: pDetails, name:pName, category:pCategory);
+            inv.Add(pId, new Tuple<Product, int>(product, amount));
+
+            return new Tuple<bool, string>(true, "");
         }
 
         public Tuple<bool, string> loadInventory(Dictionary<int, Tuple<Product, int>> otherInv)

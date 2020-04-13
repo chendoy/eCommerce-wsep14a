@@ -21,24 +21,33 @@ namespace eCommerce_14a
             return storeManagment.getStoreInfo(storeId);
         }
 
-        public Tuple<bool, String> addProduct(int storeId, string userName, Product p, int amount)
+        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount)
         {
-            return storeManagment.addProduct(storeId, userName, p, amount);
+            return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount);
         }
 
-        public Tuple<bool, String> decraseProduct(int storeId, string userName, Product p, int amount)
+        public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
-            return storeManagment.decraseProduct(storeId, userName, p, amount);
+            return storeManagment.removeProduct(storeId, userName, productId);
+        }
+        public Tuple<bool, string> addProduct(int storeId, string userName, int productId, int amount)
+        {
+            return storeManagment.addProductAmount(storeId, userName, productId, amount);
         }
 
-        public Tuple<bool, string> createStore(int storeId, int userId)
+        public Tuple<bool, string> decraseProduct(int storeId, string userName, int productId, int amount)
         {
-            return storeManagment.createStore(storeId, userId);
+            return storeManagment.decraseProduct(storeId, userName, productId, amount);
         }
 
-        public Tuple<bool, string> removeStore(int userId, int storeId)
+        public Tuple<bool, string> createStore(int storeId, string userName, int discountPolicyType, int puarchsePolicyType)
         {
-            return storeManagment.removeStore(userId, storeId);
+            return storeManagment.createStore(storeId, userName, discountPolicyType, puarchsePolicyType);
+        }
+
+        public Tuple<bool, string> removeStore(string userName, int storeId)
+        {
+            return storeManagment.removeStore(userName, storeId);
         }
 
         public Tuple<bool, string> changeStoreStatus(int storeId, bool status)
@@ -46,10 +55,6 @@ namespace eCommerce_14a
             return storeManagment.changeStoreStatus(storeId, status);
         }
 
-        public Tuple<bool, string> updateProductDetails(int storeId, string userName, int productId, string newDetails)
-        {
-            return storeManagment.UpdatePrdocutDetails(storeId, userName, productId, newDetails);
-        }
 
 
     }

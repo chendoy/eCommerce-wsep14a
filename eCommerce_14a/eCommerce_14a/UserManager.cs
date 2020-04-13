@@ -169,5 +169,29 @@ namespace eCommerce_14a
             Active_users.Remove(u.getUserName());
             users.Add(u.getUserName(), u);
         }
+
+        public bool isMainOwner(User user, int storeId)
+        {
+            //function should check if it is the user who created this store (the main owner)
+            throw new NotImplementedException();
+        }
+
+        public Tuple<bool, string> removeAllFromStore(int storeId)
+        {
+            //function should remove all store owners and store mangers from this store
+            throw new NotImplementedException();
+        }
+        public Tuple<bool, string> removeOwner(Store store ,User user)
+        {
+            //when you delete a store owner of store you should also delete it from the store owner list and use the function below
+            throw new NotImplementedException();
+            // the function is here ...
+            store.RemoveOwner(user);
+        }
+
+
+
     }
+
+
 }
