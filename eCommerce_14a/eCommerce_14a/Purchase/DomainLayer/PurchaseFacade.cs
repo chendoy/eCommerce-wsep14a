@@ -32,7 +32,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
 
             if (amount < wantedAmount)
             {
-                string error = String.Format("The is not enough products in the store, Wanted: {0} Exist: {1}",
+                string error = String.Format("There is not enough products in the store, Wanted: {0} Exist: {1}",
                     wantedAmount, amount);
                 return new Tuple<bool, string>(false, error);
             }
@@ -44,6 +44,36 @@ namespace eCommerce_14a.Purchase.DomainLayer
             }
 
             return cart.AddProduct(store, product, wantedAmount);
+        }
+
+        public Tuple<Dictionary<string, PurchaseBasket>, string> GetCartDetails(string user)
+        {
+            if (!External.CheckValidUser(user))
+            {
+                return new Tuple<Dictionary<string, PurchaseBasket>, string>(null, "Not a valid user");
+            }
+            if (!carts.TryGetValue(user, out Cart cart))
+            {
+                return new Tuple<Dictionary<string, PurchaseBasket>, string>(null, "No cart found for this user");
+            }
+
+            return new Tuple<Dictionary<string, PurchaseBasket>, string>(cart.GetBaskets(), "");
+        }
+
+        public Tuple<bool, string> ClearUserCart(string user)
+        {
+            if (!External.CheckValidUser(user))
+            {
+                return new Tuple<bool, string>(false, "Not a valid user");
+            }
+
+            if (!carts.ContainsKey(user))
+            {
+                return new Tuple<bool, string>(false, "No cart found");
+            }
+
+            carts[user] = null;
+            return new Tuple<bool, string>(true, null);
         }
     }
 }

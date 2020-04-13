@@ -17,6 +17,11 @@ namespace eCommerce_14a.Purchase.DomainLayer
             this.baskets = new Dictionary<string, PurchaseBasket>();
         }
 
+        public Dictionary<string, PurchaseBasket> GetBaskets()
+        {
+            return this.baskets;
+        }
+
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         public Tuple<bool, string> AddProduct(string store, string product, int wantedAmount)
         {
