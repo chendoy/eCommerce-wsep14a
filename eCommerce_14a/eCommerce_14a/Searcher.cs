@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a
 {
-    class Searcher
+    public class Searcher
     {
 
-        StoreManagment storeManagemnt;
+        private StoreManagment storeManagemnt;
         public Searcher(StoreManagment storeManagment)
         {
-            this.storeManagemnt = new StoreManagment();
+            this.storeManagemnt = storeManagment;
         }
 
         public List<Product> SearchProducts(Dictionary<string, object> searchBy)
@@ -67,7 +67,9 @@ namespace eCommerce_14a
             if (searchBy.ContainsKey("SearchByKeyWord"))
             {
                 string keyWord = (string)searchBy["SearchByKeyWord"];
-                if (!product.Name.Contains(keyWord))
+                string productNameNoSpaces = product.Name.Replace(" ", "");
+                string lowerProdName = productNameNoSpaces.ToLower();
+                if (!lowerProdName.Contains(keyWord.ToLower()))
                 {
                     return false;
                 }
@@ -138,7 +140,10 @@ namespace eCommerce_14a
         {
             if (searchBy.ContainsKey("searchByName"))
             {
-                if (!product.Name.Equals(searchBy["searchByName"]))
+                string productOrigName = (string)searchBy["searchByName"];
+                string productNameNoSpaces = product.Name.Replace(" ", "");
+                string lowerProdName = productNameNoSpaces.ToLower();
+                if (!lowerProdName.Equals(productOrigName.ToLower()))
                 {
                     return false;
                 }

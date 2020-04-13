@@ -6,6 +6,12 @@ namespace eCommerce_14a
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;
+
+        public StoreManagment(Dictionary<int, Store> stores)
+        {
+            this.stores = stores;
+        }
+
         public Dictionary<string, object> getStoreInfo(int storeId)
         {
             if (!stores.ContainsKey(storeId))

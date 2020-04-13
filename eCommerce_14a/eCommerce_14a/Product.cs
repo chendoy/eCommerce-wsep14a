@@ -8,7 +8,7 @@ namespace eCommerce_14a
         private int rank;
         private string name;
         private string category;
-        public Product(int product_id, string details, double price=100, string name="", int rank=3, string category="Electricity")
+        public Product(int product_id, string details="this is product", double price=100, string name="", int rank=3, string category="Electricity")
         {
             this.id = product_id;
             this.details = details;
