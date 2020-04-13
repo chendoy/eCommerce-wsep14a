@@ -17,11 +17,13 @@ namespace TestingSystem.UnitTests
             UserManager um = new UserManager();
             Security b = new Security();
             //Regular_Succes
-            Assert.IsTrue(um.RegisterMaster("AAA", b.CalcSha1("BBB")));
+            Tuple<bool, string> ans;
+            ans = um.RegisterMaster("AAA", b.CalcSha1("BBB"));
+            Assert.IsTrue(ans.Item1);
             //Sad
-            Assert.IsFalse(um.RegisterMaster("", b.CalcSha1("BBB")));
+            Assert.IsFalse(um.RegisterMaster("", b.CalcSha1("BBB")).Item1);
             //Bad
-            Assert.IsFalse(um.RegisterMaster(null, b.CalcSha1("BBB")));
+            Assert.IsFalse(um.RegisterMaster(null, b.CalcSha1("BBB")).Item1);
         }
         [TestMethod]
         public void ConnectToHandlers()

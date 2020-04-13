@@ -23,5 +23,9 @@ namespace eCommerce_14a
         {
             return isAlive;
         }
+        public bool pay(bool isAlive = true)
+        {
+            return isAlive;
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace eCommerce_14a
         {
             Console.WriteLine("Security Created\n");
         }
+        //String that are sent are already checked to be valid -
+        //Hence not null and not blank.
         public string CalcSha1(string pass)
         {
             if (pass == null || pass == "")

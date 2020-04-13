@@ -19,149 +19,100 @@ namespace eCommerce_14a
         {
             return this;
         }
-        public bool AppointStoreOwner(string owner, string addto, Store store)
+        //Owner appoints addto to be Store Owner.
+        public Tuple<bool,string> AppointStoreOwner(string owner, string addto, Store store)
         {
 
             if (owner == null || addto == null || store == null)
-            {
-                Console.WriteLine("Error Null Arguments\n");
-                return false;
-            }
-            User appointer = UM.GetAtiveUser(owner);
-            User appointed = UM.GetAtiveUser(addto);
+                return new Tuple<bool, string>(false, "Null Arguments");
+            if (owner == "" || addto == "")
+                return new Tuple<bool, string>(false, "Blank Arguemtns\n");
+            User appointer = UM.GetUser(owner);
+            User appointed = UM.GetUser(addto);
             if (appointer is null || appointed is null)
-            {
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
             if (appointer.isguest() || appointed.isguest())
-            {
-                Console.WriteLine("Error Guest users cannot appoint or be appointed\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is a Guest\n");
             if (store.IsStoreOwner(appointed))
-            {
-                Console.WriteLine(appointed.getUserName() + " Is already store Owner\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, addto+" Is already Store Owner\n");
             if (!store.IsStoreOwner(appointer))
-            {
-                Console.WriteLine(appointer.getUserName() + " Is Not A store Owner\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, owner+"Is not a store Owner\n");
             store.AddStoreOwner(appointed);
+            int[] p = { 1, 1, 1 };
+            appointed.setPermmisions(store.getStoreId(), p);
             appointed.addAppointment(appointer, store.getStoreId());
             return appointed.addStoreOwnership(store);
         }
-        public bool AppointStoreManager(string owner, string addto, Store store)
+        //Owner appoints addto to be Store Manager.
+        //Set his permissions to the store to be [1,1,0] only read and view
+        public Tuple<bool,string> AppointStoreManager(string owner, string addto, Store store)
         {
-
             if (owner == null || addto == null || store == null)
-            {
-                Console.WriteLine("Error Null Arguments\n");
-                return false;
-            }
-            User appointer = UM.GetAtiveUser(owner);
-            User appointed = UM.GetAtiveUser(addto);
+                return new Tuple<bool, string>(false, "Null Arguments");
+            if (owner == "" || addto == "")
+                return new Tuple<bool, string>(false, "Blank Arguemtns\n");
+            User appointer = UM.GetUser(owner);
+            User appointed = UM.GetUser(addto);
             if (appointer is null || appointed is null)
-            {
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
             if (appointer.isguest() || appointed.isguest())
-            {
-                Console.WriteLine("Error Guest users cannot appoint or be appointed\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is a Guest\n");
             if (store.IsStoreOwner(appointed) || store.IsStoreManager(appointed))
-            {
-                Console.WriteLine(appointed.getUserName() + " Is already store Owner or Manager\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, addto + " Is already Store Owner or Manager\n");
             if (!store.IsStoreOwner(appointer))
-            {
-                Console.WriteLine(appointer.getUserName() + " Is Not A store Owner\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreManager(appointed);
             appointed.addAppointment(appointer, store.getStoreId());
             int[] p = { 1, 1, 0 };
             appointed.setPermmisions(store.getStoreId(), p);
             return appointed.addStoreManagment(store);
         }
-        public bool RemoveAppStoreManager(string o, string m, Store store)
+        //Remove appoitment only if owner gave the permissions to the Appointed user
+        public Tuple<bool, string> RemoveAppStoreManager(string o, string m, Store store)
         {
             if (o == null || m == null || store == null)
-            {
-                Console.WriteLine("Error Null Arguments\n");
-                return false;
-            }
-            User owner = UM.GetAtiveUser(o);
-            User manager = UM.GetAtiveUser(m);
+                return new Tuple<bool, string>(false, "Null Arguments");
+            if (o == "" || m == "")
+                return new Tuple<bool, string>(false, "Blank Arguemtns\n");
+            User owner = UM.GetUser(o);
+            User manager = UM.GetUser(m);
             if (owner is null || manager is null)
-            {
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
             if (owner.isguest() || manager.isguest())
-            {
-                Console.WriteLine("Error Guest users cannot appoint or be appointed\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is a Guest\n");
             if (store.IsStoreOwner(manager))
-            {
-                Console.WriteLine(manager.getUserName() + " Is a store Owner and cannot be Removed\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, m + " Is already Store Owner\n");
             if (!store.IsStoreOwner(owner))
-            {
-                Console.WriteLine(owner.getUserName() + " Is Not A store Owner\n");
-                return false;
-            }
-            if (!manager.isAppointedBy(owner, store.getStoreId()))
-            {
-                Console.WriteLine(owner.getUserName() + " Do not Appointed:" + manager.getUserName() + "\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, o + "Is not a store Owner\n");
+            if (!manager.isAppointedBy(owner,store.getStoreId()))
+                return new Tuple<bool, string>(false, m + "Is not appointed by "+o+"to be store manager\n");
             store.RemoveManager(manager);
             manager.RemoveStoreManagment(store.getStoreId());
-            int[] p = { 0, 0, 0 };
-            manager.setPermmisions(store.getStoreId(), p);
-            return manager.RemoveAppoitment(owner, store.getStoreId());
+            manager.RemovePermission(store.getStoreId());
+            return new Tuple<bool,string>(manager.RemoveAppoitment(owner,store.getStoreId()),"");
         }
-        public bool ChangePermissions(string owner, string worker, Store store,int[] permissions)
+        public Tuple<bool,string> ChangePermissions(string ownerS, string worker, Store store,int[] permissions)
         {
-            if (owner == null || worker == null || permissions is null || store == null)
-            {
-                Console.WriteLine("Error Null Arguments\n");
-                return false;
-            }
-            User Boss = UM.GetAtiveUser(owner);
-            User manager = UM.GetAtiveUser(worker);
+            if (ownerS == null || worker == null || permissions == null || store == null)
+                return new Tuple<bool, string>(false, "Null Arguments");
+            if (ownerS == "" || worker == "")
+                return new Tuple<bool, string>(false, "Blank Arguemtns\n");
+            User owner = UM.GetUser(ownerS);
+            User manager = UM.GetUser(worker);
             if (owner is null || manager is null)
-            {
-                return false;
-            }
-            if (Boss.isguest() || manager.isguest())
-            {
-                Console.WriteLine("Error Guest users cannot chnage permissions\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
+            if (owner.isguest() || manager.isguest())
+                return new Tuple<bool, string>(false, "One of the users is a Guest\n");
             if (store.IsStoreOwner(manager))
-            {
-                Console.WriteLine(manager.getUserName() + " Is a store Owner and cannot be Removed\n");
-                return false;
-            }
-            if (!store.IsStoreOwner(Boss))
-            {
-                Console.WriteLine(Boss.getUserName() + " Is Not A store Owner\n");
-                return false;
-            }
-            if (!manager.isAppointedBy(Boss, store.getStoreId()))
-            {
-                Console.WriteLine(Boss.getUserName() + " Do not Appointed:" + manager.getUserName() + "\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, worker + " Is already Store Owner\n");
+            if (!store.IsStoreOwner(owner))
+                return new Tuple<bool, string>(false, ownerS + "Is not a store Owner\n");
+            if (!manager.isAppointedBy(owner, store.getStoreId()))
+                return new Tuple<bool, string>(false, worker + "Is not appointed by " + ownerS + "to be store manager\n");
             return manager.setPermmisions(store.getStoreId(), permissions);
         }
         //Temp function for tests
+        //Add user to logged in list and Remove user from logged in lists.
         public void addactive(User a)
         {
             UM.addtoactive(a);

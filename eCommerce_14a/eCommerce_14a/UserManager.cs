@@ -31,105 +31,107 @@ namespace eCommerce_14a
             return this;
         }
 
-        private bool name_and_pass_check(string u,string p)
+        //Checks if user name and password are legit and not exsist
+        private Tuple<bool,string> name_and_pass_check(string u,string p)
         {
-            if (u == null || p == null || u == "" || p == "" || isUserExist(u))
-                return false;
-            return true;
+            if (u == null || p == null)
+                return new Tuple<bool, string>(false, "Null Arguments\n");
+            if (u == "" || p == "")
+                return new Tuple<bool, string>(false, "Blank Arguments\n");
+            if (isUserExist(u))
+                return new Tuple<bool, string>(false, "User name Exsist\n");
+            return new Tuple<bool, string>(true, "");
         }
-        private bool check_args(string u, string p = "A")
+        //Check 1 or 2 arguments a=if input is valid.
+        private Tuple<bool, string> check_args(string u, string p = "A")
         {
-            if (u == null || p == null || u == "" || p == "")
-                return false;
-            return true;
+            if (u == null || p == null)
+                return new Tuple<bool, string>(false, "Null Arguments\n");
+            if (u == "" || p == "")
+                return new Tuple<bool, string>(false, "Blank Arguments\n");
+            return new Tuple<bool, string>(true, "");
         }
+        //CHecks if the user is registered somewhere 
+        //Means the user entered username and password
         public bool isUserExist(string username)
         {
             //if user name exist return false
             return Users_And_Hashes.ContainsKey(username);
         }
-        
-        public bool RegisterMaster(string username, string pass)
+        //Register the system admin
+        public Tuple<bool, string> RegisterMaster(string username, string pass)
         {
-            if (!name_and_pass_check(username, pass))
-                return false;
+            Tuple<bool, string> ans = name_and_pass_check(username,pass);
+            if (!ans.Item1)
+                return ans;
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username,sha1);
             User System_Admin = new User(0, username, false, true);
             users.Add(username,System_Admin);
-            return true;
+            return new Tuple<bool, string>(true,"");
         }
-        public bool Register(string username, string pass)
+        //Register regular user to the system 
+        //User name must be unique
+        public Tuple<bool, string> Register(string username, string pass)
         {
-            if (!name_and_pass_check(username, pass))
-                return false;
+            Tuple<bool, string> ans = name_and_pass_check(username, pass);
+            if (!ans.Item1)
+                return ans;
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
             User nUser = new User(Available_ID, username, false);
-            users.Add(username,nUser);
+            users.Add(username, nUser);
             Available_ID++;
-            return true;
+            return new Tuple<bool, string>(true, "");
         }
-        public bool Login(string username, string pass,bool isGuest = false)
+        //Login to Unlogged Register User with valid user name and pass.
+        public Tuple<bool, string> Login(string username, string pass,bool isGuest = false)
         {
             if(isGuest)
             {
                 addGuest();
-                return true;
+                return new Tuple<bool, string>(true, "");
             }
-            if (!check_args(username, pass))
-                return false;
+            Tuple<bool, string> ans = check_args(username, pass);
+            if (!ans.Item1)
+                return ans;
             string sha1 = SB.CalcSha1(pass);
             string temp_pass_hash;
             if (!Users_And_Hashes.TryGetValue(username, out temp_pass_hash))
-            {
-                Console.WriteLine("User Do Not Exist\n");
-                return false;
-            }
+                return new Tuple<bool, string>(false, "No such User: "+username+"\n");
             if(Users_And_Hashes.ContainsKey(username) && temp_pass_hash == sha1)
             {
                 User tUser;
-                if(!users.TryGetValue(username,out tUser))
-                {
-                    Console.WriteLine("Error occured User is not in the users_DB but is registered\n");
-                    return false;
-                }
+                if (!users.TryGetValue(username, out tUser))
+                    return new Tuple<bool, string>(false, "Error occured User is not in the users_DB but is registered: " + username + " \n");
                 if (tUser.LoggedStatus())
-                    return false;
+                    return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 Active_users.Add(tUser.getUserName(), tUser);
-                Console.WriteLine("User Logged in Successfully.\n");
-                return true;
+                return new Tuple<bool, string>(true, username+" Logged int\n");
             }
-            return false;
+            return new Tuple<bool, string>(false, "Wrong Credentials\n");
 
         }
-        public bool Logout(string sname,User user = null)
+        public Tuple<bool, string> Logout(string sname,User user = null)
         {
-            if (!check_args(sname))
-                return false;
+            Tuple<bool, string> ans = check_args(sname);
+            if (!ans.Item1)
+                return ans;
             if (user is null)
-            {
                 user = GetAtiveUser(sname);
-            }
-            if (user == null || !user.LoggedStatus())
-            {
-                Console.WriteLine("Error user is not logged in so he cannot Log out.\n");
-                return false;
-            }
+            if (user == null)
+                return new Tuple<bool, string>(false, sname + "is not Logged in\n");
+            if (!user.LoggedStatus())
+                return new Tuple<bool, string>(false, sname + "is not Logged in\n");
             if (user.isguest())
-            {
-                Console.WriteLine("Guest cannot Log out.\n");
-                return false;
-            }  
+                return new Tuple<bool, string>(false, "Guest cannot Log out.\n");
             user.Logout();
             Active_users.Remove(user.getUserName());
-            Console.WriteLine("Log out success\n");
-            Console.WriteLine("Log in as Guest\n");
             addGuest();
-            return true;
-
+            return new Tuple<bool, string>(true,sname+" Logged out succesuffly\n");
         }
+        //Add Guest user to the system and to the relevant lists.
         private void addGuest()
         {
             string tName = "Guest" + Available_ID;
@@ -139,6 +141,7 @@ namespace eCommerce_14a
             Active_users.Add(tName, nUser);
             Available_ID++;
         }
+        //Tries to get User from users list
         public User GetUser(string username)
         {
             User tUser;
@@ -146,6 +149,7 @@ namespace eCommerce_14a
                 return tUser;
             return null;
         }
+        //Tries to get user from logged in users.
         public User GetAtiveUser(string username)
         {
             User tUser;
@@ -153,21 +157,17 @@ namespace eCommerce_14a
                 return tUser;
             return null;
         }
-
-        //Temp Function
-        public bool OpenStore()
-        {
-            User nUser = new User(99, "test", false);
-            return nUser.openStore(1);
-
-        }
+        //Function for Tests only add to active user (simulate login) 
+        //And Remove from active users (Simulate logout).
         public void addtoactive(User u)
         {
             Active_users.Add(u.getUserName(),u);
+            users.Add(u.getUserName(), u);
         }
         public void Rtoactive(User u)
         {
             Active_users.Remove(u.getUserName());
+            users.Add(u.getUserName(), u);
         }
     }
 }
