@@ -20,7 +20,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, Exception> AddProduct(string product, int wantedAmount)
+        public Tuple<bool, string> AddProduct(string product, int wantedAmount)
         {
             if (!products.TryGetValue(product, out int amount))
             {
@@ -36,11 +36,11 @@ namespace eCommerce_14a.Purchase.DomainLayer
             {
                 string error = String.Format("The is not enough products in the store summed up with your current basket, Wanted: {0} Exist: {1}",
                     currentWanted, amount);
-                return new Tuple<bool, Exception>(false, new Exception(error));
+                return new Tuple<bool, string>(false, error);
             }
 
             products[product] = currentWanted;
-            return new Tuple<bool, Exception>(true, null);
+            return new Tuple<bool, string>(true, null);
         }
     }
 }

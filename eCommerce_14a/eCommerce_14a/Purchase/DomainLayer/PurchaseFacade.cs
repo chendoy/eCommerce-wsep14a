@@ -16,16 +16,16 @@ namespace eCommerce_14a.Purchase.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, Exception> AddProductToShoppingCart(string user, string store, string product, int wantedAmount)
+        public Tuple<bool, string> AddProductToShoppingCart(string user, string store, string product, int wantedAmount)
         {
             if (!External.CheckValidUser(user))
             {
-                return new Tuple<bool, Exception>(false, new Exception("Not a valid user"));
+                return new Tuple<bool, string>(false, "Not a valid user");
             }
 
             if (!External.CheckValidProduct(store, product))
             {
-                return new Tuple<bool, Exception>(false, new Exception("Not a valid product"));
+                return new Tuple<bool, string>(false, "Not a valid product");
             }
 
             int amount = External.GetAmountOfProduct(store, product);
@@ -34,7 +34,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
             {
                 string error = String.Format("The is not enough products in the store, Wanted: {0} Exist: {1}",
                     wantedAmount, amount);
-                return new Tuple<bool, Exception>(false, new Exception(error));
+                return new Tuple<bool, string>(false, error);
             }
 
             if (!this.carts.TryGetValue(user, out Cart cart))

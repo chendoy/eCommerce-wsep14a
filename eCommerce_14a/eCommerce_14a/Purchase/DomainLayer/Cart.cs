@@ -18,11 +18,11 @@ namespace eCommerce_14a.Purchase.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, Exception> AddProduct(string store, string product, int wantedAmount)
+        public Tuple<bool, string> AddProduct(string store, string product, int wantedAmount)
         {
             if (!External.CheckValidStore(store))
             {
-                return new Tuple<bool, Exception>(false, new Exception("Invalid store"));
+                return new Tuple<bool, string>(false, "Invalid store");
             }
 
             if (!baskets.TryGetValue(store, out PurchaseBasket basket))

@@ -14,7 +14,7 @@ namespace eCommerce_14a.Purchase.ServiceLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         public bool AddProductToShoppingCart(string user, string store, string product, int amount)
         {
-            Tuple<bool, Exception> res = purchaseFacade.AddProductToShoppingCart(user, store, product, amount);
+            Tuple<bool, string> res = purchaseFacade.AddProductToShoppingCart(user, store, product, amount);
             return res.Item1;
         }
     }
