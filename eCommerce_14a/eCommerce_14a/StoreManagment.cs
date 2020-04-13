@@ -6,10 +6,12 @@ namespace eCommerce_14a
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;
+        private UserManager userManager;
 
-        public StoreManagment(Dictionary<int, Store> stores)
+        public StoreManagment(Dictionary<int, Store> stores, UserManager userManager)
         {
             this.stores = stores;
+            this.userManager = userManager;
         }
 
         public Dictionary<string, object> getStoreInfo(int storeId)
@@ -19,30 +21,46 @@ namespace eCommerce_14a
             return stores[storeId].getSotoreInfo();
         }
 
-        public Tuple<bool, string> addProduct(int storeId, int userId, Product p, int amount)
+        public Tuple<bool, string> addProduct(int storeId, string userName, Product p, int amount)
         {
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<bool, string>(false, "user doesn't exist or not active");
+        
             Tuple<bool, string> storeExistRes = storeExist(storeId);
             bool isExist = storeExistRes.Item1;
             if (!isExist)
             {
                 return storeExistRes;
             }
-            return stores[storeId].addProductAmount(userId: userId, product: p, amount: amount);
+            return stores[storeId].addProductAmount(user:user, product: p, amount: amount);
         }
 
-        public Tuple<bool, string> decraseProduct(int storeId, int userId, Product p, int amount)
+        public Store getStore(int storeId)
         {
+            Store store;
+            if (!stores.TryGetValue(storeId, out store))
+                return null;
+            return store;
+        }
+
+        public Tuple<bool, string> decraseProduct(int storeId, string userName, Product p, int amount)
+        {
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<bool, string>(false, "user doesn't exist or not active");
+            
             Tuple<bool, string> storeExistRes = storeExist(storeId);
             bool isExist = storeExistRes.Item1;
             if (!isExist)
             {
                 return storeExistRes;
             }
-            return stores[storeId].decrasePrdouct(userId: userId, product: p, amount: amount);
+            return stores[storeId].decrasePrdouct(user:user , product: p, amount: amount);
         }
 
 
-        //talk with sundy on impl
+
         //should open store and add it to the current list
         public Tuple<bool, string> createStore(int userId, int storeId)
         {
@@ -99,15 +117,19 @@ namespace eCommerce_14a
         }
 
 
-        public Tuple<bool, string> UpdatePrdocutDetails(int storeId, int userId, int productId, string newDetails)
+        public Tuple<bool, string> UpdatePrdocutDetails(int storeId, string userName, int productId, string newDetails)
         {
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<bool, string>(false, "user doesn't exist or not active");
+
             Tuple<bool, string> storeExistRes = storeExist(storeId);
             bool isExist = storeExistRes.Item1;
             if (!isExist)
             {
                 return storeExistRes;
             }
-            return stores[storeId].UpdatePrdocutDetails(userId: userId, productId: productId, newDetails: newDetails);
+            return stores[storeId].UpdatePrdocutDetails(user: user, productId: productId, newDetails: newDetails);
 
         }
 

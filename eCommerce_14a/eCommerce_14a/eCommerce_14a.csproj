@@ -36,19 +36,26 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppoitmentManager.cs" />
+    <Compile Include="Appoitment_Service.cs" />
+    <Compile Include="DeliveryHandler.cs" />
     <Compile Include="DiscountPolicy.cs" />
+    <Compile Include="eSystem.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="GraphNode.cs" />
     <Compile Include="Inventory.cs" />
+    <Compile Include="PaymentHandler.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="PuarchsePolicy.cs" />
     <Compile Include="Searcher.cs" />
+    <Compile Include="Security.cs" />
     <Compile Include="Store.cs" />
-    <Compile Include="StoreManager.cs" />
+    <Compile Include="storeService.cs" />
     <Compile Include="StoreManagment.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="UserManagment.cs" />
+    <Compile Include="UserManager.cs" />
+    <Compile Include="UserService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

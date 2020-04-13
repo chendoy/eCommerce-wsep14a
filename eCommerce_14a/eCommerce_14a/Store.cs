@@ -50,12 +50,29 @@ namespace eCommerce_14a
             return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, string> UpdatePrdocutDetails(int userId, int productId, string newDetails)
+        internal bool AddStoreOwner(User user)
         {
-            if (!hasUser(owners, userId))
-            {
+            if (user.isguest() || owners.Contains(user))
+                return false;
+            owners.Add(user);
+            return true;
+        }
+
+        internal int getStoreId()
+        {
+            return id;
+        }
+
+        internal bool IsStoreOwner(User user)
+        {
+            return owners.Contains(user);
+        }
+
+        public Tuple<bool, string> UpdatePrdocutDetails(User user, int productId, string newDetails)
+        {
+            if (!owners.Contains(user))
                 return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory products details");
-            }
+            
             Tuple<bool, string> res = inv.UpdateProductDetails(productId, newDetails);
             bool updateSucess = res.Item1;
             if (updateSucess)
@@ -85,10 +102,23 @@ namespace eCommerce_14a
             return store_info;
         }
 
-        public Tuple<bool,string> addProductAmount(int userId, Product product, int amount)
+        internal bool AddStoreManager(User user)
+        {
+            if (user.isguest() || managers.Contains(user))
+                return false;
+            managers.Add(user);
+            return true;
+        }
+
+        internal bool IsStoreManager(User user)
+        {
+            return managers.Contains(user);
+        }
+
+        public Tuple<bool,string> addProductAmount(User user, Product product, int amount)
         {
 
-            if (!hasUser(owners, userId))
+            if (!owners.Contains(user))
                 return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory");
             Tuple<bool,string> res = inv.addProductAmount(product, amount);
             bool addSucess = res.Item1;
@@ -103,10 +133,11 @@ namespace eCommerce_14a
             }
 
         }
-        public Tuple<bool, string> decrasePrdouct(int userId, Product product, int amount)
+        public Tuple<bool, string> decrasePrdouct(User user, Product product, int amount)
         {
-            if (!hasUser(owners, userId))
+            if (!owners.Contains(user))
                 return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory");
+            
             Tuple<bool, string> res = inv.DecraseProductAmount(product, amount);
             bool decraseSucess = res.Item1;
             if (decraseSucess)
@@ -121,15 +152,12 @@ namespace eCommerce_14a
 
         }
 
-        private bool hasUser(List<User> users, int userId)
+        internal bool RemoveManager(User user)
         {
-            foreach(User user in users)
-            {
-                if (user.Id == userId)
-                    return true;
-            }
-            return false;
+            return Managers.Remove(user);
         }
+
+ 
         public List<User> Owners
         {
             // we dont check for correctn's because it's appoitnment responsibility

@@ -36,7 +36,7 @@ namespace TestingSystem.UnitTests
             storesDictionary.Add(1, store1);
             storesDictionary.Add(2, store2);
             storesDictionary.Add(3, store3);
-            storeManagment = new StoreManagment(storesDictionary);
+            storeManagment = new StoreManagment(storesDictionary, null);
             searcher = new Searcher(storeManagment);
         }
 

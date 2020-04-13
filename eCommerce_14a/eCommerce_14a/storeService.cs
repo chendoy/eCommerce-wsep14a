@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a
 {
-    class StoreManager
+    class storeService
     {
         StoreManagment storeManagment;
-        public StoreManager(StoreManagment storeManagment)
+        public storeService(StoreManagment storeManagment)
         {
             this.storeManagment = storeManagment;
+
         }
 
         public Dictionary<string, object> getStoreInfo(int storeId)
@@ -20,14 +21,14 @@ namespace eCommerce_14a
             return storeManagment.getStoreInfo(storeId);
         }
 
-        public Tuple<bool, String> addProduct(int storeId, int userId, Product p, int amount)
+        public Tuple<bool, String> addProduct(int storeId, string userName, Product p, int amount)
         {
-            return storeManagment.addProduct(storeId, userId, p, amount);
+            return storeManagment.addProduct(storeId, userName, p, amount);
         }
 
-        public Tuple<bool, String> decraseProduct(int storeId, int userId, Product p, int amount)
+        public Tuple<bool, String> decraseProduct(int storeId, string userName, Product p, int amount)
         {
-            return storeManagment.decraseProduct(storeId, userId, p, amount);
+            return storeManagment.decraseProduct(storeId, userName, p, amount);
         }
 
         public Tuple<bool, string> createStore(int storeId, int userId)
@@ -45,9 +46,9 @@ namespace eCommerce_14a
             return storeManagment.changeStoreStatus(storeId, status);
         }
 
-        public Tuple<bool, string> updateProductDetails(int storeId, int userId, int productId, string newDetails)
+        public Tuple<bool, string> updateProductDetails(int storeId, string userName, int productId, string newDetails)
         {
-            return storeManagment.UpdatePrdocutDetails(storeId, userId, productId, newDetails);
+            return storeManagment.UpdatePrdocutDetails(storeId, userName, productId, newDetails);
         }
 
 
