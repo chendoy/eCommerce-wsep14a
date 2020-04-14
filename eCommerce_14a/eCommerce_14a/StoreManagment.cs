@@ -12,10 +12,15 @@ namespace eCommerce_14a
         string storeAlreadyExistMessage = "store with this id already exist!";
         string storeNotExistMessage = "store Not Exists";
         string notMainOwnerErrMessage = "action cann't be performed because this user is not main owner";
-        public StoreManagment(Dictionary<int, Store> stores, UserManager userManager)
+        public StoreManagment(Dictionary<int, Store> stores)
         {
+            userManager = UserManager.Instance;
+            if(stores is null)
+            {
+                this.stores = new Dictionary<int, Store>();
+            }
             this.stores = stores;
-            this.userManager = userManager;
+            this.userManager = UserManager.Instance;
         }
 
         public Dictionary<string, object> getStoreInfo(int storeId)
@@ -242,10 +247,21 @@ namespace eCommerce_14a
                 return -1;
 
             return stores[storeId].getBucketPrice(products);
+        private Tuple<bool, string> storeNotExist(int store_id)
+        {
+            if (stores.ContainsKey(store_id))
+            {
+                return new Tuple<bool, string>(false, storeAlreadyExistMessage);
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "");
+            }
         }
- 
-
-      
+        public void cleanup()
+        {
+            this.stores = new Dictionary<int, Store>();
+        }
 
     }
 }

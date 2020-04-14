@@ -64,7 +64,11 @@ namespace eCommerce_14a
         {
             return storeManagment.getProductAmount(storeId: storeId, productId: productId); 
         }
-
+        //For Admin Uses
+        public void cleanup()
+        {
+            storeManagment.cleanup();
+        }
 
 
 

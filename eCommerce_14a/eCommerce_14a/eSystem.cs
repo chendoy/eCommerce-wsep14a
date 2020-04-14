@@ -20,11 +20,11 @@ namespace eCommerce_14a
         }
         private void system_init(string admin, string password)
         {
-            UManagment = new UserManager();
+            UManagment = UserManager.Instance;
+            AM = AppoitmentManager.Instance;
             bodyguard = new Security();
             DH = new DeliveryHandler();
             PH = new PaymentHandler();
-            AM = new AppoitmentManager(null);
             stores = new Dictionary<int, Store>();
             if (!DH.checkconnection() || !PH.checkconnection())
             {
@@ -64,6 +64,36 @@ namespace eCommerce_14a
                 Environment.Exit(1);
             }
             Console.WriteLine("System Administrator Created:\n");
+        }
+        public bool SetDeliveryConnection(bool conn)
+        {
+            DH.setConnection(conn);
+            return true;
+        }
+        public bool SetPaymentConnection(bool conn)
+        {
+            PH.setConnections(conn);
+            return true;
+        }
+        public bool CheckDeliveryConnection()
+        {
+            return DH.checkconnection();
+        }
+        public bool CheckPaymentConnection()
+        {
+            return PH.checkconnection();
+        }
+        public Tuple<bool,string> pay()
+        {
+            return PH.pay();
+        }
+        public Tuple<bool, string>  ProvideDeliveryForUser(string name ,bool ispayed)
+        {
+            return DH.ProvideDeliveryForUser(name, ispayed);
+        }
+        public void clean(string name,string pass)
+        {
+            system_init(name, pass);
         }
     }
 }

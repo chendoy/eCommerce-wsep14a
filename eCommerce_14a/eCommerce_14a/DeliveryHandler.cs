@@ -9,23 +9,33 @@ namespace eCommerce_14a
     public class DeliveryHandler
     {
         int checker;
+        bool connected;
         public DeliveryHandler()
         {
             Console.WriteLine("DeliveryHandler Created\n");
             checker = 2;
+            connected = true;
         }
         public int getchecker()
         {
             return this.checker;
         }
 
-        public bool checkconnection(bool isAlive = true)
+        public bool checkconnection()
         {
-            return isAlive;
+            return this.connected;
         }
         public bool Delivered(bool isAlive = true)
         {
             return isAlive;
+        }
+        public Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
+        {
+            return new Tuple<bool, string>(true, "FineByNow");
+        }
+        public void setConnection(bool con)
+        {
+            this.connected = con;
         }
     }
 }

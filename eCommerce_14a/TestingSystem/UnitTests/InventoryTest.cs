@@ -8,6 +8,7 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class InventoryTest
     {
+        /*
         private Inventory validInventory;
         private List<Tuple<Product, int>> validProductList;
 
@@ -189,6 +190,7 @@ namespace TestingSystem.UnitTests
             lstProds.Add(new Tuple<Product, int>(new Product(4, "Mask Kn95", price:200, rank:3, category:"Health"), 0));
             return lstProds;
         }
+        */
 
     }
 }

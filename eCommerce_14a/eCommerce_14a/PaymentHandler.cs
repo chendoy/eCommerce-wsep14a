@@ -8,24 +8,30 @@ namespace eCommerce_14a
 {
     public class PaymentHandler
     {
+        bool connected;
         int checker;
         public PaymentHandler()
         {
             Console.WriteLine("PaymentHandler Created\n");
             checker = 3;
+            connected = true;
         }
         public int getchecker()
         {
             return this.checker;
         }
 
-        public bool checkconnection(bool isAlive = true)
+        public bool checkconnection()
         {
-            return isAlive;
+            return this.connected;
         }
-        public bool pay(bool isAlive = true)
+        public Tuple<bool,string> pay()
         {
-            return isAlive;
+            return new Tuple<bool,string>(true,"OK");
+        }
+        public void setConnections(bool con)
+        {
+            this.connected = con;
         }
     }
 }
