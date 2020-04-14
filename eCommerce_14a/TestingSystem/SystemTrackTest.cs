@@ -9,11 +9,22 @@ namespace TestingSystem
     //from here comes all the functionality of the system
     class SystemTrackTest
     {
-        BridgeInterface sys = Driver.GetBridge();
+        BridgeInterface sys;
 
-        public Boolean Login(String username, String password) { return sys.Login(username, password); }
+        public SystemTrackTest()
+        {
+            sys = Driver.GetBridge();
+        }
 
-        public Boolean Register(String username, String password) { return sys.Register(username, password); }
+        public Boolean Login(String username, String password)
+        {
+            return sys.Login(username, password);
+        }
+
+        public Boolean Register(String username, String password)
+        {
+            return sys.Register(username, password);
+        }
 
     }
 }

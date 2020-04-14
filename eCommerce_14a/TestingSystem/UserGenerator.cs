@@ -43,15 +43,17 @@ namespace TestingSystem
         {
             return userNames[random.Next(0, FIXED_ARRAY_SIZE)];
         }
-
+        //generate random password
         public String GeneratePasswords()
         {
             return passwords[random.Next(0, FIXED_ARRAY_SIZE)];
         }
 
-        public static void main() {
+        public static void Main(string[] argv)
+        {
             UserGenerator gen = new UserGenerator();
             Console.WriteLine(gen.GenerateUsername());
+            Console.ReadLine();
         }
     }
 }

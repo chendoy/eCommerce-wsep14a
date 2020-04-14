@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{38FEEE93-8196-4F5D-A187-08EFE6AC160B}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestingSystem</RootNamespace>
     <AssemblyName>TestingSystem</AssemblyName>
@@ -30,7 +30,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +45,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptanceTests\AppointingManagerStoryTest.cs" />
+    <Compile Include="AcceptanceTests\AppointingOwnerStoryTest.cs" />
+    <Compile Include="AcceptanceTests\BuyingPolicyStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ChangeManagerPermissionsStoryTest.cs" />
+    <Compile Include="AcceptanceTests\check.cs" />
+    <Compile Include="AcceptanceTests\DemoteManagerStroyTest.cs" />
+    <Compile Include="AcceptanceTests\DiscountPolicyStoryTest.cs" />
+    <Compile Include="AcceptanceTests\InventoryManagementStoryTest.cs" />
+    <Compile Include="AcceptanceTests\LoginStoryTest.cs" />
+    <Compile Include="AcceptanceTests\LogoutStoryTest.cs" />
+    <Compile Include="AcceptanceTests\OpenStoreStoryTest.cs" />
+    <Compile Include="AcceptanceTests\OverlookStoresProductsStoryTest.cs" />
+    <Compile Include="AcceptanceTests\PaymentStoryTest.cs" />
+    <Compile Include="AcceptanceTests\PaymentSystemStoryTest.cs" />
+    <Compile Include="AcceptanceTests\PurchaseStoryTest.cs" />
+    <Compile Include="AcceptanceTests\RegisterStoryTest.cs" />
+    <Compile Include="AcceptanceTests\SearchProductsStoryTest.cs" />
+    <Compile Include="AcceptanceTests\SellingHistoryStoryTest.cs" />
+    <Compile Include="AcceptanceTests\StoreMangementStoryTest.cs" />
+    <Compile Include="AcceptanceTests\StoreProductsInBasketStoryTest.cs" />
+    <Compile Include="AcceptanceTests\SupplyStoryTest.cs" />
+    <Compile Include="AcceptanceTests\SupplySystemStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ViewAllPurchaseHistoryStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ViewAndEditCartStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ViewHistoryStoryTest.cs" />
     <Compile Include="BridgeInterface.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,6 +83,11 @@
       <Project>{14f01d9c-70a2-41f8-b9a0-a3a340c36823}</Project>
       <Name>eCommerce_14a</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AggregationTests\" />
+    <Folder Include="RegressionTests\" />
+    <Folder Include="UnitTests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
