@@ -6,17 +6,20 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a.Purchase.DomainLayer
 {
-    public class PurchaseFacade
+    public class PurchaseManagement
     {
         private Dictionary<string, Cart> carts;
 
-        public PurchaseFacade()
+        public PurchaseManagement()
         {
             this.carts = new Dictionary<string, Cart>();
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, string> AddProductToShoppingCart(string user, string store, string product, int wantedAmount)
+        /// Get the user ,store and product to add to the shopping cart
+        /// Additionaly indicate how much items of the product should be in the cart
+        /// exist - means this product meant to be already in the cart (in case of change/remove existing product
+        public Tuple<bool, string> AddProductToShoppingCart(string user, string store, string product, int wantedAmount, bool exist)
         {
             if (!External.CheckValidUser(user))
             {
@@ -28,13 +31,21 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 return new Tuple<bool, string>(false, "Not a valid product");
             }
 
+            if (wantedAmount < 0)
+            {
+                return new Tuple<bool, string>(false, "Cannot have negative amount of product");
+            }
+
+            if (!exist && wantedAmount == 0)
+            {
+                return new Tuple<bool, string>(false, "Cannot add product to cart with zero amount");
+            }
+
             int amount = External.GetAmountOfProduct(store, product);
 
             if (amount < wantedAmount)
             {
-                string error = String.Format("There is not enough products in the store, Wanted: {0} Exist: {1}",
-                    wantedAmount, amount);
-                return new Tuple<bool, string>(false, error);
+                return new Tuple<bool, string>(false, "There is not enough products in the store");
             }
 
             if (!this.carts.TryGetValue(user, out Cart cart))
@@ -43,7 +54,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 carts.Add(user, cart);
             }
 
-            return cart.AddProduct(store, product, wantedAmount);
+            return cart.AddProduct(store, product, wantedAmount, exist);
         }
 
         public Tuple<Dictionary<string, PurchaseBasket>, string> GetCartDetails(string user)
@@ -60,20 +71,5 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return new Tuple<Dictionary<string, PurchaseBasket>, string>(cart.GetBaskets(), "");
         }
 
-        public Tuple<bool, string> ClearUserCart(string user)
-        {
-            if (!External.CheckValidUser(user))
-            {
-                return new Tuple<bool, string>(false, "Not a valid user");
-            }
-
-            if (!carts.ContainsKey(user))
-            {
-                return new Tuple<bool, string>(false, "No cart found");
-            }
-
-            carts[user] = null;
-            return new Tuple<bool, string>(true, null);
-        }
     }
 }

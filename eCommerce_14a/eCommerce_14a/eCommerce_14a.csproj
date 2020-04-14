@@ -42,7 +42,7 @@
     <Compile Include="Purchase\DomainLayer\Cart.cs" />
     <Compile Include="Purchase\DomainLayer\External.cs" />
     <Compile Include="Purchase\DomainLayer\PurchaseBasket.cs" />
-    <Compile Include="Purchase\DomainLayer\PurchaseFacade.cs" />
+    <Compile Include="Purchase\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="Purchase\ServiceLayer\PurchaseManager.cs" />
   </ItemGroup>
   <ItemGroup>

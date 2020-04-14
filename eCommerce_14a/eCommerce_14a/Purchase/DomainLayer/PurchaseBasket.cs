@@ -20,20 +20,32 @@ namespace eCommerce_14a.Purchase.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, string> AddProduct(string product, int wantedAmount)
+        public Tuple<bool, string> AddProduct(string product, int wantedAmount, bool exist)
         {
-            if (wantedAmount == 0)
+            if (products.ContainsKey(product))
             {
-                products.Remove(product);
+                if (!exist)
+                {
+                    return new Tuple<bool, string>(false, "The product is already in the shopping cart");
+                }
+
+                if (wantedAmount == 0)
+                {
+                    products.Remove(product);
+                }
+                else
+                {
+                    products[product] = wantedAmount;
+                }
             }
             else
             {
-                if (!products.ContainsKey(product))
+                if (exist)
                 {
-                    products.Add(product, 0);
+                    return new Tuple<bool, string>(false, "The product is not already in the shopping cart");
                 }
 
-                products[product] = wantedAmount;
+                products.Add(product, wantedAmount);
             }
 
             return new Tuple<bool, string>(true, null);
