@@ -67,9 +67,9 @@ namespace eCommerce_14a
         private bool ValidProductKeyWord(Product product, Dictionary<string, object> searchBy)
         {
 
-            if (searchBy.ContainsKey(CommonStr.ProductKeyWord))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductKeyWord))
             {
-                string filterkeyWord = searchBy[CommonStr.ProductKeyWord].ToString().Replace(" ","").ToLower();
+                string filterkeyWord = searchBy[CommonStr.SearcherKeys.ProductKeyWord].ToString().Replace(" ","").ToLower();
                 string productName = product.Name.Replace(" ", "").ToLower();
                 if (!productName.Contains(filterkeyWord))
                     return false;
@@ -80,9 +80,9 @@ namespace eCommerce_14a
 
         private bool ValidProductRank(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey(CommonStr.ProductRank))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductRank))
             {
-                int minRank = (int)searchBy[CommonStr.ProductRank];
+                int minRank = (int)searchBy[CommonStr.SearcherKeys.ProductRank];
 
                 if (product.Rank < minRank)
                     return false;
@@ -92,9 +92,9 @@ namespace eCommerce_14a
 
         private bool ValidPriceRange(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey(CommonStr.ProductPriceRange))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductPriceRange))
             {
-                Tuple<double, double> priceRange = (Tuple<double, double>)searchBy[CommonStr.ProductPriceRange];
+                Tuple<double, double> priceRange = (Tuple<double, double>)searchBy[CommonStr.SearcherKeys.ProductPriceRange];
                 double minPrice = priceRange.Item1;
                 double maxPrice = priceRange.Item2;
 
@@ -108,9 +108,9 @@ namespace eCommerce_14a
         private bool ValidProductCategory(Product product, Dictionary<string, object> searchBy)
         {
 
-            if (searchBy.ContainsKey(CommonStr.ProductCategory))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductCategory))
             {
-                string filterCategory = searchBy[CommonStr.ProductCategory].ToString().Replace(" ", "").ToLower();
+                string filterCategory = searchBy[CommonStr.SearcherKeys.ProductCategory].ToString().Replace(" ", "").ToLower();
                 string productCategory = product.Category.Replace(" ", "").ToLower();
 
                 if (!filterCategory.Contains(productCategory) && !productCategory.Contains(filterCategory))
@@ -123,9 +123,9 @@ namespace eCommerce_14a
         private bool ValidStoreRank(Store store, Dictionary<string, object> searchBy)
         {
 
-            if (searchBy.ContainsKey(CommonStr.StoreRank))
+            if (searchBy.ContainsKey(CommonStr.StoreParams.StoreRank))
             {
-                int minRank = (int)searchBy[CommonStr.StoreRank];
+                int minRank = (int)searchBy[CommonStr.StoreParams.StoreRank];
                 if (store.Rank < minRank)
                     return false;
             }
@@ -134,9 +134,9 @@ namespace eCommerce_14a
 
         private bool ValidProductName(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey(CommonStr.ProductName))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductName))
             {
-                string filtrProuctName = (string)searchBy[CommonStr.ProductName];
+                string filtrProuctName = (string)searchBy[CommonStr.SearcherKeys.ProductName];
                 filtrProuctName = filtrProuctName.Replace(" ", "").ToLower();
                 string curProdName = product.Name.Replace(" ", "").ToLower();
                 if (!filtrProuctName.Equals(curProdName))

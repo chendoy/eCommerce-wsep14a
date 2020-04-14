@@ -12,8 +12,8 @@ namespace TestingSystem.UnitTests
         private Inventory validInventory;
         private List<Tuple<Product, int>> validProductList;
 
-        [ClassInitialize]
-        public void MyClassInitialize(TestContext testContext)
+        [TestInitialize]
+        public void TestInitialize()
         {
             validProductList = getValidInventroyProdList();
             validInventory = getInventory(validProductList);
@@ -83,7 +83,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
-        public void TestAddProduct_aboveZeroAmount()
+        public void TestAddProductAmount_aboveZeroAmount()
         {
             bool isAdded = AddProductDriver(validInventory, 3, 10).Item1;
             Assert.IsTrue(isAdded);
@@ -91,7 +91,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
-        public void TestAddProduct_zeroAmount()
+        public void TestAddProductAmount_zeroAmount()
         {
             bool isAdded = AddProductDriver(validInventory, 3, 0).Item1;
             Assert.IsTrue(isAdded);
@@ -99,7 +99,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
-        public void TestAddProduct_inValidAmount()
+        public void TestAddProductAmount_inValidAmount()
         {
             bool isAdded = AddProductDriver(validInventory, 3, -10).Item1;
             Assert.IsFalse(isAdded);
@@ -107,15 +107,18 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
-        public void TestAddProduct_nonExistingProduct()
+        public void TestAddProductAmount_nonExistingProduct()
         {
-            bool isAdded = AddProductDriver(validInventory, 7, 5).Item1;
-            Assert.IsTrue(isAdded);
+            Tuple<bool, string> isAdded = AddProductDriver(validInventory, 7, 5);
+            if (isAdded.Item1)
+                Assert.Fail();
+
+            Assert.AreEqual(isAdded.Item2, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
         }
 
         /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
-        public void TestAddProduct_NonExistingProduct()
+        public void TestAddProductAmount_NonExistingProduct()
         {
             bool isAdded = AddProductDriver(validInventory, -1, 10).Item1;
             Assert.IsFalse(isAdded);
@@ -130,7 +133,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(int, int)>
         [TestMethod]
-        public void TestDecraseProduct_NegativeAmount()
+        public void TestDecraseProductAmount_NegativeAmount()
         {
             bool isDecrased = AddProductDriver(validInventory, 3, -10).Item1;
             Assert.IsFalse(isDecrased);
@@ -138,7 +141,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
-        public void TestDecraseProduct_zeroAmount()
+        public void TestDecraseProductAmount_zeroAmount()
         {
             bool isDecrased = AddProductDriver(validInventory, 3, 0).Item1;
             Assert.IsTrue(isDecrased);
@@ -146,7 +149,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(int, int)>
         [TestMethod]
-        public void TestDecraseProduct_postiveAmountValid()
+        public void TestDecraseProductAmount_postiveAmountValid()
         { 
             bool isDecrased = AddProductDriver(validInventory, 3, 10).Item1;
             Assert.IsTrue(isDecrased);
@@ -154,7 +157,7 @@ namespace TestingSystem.UnitTests
 
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         [TestMethod]
-        public void TestDecraseProduct_postiveAmountInValid()
+        public void TestDecraseProductAmount_postiveAmountInValid()
         {
             bool isDecrased = decraseProductDriver(validInventory, 4, 1).Item1;
             Assert.IsFalse(isDecrased);

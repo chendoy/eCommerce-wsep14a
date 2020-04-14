@@ -12,20 +12,27 @@ namespace eCommerce_14a
         private PuarchsePolicy puarchsePolicy;
         private Inventory inventory;
         private int rank;
-        string notOwnerMessage = "this user isn't a store owner, thus he can't update inventory products details";
+
+  
         public Store(Dictionary<string, object> store_params)
         {
-            this.Id = (int)store_params[CommonStr.StoreId];
+            this.Id = (int)store_params[CommonStr.StoreParams.StoreId];
             this.owners = new List<User>();
-            User storeOwner = (User)store_params[CommonStr.StoreOwner];
+            User storeOwner = (User)store_params[CommonStr.StoreParams.StoreOwner];
             this.owners.Add(storeOwner);
             this.managers = new List<User>();
-            this.inventory = new Inventory();
-            this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreDiscountPolicy];
-            this.puarchsePolicy = (PuarchsePolicy)store_params[CommonStr.StorePuarchsePolicy];
+
+            if (store_params.ContainsKey(CommonStr.StoreParams.StoreInventory))
+                this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
+            else
+                this.inventory = new Inventory();
+
+            this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
+            this.puarchsePolicy = (PuarchsePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
             this.ActiveStore = true;
-            if (store_params.ContainsKey(CommonStr.StoreRank))
-                this.rank = (int)store_params[CommonStr.StoreRank];
+
+            if (store_params.ContainsKey(CommonStr.StoreParams.StoreRank))
+                this.rank = (int)store_params[CommonStr.StoreParams.StoreRank];
             else
                 this.rank = 1;
 
@@ -34,7 +41,7 @@ namespace eCommerce_14a
         public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
         {
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, notOwnerMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
 
             return inventory.addProductAmount(productId, amount);
         }
@@ -42,20 +49,20 @@ namespace eCommerce_14a
         public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
         {
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, notOwnerMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
 
             return inventory.DecraseProductAmount(productId, amount);
         }
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
         {
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, notOwnerMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
 
             if (newStatus)
             {
                 if(owners.Count == 0)
                 {
-                    return new Tuple<bool, string>(false, "Cann't change store status to active until store has at least one owner");
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
                 }
             }
             ActiveStore = newStatus;
@@ -65,7 +72,7 @@ namespace eCommerce_14a
         public Tuple<bool, string> removeProduct(User user, int productId)
         {
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, notOwnerMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
 
             return inventory.removeProduct(productId);
         }
@@ -74,7 +81,7 @@ namespace eCommerce_14a
         {
             
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, notOwnerMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
             return inventory.appendProduct(productParams, amount);
         }
 
@@ -83,7 +90,7 @@ namespace eCommerce_14a
         public Tuple<bool, string> UpdateProduct(User user, Dictionary<string, object> productParams)
         {
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, notOwnerMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
 
             return inventory.UpdateProduct(productParams);
         }

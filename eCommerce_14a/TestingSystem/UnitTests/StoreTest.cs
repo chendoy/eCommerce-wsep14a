@@ -14,14 +14,18 @@ namespace TestingSystem.UnitTests
     {   
         private  Store validStore;
         private List<User> owners;
+        private List<User> managers;
 
-        [ClassInitialize]
-        public  void MyClassInitialize(TestContext testContext)
+        [TestInitialize]
+        public  void TestInitialize()
         {
             User user = new User(1, "shimon", false, false);
 
-           validStore = openStore(1,user, InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()));
+            validStore = openStore(storeId:1,user:user, inv:InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()), rank:3);
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
+            validStore.managers = new List<User> { new User(2, "yosi", false, false) }; 
             owners = validStore.owners;
+            managers = validStore.managers;
         }
 
 
@@ -50,7 +54,7 @@ namespace TestingSystem.UnitTests
         public void TestChangeStoreStatus_ActiveNoOwner()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0] ,newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,managers[0] ,newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsFalse(statusChanged);
         }
@@ -77,7 +81,7 @@ namespace TestingSystem.UnitTests
                 Assert.Fail();
             }
             string ex = addProdRes.Item2;
-            Assert.AreEqual(ex, "this user isn't a store owner, thus he can't update inventory" );
+            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
         }
 
         /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)"/>
@@ -101,7 +105,7 @@ namespace TestingSystem.UnitTests
                 Assert.Fail();
             }
             string ex = decraseProdRes.Item2;
-            Assert.AreEqual(ex, "this user isn't a store owner, thus he can't update inventory");
+            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
         }
 
 
@@ -124,13 +128,13 @@ namespace TestingSystem.UnitTests
         {
 
             Dictionary<string, object> storeParams = new Dictionary<string, object>();
-            storeParams.Add(CommonStr.StoreId, storeId);
-            storeParams.Add(CommonStr.StoreOwner, user);
-            storeParams.Add(CommonStr.StoreRank, rank);
-            storeParams.Add(CommonStr.StoreDiscountPolicy, new DiscountPolicy(1));
-            storeParams.Add(CommonStr.StorePuarchsePolicy, new PuarchsePolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StoreId, storeId);
+            storeParams.Add(CommonStr.StoreParams.StoreOwner, user);
+            storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
+            storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
-            s.Inventory = inv;
             return s;
         }
         

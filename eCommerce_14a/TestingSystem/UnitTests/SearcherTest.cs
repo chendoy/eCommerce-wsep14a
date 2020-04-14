@@ -67,7 +67,7 @@ namespace TestingSystem.UnitTests
             expectedRes.Add(3, new List<Product> { inv_store_3.getProductDetails(1).Item1});
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.ProductCategory, "Computers");
+            filters.Add(CommonStr.SearcherKeys.ProductCategory, "Computers");
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
             
@@ -79,7 +79,7 @@ namespace TestingSystem.UnitTests
         {
             Dictionary<int, List<Product>> expectedRes = new Dictionary<int, List<Product>>();
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.ProductCategory, "Shoes");
+            filters.Add(CommonStr.SearcherKeys.ProductCategory, "Shoes");
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
@@ -94,7 +94,7 @@ namespace TestingSystem.UnitTests
             expectedRes.Add(3, new List<Product> { inv_store_3.getProductDetails(4).Item1 });
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.ProductPriceRange, new Tuple<double, double>(200, 500));
+            filters.Add(CommonStr.SearcherKeys.ProductPriceRange, new Tuple<double, double>(200, 500));
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
@@ -108,7 +108,7 @@ namespace TestingSystem.UnitTests
             expectedRes.Add(3, new List<Product> {inv_store_3.getProductDetails(4).Item1 });
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.ProductName, "Makeup Loreal Paris");
+            filters.Add(CommonStr.SearcherKeys.ProductName, "Makeup Loreal Paris");
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
@@ -123,7 +123,7 @@ namespace TestingSystem.UnitTests
             expectedRes.Add(3, new List<Product> { inv_store_3.getProductDetails(1).Item1 });
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.ProductKeyWord, "Mx95");
+            filters.Add(CommonStr.SearcherKeys.ProductKeyWord, "Mx95");
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
@@ -147,7 +147,7 @@ namespace TestingSystem.UnitTests
             expectedRes.Add(2, lstProducts2);
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.StoreRank, 2);
+            filters.Add(CommonStr.StoreParams.StoreRank, 2);
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
@@ -173,7 +173,7 @@ namespace TestingSystem.UnitTests
             expectedRes.Add(3, lstProducts3);
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.ProductRank, 3);
+            filters.Add(CommonStr.SearcherKeys.ProductRank, 3);
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
