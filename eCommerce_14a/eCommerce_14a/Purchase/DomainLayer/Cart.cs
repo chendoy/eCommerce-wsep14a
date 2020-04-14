@@ -6,20 +6,27 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a.Purchase.DomainLayer
 {
-    class Cart
+    public class Cart
     {
         private string user;
         private Dictionary<string, PurchaseBasket> baskets;
+        private int price;
 
         public Cart(string user)
         {
             this.user = user;
             this.baskets = new Dictionary<string, PurchaseBasket>();
+            this.price = 0;
         }
 
         public Dictionary<string, PurchaseBasket> GetBaskets()
         {
             return this.baskets;
+        }
+
+        public int GetPrice()
+        {
+            return this.price;
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
@@ -41,7 +48,18 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 baskets.Add(store, basket);
             }
 
-            return basket.AddProduct(product, wantedAmount, exist);
+            Tuple<bool, string> res =  basket.AddProduct(product, wantedAmount, exist);
+            UpdateCartPrice();
+            return res;
+        }
+
+        private void UpdateCartPrice()
+        {
+            int price = 0;
+            foreach (var basket in baskets.Values)
+            {
+                price += basket.GetPrice();
+            }
         }
     }
 }

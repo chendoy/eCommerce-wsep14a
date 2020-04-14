@@ -18,7 +18,7 @@ namespace eCommerce_14a.Purchase.ServiceLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
-        public Tuple<Dictionary<string, PurchaseBasket>, string> GetCartDetails(string user)
+        public Tuple<Cart, string> GetCartDetails(string user)
         {
             return purchaseManagement.GetCartDetails(user);
         }

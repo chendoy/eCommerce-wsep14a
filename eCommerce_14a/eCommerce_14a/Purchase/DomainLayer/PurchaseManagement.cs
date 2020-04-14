@@ -8,7 +8,9 @@ namespace eCommerce_14a.Purchase.DomainLayer
 {
     public class PurchaseManagement
     {
+        // Holding the carts and purchases by user
         private Dictionary<string, Cart> carts;
+        private Dictionary<string, Purchase> purchasesHistory;
 
         public PurchaseManagement()
         {
@@ -57,19 +59,33 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return cart.AddProduct(store, product, wantedAmount, exist);
         }
 
-        public Tuple<Dictionary<string, PurchaseBasket>, string> GetCartDetails(string user)
+        public Tuple<Cart, string> GetCartDetails(string user)
         {
             if (!External.CheckValidUser(user))
             {
-                return new Tuple<Dictionary<string, PurchaseBasket>, string>(null, "Not a valid user");
+                return new Tuple<Cart, string>(null, "Not a valid user");
             }
             if (!carts.TryGetValue(user, out Cart cart))
             {
-                return new Tuple<Dictionary<string, PurchaseBasket>, string>(null, "No cart found for this user");
+                return new Tuple<Cart, string>(null, "No cart found for this user");
             }
 
-            return new Tuple<Dictionary<string, PurchaseBasket>, string>(cart.GetBaskets(), "");
+            return new Tuple<Cart, string>(cart, "");
         }
 
+
+        public Tuple<bool, string> PerformPurchase(string user)
+        {
+            //if (!External.CheckValidUser(user))
+            //{
+            //    return new Tuple<bool, string>(false, "Not a valid user");
+            //}
+
+            //if (!carts.TryGetValue(user, out Cart userCart))
+            //{
+            //    return new Tuple<bool, string>(false, "No cart found for this user");
+            //}
+            throw new NotImplementedException();
+        }
     }
 }
