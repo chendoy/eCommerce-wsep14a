@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="AppoitmentManager.cs" />
     <Compile Include="Appoitment_Service.cs" />
+    <Compile Include="CommonStr.cs" />
     <Compile Include="DeliveryHandler.cs" />
     <Compile Include="DiscountPolicy.cs" />
     <Compile Include="eSystem.cs" />

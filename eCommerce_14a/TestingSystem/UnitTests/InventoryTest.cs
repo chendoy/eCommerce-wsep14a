@@ -19,8 +19,6 @@ namespace TestingSystem.UnitTests
         }
 
        
-
-
         /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_valid()
@@ -82,66 +80,58 @@ namespace TestingSystem.UnitTests
             return Inventory.isValidInventory(inv: inv_dict);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
         public void TestAddProduct_aboveZeroAmount()
         {
-            Product p = new Product(3, details:"");
-            bool isAdded = AddProductDriver(validInventory, p, 10).Item1;
+            bool isAdded = AddProductDriver(validInventory, 3, 10).Item1;
             Assert.IsTrue(isAdded);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
         public void TestAddProduct_zeroAmount()
         {
-            Product p = new Product(3, details:"");
-            bool isAdded = AddProductDriver(validInventory, p, 0).Item1;
+            bool isAdded = AddProductDriver(validInventory, 3, 0).Item1;
             Assert.IsTrue(isAdded);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
         public void TestAddProduct_inValidAmount()
         {
-
-            Product p = new Product(3, details:"");
-            bool isAdded = AddProductDriver(validInventory, p, -10).Item1;
+            bool isAdded = AddProductDriver(validInventory, 3, -10).Item1;
             Assert.IsFalse(isAdded);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
         public void TestAddProduct_nonExistingProduct()
         {
-            Product p = new Product(7, details:"");
-            bool isAdded = AddProductDriver(validInventory, p, 5).Item1;
+            bool isAdded = AddProductDriver(validInventory, 7, 5).Item1;
             Assert.IsTrue(isAdded);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.addProductAmount(int, int)>
         [TestMethod]
-        public void TestAddProduct_nullProduct()
+        public void TestAddProduct_NonExistingProduct()
         {
-            Product p = new Product(3, details:"");
-            bool isAdded = AddProductDriver(validInventory, null, 10).Item1;
+            bool isAdded = AddProductDriver(validInventory, -1, 10).Item1;
             Assert.IsFalse(isAdded);
         }
 
 
-        private Tuple<bool,string> AddProductDriver(Inventory inv, Product p, int amount)
+        private Tuple<bool,string> AddProductDriver(Inventory inv, int productId, int amount)
         {
-            return inv.addProductAmount(p,amount);
+            return inv.addProductAmount(productId, amount);
         }
 
 
-        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(int, int)>
         [TestMethod]
         public void TestDecraseProduct_NegativeAmount()
         {
-
-            Product p = new Product(3, details:"");
-            bool isDecrased = AddProductDriver(validInventory, p, -10).Item1;
+            bool isDecrased = AddProductDriver(validInventory, 3, -10).Item1;
             Assert.IsFalse(isDecrased);
         }
 
@@ -149,17 +139,15 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestDecraseProduct_zeroAmount()
         {
-            Product p = new Product(3, details:"");
-            bool isDecrased = AddProductDriver(validInventory, p, 0).Item1;
+            bool isDecrased = AddProductDriver(validInventory, 3, 0).Item1;
             Assert.IsTrue(isDecrased);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
+        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(int, int)>
         [TestMethod]
         public void TestDecraseProduct_postiveAmountValid()
-        {
-            Product p = new Product(3, details:"");
-            bool isDecrased = AddProductDriver(validInventory, p, 10).Item1;
+        { 
+            bool isDecrased = AddProductDriver(validInventory, 3, 10).Item1;
             Assert.IsTrue(isDecrased);
         }
 
@@ -167,63 +155,17 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestDecraseProduct_postiveAmountInValid()
         {
-
-            Product p = new Product(4, details:"");
-            bool isDecrased = decraseProductDriver(validInventory, p, 1).Item1;
+            bool isDecrased = decraseProductDriver(validInventory, 4, 1).Item1;
             Assert.IsFalse(isDecrased);
         }
 
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
-        [TestMethod]
-        public void TestDecraseProduct_nullProduct()
+        private Tuple<bool, string> decraseProductDriver(Inventory inv, int productId, int amount)
         {
-            
-            bool isDecrased = decraseProductDriver(validInventory, null, 1).Item1;
-            Assert.IsFalse(isDecrased);
+            return inv.DecraseProductAmount(productId, amount);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
-        private Tuple<bool, string> decraseProductDriver(Inventory inv, Product p, int amount)
-        {
-            return inv.DecraseProductAmount(p, amount);
-        }
-
-        /// <test cref ="eCommerce_14a.Inventory.UpdateProductDetails(int, string)>
-        [TestMethod]
-        public void TestUpdateProductDetails_valid()
-        {
-            
-            bool isUpdated = updateProductDetailsDriver(validInventory, 1," hello").Item1;
-            Assert.IsTrue(isUpdated);
-        }
-
-        /// <test cref ="eCommerce_14a.Inventory.UpdateProductDetails(int, string)>
-        [TestMethod]
-        public void TestUpdateProductDetails_NonExitingProduct()
-        {
-            
-            Tuple<bool,string> updatedRes= updateProductDetailsDriver(validInventory, 7, " hello");
-            string ex = updatedRes.Item2;
-            Assert.AreEqual(ex, "this product not exists in the Inventory");
-        }
-
-
-        /// <test cref ="eCommerce_14a.Inventory.UpdateProductDetails(int, string)>
-        [TestMethod]
-        public void TestUpdateProductDetails_nullNewDetails()
-        {
-            
-            Tuple<bool, string> updatedRes = updateProductDetailsDriver(validInventory, 1, null);
-            if (updatedRes.Item1)
-                Assert.Fail();
-            string ex = updatedRes.Item2;
-            Assert.AreEqual(ex, "details cann't b null");
-        }
-
-        private Tuple<bool, string> updateProductDetailsDriver(Inventory inv, int productId, string newDetails)
-        {
-            return inv.UpdateProductDetails(productId, newDetails);
-        }
+     
 
         public static Inventory getInventory(List<Tuple<Product, int>> invProducts)
         {
@@ -241,7 +183,7 @@ namespace TestingSystem.UnitTests
         public static List<Tuple<Product, int>> getValidInventroyProdList()
         {
             List<Tuple<Product, int>> lstProds = new List<Tuple<Product, int>>();
-            lstProds.Add(new Tuple<Product, int>(new Product(1,price:10000, name:"Dell Xps 9560", rank:4, category:"Computers"), 100));
+            lstProds.Add(new Tuple<Product, int>(new Product(1,price:10000, name:"Dell Xps 9560", rank:4, category: "Computers"), 100));
             lstProds.Add(new Tuple<Product, int>(new Product(2, name:"Ninja Blender V3", price:450, rank:2, category:"Kitchen"), 200));
             lstProds.Add(new Tuple<Product, int>(new Product(3, "MegaMix", price:1000, rank:5, category:"Kitchen"), 300));
             lstProds.Add(new Tuple<Product, int>(new Product(4, "Mask Kn95", price:200, rank:3, category:"Health"), 0));

@@ -26,6 +26,11 @@ namespace eCommerce_14a
             return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount);
         }
 
+        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
+        {
+            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory);
+        }
+
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
             return storeManagment.removeProduct(storeId, userName, productId);
@@ -40,9 +45,9 @@ namespace eCommerce_14a
             return storeManagment.decraseProduct(storeId, userName, productId, amount);
         }
 
-        public Tuple<bool, string> createStore(int storeId, string userName, int discountPolicyType, int puarchsePolicyType)
+        public Tuple<int, string> createStore(string userName, int discountPolicyType, int puarchsePolicyType)
         {
-            return storeManagment.createStore(storeId, userName, discountPolicyType, puarchsePolicyType);
+            return storeManagment.createStore(userName, discountPolicyType, puarchsePolicyType);
         }
 
         public Tuple<bool, string> removeStore(string userName, int storeId)
@@ -50,10 +55,16 @@ namespace eCommerce_14a
             return storeManagment.removeStore(userName, storeId);
         }
 
-        public Tuple<bool, string> changeStoreStatus(int storeId, bool status)
+        public Tuple<bool, string> changeStoreStatus(string userName, int storeId, bool status)
         {
-            return storeManagment.changeStoreStatus(storeId, status);
+            return storeManagment.changeStoreStatus(userName, storeId, status);
         }
+
+        public int getProductAmount(int storeId, int productId)
+        {
+            return storeManagment.getProductAmount(storeId: storeId, productId: productId); 
+        }
+
 
 
 

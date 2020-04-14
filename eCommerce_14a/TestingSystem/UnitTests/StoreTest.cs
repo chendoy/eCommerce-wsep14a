@@ -14,12 +14,15 @@ namespace TestingSystem.UnitTests
     {   
 
         private  Store validStore;
+        private List<User> owners;
 
         [ClassInitialize]
         public  void MyClassInitialize(TestContext testContext)
         {
+            User user = new User(1, "shimon", false, false);
 
-           validStore = openStore(1, InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()));
+           validStore = openStore(1,user, InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()));
+            owners = validStore.owners;
         }
 
 
@@ -28,7 +31,7 @@ namespace TestingSystem.UnitTests
         public void TestChangeStoreStatus_notActiveStatus()
         {
             bool isActive = false;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0],  newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -38,7 +41,7 @@ namespace TestingSystem.UnitTests
         public void TestChangeStoreStatus_ActiveValid()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0], newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -48,7 +51,7 @@ namespace TestingSystem.UnitTests
         public void TestChangeStoreStatus_ActiveNoOwner()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0] ,newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsFalse(statusChanged);
         }
@@ -58,8 +61,7 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestAddProductAmount_ValidUser()
         {
-            Product p = new Product(1, "", 100);
-            Tuple<bool, string> addProdRes = addProductDriver(validStore, 1, p, 100);
+            Tuple<bool, string> addProdRes = addProductDriver(validStore,user:owners[0], produtId:1, amount:100);
             Assert.IsTrue(addProdRes.Item1);
        
         }
@@ -68,9 +70,8 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestAddProductAmount_inValidUser()
         {
-
-            Product p = new Product(1, "", 100);
-            Tuple<bool, string> addProdRes = addProductDriver(validStore, 2, p, 100);
+            User u = new User(5,"ff",false,false);
+            Tuple<bool, string> addProdRes = addProductDriver(validStore, user: u, produtId: 1, amount: 100);
             
             if (addProdRes.Item1)
             {
@@ -84,9 +85,7 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestDecraseProductAmount_ValidUser()
         {
-
-            Product p = new Product(1, "", 100);
-            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, 1, p, 100);
+            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: owners[0], productId: 1, amount: 100);
             Assert.IsTrue(decraseProdRes.Item1);
 
         }
@@ -95,9 +94,8 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestDecraseProductAmount_inValidUser()
         {
-            
-            Product p = new Product(1, "", 100);
-            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, 2, p, 100);
+            User u = new User(5, "ff", false, false);
+            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: u, productId: 2, amount: 100);
 
             if (decraseProdRes.Item1)
             {
@@ -107,65 +105,33 @@ namespace TestingSystem.UnitTests
             Assert.AreEqual(ex, "this user isn't a store owner, thus he can't update inventory");
         }
 
-        /// <test cref ="eCommerce_14a.Store.UpdatePrdocutDetails(int, int, string)">
-        [TestMethod]
-        public void TestUpdateProductDetails_Valid()
-        {
 
-            int userId = 1;
-            int productId = 2;
-            Tuple<bool, string> updateProdDetailsRes = UpdateProductDetailsDriver(validStore, userId, productId, "hi");
-            Assert.IsTrue(updateProdDetailsRes.Item1);
+
+        private Tuple<bool, string> addProductDriver(Store store,User user,int produtId, int amount)
+        {
+            return store.addProductAmount(user, produtId, amount);
         }
 
-        /// <test cref ="eCommerce_14a.Store.UpdatePrdocutDetails(int, int, string)">
-        [TestMethod]
-        public void TestUpdateProductDetails_NonExistingUser()
+        private Tuple<bool, string> decraseProductDriver(Store s, User user, int productId, int amount)
         {
-            
-            int userId = 2;
-            int productId = 6;
-            Tuple<bool, string> updatedProdRes = UpdateProductDetailsDriver(validStore, userId, productId, "bibi");
-
-            if (updatedProdRes.Item1)
-            {
-                Assert.Fail();
-            }
-            string ex = updatedProdRes.Item2;
-            Assert.AreEqual(ex, "this user isn't a store owner, thus he can't update inventory products details");
+            return s.decrasePrdouct(user, productId, amount);
+        }
+        private Tuple<bool, string> changeStoreStatusDriver(Store s,User user, bool newStatus)
+        {
+            return s.changeStoreStatus(user, newStatus);
         }
 
-
-
-
-        private Tuple<bool, string> UpdateProductDetailsDriver(Store s,int userId, int productId, string newDetails)
+        public static Store openStore(int storeId, User user, Inventory inv, int rank=3)
         {
-            return s.UpdatePrdocutDetails(userId, productId, newDetails);
-        }
 
-
-        private Tuple<bool, string> addProductDriver(Store s,int userId, Product p, int amount)
-        {
-            return s.addProductAmount(userId, p, amount);
-        }
-
-        private Tuple<bool, string> decraseProductDriver(Store s, int userId, Product p, int amount)
-        {
-            return s.decrasePrdouct(userId, p, amount);
-        }
-        private Tuple<bool, string> changeStoreStatusDriver(Store s, bool newStatus)
-        {
-            return s.changeStoreStatus(newStatus);
-        }
-
-        public static Store openStore(int userId, Inventory inv)
-        {
             Dictionary<string, object> storeParams = new Dictionary<string, object>();
-            storeParams.Add("Id", userId);
-            storeParams.Add("Inventory", inv);
-            storeParams.Add("DiscountPolicy", new DiscountPolicy());
-            storeParams.Add("PuarchasePolicy", new PuarchsePolicy());
+            storeParams.Add(CommonStr.StoreId, storeId);
+            storeParams.Add(CommonStr.StoreOwner, user);
+            storeParams.Add(CommonStr.StoreRank, rank);
+            storeParams.Add(CommonStr.StoreDiscountPolicy, new DiscountPolicy(1));
+            storeParams.Add(CommonStr.StorePuarchsePolicy, new PuarchsePolicy(1));
             Store s = new Store(storeParams);
+            s.Inventory = inv;
             return s;
         }
     }

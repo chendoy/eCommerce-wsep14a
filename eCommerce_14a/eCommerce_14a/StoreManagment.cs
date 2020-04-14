@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace eCommerce_14a
 {
@@ -29,13 +30,10 @@ namespace eCommerce_14a
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
                 return new Tuple<bool, string>(false, notExistOrActiveMessage);
-        
-            Tuple<bool, string> storeExistRes = storeExist(storeId);
-            bool isExist = storeExistRes.Item1;
-            if (!isExist)
-            {
-                return storeExistRes;
-            }
+
+            if (!stores.ContainsKey(storeId))
+                return new Tuple<bool, string>(false, storeNotExistMessage);
+
             return stores[storeId].addProductAmount(user:user, productId: productId, amount: amount);
         }
 
@@ -90,17 +88,16 @@ namespace eCommerce_14a
         }
 
         //should open store and add it to the current list
-        public Tuple<bool, string> createStore(int storeId, string userName, int discountType, int puarchseType)
+        public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+                return new Tuple<int, string>(-1, notExistOrActiveMessage);
 
-            if (stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeAlreadyExistMessage);
+            int newStoreId = stores.Keys.Max() + 1;
 
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
-            storeParam.Add("Id", storeId);
+            storeParam.Add("Id", newStoreId);
             storeParam.Add("Owner", user);
             storeParam.Add("DiscountPolicy", new DiscountPolicy(discountType));
             storeParam.Add("PuarchasePolicy", new PuarchsePolicy(puarchseType));
@@ -108,11 +105,11 @@ namespace eCommerce_14a
 
             Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store);
             if (!ownershipAdded.Item1)
-                return ownershipAdded;
+                return new Tuple<int, string>(-1, ownershipAdded.Item2);
 
-            stores.Add(storeId, store);
+            stores.Add(newStoreId, store);
 
-            return new Tuple<bool, string>(true, "");
+            return new Tuple<int, string>(newStoreId, "");
         }
 
         //talk with sundy on impl
@@ -141,17 +138,37 @@ namespace eCommerce_14a
         }
 
 
-        public Tuple<bool, string> changeStoreStatus(int storeId, bool status)
+        public Tuple<bool, string> changeStoreStatus(string userName, int storeId, bool status)
         {
-            Tuple<bool, string> storeExistRes = storeExist(storeId);
-            bool isExist = storeExistRes.Item1;
-            if (!isExist)
-            {
-                return storeExistRes;
-            }
-            return stores[storeId].changeStoreStatus(status);
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+
+            if (!stores.ContainsKey(storeId))
+                return new Tuple<bool, string>(false, storeNotExistMessage);
+
+            return stores[storeId].changeStoreStatus(user, status);
 
         }
+        
+        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
+        {
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+
+            if (!stores.ContainsKey(storeId))
+                return new Tuple<bool, string>(false, storeNotExistMessage);
+
+            Dictionary<string, object> productParams = new Dictionary<string, object>();
+            productParams.Add("Id", productId);
+            productParams.Add("Details", pDetails);
+            productParams.Add("Price", pPrice);
+            productParams.Add("Name", pName);
+            productParams.Add("Category", pCategory);
+            return stores[storeId].UpdateProduct(user, productParams);
+        }
+    
 
 
         public Dictionary<int, Store> getActiveSotres()
@@ -168,29 +185,67 @@ namespace eCommerce_14a
             return activeStores;
         }
 
-        private Tuple<bool, string> storeExist(int store_id)
+
+        // return product amount, if there is exception the function returns -1
+        public int getProductAmount(int storeId, int productId)
         {
-            if (stores.ContainsKey(store_id))
-            {
-                return new Tuple<bool, string>(false, storeNotExistMessage);
-            }
+            Tuple<Product, int> details = getProductDetails(storeId, productId);
+            if (details != null)
+                return details.Item2;
             else
-            {
-                return new Tuple<bool, string>(true, "");
-            }
+                return -1;
         }
 
-        private Tuple<bool, string> storeNotExist(int store_id)
+        //return Product object, on exception function will return null
+        public Product getProduct(int storeId, int productId)
         {
-            if (stores.ContainsKey(store_id))
-            {
-                return new Tuple<bool, string>(false, storeAlreadyExistMessage);
-            }
+            Tuple<Product, int> details = getProductDetails(storeId, productId);
+            if (details != null)
+                return details.Item1;
             else
-            {
-                return new Tuple<bool, string>(true, "");
-            }
+                return null;
         }
+         
+
+        //return product and it's amount, on exception the function will return null
+        private Tuple<Product, int> getProductDetails(int storeId, int productId)
+        {
+            if (!stores.ContainsKey(storeId))
+                return null;
+            else
+                return stores[storeId].getProductDetails(productId);
+        }
+
+
+
+        public  bool CheckValidProduct(int storeId, int productId)
+        {
+            if (!stores.ContainsKey(storeId))
+                return false;
+
+           return  stores[storeId].productExist(productId);
+        }
+
+        // Gets Dictionary of Product ID and Amount
+        public  Tuple<bool, string> CheckValidBasketForStore(int storeId, Dictionary<int, int> products)
+        {
+            if (!stores.ContainsKey(storeId))
+                return new Tuple<bool, string>(false, storeNotExistMessage);
+
+            return stores[storeId].checkIsValidBasket(products);
+        }
+
+        // Gets Dictionary of Product ID and Amount
+        public double GetBasketPrice(int storeId, Dictionary<int, int> products)
+        {
+            if (!stores.ContainsKey(storeId))
+                return -1;
+
+            return stores[storeId].getBucketPrice(products);
+        }
+ 
+
+      
 
     }
 }
