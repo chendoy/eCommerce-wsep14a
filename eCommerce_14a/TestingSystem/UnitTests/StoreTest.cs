@@ -12,7 +12,6 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class StoreTest
     {   
-        /*
         private  Store validStore;
         private List<User> owners;
 
@@ -134,6 +133,6 @@ namespace TestingSystem.UnitTests
             s.Inventory = inv;
             return s;
         }
-        */
+        
     }
 }

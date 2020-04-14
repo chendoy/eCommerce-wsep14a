@@ -231,6 +231,7 @@ namespace eCommerce_14a
            return  stores[storeId].productExist(productId);
         }
 
+
         // Gets Dictionary of Product ID and Amount
         public  Tuple<bool, string> CheckValidBasketForStore(int storeId, Dictionary<int, int> products)
         {
@@ -247,21 +248,11 @@ namespace eCommerce_14a
                 return -1;
 
             return stores[storeId].getBucketPrice(products);
-        private Tuple<bool, string> storeNotExist(int store_id)
-        {
-            if (stores.ContainsKey(store_id))
-            {
-                return new Tuple<bool, string>(false, storeAlreadyExistMessage);
-            }
-            else
-            {
-                return new Tuple<bool, string>(true, "");
-            }
         }
+
         public void cleanup()
         {
             this.stores = new Dictionary<int, Store>();
         }
-
     }
 }

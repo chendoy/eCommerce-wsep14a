@@ -33,7 +33,7 @@ namespace TestingSystem.UnitTests
             Assert.IsNotNull(UM.GetAtiveUser("Appointed"));
             Assert.IsNotNull(UM.GetAtiveUser("Guest3"));
             Assert.IsTrue(UM.GetAtiveUser("Guest3").isguest());
-            SM.createStore(1, "owner", 1, 1);
+            SM.createStore("owner", 1, 1);
             Assert.IsTrue(UM.GetAtiveUser("owner").isStoreOwner(1));
             Assert.IsTrue(SM.getStore(1).IsStoreOwner(UM.GetAtiveUser("owner")));
             Assert.IsNotNull(SM.getStore(1));
@@ -82,7 +82,7 @@ namespace TestingSystem.UnitTests
             UM.Login("Appointed", "Test1");
             UM.Login("", "G", true);
             UM.Register("NotLogged", "Test1");
-            SM.createStore(1, "owner", 1, 1);
+            SM.createStore("owner", 1, 1);
             Assert.IsTrue(UM.GetAtiveUser("owner").isStoreOwner(1));
             Assert.IsTrue(SM.getStore(1).IsStoreOwner(UM.GetAtiveUser("owner")));
             Assert.IsNotNull(SM.getStore(1));
@@ -130,7 +130,7 @@ namespace TestingSystem.UnitTests
             UM.Login("Appointed", "Test1");
             UM.Login("", "G", true);
             UM.Register("NotLogged", "Test1");
-            SM.createStore(1, "owner", 1, 1);
+            SM.createStore("owner", 1, 1);
             Assert.IsTrue(UM.GetAtiveUser("owner").isStoreOwner(1));
             Assert.IsTrue(SM.getStore(1).IsStoreOwner(UM.GetAtiveUser("owner")));
             Assert.IsNotNull(SM.getStore(1));
