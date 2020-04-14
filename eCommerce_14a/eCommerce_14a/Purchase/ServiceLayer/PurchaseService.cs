@@ -12,7 +12,7 @@ namespace eCommerce_14a.Purchase.ServiceLayer
         private PurchaseManagement purchaseManagement = new PurchaseManagement();
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, string> AddProductToShoppingCart(string user, string store, string product, int amount)
+        public Tuple<bool, string> AddProductToShoppingCart(string user, int store, int product, int amount)
         {
             return purchaseManagement.AddProductToShoppingCart(user, store, product, amount, false);
         }
@@ -24,13 +24,13 @@ namespace eCommerce_14a.Purchase.ServiceLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
-        public Tuple<bool, string> ChangeProductAmoountInShoppingCart(string user, string store, string product, int amount)
+        public Tuple<bool, string> ChangeProductAmoountInShoppingCart(string user, int store, int product, int amount)
         {
             return purchaseManagement.AddProductToShoppingCart(user, store, product, amount, true);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
-        public Tuple<bool, string> RemoveProductFromShoppingCart(string user, string store, string product)
+        public Tuple<bool, string> RemoveProductFromShoppingCart(string user, int store, int product)
         {
             return purchaseManagement.AddProductToShoppingCart(user, store, product, 0, true);
         }

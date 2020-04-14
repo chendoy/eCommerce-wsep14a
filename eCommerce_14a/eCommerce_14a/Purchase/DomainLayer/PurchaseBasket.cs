@@ -9,15 +9,15 @@ namespace eCommerce_14a.Purchase.DomainLayer
     public class PurchaseBasket
     {
         private string user;
-        private string store;
-        private Dictionary<string, int> products;
+        private Store store;
+        private Dictionary<int, int> products;
         private int price;
 
-        public PurchaseBasket(string user, string store)
+        public PurchaseBasket(string user, Store store)
         {
             this.user = user;
             this.store = store;
-            this.products = new Dictionary<string, int>();
+            this.products = new Dictionary<int, int>();
             this.price = 0;
         }
 
@@ -27,10 +27,10 @@ namespace eCommerce_14a.Purchase.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, string> AddProduct(string product, int wantedAmount, bool exist)
+        public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
-            Dictionary<string, int> existingProducts = new Dictionary<string, int>(products);
-            if (products.ContainsKey(product))
+            Dictionary<int, int> existingProducts = new Dictionary<int, int>(products);
+            if (products.ContainsKey(productId))
             {
                 if (!exist)
                 {
@@ -39,11 +39,11 @@ namespace eCommerce_14a.Purchase.DomainLayer
 
                 if (wantedAmount == 0)
                 {
-                    products.Remove(product);
+                    products.Remove(productId);
                 }
                 else
                 {
-                    products[product] = wantedAmount;
+                    products[productId] = wantedAmount;
                 }
             }
             else
@@ -53,17 +53,17 @@ namespace eCommerce_14a.Purchase.DomainLayer
                     return new Tuple<bool, string>(false, "The product is not already in the shopping cart");
                 }
 
-                products.Add(product, wantedAmount);
+                products.Add(productId, wantedAmount);
             }
 
-            Tuple<bool, string> isValidBasket = External.CheckValidBasketForStore(store, products);
+            Tuple<bool, string> isValidBasket = store.CheckValidBasket(products);
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
                 return isValidBasket;
             }
 
-            this.price = External.GetBasketPrice(store, products);
+            this.price = store.GetBasketPrice(products);
 
             return new Tuple<bool, string>(true, null);
         }

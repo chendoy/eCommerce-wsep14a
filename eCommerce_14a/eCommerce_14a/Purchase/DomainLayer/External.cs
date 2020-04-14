@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a.Purchase.DomainLayer
 {
-    class External
+    public class External
     {
         // User Component
         // function that would check if this is a valid user and return the User object for further
@@ -15,32 +15,37 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return true;
         }
 
-
+        static Store store = new Store();
         // All this functions can be at Store object that I will get first from CheckValidStore
-
         // Store Component
-        public static bool CheckValidStore(string store)
+        public static Store CheckValidStore(int store)
         {
-            return true;
+            return External.store;
         }
+    }
 
+
+    public class Store
+    {
         // Inventory Component
-        public static int GetAmountOfProduct(string store, string product)
+        public int GetAmountOfProduct(int product)
         {
             return Int32.MaxValue;
         }
 
-        public static bool CheckValidProduct(string store, string product)
+        public bool CheckValidProduct(int product)
         {
             return true;
         }
 
-        public static Tuple<bool, string> CheckValidBasketForStore(string store, Dictionary<string, int> products)
+        // Gets Dictionary of Product ID and Amount
+        public Tuple<bool, string> CheckValidBasket(Dictionary<int, int> products)
         {
             return new Tuple<bool, string>(true, "");
         }
 
-        public static int GetBasketPrice(string store, Dictionary<string, int> products)
+        // Gets Dictionary of Product ID and Amount
+        public int GetBasketPrice(Dictionary<int, int> products)
         {
             return 10000;
         }

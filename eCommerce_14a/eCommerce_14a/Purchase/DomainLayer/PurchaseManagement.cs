@@ -21,14 +21,21 @@ namespace eCommerce_14a.Purchase.DomainLayer
         /// Get the user ,store and product to add to the shopping cart
         /// Additionaly indicate how much items of the product should be in the cart
         /// exist - means this product meant to be already in the cart (in case of change/remove existing product
-        public Tuple<bool, string> AddProductToShoppingCart(string user, string store, string product, int wantedAmount, bool exist)
+        public Tuple<bool, string> AddProductToShoppingCart(string userId, int storeId, int productId, int wantedAmount, bool exist)
         {
-            if (!External.CheckValidUser(user))
+            if (!External.CheckValidUser(userId))
             {
                 return new Tuple<bool, string>(false, "Not a valid user");
             }
 
-            if (!External.CheckValidProduct(store, product))
+            Store store = External.CheckValidStore(storeId);
+
+            if (store == null)
+            {
+                return new Tuple<bool, string>(false, "Not a valid store");
+            }
+
+            if (!store.CheckValidProduct(productId))
             {
                 return new Tuple<bool, string>(false, "Not a valid product");
             }
@@ -43,20 +50,20 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 return new Tuple<bool, string>(false, "Cannot add product to cart with zero amount");
             }
 
-            int amount = External.GetAmountOfProduct(store, product);
+            int amount = store.GetAmountOfProduct(productId);
 
             if (amount < wantedAmount)
             {
                 return new Tuple<bool, string>(false, "There is not enough products in the store");
             }
 
-            if (!this.carts.TryGetValue(user, out Cart cart))
+            if (!this.carts.TryGetValue(userId, out Cart cart))
             {
-                cart = new Cart(user);
-                carts.Add(user, cart);
+                cart = new Cart(userId);
+                carts.Add(userId, cart);
             }
 
-            return cart.AddProduct(store, product, wantedAmount, exist);
+            return cart.AddProduct(store, productId, wantedAmount, exist);
         }
 
         public Tuple<Cart, string> GetCartDetails(string user)

@@ -9,17 +9,17 @@ namespace eCommerce_14a.Purchase.DomainLayer
     public class Cart
     {
         private string user;
-        private Dictionary<string, PurchaseBasket> baskets;
+        private Dictionary<Store, PurchaseBasket> baskets;
         private int price;
 
         public Cart(string user)
         {
             this.user = user;
-            this.baskets = new Dictionary<string, PurchaseBasket>();
+            this.baskets = new Dictionary<Store, PurchaseBasket>();
             this.price = 0;
         }
 
-        public Dictionary<string, PurchaseBasket> GetBaskets()
+        public Dictionary<Store, PurchaseBasket> GetBaskets()
         {
             return this.baskets;
         }
@@ -30,9 +30,9 @@ namespace eCommerce_14a.Purchase.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
-        public Tuple<bool, string> AddProduct(string store, string product, int wantedAmount, bool exist)
+        public Tuple<bool, string> AddProduct(Store store, int productId, int wantedAmount, bool exist)
         {
-            if (!External.CheckValidStore(store))
+            if (store == null)
             {
                 return new Tuple<bool, string>(false, "Invalid store");
             }
@@ -48,7 +48,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 baskets.Add(store, basket);
             }
 
-            Tuple<bool, string> res =  basket.AddProduct(product, wantedAmount, exist);
+            Tuple<bool, string> res =  basket.AddProduct(productId, wantedAmount, exist);
             UpdateCartPrice();
             return res;
         }
