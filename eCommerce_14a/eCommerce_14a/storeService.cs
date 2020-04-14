@@ -54,7 +54,11 @@ namespace eCommerce_14a
         {
             return storeManagment.changeStoreStatus(storeId, status);
         }
-
+        //For Admin Uses
+        public void cleanup()
+        {
+            storeManagment.cleanup();
+        }
 
 
     }

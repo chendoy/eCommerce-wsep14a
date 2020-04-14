@@ -11,6 +11,7 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class SearcherTest
     {
+        /*
         private StoreManagment storeManagment;
         private Searcher searcher;
          
@@ -50,7 +51,7 @@ namespace TestingSystem.UnitTests
         {
             return searcher.SearchProducts(searchFilters);
         }
-
+        */
     }
 
 }

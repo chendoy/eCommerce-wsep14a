@@ -9,17 +9,35 @@ namespace eCommerce_14a
     public class AppoitmentManager
     {
         //All store appointer
-        UserManager UM;
         StoreManagment storeManagment;
-        public AppoitmentManager( StoreManagment storeManagment)
+        UserManager UM;
+        AppoitmentManager()
         {
-            UM = new UserManager();
-            this.storeManagment = storeManagment;
+            UM = UserManager.Instance;
             Console.WriteLine("AppoitmentManager Created\n");
         }
-        public AppoitmentManager getInstance()
+        private static readonly object padlock = new object();  
+        private static AppoitmentManager instance = null;  
+        public static AppoitmentManager Instance  
+        {  
+            get  
+            {  
+                if (instance == null)  
+                {  
+                    lock (padlock)  
+                    {  
+                        if (instance == null)  
+                        {  
+                            instance = new AppoitmentManager();  
+                        }  
+                    }  
+                }  
+                return instance;  
+            }  
+        }
+        public void SetStoreMeneger(StoreManagment s)
         {
-            return this;
+            storeManagment = s;
         }
         //Owner appoints addto to be Store Owner.
         public Tuple<bool, string> AppointStoreOwner(string owner, string addto, int storeId)
@@ -29,7 +47,7 @@ namespace eCommerce_14a
                 return new Tuple<bool, string>(false, "Null Arguments");
             if (owner == "" || addto == "")
                 return new Tuple<bool, string>(false, "Blank Arguemtns\n");
-            User appointer = UM.GetUser(owner);
+            User appointer = UM.GetAtiveUser(owner);
             User appointed = UM.GetUser(addto);
             if (appointer is null || appointed is null)
                 return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
@@ -54,7 +72,7 @@ namespace eCommerce_14a
                 return new Tuple<bool, string>(false, "Null Arguments");
             if (owner == "" || addto == "")
                 return new Tuple<bool, string>(false, "Blank Arguemtns\n");
-            User appointer = UM.GetUser(owner);
+            User appointer = UM.GetAtiveUser(owner);
             User appointed = UM.GetUser(addto);
             if (appointer is null || appointed is null)
                 return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
@@ -78,7 +96,7 @@ namespace eCommerce_14a
                 return new Tuple<bool, string>(false, "Null Arguments");
             if (o == "" || m == "")
                 return new Tuple<bool, string>(false, "Blank Arguemtns\n");
-            User owner = UM.GetUser(o);
+            User owner = UM.GetAtiveUser(o);
             User manager = UM.GetUser(m);
             if (owner is null || manager is null)
                 return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
@@ -102,7 +120,7 @@ namespace eCommerce_14a
                 return new Tuple<bool, string>(false, "Null Arguments");
             if (ownerS == "" || worker == "")
                 return new Tuple<bool, string>(false, "Blank Arguemtns\n");
-            User owner = UM.GetUser(ownerS);
+            User owner = UM.GetAtiveUser(ownerS);
             User manager = UM.GetUser(worker);
             if (owner is null || manager is null)
                 return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");

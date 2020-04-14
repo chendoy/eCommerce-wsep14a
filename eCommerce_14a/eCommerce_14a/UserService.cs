@@ -11,7 +11,7 @@ namespace eCommerce_14a
         UserManager UM;
         public UserService()
         {
-            UM = UM.getManagerInstance();
+            UM = UserManager.Instance;
         }
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-registration-22 </req>
         public bool Registration(string username, string password)
@@ -27,11 +27,11 @@ namespace eCommerce_14a
             Console.WriteLine(ans.Item2);
             return ans.Item1;
         }
-        public bool LoginAsGuest()
+        public string LoginAsGuest()
         {
             Tuple<bool, string> ans = UM.Login("", "", true);
             Console.WriteLine(ans.Item2);
-            return ans.Item1;
+            return ans.Item2;
         }
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer-logout-31</req>
         public bool Logout(string user)
@@ -40,6 +40,10 @@ namespace eCommerce_14a
             Console.WriteLine(ans.Item2);
             return ans.Item1;
         }
-
+        //For Admin Usage
+        public void cleanup()
+        {
+            UM.cleanup();
+        }
     }
 }

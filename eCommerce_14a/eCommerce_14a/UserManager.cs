@@ -8,8 +8,8 @@ using System.Collections;
 
 namespace eCommerce_14a
 {
-    //Add service calss that calls all this functions 
-    // No Logic in the service class and call this function from user manager   
+ 
+
     public class UserManager
     {
         private Dictionary<string, string> Users_And_Hashes;
@@ -17,7 +17,26 @@ namespace eCommerce_14a
         private Dictionary<string, User> Active_users;
         private int Available_ID;
         private Security SB;
-        public UserManager()
+        private static readonly object padlock = new object();  
+        private static UserManager instance = null;  
+        public static UserManager Instance  
+        {  
+            get  
+            {  
+                if (instance == null)  
+                {  
+                    lock (padlock)  
+                    {  
+                        if (instance == null)  
+                        {  
+                            instance = new UserManager();  
+                        }  
+                    }  
+                }  
+                return instance;  
+            }  
+        } 
+        UserManager()
         {
             Console.WriteLine("UserManager Created\n");
             Users_And_Hashes = new Dictionary<string, string>();
@@ -26,11 +45,6 @@ namespace eCommerce_14a
             SB = new Security();
             Available_ID = 1;
         }
-        public UserManager getManagerInstance()
-        {
-            return this;
-        }
-
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)
         {
@@ -89,8 +103,8 @@ namespace eCommerce_14a
         {
             if (isGuest)
             {
-                addGuest();
-                return new Tuple<bool, string>(true, "");
+                string Uname = addGuest();
+                return new Tuple<bool, string>(true, Uname);
             }
             Tuple<bool, string> ans = check_args(username, pass);
             if (!ans.Item1)
@@ -132,7 +146,7 @@ namespace eCommerce_14a
             return new Tuple<bool, string>(true, sname + " Logged out succesuffly\n");
         }
         //Add Guest user to the system and to the relevant lists.
-        private void addGuest()
+        private string addGuest()
         {
             string tName = "Guest" + Available_ID;
             User nUser = new User(Available_ID, tName);
@@ -140,6 +154,7 @@ namespace eCommerce_14a
             nUser.LogIn();
             Active_users.Add(tName, nUser);
             Available_ID++;
+            return tName;
         }
         //Tries to get User from users list
         public User GetUser(string username)
@@ -187,6 +202,16 @@ namespace eCommerce_14a
             throw new NotImplementedException();
             // the function is here ...
             store.RemoveOwner(user);
+        }
+        //For test clean the DB
+        public void cleanup()
+        {
+            Console.WriteLine("UserManager Created\n");
+            this.Users_And_Hashes = new Dictionary<string, string>();
+            this.users = new Dictionary<string, User>();
+            this.Active_users = new Dictionary<string, User>();
+            this.SB = new Security();
+            Available_ID = 1;
         }
 
 

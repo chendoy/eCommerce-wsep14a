@@ -12,7 +12,7 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class StoreTest
     {   
-
+        /*
         private  Store validStore;
 
         [ClassInitialize]
@@ -168,5 +168,6 @@ namespace TestingSystem.UnitTests
             Store s = new Store(storeParams);
             return s;
         }
+        */
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="Store.cs" />
     <Compile Include="storeService.cs" />
     <Compile Include="StoreManagment.cs" />
+    <Compile Include="System_Service.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="UserService.cs" />
