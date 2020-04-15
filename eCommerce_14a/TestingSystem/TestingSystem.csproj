@@ -82,6 +82,7 @@
     <Compile Include="UnitTests\Appoitment_Test.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
     <Compile Include="UnitTests\SearcherTest.cs" />
+    <Compile Include="UnitTests\StoreManagetTest.cs" />
     <Compile Include="UnitTests\StoreTest.cs" />
     <Compile Include="UnitTests\System_init.cs" />
     <Compile Include="UnitTests\User_test.cs" />

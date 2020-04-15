@@ -8,6 +8,11 @@ namespace eCommerce_14a
 {
     public static class CommonStr
     {
+
+        public static class GeneralErrMessage
+        {
+            public static string UnKnownErr = "UnKnown Error Occured";
+        }
         public static class SearcherKeys{
             public static string ProductKeyWord = "SearchByProductKeyWord";
             public static string ProductRank = "searchByProductRank";
@@ -40,6 +45,12 @@ namespace eCommerce_14a
         public static class ProductCategoty
         {
             public static string Consola = "Consols";
+            public static string Kitchen = "Kitchen";
+            public static string Computers = "Computers";
+            public static string Health = "Health";
+            public static string CoffeMachine = "Coffe Machines";
+            public static string Beauty = "Beauty";
+
         }
 
         public static class StoreErrorMessage

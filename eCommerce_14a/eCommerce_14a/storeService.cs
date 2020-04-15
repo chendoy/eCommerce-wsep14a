@@ -42,7 +42,7 @@ namespace eCommerce_14a
 
         public Tuple<bool, string> decraseProduct(int storeId, string userName, int productId, int amount)
         {
-            return storeManagment.decraseProduct(storeId, userName, productId, amount);
+            return storeManagment.decraseProductAmount(storeId, userName, productId, amount);
         }
 
         public Tuple<int, string> createStore(string userName, int discountPolicyType, int puarchsePolicyType)
@@ -60,10 +60,6 @@ namespace eCommerce_14a
             return storeManagment.changeStoreStatus(userName, storeId, status);
         }
 
-        public int getProductAmount(int storeId, int productId)
-        {
-            return storeManagment.getProductAmount(storeId: storeId, productId: productId); 
-        }
         //For Admin Uses
         public void cleanup()
         {

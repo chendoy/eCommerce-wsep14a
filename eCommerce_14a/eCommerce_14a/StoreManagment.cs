@@ -67,7 +67,7 @@ namespace eCommerce_14a
             return stores[storeId].addProductAmount(user: user, productId: productId, amount: amount);
         }
 
-        public Tuple<bool, string> decraseProduct(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
@@ -142,37 +142,6 @@ namespace eCommerce_14a
         }
 
 
-        // return product amount, if there is exception the function returns -1
-        public int getProductAmount(int storeId, int productId)
-        {
-            Tuple<Product, int> details = getProductDetails(storeId, productId);
-            if (details != null)
-                return details.Item2;
-            else
-                return -1;
-        }
-
-        //return Product object, on exception function will return null
-        public Product getProduct(int storeId, int productId)
-        {
-            Tuple<Product, int> details = getProductDetails(storeId, productId);
-            if (details != null)
-                return details.Item1;
-            else
-                return null;
-        }
-         
-
-        //return product and it's amount, on exception the function will return null
-        private Tuple<Product, int> getProductDetails(int storeId, int productId)
-        {
-            if (!stores.ContainsKey(storeId))
-                return null;
-            else
-                return stores[storeId].getProductDetails(productId);
-        }
-
-
 
 
 
@@ -235,6 +204,8 @@ namespace eCommerce_14a
             return new Tuple<bool, string>(true, "");
         }
 
+
+        // impl on next version only!
         private bool isMainOwner(User user, int storeId)
         {
             return stores[storeId].isMainOwner(user);

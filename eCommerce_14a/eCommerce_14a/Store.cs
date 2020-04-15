@@ -12,8 +12,9 @@ namespace eCommerce_14a
         private PuarchsePolicy puarchsePolicy;
         private Inventory inventory;
         private int rank;
+        private bool activeStore;
 
-  
+
         public Store(Dictionary<string, object> store_params)
         {
             this.Id = (int)store_params[CommonStr.StoreParams.StoreId];
@@ -28,7 +29,7 @@ namespace eCommerce_14a
       
             this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
             this.puarchsePolicy = (PuarchsePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
-            this.ActiveStore = true;
+            this.activeStore = true;
 
             if (store_params.ContainsKey(CommonStr.StoreParams.StoreRank))
                 this.rank = (int)store_params[CommonStr.StoreParams.StoreRank];
@@ -187,7 +188,10 @@ namespace eCommerce_14a
             set { puarchsePolicy = value; }
         }
      
-        public bool ActiveStore { get; private set; }
+        public bool ActiveStore {
+            get { return this.activeStore; }
+            set { activeStore = value; } 
+        }
 
         //return product and its amount in the inventory
         public Tuple<Product, int> getProductDetails(int productId)
