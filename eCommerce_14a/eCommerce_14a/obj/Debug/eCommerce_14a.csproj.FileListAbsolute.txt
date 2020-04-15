@@ -19,3 +19,10 @@ C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\eCommerce_14a\o
 C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe.config
 C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe
 C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.pdb
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe.config
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.pdb
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.csprojAssemblyReference.cache
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.exe
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.pdb

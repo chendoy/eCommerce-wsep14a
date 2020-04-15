@@ -40,7 +40,6 @@ namespace TestingSystem.UnitTests
             //Regular Registration
             Assert.IsTrue(u_test.Register("test4", "Test1").Item1);
             //Exsisting user name Registration
-            Assert.IsFalse(u_test.Register("test", "Test1").Item1);
             Assert.IsFalse(u_test.Register("test4", "Test1").Item1);
             //Checks that registration was successfull in the User DB
             Assert.IsTrue(u_test.isUserExist("test4"));
@@ -54,6 +53,10 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void LoginTest()
             {
+            //Pre
+            u_test.cleanup();
+            u_test.RegisterMaster("test", "Test1");
+            u_test.Register("test4", "Test1");
             //setup test and test4 is already registered
             //Tests
             //Regular login
@@ -74,11 +77,13 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void LoginAsGuestTest()
         {
+            //Pre
+            u_test.cleanup();
             //Tests
             Assert.IsTrue(u_test.Login("", "", true).Item1);
-            //Guest to because test4 took id 1.
-            Assert.IsTrue(u_test.GetAtiveUser("Guest2").LoggedStatus());
-            Assert.IsTrue(u_test.GetAtiveUser("Guest2").isguest());
+            //Guest1.
+            Assert.IsTrue(u_test.GetAtiveUser("Guest1").LoggedStatus());
+            Assert.IsTrue(u_test.GetAtiveUser("Guest1").isguest());
 
         }
         [TestMethod]
@@ -88,7 +93,7 @@ namespace TestingSystem.UnitTests
             UserManager.Instance.cleanup();
             u_test.Register("test", "Test1");
             u_test.Login("test", "Test1");
-            u_test.Login("test", "Test1", true);
+            u_test.Login("test", "Test1", true); // Guest2
             //Tests
             //No such user guest1 there is only Guest2.
             Assert.IsFalse(u_test.Logout("Guest1").Item1);
@@ -99,7 +104,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(u_test.Logout("").Item1);
             Assert.IsFalse(u_test.Logout(null).Item1);
             //Regular logout
-            Assert.IsTrue(u_test.Logout("test").Item1);
+            Assert.IsTrue(u_test.Logout("test").Item1); //Guest3 Created
             //CHeck that he is logged out from DB.
             Assert.IsFalse(u_test.GetUser("test").LoggedStatus());
             Assert.IsNull(u_test.GetAtiveUser("test"));
@@ -110,6 +115,8 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(u_test.GetAtiveUser("Guest2").LoggedStatus());
             //Guest3 created after test logout
             Assert.IsTrue(u_test.GetAtiveUser("Guest3").isguest());
+            //Post CLean up.
+            u_test.cleanup();
         }
     }
 }

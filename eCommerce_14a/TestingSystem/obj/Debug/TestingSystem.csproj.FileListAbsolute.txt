@@ -43,3 +43,17 @@ C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\TestingSystem\b
 C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\TestingSystem\bin\Debug\Codentia.Common.Membership.pdb
 C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\TestingSystem\bin\Debug\Codentia.Common.Membership.xml
 C:\Users\ASUS\source\repos\wsep_14a_Store_And_User\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CopyComplete
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csprojAssemblyReference.cache
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.exe
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.pdb
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\TestingSystem.exe
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\TestingSystem.pdb
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\Codentia.Common.Membership.dll
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.pdb
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe.config
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\Codentia.Common.Membership.pdb
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\Codentia.Common.Membership.xml
+C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CopyComplete
