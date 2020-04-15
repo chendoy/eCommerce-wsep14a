@@ -176,6 +176,7 @@ namespace eCommerce_14a
      
         public bool ActiveStore { get; private set; }
 
+        //return product and its amount in the inventory
         public Tuple<Product, int> getProductDetails(int productId)
         {
             return inventory.getProductDetails(productId);
@@ -188,11 +189,14 @@ namespace eCommerce_14a
 
         public double getBucketPrice(Dictionary<int, int> products)
         {
+            //TODO: manage the price also according in the discountPolicy in next version
             return inventory.getBasketPrice(products);
         }
 
         public Tuple<bool, string> checkIsValidBasket(Dictionary<int, int> products)
         {
+
+            //TODO: check if the basket is stands for the puarcshePolicy with puarchsepolicy object! next version
             return inventory.isValidBasket(products);
         }
 

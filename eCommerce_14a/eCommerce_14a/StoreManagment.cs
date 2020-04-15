@@ -174,32 +174,6 @@ namespace eCommerce_14a
 
 
 
-        public  bool CheckValidProduct(int storeId, int productId)
-        {
-            if (!stores.ContainsKey(storeId))
-                return false;
-
-           return  stores[storeId].productExist(productId);
-        }
-
-
-        // Gets Dictionary of Product ID and Amount
-        public  Tuple<bool, string> CheckValidBasketForStore(int storeId, Dictionary<int, int> products)
-        {
-            if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-
-            return stores[storeId].checkIsValidBasket(products);
-        }
-
-        // Gets Dictionary of Product ID and Amount
-        public double GetBasketPrice(int storeId, Dictionary<int, int> products)
-        {
-            if (!stores.ContainsKey(storeId))
-                return -1;
-
-            return stores[storeId].getBucketPrice(products);
-        }
 
 
         //impl on next version only!

@@ -53,7 +53,7 @@ namespace TestingSystem.UnitTests
         }
         [TestMethod]
         public void LoginTest()
-        {
+            {
             //setup test and test4 is already registered
             //Tests
             //Regular login
