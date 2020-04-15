@@ -52,6 +52,7 @@ namespace eCommerce_14a
 
             return inventory.DecraseProductAmount(productId, amount);
         }
+
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
         {
             if (!owners.Contains(user))
@@ -111,7 +112,7 @@ namespace eCommerce_14a
 
         public bool AddStoreOwner(User user)
         {
-            if (user.isguest() || owners.Contains(user))
+            if (owners.Contains(user))
                 return false;
             owners.Add(user);
             return true;
@@ -119,7 +120,7 @@ namespace eCommerce_14a
 
         public bool AddStoreManager(User user)
         {
-            if (user.isguest() || managers.Contains(user))
+            if (managers.Contains(user))
                 return false;
             managers.Add(user);
             return true;
@@ -172,6 +173,18 @@ namespace eCommerce_14a
         {
             get { return inventory; }
             set { inventory = value; }
+        }
+
+        public DiscountPolicy DiscountPolicy
+        {
+            get { return discountPolicy; }
+            set { discountPolicy = value; }
+        }
+
+        public PuarchsePolicy PuarchsePolicy
+        {
+            get { return puarchsePolicy; }
+            set { puarchsePolicy = value; }
         }
      
         public bool ActiveStore { get; private set; }

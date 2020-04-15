@@ -37,6 +37,11 @@ namespace eCommerce_14a
             public static string ProductCategory = "ProductCategory";
         }
 
+        public static class ProductCategoty
+        {
+            public static string Consola = "Consols";
+        }
+
         public static class StoreErrorMessage
         {
             public static string noStoreOwnersAtAllErrMsg = "The Action can't be performed because there is no store owner";

@@ -74,7 +74,7 @@ namespace eCommerce_14a
             if (!invProducts.ContainsKey(productId))
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
 
-            double price = (double)productParams["Price"];
+            double price = (double)productParams[CommonStr.ProductParams.ProductPrice];
             if (price < 0)
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
 
