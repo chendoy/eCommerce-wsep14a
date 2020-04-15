@@ -129,7 +129,7 @@ namespace TestingSystem.UnitTests
 
             Dictionary<string, object> storeParams = new Dictionary<string, object>();
             storeParams.Add(CommonStr.StoreParams.StoreId, storeId);
-            storeParams.Add(CommonStr.StoreParams.StoreOwner, user);
+            storeParams.Add(CommonStr.StoreParams.mainOwner, user);
             storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
             storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(1));
             storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(1));

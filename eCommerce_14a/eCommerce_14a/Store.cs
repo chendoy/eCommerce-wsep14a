@@ -18,15 +18,14 @@ namespace eCommerce_14a
         {
             this.Id = (int)store_params[CommonStr.StoreParams.StoreId];
             this.owners = new List<User>();
-            User storeOwner = (User)store_params[CommonStr.StoreParams.StoreOwner];
+            User storeOwner = (User)store_params[CommonStr.StoreParams.mainOwner];
             this.owners.Add(storeOwner);
             this.managers = new List<User>();
 
+            this.inventory = new Inventory();
             if (store_params.ContainsKey(CommonStr.StoreParams.StoreInventory))
                 this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
-            else
-                this.inventory = new Inventory();
-
+      
             this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
             this.puarchsePolicy = (PuarchsePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
             this.ActiveStore = true;
@@ -98,14 +97,14 @@ namespace eCommerce_14a
         public Dictionary<string, object> getSotoreInfo()
         {
             Dictionary<string, object> store_info = new Dictionary<string, object>();
-            store_info.Add("id", Id);
-            store_info.Add("owners", owners);
-            store_info.Add("managers", managers);
-            store_info.Add("inventory", inventory);
-            store_info.Add("discount_policy", discountPolicy);
-            store_info.Add("puarchse_policy", puarchsePolicy);
-            store_info.Add("is_active", ActiveStore);
-            store_info.Add("rank", Rank);
+            store_info.Add(CommonStr.StoreParams.StoreId, Id);
+            if (owners.Count > 0)
+                store_info.Add(CommonStr.StoreParams.mainOwner,owners[0]);
+            store_info.Add(CommonStr.StoreParams.StoreInventory, inventory);
+            store_info.Add(CommonStr.StoreParams.StoreDiscountPolicy, discountPolicy);
+            store_info.Add(CommonStr.StoreParams.StorePuarchsePolicy, puarchsePolicy);
+            store_info.Add(CommonStr.StoreParams.IsActiveStore, ActiveStore);
+            store_info.Add(CommonStr.StoreParams.StoreRank, Rank);
             return store_info;
         }
 
@@ -169,9 +168,11 @@ namespace eCommerce_14a
 
         public int Id { get; }
 
-
-        public Inventory Inventory { get; set; }
-
+        public Inventory Inventory
+        {
+            get { return inventory; }
+            set { inventory = value; }
+        }
      
         public bool ActiveStore { get; private set; }
 
@@ -193,6 +194,14 @@ namespace eCommerce_14a
         public Tuple<bool, string> checkIsValidBasket(Dictionary<int, int> products)
         {
             return inventory.isValidBasket(products);
+        }
+
+        public bool isMainOwner(User user)
+        {
+            if (owners[0] == user)
+                return true;
+            else
+                return false;
         }
     }
 }

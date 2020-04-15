@@ -185,11 +185,6 @@ namespace eCommerce_14a
             users.Add(u.getUserName(), u);
         }
 
-        public bool isMainOwner(User user, int storeId)
-        {
-            //function should check if it is the user who created this store (the main owner)
-            throw new NotImplementedException();
-        }
 
         public Tuple<bool, string> removeAllFromStore(int storeId)
         {

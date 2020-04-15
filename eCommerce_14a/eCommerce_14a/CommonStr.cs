@@ -14,17 +14,27 @@ namespace eCommerce_14a
             public static string ProductPriceRange = "searchByProductPriceRange";
             public static string ProductName = "SearchByProductName";
             public static string ProductCategory = "searchByCategory";
-          }
+            public static string StoreRank = "SearchByStoreRank";
+        }
 
         public static class StoreParams
         {
-            public static string StoreRank = "SearchByStoreRank";
             public static string StoreId = "StoreId";
-            public static string StoreOwner = "StoreOwner";
+            public static string mainOwner = "StoreOwner";
             public static string StoreDiscountPolicy = "StoreDiscountPolicy";
             public static string StorePuarchsePolicy = "StorePuarchsePolicy";
             public static string StoreInventory = "StoreInventory";
+            public static string StoreRank = "StoreRank";
+            public static string IsActiveStore = "isActive";
+        }
 
+        public static class ProductParams
+        {
+            public static string ProductId = "ProductId";
+            public static string ProductPrice = "ProductPrice";
+            public static string ProductDetails = "ProductDetails";
+            public static string ProductName = "ProductName";
+            public static string ProductCategory = "ProductCategory";
         }
 
         public static class StoreErrorMessage
@@ -40,10 +50,19 @@ namespace eCommerce_14a
             public static string ProductAlreadyExistErrMsg = "Product already exists!";
             public static string ProductNotExistErrMsg = "Product not exist!";
             public static string productAmountErrMsg = "This Action leads to invalid Product Amount";
-            public static string ProductShortageErrMsg = "There arn't enough product in the Iventorty to perform this action"; 
-
-
+            public static string ProductShortageErrMsg = "There arn't enough product in the Iventorty to perform this action";
+            public static string NullInventroyErrMsg = "Inventory Cann't be Null";
+            public static string NegativeProductAmountErrMsg = "Product amount cann't be negative in the inventory";
+            public static string UnmatchedProductAnKeyErrMsg = " Proudct Id dos'nt matches his key";
         }
+
+        public static class StoreMangmentErrorMessage
+        {
+            public static string nonExistOrActiveUserErrMessage = "This user doesn't exist or no active";
+            public static string nonExistingStoreErrMessage = "Non existing Store with this Id";
+            public static string notMainOwnerErrMessage = "This Action can't be performed because this user isn't a Main Owner";
+        }
+
 
     }
 }

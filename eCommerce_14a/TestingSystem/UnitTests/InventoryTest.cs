@@ -20,7 +20,7 @@ namespace TestingSystem.UnitTests
         }
 
        
-        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
+        /// <func cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_valid()
         {
@@ -31,7 +31,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(isValidAns.Item1);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
+        /// <func cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_valid_empty()
         {
@@ -40,7 +40,7 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(isValidAns.Item1);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
+        /// <func cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})">
         [TestMethod]
         public void TestValidInventory_null()
         {
@@ -48,7 +48,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(isValidAns.Item1);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})"
+        /// <func cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})"
         [TestMethod]
         public void TestValidInventory_negativeAmount()
         {
@@ -61,7 +61,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(isValidAns.Item1);
         }
 
-        /// <test cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})"
+        /// <func cref ="eCommerce_14a.Inventory.isValidInventory(Dictionary{int, Tuple{Product, int}})"
         [TestMethod]
         public void TestValidInventory_notMatchingKeyAndProductId()
         {
@@ -69,7 +69,7 @@ namespace TestingSystem.UnitTests
             inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:"", 100), 100));
             inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details:"", 100), 100));
             inv.Add(3, new Tuple<Product, int>(new Product(product_id: 3, details:""), 100));
-            inv.Add(4, new Tuple<Product, int>(new Product(product_id: 6, details:""), -1));
+            inv.Add(4, new Tuple<Product, int>(new Product(product_id: 6, details:""), 100));
             Tuple<bool, string> isValidAns = ValidInventoryDriver(inv);
             Assert.IsFalse(isValidAns.Item1);
         }

@@ -7,11 +7,9 @@ namespace eCommerce_14a
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;
+        private int nextStoreId = 0;
         private UserManager userManager;
-        string notExistOrActiveMessage = "user doesn't exist or not active";
-        string storeAlreadyExistMessage = "store with this id already exist!";
-        string storeNotExistMessage = "store Not Exists";
-        string notMainOwnerErrMessage = "action cann't be performed because this user is not main owner";
+
         public StoreManagment(Dictionary<int, Store> stores)
         {
             userManager = UserManager.Instance;
@@ -23,23 +21,23 @@ namespace eCommerce_14a
             this.userManager = UserManager.Instance;
         }
 
-        public Dictionary<string, object> getStoreInfo(int storeId)
-        {
-            if (!stores.ContainsKey(storeId))
-                return new Dictionary<string, object>();
-            return stores[storeId].getSotoreInfo();
-        }
+      
 
-        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount)
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
-
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
 
-            return stores[storeId].addProductAmount(user:user, productId: productId, amount: amount);
+            Dictionary<string, object> productParams = new Dictionary<string, object>();
+            productParams.Add(CommonStr.ProductParams.ProductId, pId);
+            productParams.Add(CommonStr.ProductParams.ProductDetails, pDetails);
+            productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
+            productParams.Add(CommonStr.ProductParams.ProductName, pName);
+            productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
+            return stores[storeId].appendProduct(user, productParams, amount);
         }
 
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
@@ -47,110 +45,57 @@ namespace eCommerce_14a
 
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
 
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
 
             return stores[storeId].removeProduct(user, productId);
         }
 
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount)
+
+
+        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
 
-            Dictionary<string, object> productParams = new Dictionary<string, object>();
-            productParams.Add("Id", pId);
-            productParams.Add("Details", pDetails);
-            productParams.Add("Price", pPrice);
-            productParams.Add("Name", pName);
-            productParams.Add("Category", pCategory);
-            return stores[storeId].appendProduct(user, productParams, amount);
-        }
-
-        public Store getStore(int storeId)
-        {
-            Store store;
-            if (!stores.TryGetValue(storeId, out store))
-                return null;
-            return store;
+            return stores[storeId].addProductAmount(user: user, productId: productId, amount: amount);
         }
 
         public Tuple<bool, string> decraseProduct(int storeId, string userName, int productId, int amount)
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
 
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             
             return stores[storeId].decrasePrdouct(user:user , productId: productId, amount: amount);
         }
 
-        //should open store and add it to the current list
-        public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
+        public Dictionary<string, object> getStoreInfo(int storeId)
         {
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-                return new Tuple<int, string>(-1, notExistOrActiveMessage);
-
-            int newStoreId = stores.Keys.Max() + 1;
-
-            Dictionary<string, object> storeParam = new Dictionary<string, object>();
-            storeParam.Add("Id", newStoreId);
-            storeParam.Add("Owner", user);
-            storeParam.Add("DiscountPolicy", new DiscountPolicy(discountType));
-            storeParam.Add("PuarchasePolicy", new PuarchsePolicy(puarchseType));
-            Store store = new Store(storeParam);
-
-            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store);
-            if (!ownershipAdded.Item1)
-                return new Tuple<int, string>(-1, ownershipAdded.Item2);
-
-            stores.Add(newStoreId, store);
-
-            return new Tuple<int, string>(newStoreId, "");
-        }
-
-        //talk with sundy on impl
-        public Tuple<bool, string> removeStore(string userName, int storeId)
-        {
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
-
-            if (!userManager.isMainOwner(user, storeId))
-                return new Tuple<bool, string>(false, notMainOwnerErrMessage);
-
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
-
-            if (!user.isStoreOwner(storeId))
-                return new Tuple<bool, string>(false, "user" + userName + " not store owner of " + storeId.ToString());
-
-            Tuple<bool, string> ownerShipedRemoved = userManager.removeAllFromStore(storeId);
-            if (!ownerShipedRemoved.Item1)
-                return ownerShipedRemoved;
-
-            stores.Remove(storeId);
-
-            return new Tuple<bool, string>(true, "");
+                return new Dictionary<string, object>();
+            return stores[storeId].getSotoreInfo();
         }
 
 
+     
         public Tuple<bool, string> changeStoreStatus(string userName, int storeId, bool status)
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
 
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
 
             return stores[storeId].changeStoreStatus(user, status);
 
@@ -160,21 +105,27 @@ namespace eCommerce_14a
         {
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
-                return new Tuple<bool, string>(false, notExistOrActiveMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
 
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
 
             Dictionary<string, object> productParams = new Dictionary<string, object>();
-            productParams.Add("Id", productId);
-            productParams.Add("Details", pDetails);
-            productParams.Add("Price", pPrice);
-            productParams.Add("Name", pName);
-            productParams.Add("Category", pCategory);
+            productParams.Add(CommonStr.ProductParams.ProductId, productId);
+            productParams.Add(CommonStr.ProductParams.ProductDetails, pDetails);
+            productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
+            productParams.Add(CommonStr.ProductParams.ProductName, pName);
+            productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
             return stores[storeId].UpdateProduct(user, productParams);
         }
-    
 
+
+        public Store getStore(int storeId)
+        {
+            if (stores.ContainsKey(storeId))
+                return stores[storeId];
+            return null;
+        }
 
         public Dictionary<int, Store> getActiveSotres()
         {
@@ -236,7 +187,7 @@ namespace eCommerce_14a
         public  Tuple<bool, string> CheckValidBasketForStore(int storeId, Dictionary<int, int> products)
         {
             if (!stores.ContainsKey(storeId))
-                return new Tuple<bool, string>(false, storeNotExistMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
 
             return stores[storeId].checkIsValidBasket(products);
         }
@@ -249,6 +200,74 @@ namespace eCommerce_14a
 
             return stores[storeId].getBucketPrice(products);
         }
+
+
+        //impl on next version only!
+        public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
+        {
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<int, string>(-1, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+
+            nextStoreId += 1;
+
+            Dictionary<string, object> storeParam = new Dictionary<string, object>();
+            storeParam.Add(CommonStr.StoreParams.StoreId, nextStoreId);
+            storeParam.Add(CommonStr.StoreParams.mainOwner, user);
+            storeParam.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(discountType));
+            storeParam.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(puarchseType));
+            Store store = new Store(storeParam);
+
+            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store);
+
+            if (!ownershipAdded.Item1)
+            {
+                nextStoreId -= 1;
+                return new Tuple<int, string>(-1, ownershipAdded.Item2);
+            }
+            else
+            {
+                stores.Add(nextStoreId, store);
+                return new Tuple<int, string>(nextStoreId, "");
+            }
+
+        }
+
+
+        // impl on next version only!
+        public Tuple<bool, string> removeStore(string userName, int storeId)
+        {
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+
+            if (!stores.ContainsKey(storeId))
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+
+
+            if (!isMainOwner(user, storeId))
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.notMainOwnerErrMessage);
+
+
+            if (!user.isStoreOwner(storeId))
+                return new Tuple<bool, string>(false, "user" + userName + " not store owner of " + storeId.ToString());
+
+            Tuple<bool, string> ownerShipedRemoved = userManager.removeAllFromStore(storeId);
+            if (!ownerShipedRemoved.Item1)
+                return ownerShipedRemoved;
+
+            stores.Remove(storeId);
+
+            return new Tuple<bool, string>(true, "");
+        }
+
+        private bool isMainOwner(User user, int storeId)
+        {
+            return stores[storeId].isMainOwner(user);
+        }
+
+
+
 
         public void cleanup()
         {
