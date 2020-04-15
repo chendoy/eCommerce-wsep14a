@@ -10,9 +10,11 @@ namespace eCommerce_14a
     class storeService
     {
         StoreManagment storeManagment;
-        public storeService(StoreManagment storeManagment)
+        Searcher searcher;
+        public storeService(StoreManagment storeManagment, Searcher searcher)
         {
             this.storeManagment = storeManagment;
+            this.searcher = searcher;
 
         }
 
@@ -35,7 +37,7 @@ namespace eCommerce_14a
         {
             return storeManagment.removeProduct(storeId, userName, productId);
         }
-        public Tuple<bool, string> addProduct(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(int storeId, string userName, int productId, int amount)
         {
             return storeManagment.addProductAmount(storeId, userName, productId, amount);
         }
@@ -58,6 +60,11 @@ namespace eCommerce_14a
         public Tuple<bool, string> changeStoreStatus(string userName, int storeId, bool status)
         {
             return storeManagment.changeStoreStatus(userName, storeId, status);
+        }
+
+        public Dictionary<int, List<Product>> SearchProducts(Dictionary<string, object> searchBy)
+        {
+            return searcher.SearchProducts(searchBy);
         }
 
         //For Admin Uses
