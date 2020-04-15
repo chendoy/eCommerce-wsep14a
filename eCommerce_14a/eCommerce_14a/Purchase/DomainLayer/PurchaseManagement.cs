@@ -11,10 +11,12 @@ namespace eCommerce_14a.Purchase.DomainLayer
         // Holding the carts and purchases by user
         private Dictionary<string, Cart> carts;
         private Dictionary<string, Purchase> purchasesHistory;
+        private StoreManagment storeManagment;
 
-        public PurchaseManagement()
+        public PurchaseManagement(StoreManagment storeManagment)
         {
             this.carts = new Dictionary<string, Cart>();
+            this.storeManagment = storeManagment;
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
