@@ -27,6 +27,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
 
     public class Store
     {
+        public int Id { get; }
         // Inventory Component
         public int GetAmountOfProduct(int product)
         {

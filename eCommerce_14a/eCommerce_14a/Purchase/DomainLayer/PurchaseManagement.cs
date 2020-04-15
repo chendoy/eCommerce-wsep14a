@@ -83,15 +83,17 @@ namespace eCommerce_14a.Purchase.DomainLayer
 
         public Tuple<bool, string> PerformPurchase(string user)
         {
-            //if (!External.CheckValidUser(user))
-            //{
-            //    return new Tuple<bool, string>(false, "Not a valid user");
-            //}
+            if (!External.CheckValidUser(user))
+            {
+                return new Tuple<bool, string>(false, "Not a valid user");
+            }
 
-            //if (!carts.TryGetValue(user, out Cart userCart))
-            //{
-            //    return new Tuple<bool, string>(false, "No cart found for this user");
-            //}
+            if (!carts.TryGetValue(user, out Cart userCart))
+            {
+                return new Tuple<bool, string>(false, "No cart found for this user");
+            }
+
+
             throw new NotImplementedException();
         }
     }
