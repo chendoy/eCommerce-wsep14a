@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eCommerce_14a
 {
-    class Searcher
+    public class Searcher
     {
+       
 
-        StoreManagment storeManagemnt;
+        private StoreManagment storeManagemnt;
         public Searcher(StoreManagment storeManagment)
         {
-            this.storeManagemnt = new StoreManagment();
+            this.storeManagemnt = storeManagment;
         }
-
-        public List<Product> SearchProducts(Dictionary<string, object> searchBy)
+        /// <test cref ="TestingSystem.UnitTests(Dictionary{string, object})"/>
+        // the functions search products on all stores and returns List of <storeId, List<matches products>> that matches the filters
+        public Dictionary<int, List<Product>> SearchProducts(Dictionary<string, object> searchBy)
         {
             Dictionary<int, Store> activeStores = storeManagemnt.getActiveSotres();
-            List<Product> matchProducts = new List<Product>();
+            Dictionary<int,List<Product>> matchProducts = new Dictionary<int, List<Product>>();
             foreach (KeyValuePair<int, Store> entry in activeStores)
             {
                 Store store = entry.Value;
@@ -43,7 +42,11 @@ namespace eCommerce_14a
 
                                         if (ValidProductKeyWord(product, searchBy))
                                         {
-                                            matchProducts.Add(product);
+                                            if (matchProducts.ContainsKey(store.Id))
+                                                matchProducts[store.Id].Add(product);
+                                            else
+                                            matchProducts.Add(store.Id, new List<Product> { product });
+
                                         }
 
                                     }
@@ -64,13 +67,12 @@ namespace eCommerce_14a
         private bool ValidProductKeyWord(Product product, Dictionary<string, object> searchBy)
         {
 
-            if (searchBy.ContainsKey("SearchByKeyWord"))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductKeyWord))
             {
-                string keyWord = (string)searchBy["SearchByKeyWord"];
-                if (!product.Name.Contains(keyWord))
-                {
+                string filterkeyWord = searchBy[CommonStr.SearcherKeys.ProductKeyWord].ToString().Replace(" ","").ToLower();
+                string productName = product.Name.Replace(" ", "").ToLower();
+                if (!productName.Contains(filterkeyWord))
                     return false;
-                }
             }
 
             return true;
@@ -78,29 +80,27 @@ namespace eCommerce_14a
 
         private bool ValidProductRank(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey("searchByProductRank"))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductRank))
             {
-                int minRank = (int)searchBy["searchByRank"];
+                int minRank = (int)searchBy[CommonStr.SearcherKeys.ProductRank];
+
                 if (product.Rank < minRank)
-                {
                     return false;
-                }
             }
             return true;
         }
 
         private bool ValidPriceRange(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey("searchByPriceRange"))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductPriceRange))
             {
-                Tuple<double, double> priceRange = (Tuple<double, double>)searchBy["searchByPriceRange"];
+                Tuple<double, double> priceRange = (Tuple<double, double>)searchBy[CommonStr.SearcherKeys.ProductPriceRange];
                 double minPrice = priceRange.Item1;
                 double maxPrice = priceRange.Item2;
-                if (product.Price > maxPrice || product.Price < minPrice)
-                {
-                    return false;
-                }
 
+
+                if (product.Price > maxPrice || product.Price < minPrice)
+                    return false;
             }
             return true;
         }
@@ -108,13 +108,13 @@ namespace eCommerce_14a
         private bool ValidProductCategory(Product product, Dictionary<string, object> searchBy)
         {
 
-            if (searchBy.ContainsKey("searchByCategory"))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductCategory))
             {
+                string filterCategory = searchBy[CommonStr.SearcherKeys.ProductCategory].ToString().Replace(" ", "").ToLower();
+                string productCategory = product.Category.Replace(" ", "").ToLower();
 
-                if (!product.Category.Equals(searchBy["searchByCategory"]))
-                {
+                if (!filterCategory.Contains(productCategory) && !productCategory.Contains(filterCategory))
                     return false;
-                }
             }
 
             return true;
@@ -123,28 +123,29 @@ namespace eCommerce_14a
         private bool ValidStoreRank(Store store, Dictionary<string, object> searchBy)
         {
 
-            if (searchBy.ContainsKey("SearchByStoreRank"))
+            if (searchBy.ContainsKey(CommonStr.StoreParams.StoreRank))
             {
-                int minRank = (int)searchBy["SearchByStoreRank"];
+                int minRank = (int)searchBy[CommonStr.StoreParams.StoreRank];
                 if (store.Rank < minRank)
-                {
                     return false;
-                }
             }
             return true;
         }
 
         private bool ValidProductName(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey("searchByName"))
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductName))
             {
-                if (!product.Name.Equals(searchBy["searchByName"]))
-                {
+                string filtrProuctName = (string)searchBy[CommonStr.SearcherKeys.ProductName];
+                filtrProuctName = filtrProuctName.Replace(" ", "").ToLower();
+                string curProdName = product.Name.Replace(" ", "").ToLower();
+                if (!filtrProuctName.Equals(curProdName))
                     return false;
-                }
             }
             return true;
         }
+
+   
 
 
 

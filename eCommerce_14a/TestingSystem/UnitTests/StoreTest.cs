@@ -11,15 +11,30 @@ namespace TestingSystem.UnitTests
 {
     [TestClass]
     public class StoreTest
-    {
+    {   
+        private  Store validStore;
+        private List<User> owners;
+        private List<User> managers;
+
+        [TestInitialize]
+        public  void TestInitialize()
+        {
+            User user = new User(1, "shimon", false, false);
+
+            validStore = openStore(storeId:1,user:user, inv:InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()), rank:3);
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
+            validStore.managers = new List<User> { new User(2, "yosi", false, false) }; 
+            owners = validStore.owners;
+            managers = validStore.managers;
+        }
+
 
         /// <test cref ="eCommerce_14a.Store.changeStoreStatus(bool)"/>
         [TestMethod]
         public void TestChangeStoreStatus_notActiveStatus()
         {
             bool isActive = false;
-            Store s = getValidStore();
-            Tuple<bool, Exception> changeStatusRes = changeStoreStatusDriver(s, newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0],  newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -29,8 +44,7 @@ namespace TestingSystem.UnitTests
         public void TestChangeStoreStatus_ActiveValid()
         {
             bool isActive = true;
-            Store s = getValidStore();
-            Tuple<bool, Exception> changeStatusRes = changeStoreStatusDriver(s, newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0], newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -40,9 +54,7 @@ namespace TestingSystem.UnitTests
         public void TestChangeStoreStatus_ActiveNoOwner()
         {
             bool isActive = true;
-            Store s = getValidStore();
-            s.Owners = new List<User>();
-            Tuple<bool, Exception> changeStatusRes = changeStoreStatusDriver(s, newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,managers[0] ,newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsFalse(statusChanged);
         }
@@ -52,9 +64,7 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestAddProductAmount_ValidUser()
         {
-            Store s = getValidStore();
-            Product p = new Product(1, "", 100);
-            Tuple<bool, Exception> addProdRes = addProductDriver(s, 1, p, 100);
+            Tuple<bool, string> addProdRes = addProductDriver(validStore,user:owners[0], produtId:1, amount:100);
             Assert.IsTrue(addProdRes.Item1);
        
         }
@@ -63,25 +73,22 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestAddProductAmount_inValidUser()
         {
-            Store s = getValidStore();
-            Product p = new Product(1, "", 100);
-            Tuple<bool, Exception> addProdRes = addProductDriver(s, 2, p, 100);
+            User u = new User(5,"ff",false,false);
+            Tuple<bool, string> addProdRes = addProductDriver(validStore, user: u, produtId: 1, amount: 100);
             
             if (addProdRes.Item1)
             {
                 Assert.Fail();
             }
-            Exception ex = addProdRes.Item2;
-            Assert.AreEqual(ex.Message, "this user isn't a store owner, thus he can't update inventory" );
+            string ex = addProdRes.Item2;
+            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
         }
 
         /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)"/>
         [TestMethod]
         public void TestDecraseProductAmount_ValidUser()
         {
-            Store s = getValidStore();
-            Product p = new Product(1, "", 100);
-            Tuple<bool, Exception> decraseProdRes = decraseProductDriver(s, 1, p, 100);
+            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: owners[0], productId: 1, amount: 100);
             Assert.IsTrue(decraseProdRes.Item1);
 
         }
@@ -90,80 +97,46 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void TestDecraseProductAmount_inValidUser()
         {
-            Store s = getValidStore();
-            Product p = new Product(1, "", 100);
-            Tuple<bool, Exception> decraseProdRes = decraseProductDriver(s, 2, p, 100);
+            User u = new User(5, "ff", false, false);
+            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: u, productId: 2, amount: 100);
 
             if (decraseProdRes.Item1)
             {
                 Assert.Fail();
             }
-            Exception ex = decraseProdRes.Item2;
-            Assert.AreEqual(ex.Message, "this user isn't a store owner, thus he can't update inventory");
-        }
-
-        /// <test cref ="eCommerce_14a.Store.UpdatePrdocutDetails(int, int, string)">
-        [TestMethod]
-        public void TestUpdateProductDetails_Valid()
-        {
-            Store s = getValidStore();
-            int userId = 1;
-            int productId = 2;
-            Tuple<bool, Exception> updateProdDetailsRes = UpdateProductDetailsDriver(s, userId, productId, "hi");
-            Assert.IsTrue(updateProdDetailsRes.Item1);
-        }
-
-        /// <test cref ="eCommerce_14a.Store.UpdatePrdocutDetails(int, int, string)">
-        [TestMethod]
-        public void TestUpdateProductDetails_NonExistingUser()
-        {
-            Store s = getValidStore();
-            int userId = 2;
-            int productId = 6;
-            Tuple<bool, Exception> updatedProdRes = UpdateProductDetailsDriver(s, userId, productId, "bibi");
-
-            if (updatedProdRes.Item1)
-            {
-                Assert.Fail();
-            }
-            Exception ex = updatedProdRes.Item2;
-            Assert.AreEqual(ex.Message, "this user isn't a store owner, thus he can't update inventory products details");
+            string ex = decraseProdRes.Item2;
+            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
         }
 
 
 
-
-        private Tuple<bool, Exception> UpdateProductDetailsDriver(Store s,int userId, int productId, string newDetails)
+        private Tuple<bool, string> addProductDriver(Store store,User user,int produtId, int amount)
         {
-            return s.UpdatePrdocutDetails(userId, productId, newDetails);
+            return store.addProductAmount(user, produtId, amount);
         }
 
-
-        private Tuple<bool, Exception> addProductDriver(Store s,int userId, Product p, int amount)
+        private Tuple<bool, string> decraseProductDriver(Store s, User user, int productId, int amount)
         {
-            return s.addProductAmount(userId, p, amount);
+            return s.decrasePrdouct(user, productId, amount);
+        }
+        private Tuple<bool, string> changeStoreStatusDriver(Store s,User user, bool newStatus)
+        {
+            return s.changeStoreStatus(user, newStatus);
         }
 
-        private Tuple<bool, Exception> decraseProductDriver(Store s, int userId, Product p, int amount)
+        public static Store openStore(int storeId, User user, Inventory inv, int rank=3)
         {
-            return s.decrasePrdouct(userId, p, amount);
-        }
-        private Tuple<bool, Exception> changeStoreStatusDriver(Store s, bool newStatus)
-        {
-            return s.changeStoreStatus(newStatus);
-        }
 
-        private Store getValidStore()
-        {
-            User user1 = new User(1);
             Dictionary<string, object> storeParams = new Dictionary<string, object>();
-            storeParams.Add("Id", 1);
-            storeParams.Add("Owner", user1);
-            storeParams.Add("Inventory", InventoryTest.getValidInventory());
-            storeParams.Add("DiscountPolicy", new DiscountPolicy());
-            storeParams.Add("PuarchasePolicy", new PuarchsePolicy());
+            storeParams.Add(CommonStr.StoreParams.StoreId, storeId);
+            storeParams.Add(CommonStr.StoreParams.StoreOwner, user);
+            storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
+            storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
             return s;
         }
+        
     }
 }

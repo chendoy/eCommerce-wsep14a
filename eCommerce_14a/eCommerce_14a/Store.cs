@@ -3,150 +3,147 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System;
-using System.Text;
 
 namespace eCommerce_14a
 {
     public class Store
     {
-        private int id;
-        private List<User> owners;
-        private List<User> managers;
-        private Inventory inv;
         private DiscountPolicy discountPolicy;
         private PuarchsePolicy puarchsePolicy;
-        private bool isActive;
+        private Inventory inventory;
         private int rank;
+
+  
         public Store(Dictionary<string, object> store_params)
         {
-            this.id = (int)store_params["Id"];
+            this.Id = (int)store_params[CommonStr.StoreParams.StoreId];
             this.owners = new List<User>();
-            User storeOwner = (User)store_params["Owner"];
+            User storeOwner = (User)store_params[CommonStr.StoreParams.StoreOwner];
             this.owners.Add(storeOwner);
             this.managers = new List<User>();
-            this.inv = (Inventory)store_params["Inventory"];
-            this.discountPolicy = (DiscountPolicy)store_params["DiscountPolicy"];
-            this.puarchsePolicy = (PuarchsePolicy)store_params["PuarchasePolicy"];
-            this.isActive = true;
-            this.rank = (int)store_params["Rank"];
+
+            if (store_params.ContainsKey(CommonStr.StoreParams.StoreInventory))
+                this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
+            else
+                this.inventory = new Inventory();
+
+            this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
+            this.puarchsePolicy = (PuarchsePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
+            this.ActiveStore = true;
+
+            if (store_params.ContainsKey(CommonStr.StoreParams.StoreRank))
+                this.rank = (int)store_params[CommonStr.StoreParams.StoreRank];
+            else
+                this.rank = 1;
+
         }
 
-        public bool ActiveStore
+        public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
         {
-            get { return isActive; }
+            if (!owners.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+
+            return inventory.addProductAmount(productId, amount);
         }
 
-        public Tuple<bool,string> changeStoreStatus(bool newStatus)
+        public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
         {
+            if (!owners.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+
+            return inventory.DecraseProductAmount(productId, amount);
+        }
+        public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
+        {
+            if (!owners.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+
             if (newStatus)
             {
                 if(owners.Count == 0)
                 {
-                    return new Tuple<bool, string>(false, "Cann't change store status to active until store has at least one owner");
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
                 }
             }
-            isActive = newStatus;
+            ActiveStore = newStatus;
             return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, string> UpdatePrdocutDetails(int userId, int productId, string newDetails)
+        public Tuple<bool, string> removeProduct(User user, int productId)
         {
-            if (!hasUser(owners, userId))
-            {
-                return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory products details");
-            }
-            Tuple<bool, string> res = inv.UpdateProductDetails(productId, newDetails);
-            bool updateSucess = res.Item1;
-            if (updateSucess)
-            {
-                return new Tuple<bool, string>(true, "");
+            if (!owners.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
 
-            }
-            else
-            {
-                return new Tuple<bool, string>(false, res.Item2);
-            }
+            return inventory.removeProduct(productId);
+        }
+
+        public Tuple<bool, string> appendProduct(User user, Dictionary<string, object> productParams, int amount)
+        {
+            
+            if (!owners.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            return inventory.appendProduct(productParams, amount);
+        }
 
 
+
+        public Tuple<bool, string> UpdateProduct(User user, Dictionary<string, object> productParams)
+        {
+            if (!owners.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+
+            return inventory.UpdateProduct(productParams);
         }
 
         public Dictionary<string, object> getSotoreInfo()
         {
             Dictionary<string, object> store_info = new Dictionary<string, object>();
-            store_info.Add("id", id);
+            store_info.Add("id", Id);
             store_info.Add("owners", owners);
             store_info.Add("managers", managers);
-            store_info.Add("inventory", inv);
+            store_info.Add("inventory", inventory);
             store_info.Add("discount_policy", discountPolicy);
             store_info.Add("puarchse_policy", puarchsePolicy);
-            store_info.Add("is_active", isActive);
-            store_info.Add("rank", rank);
+            store_info.Add("is_active", ActiveStore);
+            store_info.Add("rank", Rank);
             return store_info;
         }
 
-        public Tuple<bool,string> addProductAmount(int userId, Product product, int amount)
+
+        public bool AddStoreOwner(User user)
         {
-
-            if (!hasUser(owners, userId))
-                return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory");
-            Tuple<bool,string> res = inv.addProductAmount(product, amount);
-            bool addSucess = res.Item1;
-            if (addSucess)
-            {
-                return new Tuple<bool, string>(true, "");
-
-            }
-            else
-            {
-                return new Tuple<bool, string>(false, res.Item2);
-            }
-
-        }
-        public Tuple<bool, string> decrasePrdouct(int userId, Product product, int amount)
-        {
-            if (!hasUser(owners, userId))
-                return new Tuple<bool, string>(false, "this user isn't a store owner, thus he can't update inventory");
-            Tuple<bool, string> res = inv.DecraseProductAmount(product, amount);
-            bool decraseSucess = res.Item1;
-            if (decraseSucess)
-            {
-                return new Tuple<bool, string>(true, "");
-
-            }
-            else
-            {
-                return new Tuple<bool, string>(false, res.Item2);
-            }
-
+            if (user.isguest() || owners.Contains(user))
+                return false;
+            owners.Add(user);
+            return true;
         }
 
-        private bool hasUser(List<User> users, int userId)
+        public bool AddStoreManager(User user)
         {
-            foreach(User user in users)
-            {
-                if (user.Id == userId)
-                    return true;
-            }
-            return false;
+            if (user.isguest() || managers.Contains(user))
+                return false;
+            managers.Add(user);
+            return true;
         }
-        public List<User> Owners
+
+        public bool IsStoreOwner(User user)
         {
-            // we dont check for correctn's because it's appoitnment responsibility
-            set { owners = value; }
-            get { return owners; }
+            return owners.Contains(user);
         }
         
-        public List<User> Managers
+        public bool IsStoreManager(User user)
         {
-            // we dont check for correctn's because it's appoitnment responsibility
-            set { managers = value; }
-            get { return managers; }
+            return managers.Contains(user);
         }
 
-        public int Id
+        public bool RemoveManager(User user)
         {
-            get { return id; }
+            return managers.Remove(user);
+        }
+
+        public bool RemoveOwner(User user)
+        {
+            return owners.Remove(user);
         }
 
         public int Rank
@@ -155,10 +152,47 @@ namespace eCommerce_14a
             set { rank = value; }
         }
 
-        public Inventory Inventory
+
+        internal int getStoreId()
         {
-            get { return inv; }
+            return Id;
         }
 
+
+        public List<User> owners {
+            // we dont check for correctn's because it's appoitnment responsibility
+            set; get; }
+
+        public List<User> managers {
+            // we dont check for correctn's because it's appoitnment responsibility
+            set; get; }
+
+        public int Id { get; }
+
+
+        public Inventory Inventory { get; set; }
+
+     
+        public bool ActiveStore { get; private set; }
+
+        public Tuple<Product, int> getProductDetails(int productId)
+        {
+            return inventory.getProductDetails(productId);
+        }
+
+        public bool productExist(int productId)
+        {
+            return inventory.productExist(productId);
+        }
+
+        public double getBucketPrice(Dictionary<int, int> products)
+        {
+            return inventory.getBasketPrice(products);
+        }
+
+        public Tuple<bool, string> checkIsValidBasket(Dictionary<int, int> products)
+        {
+            return inventory.isValidBasket(products);
+        }
     }
 }

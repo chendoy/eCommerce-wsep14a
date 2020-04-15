@@ -8,5 +8,16 @@ namespace eCommerce_14a
 {
     public class DiscountPolicy
     {
+        private int type;
+        public DiscountPolicy(int type)
+        {
+            this.type = type;
+        }
+
+        public int Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
     }
 }
