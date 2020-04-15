@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\eCommerce_14a",
+    "\\eCommerce_14a\\TestingSystem",
+    "\\eCommerce_14a\\TestingSystem\\AcceptanceTests",
+    "\\eCommerce_14a\\TestingSystem\\UnitTests"
+  ],
+  "SelectedNode": "\\eCommerce_14a\\TestingSystem\\UnitTests\\AdministrationTests.cs",
+  "PreviewInSolutionExplorer": false
+}

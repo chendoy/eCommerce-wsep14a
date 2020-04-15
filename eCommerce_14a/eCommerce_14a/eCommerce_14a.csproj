@@ -37,6 +37,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiscountPolicy.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="GraphNode.cs" />
+    <Compile Include="Inventory.cs" />
+    <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Purchase\DomainLayer\Cart.cs" />
@@ -56,6 +61,13 @@
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="PuarchsePolicy.cs" />
+    <Compile Include="Searcher.cs" />
+    <Compile Include="Store.cs" />
+    <Compile Include="StoreManager.cs" />
+    <Compile Include="StoreManagment.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserManagment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
