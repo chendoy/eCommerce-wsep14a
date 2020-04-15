@@ -4,19 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eCommerce_14a.Purchase.DomainLayer
+namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseManagement
     {
         // Holding the carts and purchases by user
         private Dictionary<string, Cart> carts;
-        private Dictionary<string, Purchase> purchasesHistory;
+        private Dictionary<string, List<Purchase>> purchasesHistory;
         private StoreManagment storeManagment;
+        PaymentHandler paymentHandler;
+        DeliveryHandler deliveryHandler;
 
-        public PurchaseManagement(StoreManagment storeManagment)
+        public PurchaseManagement(StoreManagment storeManagment, PaymentHandler paymentHandler, DeliveryHandler deliveryHandler)
         {
             this.carts = new Dictionary<string, Cart>();
+            this.purchasesHistory = new Dictionary<string, List<Purchase>>();
             this.storeManagment = storeManagment;
+            this.paymentHandler = paymentHandler;
+            this.deliveryHandler = deliveryHandler;
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
@@ -30,14 +35,14 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 return new Tuple<bool, string>(false, "Not a valid user");
             }
 
-            Store store = External.CheckValidStore(storeId);
+            Store store = storeManagment.getStore(storeId);
 
-            if (store == null)
+            if (store == null || !store.ActiveStore)
             {
                 return new Tuple<bool, string>(false, "Not a valid store");
             }
 
-            if (!store.CheckValidProduct(productId))
+            if (!store.productExist(productId))
             {
                 return new Tuple<bool, string>(false, "Not a valid product");
             }
@@ -52,7 +57,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 return new Tuple<bool, string>(false, "Cannot add product to cart with zero amount");
             }
 
-            int amount = store.GetAmountOfProduct(productId);
+            int amount = store.getProductDetails(productId).Item2;
 
             if (amount < wantedAmount)
             {
@@ -68,6 +73,7 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return cart.AddProduct(store, productId, wantedAmount, exist);
         }
 
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         public Tuple<Cart, string> GetCartDetails(string user)
         {
             if (!External.CheckValidUser(user))
@@ -82,8 +88,8 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return new Tuple<Cart, string>(cart, "");
         }
 
-
-        public Tuple<bool, string> PerformPurchase(string user)
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28 </req>
+        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
         {
             if (!External.CheckValidUser(user))
             {
@@ -95,8 +101,56 @@ namespace eCommerce_14a.Purchase.DomainLayer
                 return new Tuple<bool, string>(false, "No cart found for this user");
             }
 
+            Tuple<bool, string> validCart = userCart.CheckProductsValidity();
+            if (!validCart.Item1)
+            {
+                return validCart;
+            }
 
-            throw new NotImplementedException();
+            userCart.UpdateCartPrice();
+
+            /// <param name="paymentDetails">Pay with this</param>
+            /// <param name="price"> with userCart.Price</param>
+            Tuple<bool,string> payRes = paymentHandler.pay();
+            if (!payRes.Item1)
+            {
+                return payRes;
+            }
+
+            // NEED TO FIX DELIVERY METHOD
+            Tuple<bool, string> delvRes = deliveryHandler.ProvideDeliveryForUser(address, true);
+            if (!delvRes.Item1)
+            {
+                // Need To ADD REFUND
+                return delvRes;
+            }
+
+            Purchase newPurchase = new Purchase(userCart);
+            if(!purchasesHistory.TryGetValue(user, out List<Purchase> userHistory)) 
+            {
+                userHistory = new List<Purchase>();
+            } 
+            
+            userHistory.Add(newPurchase);
+            purchasesHistory[user] = userHistory;
+
+            return new Tuple<bool, string>(true, "");
+        }
+
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
+        public Tuple<List<Purchase>, string> GetBuyerHistory(string user)
+        {
+            if (!External.CheckValidUser(user))
+            {
+                return new Tuple<List<Purchase>, string>(new List<Purchase>(), "Not a valid user");
+            }
+
+            if(!purchasesHistory.ContainsKey(user))
+            {
+                return new Tuple<List<Purchase>, string>(new List<Purchase>(), "");
+            }
+
+            return new Tuple<List<Purchase>, string>(purchasesHistory[user], "");
         }
     }
 }

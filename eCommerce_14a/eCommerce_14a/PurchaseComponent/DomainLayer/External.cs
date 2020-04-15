@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eCommerce_14a.Purchase.DomainLayer
+namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class External
     {
@@ -15,37 +15,44 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return true;
         }
 
-        static Store store = new Store();
+        static StoreExternal store = new StoreExternal();
         // All this functions can be at Store object that I will get first from CheckValidStore
         // Store Component
-        public static Store CheckValidStore(int store)
+        // public Store getStore(int storeId)
+        // active store property - if not close
+        public static StoreExternal CheckValidStore(int store)
         {
             return External.store;
         }
     }
 
 
-    public class Store
+    public class StoreExternal
     {
-        public int Id { get; }
+        public int Id { get; } // storeId
         // Inventory Component
+        // public Tuple<Product, int> getProductDetails(int productId) . item2
         public int GetAmountOfProduct(int product)
         {
             return Int32.MaxValue;
         }
 
+        //public bool productExist(int productId)
         public bool CheckValidProduct(int product)
         {
             return true;
         }
 
         // Gets Dictionary of Product ID and Amount
+        // public Tuple<bool, string> checkIsValidBasket(Dictionary<int, int> products)
+        // check if products are valid and amounts
         public Tuple<bool, string> CheckValidBasket(Dictionary<int, int> products)
         {
             return new Tuple<bool, string>(true, "");
         }
 
         // Gets Dictionary of Product ID and Amount
+        // public double getBucketPrice(Dictionary<int, int> products)
         public int GetBasketPrice(Dictionary<int, int> products)
         {
             return 10000;

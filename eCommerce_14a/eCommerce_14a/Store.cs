@@ -185,7 +185,7 @@ namespace eCommerce_14a
             return inventory.productExist(productId);
         }
 
-        public double getBucketPrice(Dictionary<int, int> products)
+        public double getBasketPrice(Dictionary<int, int> products)
         {
             return inventory.getBasketPrice(products);
         }
