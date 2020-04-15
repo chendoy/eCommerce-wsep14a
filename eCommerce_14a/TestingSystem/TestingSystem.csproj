@@ -84,12 +84,6 @@
     <Compile Include="UserGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\eCommerce_14a\eCommerce_14a.csproj">
-      <Project>{14f01d9c-70a2-41f8-b9a0-a3a340c36823}</Project>
-      <Name>eCommerce_14a</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="AggregationTests\" />
     <Folder Include="RegressionTests\" />
   </ItemGroup>
