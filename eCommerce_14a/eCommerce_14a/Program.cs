@@ -16,8 +16,10 @@ namespace eCommerce_14a
 
         private void testLogger()
         {
-            Logger.logError("Error message.", this);
-            Logger.logEvent("Event message.", this);
+            string str = "microsogt";
+
+            string bestOffer = DidYouMean.suggest(str, "suggestions2.txt");
+            Console.WriteLine("Did you mean: " + bestOffer + "?");
             Console.ReadLine();
         }
 
