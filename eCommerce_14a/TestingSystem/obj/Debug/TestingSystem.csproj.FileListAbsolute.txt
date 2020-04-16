@@ -57,3 +57,6 @@ C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\Coden
 C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\bin\Debug\Codentia.Common.Membership.xml
 C:\Users\ASUS\Source\Repos\wsep_14a2\eCommerce_14a\TestingSystem\obj\Debug\TestingSystem.csproj.CopyComplete
 C:\Users\LiavB\source\repos\chendoy\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\log4net.config
+C:\Users\LiavB\source\repos\chendoy\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\log4net.dll
+C:\Users\LiavB\source\repos\chendoy\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\eCommerce_14a.exe.config
+C:\Users\LiavB\source\repos\chendoy\wsep_14a\eCommerce_14a\TestingSystem\bin\Debug\log4net.xml
