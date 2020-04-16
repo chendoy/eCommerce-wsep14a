@@ -10,8 +10,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
     {
         // Holding the carts and purchases by user
         private Dictionary<string, Cart> carts;
-        private Dictionary<string, List<Purchase>> purchasesHistoryByUser;
-        private Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore;
+        private readonly Dictionary<string, List<Purchase>> purchasesHistoryByUser;
+        private readonly Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore;
         private StoreManagment storeManagment;
         PaymentHandler paymentHandler;
         DeliveryHandler deliveryHandler;
@@ -193,6 +193,41 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             return new Tuple<List<PurchaseBasket>, string>(currHistory, "");
+        }
+
+
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+        internal Tuple<Dictionary<Store, List<PurchaseBasket>> , string> GetAllStoresHistory(string admin)
+        {
+            Dictionary<Store, List<PurchaseBasket>> res = new Dictionary<Store, List<PurchaseBasket>>();
+            if (!External.CheckValidUser(admin))
+            {
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(res, "Not a valid user");
+            }
+
+            if (!External.CheckIsAdmin(admin))
+            {
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(res, "Not authorized to this store");
+            }
+
+            return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(purchasesHistoryByStore, "");
+        }
+
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+        internal Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
+        {
+            Dictionary<string, List<Purchase>> res = new Dictionary<string, List<Purchase>>();
+            if (!External.CheckValidUser(admin))
+            {
+                return new Tuple<Dictionary<string, List<Purchase>>, string>(res, "Not a valid user");
+            }
+
+            if (!External.CheckIsAdmin(admin))
+            {
+                return new Tuple<Dictionary<string, List<Purchase>>, string>(res, "Not authorized to this store");
+            }
+
+            return new Tuple<Dictionary<string, List<Purchase>>, string>(purchasesHistoryByUser, "");
         }
     }
 }

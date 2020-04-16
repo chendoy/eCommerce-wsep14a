@@ -56,5 +56,17 @@ namespace eCommerce_14a.PurchaseComponent.ServiceLayer
         {
             return purchaseManagement.GetStoreHistory(manager, storeId);
         }
+
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+        public Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
+        {
+            return purchaseManagement.GetAllStoresHistory(admin);
+        }
+
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+        public Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
+        {
+            return purchaseManagement.GetAllUsersHistory(admin);
+        }
     }
 }
