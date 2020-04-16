@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿    using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,41 +8,56 @@ using System.Windows.Documents;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-overlook-details-about-stores-and-their-products-24 </req>
     [TestClass]
     public class OverlookStoresProductsStoryTest : SystemTrackTest
     {
-        String InvalidCategory;
+        string username;
+        string password;
+        int storeID;
+        int amount;
+        int productID;
+        string productDetails = "Details";
+        double productPrice = 3.02;
+        string productName = "Name";
+        string productCategory = "Category";
+
         [TestInitialize]
         public void SetUp()
         {
-            InvalidCategory = "NoSuchCategory";
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
+            Register(username, password);
+            Login(username, password);
+            storeID = OpenStore(username).Item1;
+            productID = 3;
         }
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            ClearAllUsers();
+            ClearAllShops();
         }
 
         [TestMethod]
         public void ViewShopDetailsTest() 
         {
-            Assert.IsTrue(ViewShopDetails());
+            amount = 1;
+            AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
+            Assert.AreNotEqual(0, ViewStoreDetails(storeID).Count);
         }
         [TestMethod]
         public void UnExistCategoryTest()
         {
-            ViewShopDetails();
-            Assert.Equals(new List(),ViewProductsByCategory(InvalidCategory));// suppose to return an EmptyList
+            ViewStoreDetails(storeID);
+            Assert.Equals(0, ViewStoreProductsByCategory(storeID, " ").Count);// suppose to return an EmptyList
         }
         [TestMethod]
         public void CloseShopWhileViewShopDetailsTest()
         {
-            ViewShopDetails();
-            CloseShop();
-            Assert.IsFalse(ViewShopDetails());
+            ViewStoreDetails(storeID);
+            CloseStore(username, storeID);
+            Assert.AreEqual(0, ViewStoreDetails(storeID).Count);
         }
-
-
-
     }
 }

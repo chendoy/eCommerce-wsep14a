@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-registration-22 </req>
     [TestClass]
     public class RegisterStoryTest : SystemTrackTest
     {
@@ -15,31 +16,36 @@ namespace TestingSystem.AcceptanceTests
         {
             // TODO: impl
         }
+
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            /// TODO: impl
         }
 
         [TestMethod]
         //happy
         public void LegalUserDetailsTest() 
         {
-            Assert.IsTrue(Register(UserGenerator.RandomString(3), UserGenerator.RandomString(5)));
+            string username = UserGenerator.RandomString(3);
+            string password = UserGenerator.RandomString(5);
+            Assert.IsTrue(Register(username, password).Item1, Register(username, password).Item2);
         }
+
         [TestMethod]
         //sad
         public void ShortUserNameTest()
         {
-            Assert.IsFalse(Register(UserGenerator.RandomString(1), UserGenerator.RandomString(5)));
+            string username = UserGenerator.RandomString(1);
+            string password = UserGenerator.RandomString(5);
+            Assert.IsFalse(Register(username, password).Item1, Register(username, password).Item2);
         }
+
         [TestMethod]
         //bad
-        public void UserLeftWhileRegisterTest()
+        public void BlankUsernameAndPasswordRegisterTest()
         {
-            GetDetailsFromUser();
-            UserLeft();
-            Assert.IsTrue(UserNotRegistered());
+            Assert.IsFalse(Register("           ", "    ").Item1, Register("           ", "    ").Item2);
         }
     }
 }

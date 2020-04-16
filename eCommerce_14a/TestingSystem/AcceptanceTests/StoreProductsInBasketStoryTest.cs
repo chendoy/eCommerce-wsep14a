@@ -8,48 +8,60 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
     [TestClass]
     public class StoreProductsInBasketStoryTest : SystemTrackTest
     {
-        Product validProduct;
-        Product invalidProduct;
-        Basket basket;
+        int productID;
+        int storeID;
+        string userID;
+        string username;
+        string password;
+        string productDetails = "Details";
+        double productPrice = 3.02;
+        string productName = "Name";
+        string productCategory = "Category";
+        int amount = 3;
+
         [TestInitialize]
         public void SetUp()
         {
-            basket = BasketGenerator.GetValidBasket();
-            validProduct = ProductGenerator.GetValidProduct();
-            invalidProduct = ProductGenerator.GetInvalidProduct();
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
+            Register(username, password);
+            Login(username, password);
+            storeID = OpenStore(username).Item1;
+            userID = enterSystem().Item1;
+            productID = 3;
         }
+
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            ClearAllShops();
+            ClearAllUsers();
         }
+
         [TestMethod]
         //happy
         public void StoreAvailableProductTest() 
         {
-            basket.AddProduct(validProduct);
-            Assert.IsTrue(basket.Contains(validProduct));
-        }
-        [TestMethod]
-        //bad
-        public void StoreUnAvailableProductTest()
-        {
-            basket.AddProduct(invalidProduct);
-            Assert.IsFalse(basket.Contains(validProduct));
+            AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
+            Assert.IsTrue(AddProductToBasket(userID, storeID, productID, 1).Item1, AddProductToBasket(userID, storeID, productID, 1).Item2);
         }
 
         [TestMethod]
         //sad
-        public void StoreProductWhileShopCloseTest()
+        public void StoreUnExistingProductTest()
         {
-            basket.AddProduct(validProduct);
-            CloseShop();
-            Assert.IsFalse(basket.Contains(validProduct));
+            Assert.IsFalse(AddProductToBasket(userID, storeID, productID, 1).Item1, AddProductToBasket(userID, storeID, productID, 1).Item2);
         }
 
-
+        [TestMethod]
+        //bad
+        public void StoreProductWithNegIDTest()
+        {
+            Assert.IsFalse(AddProductToBasket(userID, storeID, -2, 1).Item1, AddProductToBasket(userID, storeID, productID, 1).Item2);
+        }
     }
 }

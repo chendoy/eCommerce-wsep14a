@@ -7,26 +7,24 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
-    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281 </req>
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchases-history-view-410 </req>
     [TestClass]
-    public class DiscountPolicyStoryTest : SystemTrackTest
+    public class ViewStorePurchaseHistoryStoryTest : SystemTrackTest
     {
-        string guestID;
         string username;
-        string password;
         int storeID;
+        string password;
 
         [TestInitialize]
         public void SetUp()
         {
             username = UserGenerator.RandomString(5);
             password = UserGenerator.RandomString(5);
-            guestID = enterSystem().Item1;
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
         }
-        
+
         [TestCleanup]
         public void TearDown()
         {
@@ -36,23 +34,24 @@ namespace TestingSystem.AcceptanceTests
 
         [TestMethod]
         //happy
-        public void ValidDiscountPolicyTest() 
+        public void ViewAllPurchaseTest() 
         {
-            Assert.IsTrue(CheckDiscountPolicy(guestID, storeID).Item1, CheckDiscountPolicy(guestID, storeID).Item2);
+            // TODO: add purchase before
+            Assert.AreNotEqual(0, ViewAllStorePurchase(username, storeID).Item1.Count);
         }
 
         [TestMethod]
         //sad
-        public void InvalidUserIDPolicyTest()
+        public void EmptyPurchaseHisstoryTest() 
         {
-            Assert.IsFalse(CheckDiscountPolicy("", storeID).Item1, CheckDiscountPolicy("", storeID).Item2);
+            Assert.AreEqual(0, ViewAllStorePurchase(username, storeID).Item1.Count);
         }
 
         [TestMethod]
         //bad
-        public void InvalidUserIDAndStoreIDPolicyTest()
+        public void BlankUsernamePurchaseHisstoryTest()
         {
-            Assert.IsFalse(CheckDiscountPolicy("       ", 10^6).Item1, CheckDiscountPolicy("       ", 10 ^ 6).Item2);
+            Assert.AreEqual(0, ViewAllStorePurchase(" ", storeID).Item1.Count);
         }
     }
 }

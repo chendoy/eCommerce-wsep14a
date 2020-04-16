@@ -7,48 +7,57 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-search-for-products-25 </req>
     [TestClass]
     public class SearchProductsStoryTest : SystemTrackTest
     {
-        String validProductName;
-        String anotherValidName;
-        String invalidProductName;
+         
+        string validProductName = "Lego";
+        string username;
+        string password;
+        int storeID;
+        int amount = 3;
+        int productID = 3;
+        string productDetails = "bla bla";
+
+
         [TestInitialize]
         public void SetUp()
         {
-            anotherValidName = "Bottle";
-            validProductName = "Lego";
-            invalidProductName = "\n";
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
+            Register(username, password);
+            Login(username, password);
+            storeID = OpenStore(username).Item1;
+            AddProductToStore(storeID, username, productID, productDetails, 3.0, validProductName, "lego", amount);
         }
+
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            ClearAllShops();
+            ClearAllUsers();
         }
+
         [TestMethod]
         //happy
         public void SearchProductByValidNameTest() 
         {
-            Assert.AreNotEqual(new List<Object>().Count, ViewProductByName(validProductName)); //change to list size
+            Assert.AreNotEqual(0, ViewProductByName(validProductName).Count);
         }
 
         [TestMethod]
         //bad
         public void SearchProductByInvalidNameTest()
         {
-            Assert.AreEqual(new List<Object>().Count, ViewProductByName(invalidProductName)); //change to list size
+            Assert.AreEqual(0, ViewProductByName("plane").Count); 
         }
+
         [TestMethod]
         //sad
-        public void SearchProductWhileChangeNameTest()
+        public void SearchProductIllegalCharsNameTest()
         {
-            ViewProductByName(validProductName);
-            ChangeProductName(anotherValidName);
-            ViewProductDetails();
-            Assert.AreEqual(GetProductName(), anotherValidName);  //change to list size
+            Assert.AreEqual(0, ViewProductByName("@#$@#%%$&               #$% ").Count);
         }
-
-
-
     }
 }

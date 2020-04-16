@@ -7,25 +7,27 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-login-23 </req>
     [TestClass]
     public class LoginStoryTest : SystemTrackTest
     {
-        String UserName1;
-        String Password1;
-        String UserName2;
-        String Password2;
+        string[] validUsernames = UserGenerator.GetValidUsernames();
+        string[] incorrectUsernames = UserGenerator.GetIncorrectUsernames();
+        string[] passwords = UserGenerator.GetPasswords();
+        string password1;
+        string username2;
+        string password2;
+
         [TestInitialize]
         public void SetUp()
         {
-            String UserName1 = UserGenerator.RandomString(5);
-            String Password1 = UserGenerator.RandomString(5);
-            String UserName2 = UserGenerator.RandomString(5);
-            String Password2 = UserGenerator.RandomString(5);
+
         }
+
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            ClearAllUsers();
         }
 
         [TestMethod]
@@ -33,24 +35,34 @@ namespace TestingSystem.AcceptanceTests
         public void ExistingUsernameAndPasswordTest()
         {
             //pre-condition
-            Register(UserName1, Password1);
-            Assert.IsTrue(sys.Login(UserName1, Password1));
+            for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE; i++)
+            {
+                Register(validUsernames[i], passwords[i]);
+                Assert.IsTrue(Login(validUsernames[i], passwords[i]).Item1, Login(validUsernames[i], passwords[i]).Item2);
+            }
         }
+
         [TestMethod]
         //sad
         public void UnmatchUsernameAndPasswordTest()
         {
-            Register(UserName1, Password1);
-            Register(UserName2, Password2);
-            Assert.IsFalse(Login(UserName1,UserName2));
+            Register(validUsernames[1], passwords[1]);
+            Register(validUsernames[2], passwords[2]);
+            Assert.IsFalse(Login(validUsernames[1], passwords[2]).Item1, Login(validUsernames[1], passwords[2]).Item2);
+
+            for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE; i++)
+            {
+                Register(validUsernames[i], passwords[i]);
+                Assert.IsTrue(Login(validUsernames[i], passwords[i]).Item1, Login(validUsernames[i], passwords[i]).Item2);
+            }
+
         }
+
         [TestMethod]
         //bad
-        public void UserLeftWhileLoginTest()
+        public void InvalidPasswordAndUsernameTest()
         {
-            GetDetailsFromUser();
-            UserLeft();
-            Assert.IsTrue(UserNotLogin());
+            Assert.IsFalse(Login("@!#!#!@$%^$%^","  ").Item1, Login("@!#!#!@$%^$%^", "  ").Item2);
         }
     }
 }

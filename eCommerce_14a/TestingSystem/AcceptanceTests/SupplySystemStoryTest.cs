@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-external-product-supply-system-8 </req>
     [TestClass]
     public class SupplySystemStoryTest : SystemTrackTest
     {

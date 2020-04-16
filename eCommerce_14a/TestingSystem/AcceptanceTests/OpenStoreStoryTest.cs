@@ -7,19 +7,48 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--open-store-32 </req>
     [TestClass]
     public class OpenStoreStoryTest : SystemTrackTest
     {
+        string username;
+        string password;
+
         [TestInitialize]
         public void SetUp()
         {
-            // TODO: impl
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
+            Register(username, password);
+            Login(username, password);
         }
+
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            ClearAllUsers();
+            ClearAllShops();
         }
 
+        [TestMethod]
+        //happy
+        public void OpenValidStoreDetailsTest() 
+        {
+            Assert.AreNotEqual(-1, OpenStore(username).Item1);
+        }
+
+        [TestMethod]
+        //sad
+        public void OpenInvalidStoreDetailsTest()
+        {
+            Assert.AreEqual(-1, OpenStore("hello").Item1);
+        }
+
+        [TestMethod]
+        //bad
+        public void OpenStoreWIthInvalisUsernameTest()
+        {
+            Assert.AreEqual(-1, OpenStore("\n\n\n\\t#@$#$@").Item1);
+        }
     }
 }

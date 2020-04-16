@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-external-payment-system-7 </req>
     [TestClass]
     public class PaymentSystemStoryTest : SystemTrackTest
     {
@@ -20,6 +21,5 @@ namespace TestingSystem.AcceptanceTests
         {
             // TODO: impl
         }
-
     }
 }
