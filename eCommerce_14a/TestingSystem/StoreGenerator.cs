@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestingSystem.AcceptanceTests
+namespace TestingSystem
 {
-    class ViewAllPurchaseHistoryStoryTest
+    class StoreGenerator
     {
     }
 }

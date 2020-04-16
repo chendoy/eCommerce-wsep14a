@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace TestingSystem.AcceptanceTests
 {
-    class ViewHistoryStoryTest
+    /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+    class AdminViewAllPurchaseHistoryStoryTest
     {
+
     }
 }
