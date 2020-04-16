@@ -204,7 +204,7 @@ namespace eCommerce_14a
             return inventory.productExist(productId);
         }
 
-        public double getBucketPrice(Dictionary<int, int> products)
+        public double getBasketPrice(Dictionary<int, int> products)
         {
             //TODO: manage the price also according in the discountPolicy in next version
             return inventory.getBasketPrice(products);

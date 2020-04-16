@@ -4,37 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eCommerce_14a.Purchase.DomainLayer
+namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class Cart
     {
         private string user;
         private Dictionary<Store, PurchaseBasket> baskets;
-        private int price;
+        public double Price { get; private set; }
 
         public Cart(string user)
         {
             this.user = user;
             this.baskets = new Dictionary<Store, PurchaseBasket>();
-            this.price = 0;
+            Price = 0;
         }
 
-        public Dictionary<Store, PurchaseBasket> GetBaskets()
+        internal Dictionary<Store, PurchaseBasket> GetBaskets()
         {
             return this.baskets;
-        }
-
-        public int GetPrice()
-        {
-            return this.price;
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         public Tuple<bool, string> AddProduct(Store store, int productId, int wantedAmount, bool exist)
         {
-            if (store == null)
+            if (store == null || !store.ActiveStore)
             {
                 return new Tuple<bool, string>(false, "Invalid store");
+            }
+
+            if (!store.productExist(productId))
+            {
+                return new Tuple<bool, string>(false, "Not a valid product");
             }
 
             if (!baskets.TryGetValue(store, out PurchaseBasket basket))
@@ -53,12 +53,37 @@ namespace eCommerce_14a.Purchase.DomainLayer
             return res;
         }
 
-        private void UpdateCartPrice()
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
+        internal void UpdateCartPrice()
         {
-            int price = 0;
+            Price = 0;
             foreach (var basket in baskets.Values)
             {
-                price += basket.GetPrice();
+                Price += basket.UpdateCartPrice();
+            }
+        }
+
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-buying-policy-282</req>
+        internal Tuple<bool, string> CheckProductsValidity()
+        {
+            foreach (var basket in baskets.Values)
+            {
+                Tuple<bool, string> res = basket.CheckProductsValidity();
+                if (!res.Item1)
+                {
+                    return res;
+                }
+            }
+
+            return new Tuple<bool, string>(true, "");
+        }
+
+        internal void SetPurchaseTime(DateTime purchaseTime)
+        {
+            foreach (var basket in baskets.Values)
+            {
+                basket.SetPurchaseTime(purchaseTime);
             }
         }
     }

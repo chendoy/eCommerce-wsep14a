@@ -50,12 +50,12 @@
     <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Purchase\DomainLayer\Cart.cs" />
-    <Compile Include="Purchase\DomainLayer\External.cs" />
-    <Compile Include="Purchase\DomainLayer\Purchase.cs" />
-    <Compile Include="Purchase\DomainLayer\PurchaseBasket.cs" />
-    <Compile Include="Purchase\DomainLayer\PurchaseManagement.cs" />
-    <Compile Include="Purchase\ServiceLayer\PurchaseService.cs" />
+    <Compile Include="PurchaseComponent\DomainLayer\Cart.cs" />
+    <Compile Include="PurchaseComponent\DomainLayer\External.cs" />
+    <Compile Include="PurchaseComponent\DomainLayer\Purchase.cs" />
+    <Compile Include="PurchaseComponent\DomainLayer\PurchaseBasket.cs" />
+    <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
+    <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
