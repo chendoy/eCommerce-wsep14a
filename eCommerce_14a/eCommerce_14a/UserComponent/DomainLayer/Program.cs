@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using log4net;
 
-namespace eCommerce_14a
+namespace eCommerce_14a.UserComponent.DomainLayer
 {
     public class Program
     {

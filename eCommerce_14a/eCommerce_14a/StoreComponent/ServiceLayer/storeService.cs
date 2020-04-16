@@ -4,8 +4,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
-namespace eCommerce_14a
+
+namespace eCommerce_14a.StoreComponent.ServiceLayer
 {
     public class StoreService
     {

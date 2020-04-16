@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
- 
-namespace eCommerce_14a
+
+namespace eCommerce_14a.UserComponent.DomainLayer
 {
- 
+
 
     public class UserManager
     {

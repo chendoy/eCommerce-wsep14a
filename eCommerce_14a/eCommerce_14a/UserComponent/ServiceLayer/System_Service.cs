@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.UserComponent.DomainLayer;
 
-namespace eCommerce_14a
+
+namespace eCommerce_14a.UserComponent.ServiceLayer
 {
     public class System_Service
     {

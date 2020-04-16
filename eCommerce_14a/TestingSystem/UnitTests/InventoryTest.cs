@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace TestingSystem.UnitTests
 {

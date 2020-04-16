@@ -7,6 +7,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.UserComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace TestingSystem.UnitTests
 {

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eCommerce_14a.UserComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
-namespace eCommerce_14a
+namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public class StoreManagment
     {
