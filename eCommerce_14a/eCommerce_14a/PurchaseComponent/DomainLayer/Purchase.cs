@@ -8,11 +8,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class Purchase
     {
-        private Cart userCart;
+        public string User { get; private set; }
+        public DateTime PurchaseTime { get; private set; }
+        public Cart UserCart { get; private set; }
 
-        public Purchase(Cart userCart)
+        public Purchase(string user, DateTime purchaseTime, Cart userCart)
         {
-            this.userCart = userCart;
+            User = user;
+            PurchaseTime = purchaseTime;
+            UserCart = userCart;
         }
     }
 }

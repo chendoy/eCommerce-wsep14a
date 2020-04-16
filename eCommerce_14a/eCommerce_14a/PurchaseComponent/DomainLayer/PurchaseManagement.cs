@@ -125,7 +125,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return delvRes;
             }
 
-            Purchase newPurchase = new Purchase(userCart);
+            Purchase newPurchase = new Purchase(user, DateTime.Now, userCart);
             if(!purchasesHistory.TryGetValue(user, out List<Purchase> userHistory)) 
             {
                 userHistory = new List<Purchase>();
