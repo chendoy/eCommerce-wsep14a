@@ -1,0 +1,6 @@
+2020-04-13 13:13:44,204 [1] ERROR eCommerce_14a.Program - Error log. Nadav Voloch is the king.
+2020-04-13 13:13:44,213 [1] WARN eCommerce_14a.Program - Warning log. Miki Fayer is the king.
+2020-04-13 13:13:44,213 [1] INFO eCommerce_14a.Program - fdfd
+2020-04-13 13:21:19,970 [1] ERROR eCommerce_14a.Program - Error log. Nadav Voloch is the king.
+2020-04-13 13:21:19,979 [1] WARN eCommerce_14a.Program - Warning log. Miki Fayer is the king.
+2020-04-13 13:21:19,980 [1] INFO eCommerce_14a.Program - fdfd
