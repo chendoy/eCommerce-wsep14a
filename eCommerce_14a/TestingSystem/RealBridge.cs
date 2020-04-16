@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a;
+using eCommerce_14a.PurchaseComponent.ServiceLayer;
 
 namespace TestingSystem
 {
@@ -11,117 +12,128 @@ namespace TestingSystem
     {
         Appoitment_Service appointService; //sundy
         UserService userService; //sundy
-        eSystem sysService; //sundy
-        storeService storeService; //liav
+        System_Service sysService; //sundy
+        StoreService StoreService; //liav
         PurchaseService purchService; //naor
 
         public RealBridge()
         {
             appointService = new Appoitment_Service();
             userService = new UserService();
-            sysService = new eSystem();
-            storeService = new storeService();
+            sysService = new System_Service("admin", "admin");
+            StoreService = new StoreService();
             purchService = new PurchaseService();
         }
 
         /// ~~~~~~~~Naor~~~~~~~~:
 
-        public new List<object> ViewCartDetails(string cartID)
-        {
-            return purchService.GetCartDetails(cartID);
-        }
+        // TODO: resolve return type 
+        //public new List<object> ViewCartDetails(string cartID)
+        //{
+        //    return purchService.GetCartDetails(cartID);
+        //}
        
         public new Tuple<bool, string> AddProductToBasket(string userID, int storeID, int productID, int amount)
         {
             return purchService.AddProductToShoppingCart(userID, storeID, productID, amount);
         }
 
-        public new Tuple<bool, string> PayForProduct(string userID, string paymentDetails)
+        public new Tuple<bool, string> PayForProduct(string userID, string paymentDetails, string address)
         {
-            return purchService.PayForProduct(userID, paymentDetails);//@@@@@@@@@@@@@@@@@@
+            return purchService.PerformPurchase(userID, paymentDetails, address);//@@@@@@@@@@@@@@@@@@
         }
 
         public new Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)//@@@@@@@@@@@@@@@@@@@@
         {
-            purchService.PerformPurchase(user, paymentDetails, address);
+            return purchService.PerformPurchase(user, paymentDetails, address);
         }
 
-        public new Tuple<List<object>, string> ViewPurchaseUserHistory(string userName)
-        {
-            return purchService.GetBuyerHistory(userName);//@@@@@@@@@@@@
-        }
+        // TODO: resolve return type 
+        //public new Tuple<List<object>, string> ViewPurchaseUserHistory(string userName)
+        //{
+        //    return purchService.GetBuyerHistory(userName);//@@@@@@@@@@@@
+        //}
 
-        public new Tuple<List<object>, string> ViewAllStorePurchase(string userName, int storeID) //@@@@@@@
-        {
-            return purchService.GetStoreHistory(userName, storeID);
-        }
+        // TODO: resolve return type 
+        //public new Tuple<List<object>, string> ViewAllStorePurchase(string userName, int storeID) //@@@@@@@
+        //{
+        //    return purchService.GetStoreHistory(userName, storeID);
+        //}
 
-        public Tuple<bool, string> RemoveProductFromShoppingCart(string user, int store, int product)
+
+        public new Tuple<bool, string> RemoveProductFromShoppingCart(string user, int store, int product)
         {
             return purchService.RemoveProductFromShoppingCart(user, store, product);
         }
 
 
         /// ~~~~~~~~Liav~~~~~~~~:
-
-        public new Tuple<bool, String> ChangeProductAmount(int storeID, string username, int productID, int newAmount)
-        {
-            return storeService.ChangeProductAmount(storeID, username, productID, newAmount);//@@@@@@@@@@@@
-        }
+        
+        //TODO: change to increase decrase
+        //public new Tuple<bool, String> ChangeProductAmount(int storeID, string username, int productID, int newAmount)
+        //{
+        //    return StoreService.ChangeProductAmount(storeID, username, productID, newAmount);//@@@@@@@@@@@@
+        //}
 
         public new Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
         {
-            return storeService.appendProduct(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount); ;
+            return StoreService.appendProduct(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount); ;
         }
 
         public new Dictionary<string, object> ViewStoreDetails(int storeID)
         {
-            return storeService.getStoreInfo(storeID);
+            return StoreService.getStoreInfo(storeID);
         }
 
-        public new Dictionary<int, List<object>> ViewStoreProductsByCategory(int storeID, String category)
-        {
-            return storeService.SearchProducts(new Dictionary<string, object> { { "searchByCategory", category } });//@@@@@@@@@@@@@@@@@
-        }
+
+        // TODO: resolve return type 
+        //public new Dictionary<int, List<object>> ViewStoreProductsByCategory(int storeID, String category)
+        //{
+        //    return StoreService.SearchProducts(new Dictionary<string, object> { { "searchByCategory", category } });//@@@@@@@@@@@@@@@@@
+        //}
 
         public new Tuple<bool, string> CloseStore(string username, int storeID)
         {
-            return storeService.removeStore(username, storeID);
+            return StoreService.removeStore(username, storeID);
         }
 
-        public new Dictionary<int, List<object>> ViewProductByName(String productName)
-        {
-            return storeService.SearchProducts(new Dictionary<string, object> { { "SearchByProductName", productName } });//@@@@@@@@@@@@@@@@@
-        }
+
+        // TODO: resolve return type 
+        //public new Dictionary<int, List<object>> ViewProductByName(String productName)
+        //{
+        //    return StoreService.SearchProducts(new Dictionary<string, object> { { "SearchByProductName", productName } });//@@@@@@@@@@@@@@@@@
+        //}
 
         public new Tuple<int, string> OpenStore(string userName)
         {
-            return storeService.createStore(userName, 0, 0); // without discount or buying policy
+            return StoreService.createStore(userName, 0, 0); // without discount or buying policy
         }
 
         public new Tuple<bool, string> UpdateProductDetails(int storeId, string userId, int productId, string newDetails, double price, string name, string category)
         {
-            return storeService.UpdateProduct(userId, storeId, productId, newDetails, price, name, category);
+            return StoreService.UpdateProduct(userId, storeId, productId, newDetails, price, name, category);
         }
 
         public new Tuple<bool, string> RemoveProductFromStore(string username, int storeID, int productID)
         {
-            return storeService.removeProduct(storeID, username, productID);
+            return StoreService.removeProduct(storeID, username, productID);
         }
 
-        public new Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID)
-        {
-            return storeService.CheckBuyingPolicy(userID, storeID);// @@@@@@@@@@@@@@ stub
-        }
+        // impl on next version
+        //public new Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID)
+        //{
+        //    return StoreService.CheckBuyingPolicy(userID, storeID);// @@@@@@@@@@@@@@ stub
+        //}
 
-        public new Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID)
-        {
-            return storeService.CheckDiscountPolicy(userID, storeID); //@@@@@@@@@@@@@@@@@@@@ stub
-        }
+        //impl on next version
+        //public new Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID)
+        //{
+        //    return StoreService.CheckDiscountPolicy(userID, storeID); //@@@@@@@@@@@@@@@@@@@@ stub
+        //}
 
         public new void ClearAllShops()
         {
-            storeService.cleanup();
+            StoreService.cleanup();
         }
 
 
@@ -154,13 +166,14 @@ namespace TestingSystem
 
         public new Tuple<bool, string> Init()
         {
-            return sysService.system_init("Admin","Admin");
+            return sysService.initSystem("Admin","Admin");
         }
 
-        public new Tuple<string, string> enterSystem()
-        {
-            return new Tuple<string,string>(userService.LoginAsGuest(),"");
-        }
+        // TODO: change to <bool, string>
+        //public new Tuple<string, string> enterSystem()
+        //{
+        //    return new Tuple<string,string>(userService.LoginAsGuest(),"");
+        //}
 
         public new Tuple<bool, string> ProvideDeliveryForUser(string UserID, bool paymentFlag) //@@@@@@@@@
         {

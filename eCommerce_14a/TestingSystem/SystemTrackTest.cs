@@ -32,7 +32,7 @@ namespace TestingSystem
         
         public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
         {
-            sys.PerformPurchase(user, paymentDetails, address);
+            return sys.PerformPurchase(user, paymentDetails, address);
         }
 
 

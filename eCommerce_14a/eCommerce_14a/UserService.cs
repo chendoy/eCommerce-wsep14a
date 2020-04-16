@@ -14,31 +14,27 @@ namespace eCommerce_14a
             UM = UserManager.Instance;
         }
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-registration-22 </req>
-        public bool Registration(string username, string password)
+        public Tuple<bool,string> Registration(string username, string password)
         {
-            Tuple<bool, string> ans = UM.Register(username, password);
-            Console.WriteLine(ans.Item2);
-            return ans.Item1;
+            return  UM.Register(username, password);
+
         }
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-login-23 </req>
-        public bool Login(string username, string password)
+        public Tuple<bool,string> Login(string username, string password)
         {
-            Tuple<bool, string> ans = UM.Login(username, password);
-            Console.WriteLine(ans.Item2);
-            return ans.Item1;
+            return UM.Login(username, password);
+
         }
-        public string LoginAsGuest()
+        public Tuple<bool,string> LoginAsGuest()
         {
-            Tuple<bool, string> ans = UM.Login("", "", true);
-            Console.WriteLine(ans.Item2);
-            return ans.Item2;
+            return UM.Login("", "", true);
+
         }
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer-logout-31</req>
-        public bool Logout(string user)
+        public Tuple<bool,string> Logout(string user)
         {
-            Tuple<bool, string> ans = UM.Logout(user);
-            Console.WriteLine(ans.Item2);
-            return ans.Item1;
+            return UM.Logout(user);
+        
         }
         //For Admin Usage
         public void cleanup()

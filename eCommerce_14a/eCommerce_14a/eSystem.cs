@@ -14,11 +14,9 @@ namespace eCommerce_14a
         private PaymentHandler PH;
         private AppoitmentManager AM;
         private Dictionary<int, Store> stores;
-        public eSystem(string admin = "", string password = "")
-        {
-            system_init(admin, password);
-        }
-        private void system_init(string admin, string password)
+        
+         
+        public Tuple<bool, string> system_init(string admin, string password)
         {
             UManagment = UserManager.Instance;
             AM = AppoitmentManager.Instance;
@@ -35,35 +33,18 @@ namespace eCommerce_14a
                         break;
                     }
                 }
-                string Exit = "Queiting the System\n";
-                Console.WriteLine(Exit);
-                Environment.Exit(1);
+                return new Tuple<bool, string>(false, "cann't connect to 3rd party system");
             }
-            if (admin == "" || password == "")
-            {
-                Console.WriteLine("System is ready please register the system's Admin:\n");
-                Console.WriteLine("User:\n");
-                admin = Console.ReadLine();
-                while (UManagment.isUserExist(admin))
-                {
-                    Console.WriteLine("User Already Exist Try Again:\n");
-                    Console.WriteLine("User:\n");
-                    admin = Console.ReadLine();
-                }
-                Console.WriteLine("Password:\n");
-                password = Console.ReadLine();
-            }
+            
             string user_hash = bodyguard.CalcSha1(password);
             Tuple<bool, string> ans;
             ans = UManagment.RegisterMaster(admin, user_hash);
             if (user_hash == null || !ans.Item1)
             {
-                Console.WriteLine("Failed to Assign Administrator\n");
-                string Exit = "Queiting the System\n";
-                Console.WriteLine(Exit);
-                Environment.Exit(1);
+                return new Tuple<bool, string>(true, "System Admin didn't register");
+
             }
-            Console.WriteLine("System Administrator Created:\n");
+            return new Tuple<bool, string>(true, "");
         }
         public bool SetDeliveryConnection(bool conn)
         {

@@ -71,7 +71,7 @@
     <Compile Include="Searcher.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="Store.cs" />
-    <Compile Include="storeService.cs" />
+    <Compile Include="StoreService.cs" />
     <Compile Include="StoreManagment.cs" />
     <Compile Include="System_Service.cs" />
     <Compile Include="User.cs" />

@@ -44,7 +44,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void ConnectionLostWithSupplySystemTest()
         {
-            setSupplySystemConnection(false);
+            SetSupplySystemConnection(false);
             Assert.IsFalse(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
         }
     }

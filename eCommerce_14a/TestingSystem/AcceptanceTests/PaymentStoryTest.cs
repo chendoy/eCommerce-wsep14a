@@ -42,7 +42,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void ConnectionLostWithPaymentSystemTest()
         {
-            setPaymentSystemConnection(false);
+            SetPaymentSystemConnection(false);
             Assert.IsFalse(PayForProduct(userID, paymentDetails).Item1, PayForProduct(userID, paymentDetails).Item2);
         }
     }

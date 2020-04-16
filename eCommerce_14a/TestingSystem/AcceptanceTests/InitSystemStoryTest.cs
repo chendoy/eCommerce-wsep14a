@@ -37,7 +37,7 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void NoConnectionWithOneSystemTest()
         {
-            setPaymentSystemConnection(false);
+            SetPaymentSystemConnection(false);
             Assert.IsFalse(Init().Item1, Init().Item2);
         }
 

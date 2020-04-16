@@ -26,7 +26,6 @@ namespace TestingSystem.AcceptanceTests
         [TestCleanup]
         public void TearDown()
         {
-            ClearUserCart(userID);
         }
         [TestMethod]
         public void LegalPurchaseTest() 

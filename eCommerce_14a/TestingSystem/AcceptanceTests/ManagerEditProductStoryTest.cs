@@ -52,7 +52,7 @@ namespace TestingSystem.AcceptanceTests
         public void EditValidProductTest()
         {
             AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount);
-            Assert.IsTrue(UpdateProductDetails(storeID, userManager, productID, newName).Item1, UpdateProductDetails(storeID, userManager, productID, newName).Item2);
+            Assert.IsTrue(UpdateProductDetails(storeID, userManager, productID, newName, productPrice, productName,productCategory).Item1, UpdateProductDetails(storeID, userManager, productID, newName, productPrice, productName, productCategory).Item2);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace TestingSystem.AcceptanceTests
         public void EditUnExistingProductTest()
         {
             AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount);
-            Assert.IsFalse(UpdateProductDetails(storeID, userManager, 0, newName).Item1, UpdateProductDetails(storeID, userManager, 0, newName).Item2);
+            Assert.IsFalse(UpdateProductDetails(storeID, userManager, 0, newName, productPrice, productName, productCategory).Item1, UpdateProductDetails(storeID, userManager, 0, newName, productPrice, productName, productCategory).Item2);
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace TestingSystem.AcceptanceTests
         public void EditBlankDetailProductTest()
         {
             AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount);
-            Assert.IsFalse(UpdateProductDetails(storeID, userManager, 0, "  ").Item1, UpdateProductDetails(storeID, userManager, 0, "  ").Item2);
+            Assert.IsFalse(UpdateProductDetails(storeID, userManager, 0, "  ", productPrice, productName, productCategory).Item1, UpdateProductDetails(storeID, userManager, 0, "  ", productPrice, productName, productCategory).Item2);
         }
     }
 }

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a
 {
-    class storeService
+    public class StoreService
     {
         StoreManagment storeManagment;
         Searcher searcher;
-        public storeService(StoreManagment storeManagment, Searcher searcher)
+        public StoreService()
         {
-            this.storeManagment = storeManagment;
-            this.searcher = searcher;
+            this.storeManagment = new StoreManagment(null);
+            this.searcher = new Searcher(storeManagment);
 
         }
 

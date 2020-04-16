@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace eCommerce_14a
 {
-    class System_Service
+    public class System_Service
     {
         eSystem Commercial_System;
         public System_Service(string name, string pass)
         {
-            Commercial_System = new eSystem(name, pass);
+            Commercial_System = new eSystem();
+        }
+
+        public Tuple<bool, string> initSystem(string userName, string pass)
+        {
+            return Commercial_System.system_init(userName, pass);
         }
         public bool SetDeliveryConnection(bool con)
         {

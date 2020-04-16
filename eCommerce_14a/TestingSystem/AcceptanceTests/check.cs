@@ -13,7 +13,6 @@ namespace TestingSystem.AcceptanceTests
         [TestMethod]
         public void ExceptionCheckTest()
         {
-            ExceptionChecking();
         }
 
 
