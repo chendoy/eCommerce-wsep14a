@@ -18,50 +18,67 @@ namespace eCommerce_14a
         {
             Dictionary<int, Store> activeStores = storeManagemnt.getActiveSotres();
             Dictionary<int,List<Product>> matchProducts = new Dictionary<int, List<Product>>();
+            bool searchByStoreId = searchBy.ContainsKey(CommonStr.SearcherKeys.StoreId);
             foreach (KeyValuePair<int, Store> entry in activeStores)
             {
                 Store store = entry.Value;
                 Inventory storeInv = store.Inventory;
-
-                if(ValidStoreRank(store, searchBy))
+                bool isValidStoreId = false;
+                if(isValidStoreId = ValidStoreId(store, searchBy))
                 {
-                    foreach (KeyValuePair<int, Tuple<Product, int>> entryProduct in storeInv.Inv)
+                    if (ValidStoreRank(store, searchBy))
                     {
-                        Product product = entryProduct.Value.Item1;
-
-                        if (ValidProductName(product, searchBy))
+                        foreach (KeyValuePair<int, Tuple<Product, int>> entryProduct in storeInv.Inv)
                         {
-                            if (ValidProductCategory(product, searchBy))
-                            {
+                            Product product = entryProduct.Value.Item1;
 
-                                if (ValidPriceRange(product, searchBy))
+                            if (ValidProductName(product, searchBy))
+                            {
+                                if (ValidProductCategory(product, searchBy))
                                 {
 
-                                    if (ValidProductRank(product, searchBy))
+                                    if (ValidPriceRange(product, searchBy))
                                     {
 
-                                        if (ValidProductKeyWord(product, searchBy))
+                                        if (ValidProductRank(product, searchBy))
                                         {
-                                            if (matchProducts.ContainsKey(store.Id))
-                                                matchProducts[store.Id].Add(product);
-                                            else
-                                            matchProducts.Add(store.Id, new List<Product> { product });
+
+                                            if (ValidProductKeyWord(product, searchBy))
+                                            {
+                                                if (matchProducts.ContainsKey(store.Id))
+                                                    matchProducts[store.Id].Add(product);
+                                                else
+                                                    matchProducts.Add(store.Id, new List<Product> { product });
+
+                                            }
 
                                         }
 
                                     }
-
                                 }
-                            } 
-                           
+
+                            }
+
                         }
 
                     }
-
                 }
+                if (searchByStoreId && isValidStoreId)
+                    break;        
             }
                 
             return matchProducts;
+        }
+
+        private bool ValidStoreId(Store store, Dictionary<string, object> searchBy)
+        {
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.StoreId))
+                if ((int)searchBy[CommonStr.SearcherKeys.StoreId] == store.Id)
+                    return true;
+                else
+                    return false;
+
+            return true;
         }
 
         private bool ValidProductKeyWord(Product product, Dictionary<string, object> searchBy)

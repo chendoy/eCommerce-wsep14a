@@ -20,7 +20,7 @@ namespace eCommerce_14a
             public static string ProductName = "SearchByProductName";
             public static string ProductCategory = "searchByCategory";
             public static string StoreRank = "SearchByStoreRank";
-
+            public static string StoreId = "SearchByStioreId";
         }
 
         
