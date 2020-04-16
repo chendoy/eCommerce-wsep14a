@@ -52,9 +52,9 @@ namespace eCommerce_14a.PurchaseComponent.ServiceLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchases-history-view-410 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
         /// <param name="manager"> Any Owner/Manager of the store or the admin of the system</param>
-        public Tuple<List<Purchase>, string> GetStoreHistory(string manager, int storeId)
+        public Tuple<List<PurchaseBasket>, string> GetStoreHistory(string manager, int storeId)
         {
-            throw new NotImplementedException();
+            return purchaseManagement.GetStoreHistory(manager, storeId);
         }
     }
 }

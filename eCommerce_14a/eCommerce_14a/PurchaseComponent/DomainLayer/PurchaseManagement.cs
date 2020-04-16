@@ -10,7 +10,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
     {
         // Holding the carts and purchases by user
         private Dictionary<string, Cart> carts;
-        private Dictionary<string, List<Purchase>> purchasesHistory;
+        private Dictionary<string, List<Purchase>> purchasesHistoryByUser;
+        private Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore;
         private StoreManagment storeManagment;
         PaymentHandler paymentHandler;
         DeliveryHandler deliveryHandler;
@@ -18,7 +19,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public PurchaseManagement(StoreManagment storeManagment, PaymentHandler paymentHandler, DeliveryHandler deliveryHandler)
         {
             this.carts = new Dictionary<string, Cart>();
-            this.purchasesHistory = new Dictionary<string, List<Purchase>>();
+            this.purchasesHistoryByUser = new Dictionary<string, List<Purchase>>();
+            this.purchasesHistoryByStore = new Dictionary<Store, List<PurchaseBasket>>();
             this.storeManagment = storeManagment;
             this.paymentHandler = paymentHandler;
             this.deliveryHandler = deliveryHandler;
@@ -111,7 +113,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
             /// <param name="paymentDetails">Pay with this</param>
             /// <param name="price"> with userCart.Price</param>
-            Tuple<bool,string> payRes = paymentHandler.pay();
+            Tuple<bool, string> payRes = paymentHandler.pay();
             if (!payRes.Item1)
             {
                 return payRes;
@@ -125,14 +127,24 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return delvRes;
             }
 
-            Purchase newPurchase = new Purchase(user, DateTime.Now, userCart);
-            if(!purchasesHistory.TryGetValue(user, out List<Purchase> userHistory)) 
+            userCart.SetPurchaseTime(DateTime.Now);
+            foreach (Store store in userCart.GetBaskets().Keys)
+            {
+                if (!purchasesHistoryByStore.TryGetValue(store, out List<PurchaseBasket> currHistory))
+                {
+                    currHistory = new List<PurchaseBasket>();
+                }
+
+                currHistory.Add(userCart.GetBaskets()[store]);
+            }
+            Purchase newPurchase = new Purchase(user, userCart);
+            if (!purchasesHistoryByUser.TryGetValue(user, out List<Purchase> userHistory))
             {
                 userHistory = new List<Purchase>();
-            } 
-            
+            }
+
             userHistory.Add(newPurchase);
-            purchasesHistory[user] = userHistory;
+            purchasesHistoryByUser[user] = userHistory;
 
             return new Tuple<bool, string>(true, "");
         }
@@ -145,12 +157,42 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<List<Purchase>, string>(new List<Purchase>(), "Not a valid user");
             }
 
-            if(!purchasesHistory.ContainsKey(user))
+            if (!purchasesHistoryByUser.ContainsKey(user))
             {
                 return new Tuple<List<Purchase>, string>(new List<Purchase>(), "");
             }
 
-            return new Tuple<List<Purchase>, string>(purchasesHistory[user], "");
+            return new Tuple<List<Purchase>, string>(purchasesHistoryByUser[user], "");
+        }
+
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchases-history-view-410 </req>
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+        /// <param name="manager"> Any Owner/Manager of the store or the admin of the system</param>
+        public Tuple<List<PurchaseBasket>, string> GetStoreHistory(string manager, int storeId)
+        {
+            List<PurchaseBasket> res = new List<PurchaseBasket>();
+            if (!External.CheckValidUser(manager))
+            {
+                return new Tuple<List<PurchaseBasket>, string>(res, "Not a valid user");
+            }
+
+            if (!External.CheckOwnership(manager, storeId) || !External.CheckIsAdmin(manager))
+            {
+                return new Tuple<List<PurchaseBasket>, string>(res, "Not authorized to this store");
+            }
+
+            Store store = storeManagment.getStore(storeId);
+            if (store == null)
+            {
+                return new Tuple<List<PurchaseBasket>, string>(res, "Not a valid store");
+            }
+
+            if (!purchasesHistoryByStore.TryGetValue(store, out List<PurchaseBasket> currHistory))
+            {
+                currHistory = new List<PurchaseBasket>();
+            }
+
+            return new Tuple<List<PurchaseBasket>, string>(currHistory, "");
         }
     }
 }

@@ -15,6 +15,16 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return true;
         }
 
+        public static bool CheckOwnership(string manager, int storeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool CheckIsAdmin(string admin)
+        {
+            throw new NotImplementedException();
+        }
+
         static StoreExternal store = new StoreExternal();
         // All this functions can be at Store object that I will get first from CheckValidStore
         // Store Component
@@ -24,6 +34,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             return External.store;
         }
+
+
     }
 
 

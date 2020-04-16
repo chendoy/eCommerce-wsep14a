@@ -19,7 +19,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             Price = 0;
         }
 
-        public Dictionary<Store, PurchaseBasket> GetBaskets()
+        internal Dictionary<Store, PurchaseBasket> GetBaskets()
         {
             return this.baskets;
         }
@@ -77,6 +77,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             return new Tuple<bool, string>(true, "");
+        }
+
+        internal void SetPurchaseTime(DateTime purchaseTime)
+        {
+            foreach (var basket in baskets.Values)
+            {
+                basket.SetPurchaseTime(purchaseTime);
+            }
         }
     }
 }

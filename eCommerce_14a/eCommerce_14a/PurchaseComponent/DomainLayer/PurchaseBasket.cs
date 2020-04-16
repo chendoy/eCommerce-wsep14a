@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         private readonly Store store;
         private Dictionary<int, int> products;
         private double Price { get; set; }
+        public DateTime PurchaseTime { get; private set; }
 
         public PurchaseBasket(string user, Store store)
         {
@@ -76,6 +78,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             Price = store.getBasketPrice(products);
             return Price;
+        }
+
+        internal void SetPurchaseTime(DateTime purchaseTime)
+        {
+            PurchaseTime = purchaseTime;
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
