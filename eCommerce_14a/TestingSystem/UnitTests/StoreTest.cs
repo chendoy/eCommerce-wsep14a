@@ -51,6 +51,7 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestCleanup()
         {
             UserManager.Instance.cleanup();
+            StoreManagment.Instance.cleanup();
         }
 
 
