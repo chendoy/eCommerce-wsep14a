@@ -15,7 +15,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         private string name;
         private int id;
         private bool isGuest;
-        private int[] roles;
         private bool isAdmin, isLoggedIn;
         private Dictionary<int, Store> Store_Ownership;
         private Dictionary<int, Store> Store_Managment;

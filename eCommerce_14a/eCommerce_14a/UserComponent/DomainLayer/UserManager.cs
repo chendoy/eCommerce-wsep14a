@@ -203,7 +203,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             //when you delete a store owner of store you should also delete it from the store owner list and use the function below
             throw new NotImplementedException();
             // the function is here ...
-            store.RemoveOwner(user);
+            //store.RemoveOwner(user);
         }
         //For test clean the DB
         public void cleanup()

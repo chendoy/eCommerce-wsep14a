@@ -20,7 +20,6 @@ namespace TestingSystem.UnitTests.StoreTest
         private  Store validStore;
         private List<User> owners;
         private List<User> managers;
-        private UserManager um;
         [TestInitialize]
         public  void TestInitialize()
         {
