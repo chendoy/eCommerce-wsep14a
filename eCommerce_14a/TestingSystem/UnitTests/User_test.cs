@@ -46,6 +46,10 @@ namespace TestingSystem.UnitTests.User_test
             Assert.IsTrue(u_test.isUserExist("test4"));
             //Null args
             Assert.IsFalse(u_test.Register("test", null).Item1);
+            Assert.IsFalse(u_test.Register("$", "AAA").Item1);
+            Assert.IsFalse(u_test.Register("$xuqe", "AAA").Item1);
+            Assert.IsFalse(u_test.Register("t1", "AAA").Item1);
+            Assert.IsFalse(u_test.Register("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "AAA").Item1);
             Assert.IsFalse(u_test.Register(null, null).Item1);
             //Blank args
             Assert.IsFalse(u_test.Register("", "Test1").Item1);
