@@ -74,6 +74,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return new Tuple<bool, string>(true, null);
         }
 
+        internal bool IsEmpty()
+        {
+            return products.Count == 0;
+        }
+
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
