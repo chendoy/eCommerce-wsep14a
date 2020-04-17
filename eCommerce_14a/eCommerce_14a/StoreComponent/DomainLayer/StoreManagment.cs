@@ -6,6 +6,7 @@ using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
+    /// <testClass cref ="eCommerce_14a.StoreManagment.getStore(int)
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;
@@ -147,7 +148,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        //impl on next version only!
         public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
         {
             User user = userManager.GetAtiveUser(userName);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using eCommerce_14a;
 using eCommerce_14a.UserComponent.DomainLayer;
 
-namespace TestingSystem.UnitTests
+namespace TestingSystem.UnitTests.User_test
 {
     [TestClass]
     public class User_test
