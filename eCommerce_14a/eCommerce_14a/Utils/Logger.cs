@@ -33,7 +33,7 @@ namespace eCommerce_14a
 
         }
 
-        public static Boolean logEvent(string msg, object classObj, MethodBase mb)
+        public static Boolean logEvent(object classObj, MethodBase mb)
         {
             if (eventLogger == null)
             {
@@ -42,10 +42,27 @@ namespace eCommerce_14a
             }
             else
             {
-                eventLogger.Info("[" + getClassName(classObj) + "." + getMethodName(mb) + "]" + " - " + msg);
+                eventLogger.Info("Function '" + getMethodName(mb) + "' was called within " + getClassName(classObj) + ".cs" + " with args: [" + argsPrettify(mb) + "]");
                 return true;
             }
 
+        }
+
+        private static string argsPrettify(MethodBase mb)
+        {
+            ParameterInfo[] pis = mb.GetParameters();
+            string argsStr = "";
+
+            if (pis.Length == 0)
+                argsStr = "None";
+
+            foreach (ParameterInfo pi in pis)
+            {
+                argsStr += pi.Name + ":" + pi.ParameterType.Name + ", ";
+            }
+            char[] charsToTrim = { ',', ' ' };
+            argsStr = argsStr.Trim(charsToTrim);
+            return argsStr;
         }
 
         private static string getMethodName(MethodBase mb)
