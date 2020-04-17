@@ -99,8 +99,6 @@
     <Compile Include="UnitTests\User_test.cs" />
     <Compile Include="TestsProjectInterface.cs" />
     <Compile Include="UnitTests\AdministrationTests.cs" />
-    <Compile Include="UnitTests\StoreTests.cs" />
-    <Compile Include="UnitTests\UserTests.cs" />
     <Compile Include="UserGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

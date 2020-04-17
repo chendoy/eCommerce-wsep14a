@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a;
+using eCommerce_14a.UserComponent.DomainLayer;
 
-namespace TestingSystem.UnitTests
+namespace TestingSystem.UnitTests.User_test
 {
     [TestClass]
     public class User_test
@@ -45,6 +46,10 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(u_test.isUserExist("test4"));
             //Null args
             Assert.IsFalse(u_test.Register("test", null).Item1);
+            Assert.IsFalse(u_test.Register("$", "AAA").Item1);
+            Assert.IsFalse(u_test.Register("$xuqe", "AAA").Item1);
+            Assert.IsFalse(u_test.Register("t1", "AAA").Item1);
+            Assert.IsFalse(u_test.Register("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "AAA").Item1);
             Assert.IsFalse(u_test.Register(null, null).Item1);
             //Blank args
             Assert.IsFalse(u_test.Register("", "Test1").Item1);

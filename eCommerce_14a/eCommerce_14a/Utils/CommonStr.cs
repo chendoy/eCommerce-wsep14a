@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eCommerce_14a
+namespace eCommerce_14a.Utils
 {
     public static class CommonStr
     {
@@ -58,8 +58,8 @@ namespace eCommerce_14a
         public static class StoreErrorMessage
         {
             public static string noStoreOwnersAtAllErrMsg = "The Action can't be performed because there is no store owner";
-            public static string userIsNotOwnerErrMsg = "this user isn't a store owner, thus he can't perform this action";
-
+            public static string notAOwnerOrManagerErrMsg = "This user isn't a store owner or manager, thus he can't perform this action";
+            public static string ManagerNoPermissionErrMsg = "This manager doesn't have permission to perform this action";
         }
 
         public static class InventoryErrorMessage
@@ -79,6 +79,12 @@ namespace eCommerce_14a
             public static string nonExistOrActiveUserErrMessage = "This user doesn't exist or no active";
             public static string nonExistingStoreErrMessage = "Non existing Store with this Id";
             public static string notMainOwnerErrMessage = "This Action can't be performed because this user isn't a Main Owner";
+        }
+        public static class MangerPermission
+        {
+            public static string Comments = "CommentsPermission";
+            public static string Puarchse = "ViewPuarchseHistory";
+            public static string Product = "ProductPermission";
         }
 
 

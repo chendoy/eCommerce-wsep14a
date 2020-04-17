@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
- 
-namespace eCommerce_14a
+
+namespace eCommerce_14a.UserComponent.DomainLayer
 {
- 
+
 
     public class UserManager
     {
@@ -54,6 +55,12 @@ namespace eCommerce_14a
                 return new Tuple<bool, string>(false, "Blank Arguments\n");
             if (isUserExist(u))
                 return new Tuple<bool, string>(false, "User name Exsist\n");
+            if (u.Length < 3 || u.Length > 14)
+                return new Tuple<bool, string>(false, "User name Don't meet the length Requirements\n");
+            if(!u.All(char.IsLetterOrDigit))
+            {
+                return new Tuple<bool, string>(false, "User name Don't meet the Requirements chars\n");
+            }
             return new Tuple<bool, string>(true, "");
         }
         //Check 1 or 2 arguments a=if input is valid.
