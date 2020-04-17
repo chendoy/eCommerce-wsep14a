@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
-namespace eCommerce_14a
+namespace eCommerce_14a.UserComponent.DomainLayer
+
 {
     public class eSystem
     {
@@ -16,13 +18,14 @@ namespace eCommerce_14a
         private Dictionary<int, Store> stores;
         
          
-        public Tuple<bool, string> system_init(string admin, string password)
+        public Tuple<bool, string> system_init(string admin, string password,bool paymmentconnection = true)
         {
             UManagment = UserManager.Instance;
             AM = AppoitmentManager.Instance;
             bodyguard = new Security();
             DH = new DeliveryHandler();
             PH = new PaymentHandler();
+            PH.setConnections(paymmentconnection);
             stores = new Dictionary<int, Store>();
             if (!DH.checkconnection() || !PH.checkconnection())
             {
@@ -64,9 +67,9 @@ namespace eCommerce_14a
         {
             return PH.checkconnection();
         }
-        public Tuple<bool,string> pay()
+        public Tuple<bool,string> pay(string PaymentDetails, double amount)
         {
-            return PH.pay();
+            return PH.pay(PaymentDetails, amount);
         }
         public Tuple<bool, string>  ProvideDeliveryForUser(string name ,bool ispayed)
         {

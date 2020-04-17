@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using eCommerce_14a.Utils;
 
-namespace eCommerce_14a
+namespace eCommerce_14a.StoreComponent.DomainLayer
 {
+    
+    /// <testclass cref ="TestingSystem.UnitTests.InventroyTest/>
+    
     public class Inventory
     {
         private Dictionary<int, Tuple<Product, int>> invProducts;

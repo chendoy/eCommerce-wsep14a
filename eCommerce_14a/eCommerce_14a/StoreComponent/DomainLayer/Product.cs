@@ -1,4 +1,4 @@
-namespace eCommerce_14a
+namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public class Product
     {

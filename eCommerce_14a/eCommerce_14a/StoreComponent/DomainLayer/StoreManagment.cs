@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eCommerce_14a.UserComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
-namespace eCommerce_14a
+namespace eCommerce_14a.StoreComponent.DomainLayer
 {
+    /// <testclass cref ="TestingSystem.UnitTests.StoreManagmentTest/>
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;
@@ -15,7 +18,7 @@ namespace eCommerce_14a
             userManager = UserManager.Instance;
             if(stores is null)
             {
-                this.stores = new Dictionary<int, Store>();
+                stores = new Dictionary<int, Store>();
             }
             this.stores = stores;
             this.userManager = UserManager.Instance;
@@ -145,7 +148,6 @@ namespace eCommerce_14a
 
 
 
-        //impl on next version only!
         public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
         {
             User user = userManager.GetAtiveUser(userName);

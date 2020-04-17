@@ -37,18 +37,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppoitmentManager.cs" />
-    <Compile Include="Appoitment_Service.cs" />
-    <Compile Include="CommonStr.cs" />
-    <Compile Include="DeliveryHandler.cs" />
-    <Compile Include="DiscountPolicy.cs" />
-    <Compile Include="eSystem.cs" />
-    <Compile Include="Graph.cs" />
-    <Compile Include="GraphNode.cs" />
-    <Compile Include="Inventory.cs" />
-    <Compile Include="PaymentHandler.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
+    <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
+    <Compile Include="Utils\CommonStr.cs" />
+    <Compile Include="UserComponent\DomainLayer\DeliveryHandler.cs" />
+    <Compile Include="StoreComponent\DomainLayer\DiscountPolicy.cs" />
+    <Compile Include="UserComponent\DomainLayer\eSystem.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Inventory.cs" />
+    <Compile Include="UserComponent\DomainLayer\PaymentHandler.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Product.cs" />
+    <Compile Include="UserComponent\DomainLayer\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\Cart.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\External.cs" />
@@ -56,6 +54,7 @@
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseBasket.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
+    <Compile Include="Utils\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -67,16 +66,16 @@
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="PuarchsePolicy.cs" />
-    <Compile Include="Searcher.cs" />
-    <Compile Include="Security.cs" />
-    <Compile Include="Store.cs" />
-    <Compile Include="StoreService.cs" />
-    <Compile Include="StoreManagment.cs" />
-    <Compile Include="System_Service.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="UserManager.cs" />
-    <Compile Include="UserService.cs" />
+    <Compile Include="StoreComponent\DomainLayer\PuarchsePolicy.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Searcher.cs" />
+    <Compile Include="UserComponent\DomainLayer\Security.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Store.cs" />
+    <Compile Include="StoreComponent\ServiceLayer\StoreService.cs" />
+    <Compile Include="StoreComponent\DomainLayer\StoreManagment.cs" />
+    <Compile Include="UserComponent\ServiceLayer\System_Service.cs" />
+    <Compile Include="UserComponent\DomainLayer\User.cs" />
+    <Compile Include="UserComponent\DomainLayer\UserManager.cs" />
+    <Compile Include="UserComponent\ServiceLayer\UserService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
