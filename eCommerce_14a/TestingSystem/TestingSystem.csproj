@@ -37,7 +37,9 @@
     <Reference Include="Codentia.Common.Membership, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Codentia.Common.Membership.dll.2.0.0.105\lib\Codentia.Common.Membership.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,50 +50,59 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptanceTests\AddProductStoryTest.cs" />
+    <Compile Include="AcceptanceTests\AdminViewAllPurchaseHistoryStoryTest.cs" />
     <Compile Include="AcceptanceTests\AppointingManagerStoryTest.cs" />
     <Compile Include="AcceptanceTests\AppointingOwnerStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ChangeProductAmountStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ManagerAddProductStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ManagerChangeDiscountStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ManagerEditProductStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ManagerRemoveProductStoryTest.cs" />
+    <Compile Include="AcceptanceTests\RemoveProductStoryTest.cs" />
     <Compile Include="AcceptanceTests\BuyingPolicyStoryTest.cs" />
     <Compile Include="AcceptanceTests\ChangeManagerPermissionsStoryTest.cs" />
     <Compile Include="AcceptanceTests\check.cs" />
     <Compile Include="AcceptanceTests\DemoteManagerStroyTest.cs" />
     <Compile Include="AcceptanceTests\DiscountPolicyStoryTest.cs" />
-    <Compile Include="AcceptanceTests\InventoryManagementStoryTest.cs" />
+    <Compile Include="AcceptanceTests\InitSystemStoryTest.cs" />
     <Compile Include="AcceptanceTests\LoginStoryTest.cs" />
     <Compile Include="AcceptanceTests\LogoutStoryTest.cs" />
     <Compile Include="AcceptanceTests\OpenStoreStoryTest.cs" />
     <Compile Include="AcceptanceTests\OverlookStoresProductsStoryTest.cs" />
     <Compile Include="AcceptanceTests\PaymentStoryTest.cs" />
     <Compile Include="AcceptanceTests\PaymentSystemStoryTest.cs" />
+    <Compile Include="AcceptanceTests\OwnerEditProductStoryTest.cs" />
     <Compile Include="AcceptanceTests\PurchaseStoryTest.cs" />
     <Compile Include="AcceptanceTests\RegisterStoryTest.cs" />
     <Compile Include="AcceptanceTests\SearchProductsStoryTest.cs" />
-    <Compile Include="AcceptanceTests\SellingHistoryStoryTest.cs" />
-    <Compile Include="AcceptanceTests\StoreMangementStoryTest.cs" />
     <Compile Include="AcceptanceTests\StoreProductsInBasketStoryTest.cs" />
     <Compile Include="AcceptanceTests\SupplyStoryTest.cs" />
     <Compile Include="AcceptanceTests\SupplySystemStoryTest.cs" />
-    <Compile Include="AcceptanceTests\ViewAllPurchaseHistoryStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ViewStorePurchaseHistoryStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewAndEditCartStoryTest.cs" />
-    <Compile Include="AcceptanceTests\ViewHistoryStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ViewUserPurchaseHistoryStoryTest.cs" />
+    <Compile Include="IntegrationTests\StubClass.cs" />
     <Compile Include="BridgeInterface.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
+    <Compile Include="RegressionTests\StubClass.cs" />
+    <Compile Include="StoreGenerator.cs" />
     <Compile Include="SystemTrackTest.cs" />
     <Compile Include="UnitTests\Appoitment_Test.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
     <Compile Include="UnitTests\SearcherTest.cs" />
+    <Compile Include="UnitTests\StoreManagetTest.cs" />
     <Compile Include="UnitTests\StoreTest.cs" />
     <Compile Include="UnitTests\System_init.cs" />
     <Compile Include="UnitTests\User_test.cs" />
+    <Compile Include="TestsProjectInterface.cs" />
+    <Compile Include="UnitTests\AdministrationTests.cs" />
+    <Compile Include="UnitTests\StoreTests.cs" />
+    <Compile Include="UnitTests\UserTests.cs" />
     <Compile Include="UserGenerator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\eCommerce_14a\eCommerce_14a.csproj">
-      <Project>{14f01d9c-70a2-41f8-b9a0-a3a340c36823}</Project>
-      <Name>eCommerce_14a</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AggregationTests\" />
@@ -99,6 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\eCommerce_14a\eCommerce_14a.csproj">
+      <Project>{14f01d9c-70a2-41f8-b9a0-a3a340c36823}</Project>
+      <Name>eCommerce_14a</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

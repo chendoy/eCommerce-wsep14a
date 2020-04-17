@@ -8,24 +8,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestingSystem.AcceptanceTests
 {
     [TestClass]
-    public class check
+    public class check : SystemTrackTest
     {
         [TestMethod]
-        public void test1() { Assert.IsTrue(true); }
-       
-        [TestMethod]
-        public void test2() { Assert.IsTrue(true); }
+        public void ExceptionCheckTest()
+        {
+        }
 
-        [TestMethod]
-        public void test3() { Assert.IsTrue(true); }
-
-
-        [TestMethod]
-        public void test4() { Assert.IsTrue(true); }
-
-
-        [TestMethod]
-        public void test5() { Assert.IsTrue(true); }
 
     }
 }
