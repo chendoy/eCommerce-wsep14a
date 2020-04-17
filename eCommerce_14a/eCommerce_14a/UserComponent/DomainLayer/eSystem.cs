@@ -18,13 +18,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         private Dictionary<int, Store> stores;
         
          
-        public Tuple<bool, string> system_init(string admin, string password)
+        public Tuple<bool, string> system_init(string admin, string password,bool paymmentconnection = true)
         {
             UManagment = UserManager.Instance;
             AM = AppoitmentManager.Instance;
             bodyguard = new Security();
             DH = new DeliveryHandler();
             PH = new PaymentHandler();
+            PH.setConnections(paymmentconnection);
             stores = new Dictionary<int, Store>();
             if (!DH.checkconnection() || !PH.checkconnection())
             {
@@ -66,9 +67,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             return PH.checkconnection();
         }
-        public Tuple<bool,string> pay()
+        public Tuple<bool,string> pay(string PaymentDetails, double amount)
         {
-            return PH.pay();
+            return PH.pay(PaymentDetails, amount);
         }
         public Tuple<bool, string>  ProvideDeliveryForUser(string name ,bool ispayed)
         {
