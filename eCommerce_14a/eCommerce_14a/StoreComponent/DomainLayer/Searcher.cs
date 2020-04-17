@@ -4,10 +4,9 @@ using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
+    /// <testclass cref ="TestingSystem.UnitTests.SearcherTest/>
     public class Searcher
-    {
-       
-
+    { 
         private StoreManagment storeManagemnt;
         public Searcher(StoreManagment storeManagment)
         {
