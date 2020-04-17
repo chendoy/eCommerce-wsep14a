@@ -16,9 +16,9 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             Commercial_System = new eSystem();
         }
 
-        public Tuple<bool, string> initSystem(string userName, string pass)
+        public Tuple<bool, string> initSystem(string userName, string pass,bool paymentconnection = true)
         {
-            return Commercial_System.system_init(userName, pass);
+            return Commercial_System.system_init(userName, pass,paymentconnection);
         }
         public bool SetDeliveryConnection(bool con)
         {
