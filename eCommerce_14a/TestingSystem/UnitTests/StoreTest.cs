@@ -24,7 +24,7 @@ namespace TestingSystem.UnitTests.StoreTest
         [TestInitialize]
         public  void TestInitialize()
         {
-            StoreManagment sm = new StoreManagment(null);
+            StoreManagment sm = StoreManagment.Instance;
             UserManager userManager = UserManager.Instance;
             userManager.Register("shimon", "123");
             userManager.Login("shimon", "123", false);
