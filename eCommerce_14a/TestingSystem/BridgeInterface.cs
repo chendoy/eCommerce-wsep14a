@@ -22,7 +22,7 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public Tuple<bool, string> Init(bool flag = true)
+        public Tuple<bool, string> Init()
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -47,9 +47,9 @@ namespace TestingSystem
             return new Dictionary<int, List<object>>();
         }
 
-        public Tuple<Cart, string> ViewCartDetails(string id) 
+        public List<object> ViewCartDetails(string id) 
         {
-            return new Tuple<Cart,string>(new Cart(id),"");
+            return new List<object>();
         }
 
         public Tuple<bool, string> enterSystem() 

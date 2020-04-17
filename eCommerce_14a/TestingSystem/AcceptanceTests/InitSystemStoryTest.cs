@@ -35,14 +35,16 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void NoConnectionWithOneSystemTest()
         {
-            Assert.IsFalse(Init(false).Item1, Init(false).Item2);
+            SetPaymentSystemConnection(false);
+            Assert.IsFalse(Init().Item1, Init().Item2);
         }
 
         [TestMethod]
         //bad
         public void StartReqWhileBootingTest()
         {
-            Assert.IsFalse(Init(false).Item1, Init(false).Item2);
+            Assert.IsFalse(Register(username, password).Item1, Register(username, password).Item2);
+            Assert.IsFalse(Init().Item1, Init().Item2);
         }
     }
 }
