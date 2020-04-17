@@ -256,3 +256,93 @@
 2020-04-17 19:04:29,303 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
 2020-04-17 19:04:29,304 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
 2020-04-17 19:04:29,306 [14] ERROR errors - [StoreManagment.changeStoreStatus] - Non existing Store with this Id
+2020-04-17 19:14:35,673 [14] ERROR errors - [Store.addProductAmount] - This manager doesn't have permission to perform this action
+2020-04-17 19:14:35,695 [14] ERROR errors - [Store.addProductAmount] - This user isn't a store owner or manager, thus he can't perform this action user: ffstore: 1
+2020-04-17 19:14:35,698 [14] ERROR errors - [Store.decrasePrdouct] - This manager doesn't have permission to perform this action
+2020-04-17 19:14:35,710 [14] ERROR errors - [Store.decrasePrdouct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:14:35,713 [14] ERROR errors - [Store.changeStoreStatus] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:14:35,714 [14] ERROR errors - [Store.removeProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:14:35,717 [14] ERROR errors - [Store.removeProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:14:35,719 [14] ERROR errors - [Store.appendProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:14:35,726 [14] ERROR errors - [Store.appendProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:14:35,728 [14] ERROR errors - [Store.UpdateProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:14:35,733 [14] ERROR errors - [Store.UpdateProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:14:35,756 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:14:35,757 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:14:35,757 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:14:35,759 [14] ERROR errors - [StoreManagment.removeProduct] - This user doesn't exist or no active
+2020-04-17 19:14:35,760 [14] ERROR errors - [StoreManagment.removeProduct] - This user doesn't exist or no active
+2020-04-17 19:14:35,764 [14] ERROR errors - [StoreManagment.removeProduct] - Non existing Store with this Id
+2020-04-17 19:14:35,770 [14] ERROR errors - [StoreManagment.UpdateProduct] - This user doesn't exist or no active
+2020-04-17 19:14:35,773 [14] ERROR errors - [StoreManagment.UpdateProduct] - This user doesn't exist or no active
+2020-04-17 19:14:35,774 [14] ERROR errors - [StoreManagment.UpdateProduct] - Non existing Store with this Id
+2020-04-17 19:14:35,776 [14] ERROR errors - [StoreManagment.addProductAmount] - This user doesn't exist or no active
+2020-04-17 19:14:35,777 [14] ERROR errors - [StoreManagment.addProductAmount] - This user doesn't exist or no active
+2020-04-17 19:14:35,778 [14] ERROR errors - [StoreManagment.addProductAmount] - Non existing Store with this Id
+2020-04-17 19:14:35,781 [14] ERROR errors - [StoreManagment.decraseProductAmount] - This user doesn't exist or no active
+2020-04-17 19:14:35,782 [14] ERROR errors - [StoreManagment.decraseProductAmount] - This user doesn't exist or no active
+2020-04-17 19:14:35,782 [14] ERROR errors - [StoreManagment.decraseProductAmount] - Non existing Store with this Id
+2020-04-17 19:14:35,783 [14] ERROR errors - [StoreManagment.getStoreInfo] - Non existing Store with this Id
+2020-04-17 19:14:35,790 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
+2020-04-17 19:14:35,791 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
+2020-04-17 19:14:35,794 [14] ERROR errors - [StoreManagment.changeStoreStatus] - Non existing Store with this Id
+2020-04-17 19:15:09,677 [14] ERROR errors - [Store.addProductAmount] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:09,699 [14] ERROR errors - [Store.addProductAmount] - This user isn't a store owner or manager, thus he can't perform this action user: ffstore: 1
+2020-04-17 19:15:09,702 [14] ERROR errors - [Store.decrasePrdouct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:09,714 [14] ERROR errors - [Store.decrasePrdouct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:09,716 [14] ERROR errors - [Store.changeStoreStatus] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:09,723 [14] ERROR errors - [Store.removeProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:09,728 [14] ERROR errors - [Store.removeProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:09,729 [14] ERROR errors - [Store.appendProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:09,735 [14] ERROR errors - [Store.appendProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:09,737 [14] ERROR errors - [Store.UpdateProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:09,739 [14] ERROR errors - [Store.UpdateProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:09,756 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:15:09,757 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:15:09,758 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:15:09,760 [14] ERROR errors - [StoreManagment.removeProduct] - This user doesn't exist or no active
+2020-04-17 19:15:09,761 [14] ERROR errors - [StoreManagment.removeProduct] - This user doesn't exist or no active
+2020-04-17 19:15:09,764 [14] ERROR errors - [StoreManagment.removeProduct] - Non existing Store with this Id
+2020-04-17 19:15:09,766 [14] ERROR errors - [StoreManagment.UpdateProduct] - This user doesn't exist or no active
+2020-04-17 19:15:09,767 [14] ERROR errors - [StoreManagment.UpdateProduct] - This user doesn't exist or no active
+2020-04-17 19:15:09,767 [14] ERROR errors - [StoreManagment.UpdateProduct] - Non existing Store with this Id
+2020-04-17 19:15:09,769 [14] ERROR errors - [StoreManagment.addProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:09,771 [14] ERROR errors - [StoreManagment.addProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:09,771 [14] ERROR errors - [StoreManagment.addProductAmount] - Non existing Store with this Id
+2020-04-17 19:15:09,775 [14] ERROR errors - [StoreManagment.decraseProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:09,776 [14] ERROR errors - [StoreManagment.decraseProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:09,777 [14] ERROR errors - [StoreManagment.decraseProductAmount] - Non existing Store with this Id
+2020-04-17 19:15:09,779 [14] ERROR errors - [StoreManagment.getStoreInfo] - Non existing Store with this Id
+2020-04-17 19:15:09,782 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
+2020-04-17 19:15:09,783 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
+2020-04-17 19:15:09,787 [14] ERROR errors - [StoreManagment.changeStoreStatus] - Non existing Store with this Id
+2020-04-17 19:15:30,158 [14] ERROR errors - [Store.addProductAmount] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:30,182 [14] ERROR errors - [Store.addProductAmount] - This user isn't a store owner or manager, thus he can't perform this action user: ffstore: 1
+2020-04-17 19:15:30,184 [14] ERROR errors - [Store.decrasePrdouct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:30,202 [14] ERROR errors - [Store.decrasePrdouct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:30,205 [14] ERROR errors - [Store.changeStoreStatus] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:30,207 [14] ERROR errors - [Store.removeProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:30,210 [14] ERROR errors - [Store.removeProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:30,211 [14] ERROR errors - [Store.appendProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:30,216 [14] ERROR errors - [Store.appendProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:30,218 [14] ERROR errors - [Store.UpdateProduct] - This user isn't a store owner or manager, thus he can't perform this action
+2020-04-17 19:15:30,221 [14] ERROR errors - [Store.UpdateProduct] - This manager doesn't have permission to perform this action
+2020-04-17 19:15:30,244 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:15:30,245 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:15:30,245 [14] ERROR errors - [StoreManagment.appendProduct] - Non existing Store with this Id
+2020-04-17 19:15:30,247 [14] ERROR errors - [StoreManagment.removeProduct] - This user doesn't exist or no active
+2020-04-17 19:15:30,247 [14] ERROR errors - [StoreManagment.removeProduct] - This user doesn't exist or no active
+2020-04-17 19:15:30,250 [14] ERROR errors - [StoreManagment.removeProduct] - Non existing Store with this Id
+2020-04-17 19:15:30,252 [14] ERROR errors - [StoreManagment.UpdateProduct] - This user doesn't exist or no active
+2020-04-17 19:15:30,254 [14] ERROR errors - [StoreManagment.UpdateProduct] - This user doesn't exist or no active
+2020-04-17 19:15:30,255 [14] ERROR errors - [StoreManagment.UpdateProduct] - Non existing Store with this Id
+2020-04-17 19:15:30,256 [14] ERROR errors - [StoreManagment.addProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:30,260 [14] ERROR errors - [StoreManagment.addProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:30,261 [14] ERROR errors - [StoreManagment.addProductAmount] - Non existing Store with this Id
+2020-04-17 19:15:30,267 [14] ERROR errors - [StoreManagment.decraseProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:30,269 [14] ERROR errors - [StoreManagment.decraseProductAmount] - This user doesn't exist or no active
+2020-04-17 19:15:30,270 [14] ERROR errors - [StoreManagment.decraseProductAmount] - Non existing Store with this Id
+2020-04-17 19:15:30,272 [14] ERROR errors - [StoreManagment.getStoreInfo] - Non existing Store with this Id
+2020-04-17 19:15:30,278 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
+2020-04-17 19:15:30,278 [14] ERROR errors - [StoreManagment.changeStoreStatus] - This user doesn't exist or no active
+2020-04-17 19:15:30,281 [14] ERROR errors - [StoreManagment.changeStoreStatus] - Non existing Store with this Id
