@@ -296,7 +296,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.stores = new Dictionary<int, Store>();
             this.nextStoreId = 0;
             userManager = UserManager.Instance;
-            instance = null;
         }
     }
 }
