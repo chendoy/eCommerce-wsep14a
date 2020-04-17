@@ -63,6 +63,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             return this.isGuest;
         }
+
+        public bool getUserPermission(string permission)
+        {
+            return true;
+        }
+
         //This user will be store Owner 
         public Tuple<bool, string> addStoreOwnership(Store store)
         {

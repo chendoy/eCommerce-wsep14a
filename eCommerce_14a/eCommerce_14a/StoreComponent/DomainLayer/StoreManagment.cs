@@ -147,7 +147,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        //impl on next version only!
         public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
         {
             User user = userManager.GetAtiveUser(userName);

@@ -26,51 +26,89 @@ namespace TestingSystem.UnitTests
             User user = new User(1, "shimon", false, false);
 
             validStore = openStore(storeId:1,user:user, inv:InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()), rank:3);
-            validStore.managers = new List<User> { new User(2, "yosi", false, false) }; 
+            validStore.managers = new List<User> { new User(2, "yosi", false, false) , new User(3, "shmuel", false, false)};
+            managers[0].setPermmisions(1, new int[] { 0, 0, 1 });
+            managers[1].setPermmisions(1, new int[] {1, 1, 0});
             owners = validStore.owners;
             managers = validStore.managers;
         }
 
 
 
-        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         [TestMethod]
-        public void TestAddProductAmount_ValidUser()
+        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
+        public void TestAddProductAmount_ValidOwner()
         {
-            Tuple<bool, string> addProdRes = addProductDriver(validStore, user: owners[0], produtId: 1, amount: 100);
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: owners[0], produtId: 1, amount: 100);
             Assert.IsTrue(addProdRes.Item1);
 
         }
 
-        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
+        public void TestAddProductAmount_ManagerWithPermission()
+        {
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: managers[0], produtId: 1, amount: 100);
+            Assert.IsTrue(addProdRes.Item1);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
+        public void TestAddProductAmount_ValidManagerWithOutPermission()
+        {
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: managers[1], produtId: 1, amount: 100);
+            if (addProdRes.Item1)
+                Assert.Fail();
+            Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, addProdRes.Item2);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         public void TestAddProductAmount_inValidUser()
         {
             User u = new User(5, "ff", false, false);
-            Tuple<bool, string> addProdRes = addProductDriver(validStore, user: u, produtId: 1, amount: 100);
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: u, produtId: 1, amount: 100);
 
             if (addProdRes.Item1)
             {
                 Assert.Fail();
             }
             string ex = addProdRes.Item2;
-            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
         }
 
 
-        private Tuple<bool, string> addProductDriver(Store store, User user, int produtId, int amount)
+        private Tuple<bool, string> addProductAmountDriver(Store store, User user, int produtId, int amount)
         {
             return store.addProductAmount(user, produtId, amount);
         }
 
 
-        /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
         [TestMethod]
-        public void TestDecraseProductAmount_ValidUser()
+        /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
+        public void TestDecraseProductAmount_ValidOwner()
         {
             Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: owners[0], productId: 1, amount: 100);
             Assert.IsTrue(decraseProdRes.Item1);
 
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
+        public void TestDecraseProductAmount_ManagerWithPermission()
+        {
+            Tuple<bool, string> addProdRes = decraseProductDriver(validStore, user: managers[0], productId: 1, amount: 5);
+            Assert.IsTrue(addProdRes.Item1);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
+        public void TestDecraseProductAmount_ValidManagerWithOutPermission()
+        {
+            Tuple<bool, string> addProdRes = decraseProductDriver(validStore, user: managers[1], productId: 1, amount: 100);
+            if (addProdRes.Item1)
+                Assert.Fail();
+            Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, addProdRes.Item2);
         }
 
         /// <test cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
@@ -85,7 +123,7 @@ namespace TestingSystem.UnitTests
                 Assert.Fail();
             }
             string ex = decraseProdRes.Item2;
-            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            Assert.AreEqual(ex, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
         }
 
 
@@ -93,6 +131,7 @@ namespace TestingSystem.UnitTests
         {
             return s.decrasePrdouct(user, productId, amount);
         }
+
 
         /// <test cref ="eCommerce_14a.Store.changeStoreStatus(bool)
         [TestMethod]
@@ -124,29 +163,46 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(statusChanged);
         }
 
-
         private Tuple<bool, string> changeStoreStatusDriver(Store s,User user, bool newStatus)
         {
             return s.changeStoreStatus(user, newStatus);
         }
 
-        /// <test cref ="eCommerce_14a.Store.removeProduct(User, int)
+
         [TestMethod]
-        public void TestRemoveProduct_NoOwnerUser()
+        /// <test cref ="eCommerce_14a.Store.removeProduct(User, int)
+        public void TestRemoveProduct_NotValidUser()
         {
-            Tuple<bool, string> res = removeProductDriver(validStore, managers[0], 1);
+            Tuple<bool, string> res = removeProductDriver(validStore, new User(10,"shimon", false, false), 1);
             if (res.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg, res.Item2);
+            Assert.AreEqual(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, res.Item2);
    
         }
 
-        /// <test cref ="eCommerce_14a.Store.removeProduct(User, int)
         [TestMethod]
-        public void TestRemoveProduct_valid()
+        /// <test cref ="eCommerce_14a.Store.removeProduct(User, int)
+        public void TestRemoveProduct_Owner()
         {
             Tuple<bool, string> res = removeProductDriver(validStore, owners[0], 1);
             Assert.IsTrue(res.Item1);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.removeProduct(User, int)
+        public void TestRemoveProduct_ManagerWithPermission()
+        {
+            Assert.IsTrue(removeProductDriver(validStore, managers[0], 1).Item1);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.removeProduct(User, int)
+        public void TestRemoveProduct_ManagerWithOutPermission()
+        {
+            Tuple<bool, string> res = removeProductDriver(validStore, managers[1], 1);
+            if (res.Item1)
+                Assert.Fail();
+            Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, res.Item2);
         }
 
         private Tuple<bool, string> removeProductDriver(Store s, User user, int productId)
@@ -154,19 +210,52 @@ namespace TestingSystem.UnitTests
            return s.removeProduct(user, productId);
         }
 
-        /// <test cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
+
         [TestMethod]
-        public void TestAppendProduct_NoOwnerUser()
+        /// <test cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
+        public void TestAppendProduct_NotValidUser()
         {
-            Tuple<bool, string> res = appendProductDriver(validStore, managers[0],new Dictionary<string, object>() ,1);
+            Tuple<bool, string> res = appendProductDriver(validStore, new User(44, "shmulik", false, false),new Dictionary<string, object>() ,1);
             if (res.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg, res.Item2);
+            Assert.AreEqual(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, res.Item2);
         }
 
-        /// <test cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
         [TestMethod]
-        public void TestAppendProduct_Valid()
+        /// <test cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
+        public void TestAppendProduct_ManagerWithPermission()
+        {
+            Dictionary<string, object> validParamDetails = new Dictionary<string, object>();
+            validParamDetails.Add(CommonStr.ProductParams.ProductId, 10);
+            validParamDetails.Add(CommonStr.ProductParams.ProductDetails, "hell");
+            validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
+            validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
+            validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+
+            Tuple<bool, string> res = appendProductDriver(validStore, managers[0], validParamDetails, 1);
+            Assert.IsTrue(res.Item1);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
+        public void TestAppendProduct_ManagerWithOutPermission()
+        {
+            Dictionary<string, object> validParamDetails = new Dictionary<string, object>();
+            validParamDetails.Add(CommonStr.ProductParams.ProductId, 10);
+            validParamDetails.Add(CommonStr.ProductParams.ProductDetails, "hell");
+            validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
+            validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
+            validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+
+            Tuple<bool, string> res = appendProductDriver(validStore, managers[1], validParamDetails, 1);
+            if (res.Item1)
+                Assert.Fail();
+            Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, res.Item2);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
+        public void TestAppendProduct_Owner()
         {
             Dictionary<string, object> validParamDetails = new Dictionary<string, object>();
             validParamDetails.Add(CommonStr.ProductParams.ProductId, 10);
@@ -179,25 +268,58 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(res.Item1);
         }
 
-
         private Tuple<bool, string> appendProductDriver(Store s, User user, Dictionary<string, object> productParams, int amount)
         {
             return s.appendProduct(user, productParams, amount);
         }
 
-        /// <test cref ="eCommerce_14a.Store.UpdateProduct(User, Dictionary{string, object})
+
         [TestMethod]
-        public void TestUpdateProduct_NoOwnerUser()
+        /// <test cref ="eCommerce_14a.Store.UpdateProduct(User, Dictionary{string, object})
+        public void TestUpdateProduct_NotValidUser()
         {
-            Tuple<bool, string> res = UpdateProductDriver(validStore, managers[0], new Dictionary<string, object>());
+            Tuple<bool, string> res = UpdateProductDriver(validStore, new User(33, "shmulik", false, false), new Dictionary<string, object>());
             if (res.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg, res.Item2);
+            Assert.AreEqual(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, res.Item2);
         }
 
-        /// <test cref ="eCommerce_14a.Store.UpdateProduct(User, Dictionary{string, object})
         [TestMethod]
-        public void TestUpdateProduct_Valid()
+        /// <test cref ="eCommerce_14a.Store.UpdateProduct(User, Dictionary{string, object})
+        public void TestUpdateProduct_ManagerWithPermission()
+        {
+            Dictionary<string, object> validParamDetails = new Dictionary<string, object>();
+            validParamDetails.Add(CommonStr.ProductParams.ProductId, 1);
+            validParamDetails.Add(CommonStr.ProductParams.ProductDetails, "hell");
+            validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
+            validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
+            validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+
+            Tuple<bool, string> res = UpdateProductDriver(validStore, managers[0], validParamDetails);
+            Assert.IsTrue(res.Item1);
+        }
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.UpdateProduct(User, Dictionary{string, object})
+        public void TestUpdateProduct_ManagerWithOutPermission()
+        {
+            Dictionary<string, object> validParamDetails = new Dictionary<string, object>();
+            validParamDetails.Add(CommonStr.ProductParams.ProductId, 1);
+            validParamDetails.Add(CommonStr.ProductParams.ProductDetails, "hell");
+            validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
+            validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
+            validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+
+            Tuple<bool, string> res = UpdateProductDriver(validStore, managers[1], validParamDetails);
+            if (res.Item1)
+                Assert.Fail();
+            Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, res.Item2);
+        }
+
+
+        [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.UpdateProduct(User, Dictionary{string, object})
+        public void TestUpdateProduct_Owner()
         {
             Dictionary<string, object> validParamDetails = new Dictionary<string, object>();
             validParamDetails.Add(CommonStr.ProductParams.ProductId, 1);
@@ -216,8 +338,9 @@ namespace TestingSystem.UnitTests
             return s.UpdateProduct(user, productParams);
         }
 
-        /// <test cref ="eCommerce_14a.Store.getSotoreInfo
+
         [TestMethod]
+        /// <test cref ="eCommerce_14a.Store.getSotoreInfo
         public void TestGetStoreInfo_validInfo()
         {
             Dictionary<string, object> validStoreInfo = getStoreInfoDriver(validStore);

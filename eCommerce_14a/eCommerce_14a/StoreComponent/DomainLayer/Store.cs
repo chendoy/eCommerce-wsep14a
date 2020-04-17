@@ -42,16 +42,24 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
         {
-            if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            if (!owners.Contains(user) || !managers.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+
+            if (managers.Contains(user))
+                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.addProductAmount(productId, amount);
         }
 
         public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
         {
-            if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            if (!owners.Contains(user) || !managers.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+
+            if (managers.Contains(user))
+                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.DecraseProductAmount(productId, amount);
         }
@@ -59,13 +67,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
         {
             if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (newStatus)
             {
                 if(owners.Count == 0)
                 {
-                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 }
             }
             ActiveStore = newStatus;
@@ -74,8 +82,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> removeProduct(User user, int productId)
         {
-            if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            if (!owners.Contains(user) || managers.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+
+            if (managers.Contains(user))
+                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.removeProduct(productId);
         }
@@ -83,8 +95,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool, string> appendProduct(User user, Dictionary<string, object> productParams, int amount)
         {
             
-            if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            if (!owners.Contains(user) || managers.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+
+            if (managers.Contains(user))
+                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
+
+
             return inventory.appendProduct(productParams, amount);
         }
 
@@ -92,8 +110,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> UpdateProduct(User user, Dictionary<string, object> productParams)
         {
-            if (!owners.Contains(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.userIsNotOwnerErrMsg);
+            if (!owners.Contains(user) || managers.Contains(user))
+                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+
+            if (managers.Contains(user))
+                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                    return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.UpdateProduct(productParams);
         }
