@@ -64,6 +64,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             appointed.addAppointment(appointer, id: store.getStoreId());
             return appointed.addStoreOwnership(store);
         }
+
+        public void cleanup()
+        {
+            UM = UserManager.Instance;
+        }
+
         //Owner appoints addto to be Store Manager.
         //Set his permissions to the store to be [1,1,0] only read and view
         public Tuple<bool, string> AppointStoreManager(string owner, string addto, int storeId)

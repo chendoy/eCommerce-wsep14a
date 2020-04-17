@@ -47,7 +47,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
-                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.addProductAmount(productId, amount);
@@ -59,7 +59,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
-                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.DecraseProductAmount(productId, amount);
@@ -87,7 +87,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
-                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.removeProduct(productId);
@@ -100,7 +100,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
-                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
 
@@ -115,7 +115,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
-                if (!user.getUserPermission(CommonStr.MangerPermission.Product))
+                if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
             return inventory.UpdateProduct(productParams);

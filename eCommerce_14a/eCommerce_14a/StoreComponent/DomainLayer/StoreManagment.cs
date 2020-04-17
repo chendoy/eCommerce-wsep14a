@@ -18,7 +18,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             userManager = UserManager.Instance;
             if(stores is null)
             {
-                this.stores = new Dictionary<int, Store>();
+                stores = new Dictionary<int, Store>();
             }
             this.stores = stores;
             this.userManager = UserManager.Instance;
