@@ -42,7 +42,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
         {
-            if (!owners.Contains(user) || !managers.Contains(user))
+            if (!owners.Contains(user) && !managers.Contains(user))
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
@@ -54,7 +54,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
         {
-            if (!owners.Contains(user) || !managers.Contains(user))
+            if (!owners.Contains(user) && !managers.Contains(user))
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
@@ -82,7 +82,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> removeProduct(User user, int productId)
         {
-            if (!owners.Contains(user) || managers.Contains(user))
+            if (!owners.Contains(user) && !managers.Contains(user))
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
@@ -95,7 +95,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool, string> appendProduct(User user, Dictionary<string, object> productParams, int amount)
         {
             
-            if (!owners.Contains(user) || managers.Contains(user))
+            if (!owners.Contains(user) && !managers.Contains(user))
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
@@ -110,7 +110,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> UpdateProduct(User user, Dictionary<string, object> productParams)
         {
-            if (!owners.Contains(user) || managers.Contains(user))
+            if (!owners.Contains(user) && !managers.Contains(user))
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
 
             if (managers.Contains(user))
