@@ -18,55 +18,13 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
     {
         private StoreManagment storeManagment;
         private UserManager userManger;
-        Product p1_firstStore;
-        Store store1;
-        Store store2;
-        Store store3;
+  
 
         [TestInitialize]
         public void TestInitialize()
-        {
-
+        { 
+            storeManagment = StoreManagetTest.getValidStoreManagmet();
             userManger = UserManager.Instance;
-            userManger.Register("liav", "123");
-            userManger.Register("sundy", "125");
-            userManger.Register("yosef", "127");
-            userManger.Login("liav", "123", false);
-            userManger.Login("sundy", "125");
-
-            List<Tuple<Product, int>> lstProds = new List<Tuple<Product, int>>();
-            p1_firstStore = new Product(1, price: 10000, name: "Dell Xps 9560", rank: 4, category: CommonStr.ProductCategoty.Computers);
-            lstProds.Add(new Tuple<Product, int>(p1_firstStore,100));
-            lstProds.Add(new Tuple<Product, int>(new Product(2, name: "Ninja Blender V3", price: 450, rank: 2, category: CommonStr.ProductCategoty.Kitchen), 200));
-            lstProds.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix", price: 1000, rank: 5, category: CommonStr.ProductCategoty.Kitchen), 300));
-            lstProds.Add(new Tuple<Product, int>(new Product(4, name: "makeup loreal paris", price: 200, rank: 3, category: CommonStr.ProductCategoty.Beauty), 0));
-            Inventory inv_store_1 = InventoryTest.getInventory(lstProds);
-            store1 = StoreTest.StoreTest.openStore(storeId: 1, user: userManger.GetUser("liav"), inv: inv_store_1, rank: 4);
-
-            List<Tuple<Product, int>> lstProds2 = new List<Tuple<Product, int>>();
-            lstProds2.Add(new Tuple<Product, int>(new Product(1, price: 650, name: "Keyboard Mx95 Lgoitech", rank: 4, category: CommonStr.ProductCategoty.Computers), 100));
-            lstProds2.Add(new Tuple<Product, int>(new Product(2, name: "Elctricty Knife", price: 450, rank: 5, category: CommonStr.ProductCategoty.Kitchen), 200));
-            lstProds2.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix v66", price: 1500, rank: 1, category: CommonStr.ProductCategoty.Kitchen), 300));
-            lstProds2.Add(new Tuple<Product, int>(new Product(4, name: "Lipstick in955", price: 200, rank: 3, category: CommonStr.ProductCategoty.Beauty), 10));
-            Inventory inv_store_2 = InventoryTest.getInventory(lstProds2);
-            store2 = StoreTest.StoreTest.openStore(storeId: 2, user: userManger.GetUser("sundy"), inv: inv_store_2, rank: 3);
-
-            List<Tuple<Product, int>> lstProd3 = new List<Tuple<Product, int>>();
-            lstProd3.Add(new Tuple<Product, int>(new Product(1, price: 50, name: "Mouse Mx95 Lgoitech", rank: 2, category: CommonStr.ProductCategoty.Computers), 100));
-            lstProd3.Add(new Tuple<Product, int>(new Product(2, name: "Nespresso Latsima Touch Coffe Machine", price: 1400, rank: 2, category: CommonStr.ProductCategoty.Kitchen), 200));
-            lstProd3.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix v41", price: 1500, rank: 4, category: CommonStr.ProductCategoty.Kitchen), 300));
-            lstProd3.Add(new Tuple<Product, int>(new Product(4, name: "makeup loreal paris", price: 200, rank: 5, category: CommonStr.ProductCategoty.Beauty), 10));
-            Inventory inv_store_3 = InventoryTest.getInventory(lstProd3);
-            store3 = StoreTest.StoreTest.openStore(storeId: 3, user: userManger.GetUser("yosef"), inv: inv_store_3, rank: 1);
-            store3.ActiveStore = false;
-
-            Dictionary<int, Store> storesDictionary = new Dictionary<int, Store>();
-            storesDictionary.Add(1, store1);
-            storesDictionary.Add(2, store2);
-            storesDictionary.Add(3, store3);
-            
-            storeManagment = new StoreManagment(storesDictionary);
-          
         }
 
 
@@ -400,7 +358,49 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         }
 
 
-  
+        public static StoreManagment getValidStoreManagmet()
+        {
+
+            UserManager userManger = UserManager.Instance;
+            userManger.Register("liav", "123");
+            userManger.Register("sundy", "125");
+            userManger.Register("yosef", "127");
+            userManger.Login("liav", "123", false);
+            userManger.Login("sundy", "125");
+
+            List<Tuple<Product, int>> lstProds = new List<Tuple<Product, int>>();
+            Product p1_firstStore = new Product(1, price: 10000, name: "Dell Xps 9560", rank: 4, category: CommonStr.ProductCategoty.Computers);
+            lstProds.Add(new Tuple<Product, int>(p1_firstStore, 100));
+            lstProds.Add(new Tuple<Product, int>(new Product(2, name: "Ninja Blender V3", price: 450, rank: 2, category: CommonStr.ProductCategoty.Kitchen), 200));
+            lstProds.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix", price: 1000, rank: 5, category: CommonStr.ProductCategoty.Kitchen), 300));
+            lstProds.Add(new Tuple<Product, int>(new Product(4, name: "makeup loreal paris", price: 200, rank: 3, category: CommonStr.ProductCategoty.Beauty), 0));
+            Inventory inv_store_1 = InventoryTest.getInventory(lstProds);
+            Store store1 = StoreTest.StoreTest.openStore(storeId: 1, user: userManger.GetUser("liav"), inv: inv_store_1, rank: 4);
+
+            List<Tuple<Product, int>> lstProds2 = new List<Tuple<Product, int>>();
+            lstProds2.Add(new Tuple<Product, int>(new Product(1, price: 650, name: "Keyboard Mx95 Lgoitech", rank: 4, category: CommonStr.ProductCategoty.Computers), 100));
+            lstProds2.Add(new Tuple<Product, int>(new Product(2, name: "Elctricty Knife", price: 450, rank: 5, category: CommonStr.ProductCategoty.Kitchen), 200));
+            lstProds2.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix v66", price: 1500, rank: 1, category: CommonStr.ProductCategoty.Kitchen), 300));
+            lstProds2.Add(new Tuple<Product, int>(new Product(4, name: "Lipstick in955", price: 200, rank: 3, category: CommonStr.ProductCategoty.Beauty), 10));
+            Inventory inv_store_2 = InventoryTest.getInventory(lstProds2);
+            Store store2 = StoreTest.StoreTest.openStore(storeId: 2, user: userManger.GetUser("sundy"), inv: inv_store_2, rank: 3);
+
+            List<Tuple<Product, int>> lstProd3 = new List<Tuple<Product, int>>();
+            lstProd3.Add(new Tuple<Product, int>(new Product(1, price: 50, name: "Mouse Mx95 Lgoitech", rank: 2, category: CommonStr.ProductCategoty.Computers), 100));
+            lstProd3.Add(new Tuple<Product, int>(new Product(2, name: "Nespresso Latsima Touch Coffe Machine", price: 1400, rank: 2, category: CommonStr.ProductCategoty.Kitchen), 200));
+            lstProd3.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix v41", price: 1500, rank: 4, category: CommonStr.ProductCategoty.Kitchen), 300));
+            lstProd3.Add(new Tuple<Product, int>(new Product(4, name: "makeup loreal paris", price: 200, rank: 5, category: CommonStr.ProductCategoty.Beauty), 10));
+            Inventory inv_store_3 = InventoryTest.getInventory(lstProd3);
+            Store store3 = StoreTest.StoreTest.openStore(storeId: 3, user: userManger.GetUser("yosef"), inv: inv_store_3, rank: 1);
+            store3.ActiveStore = false;
+
+            Dictionary<int, Store> storesDictionary = new Dictionary<int, Store>();
+            storesDictionary.Add(1, store1);
+            storesDictionary.Add(2, store2);
+            storesDictionary.Add(3, store3);
+
+            return new StoreManagment(storesDictionary);
+        }
 
     }
 }

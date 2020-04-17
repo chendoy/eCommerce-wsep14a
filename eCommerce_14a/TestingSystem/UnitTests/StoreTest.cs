@@ -20,17 +20,37 @@ namespace TestingSystem.UnitTests.StoreTest
         private  Store validStore;
         private List<User> owners;
         private List<User> managers;
-
+        private UserManager um;
         [TestInitialize]
         public  void TestInitialize()
         {
-            User user = new User(1, "shimon", false, false);
-            validStore = openStore(storeId:1,user:user, inv:InventoryTest.getInventory(InventoryTest.getValidInventroyProdList()), rank:3);
-            validStore.managers = new List<User> { new User(2, "yosi", false, false) , new User(3, "shmuel", false, false)};
-            validStore.managers[0].setPermmisions(1, new int[] { 0, 0, 1 });
-            validStore.managers[1].setPermmisions(1, new int[] { 1, 1, 0 });
+            StoreManagment sm = new StoreManagment(null);
+            UserManager userManager = UserManager.Instance;
+            userManager.Register("shimon", "123");
+            userManager.Login("shimon", "123", false);
+            sm.createStore("shimon", 1, 1);
+            userManager.Register("yosi", "123");
+            userManager.Login("yosi", "123");
+            userManager.Register("shmuel", "123");
+            userManager.Login("shmuel", "123");
+            AppoitmentManager appmgr = AppoitmentManager.Instance;
+            appmgr.SetStoreMeneger(sm);
+            appmgr.AppointStoreManager("shimon", "shmuel", 1);
+            appmgr.AppointStoreManager("shimon", "yosi", 1);
+            userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
+            userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
+
+            validStore = sm.getStore(1);
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
             managers = validStore.managers;
             owners = validStore.owners;
+
+
+        }
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            UserManager.Instance.cleanup();
         }
 
 
