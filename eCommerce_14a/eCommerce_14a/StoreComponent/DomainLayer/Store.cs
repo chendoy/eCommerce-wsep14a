@@ -8,6 +8,7 @@ using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
+    /// <testclass cref ="TestingSystem.UnitTests.StoreTest/>
     public class Store
     {
         private DiscountPolicy discountPolicy;

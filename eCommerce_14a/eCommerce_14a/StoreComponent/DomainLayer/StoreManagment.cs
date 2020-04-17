@@ -6,7 +6,7 @@ using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
-    /// <testClass cref ="eCommerce_14a.StoreManagment.getStore(int)
+    /// <testclass cref ="TestingSystem.UnitTests.StoreManagmentTest/>
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;

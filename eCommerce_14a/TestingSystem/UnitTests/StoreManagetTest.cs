@@ -13,6 +13,7 @@ using TestingSystem.UnitTests.InventroyTest;
 namespace TestingSystem.UnitTests.StoreManagmentTest
 {
     [TestClass]
+
    public class StoreManagetTest
     {
         private StoreManagment storeManagment;
