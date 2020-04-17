@@ -11,8 +11,8 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ViewUserPurchaseHistoryStoryTest : SystemTrackTest
     {
-        string username;
-        string password;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
         string paymentDetails = "311546777";
         string address = "han";
         int storeID;
@@ -20,8 +20,6 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;

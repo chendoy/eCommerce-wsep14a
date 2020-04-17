@@ -12,16 +12,14 @@ namespace TestingSystem.AcceptanceTests
     public class DiscountPolicyStoryTest : SystemTrackTest
     {
         string guestID;
-        string username;
-        string password;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
         int storeID;
 
         [TestInitialize]
         public void SetUp()
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
-            guestID = enterSystem().Item1;
+            guestID = enterSystem().Item2;
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
@@ -38,21 +36,21 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ValidDiscountPolicyTest() 
         {
-            Assert.IsTrue(CheckDiscountPolicy(guestID, storeID).Item1, CheckDiscountPolicy(guestID, storeID).Item2);
+            Assert.IsTrue(CheckDiscountPolicy(guestID, 1, true).Item1, CheckDiscountPolicy(guestID, 1, true).Item2);
         }
 
         [TestMethod]
         //sad
         public void InvalidUserIDPolicyTest()
         {
-            Assert.IsFalse(CheckDiscountPolicy("", storeID).Item1, CheckDiscountPolicy("", storeID).Item2);
+            Assert.IsFalse(CheckDiscountPolicy("", 0, false).Item1, CheckDiscountPolicy("", 0, false).Item2);
         }
 
         [TestMethod]
         //bad
         public void InvalidUserIDAndStoreIDPolicyTest()
         {
-            Assert.IsFalse(CheckDiscountPolicy("       ", 10^6).Item1, CheckDiscountPolicy("       ", 10 ^ 6).Item2);
+            Assert.IsFalse(CheckDiscountPolicy("       ", 0, false).Item1, CheckDiscountPolicy("       ", 0, false).Item2);
         }
     }
 }

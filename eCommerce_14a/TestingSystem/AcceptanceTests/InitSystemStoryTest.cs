@@ -11,8 +11,8 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class InitSystemStoryTest : SystemTrackTest
     {
-        string username;
-        string password; 
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
 
         [TestCleanup]
         public void TearDown() 
@@ -23,8 +23,6 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp() 
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
         }
 
         [TestMethod]
@@ -45,7 +43,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void StartReqWhileBootingTest()
         {
-            Register(username, password);
+            Assert.IsFalse(Register(username, password).Item1, Register(username, password).Item2);
             Assert.IsFalse(Init().Item1, Init().Item2);
         }
     }

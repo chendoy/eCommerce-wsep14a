@@ -89,7 +89,6 @@
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
     <Compile Include="RegressionTests\StubClass.cs" />
-    <Compile Include="StoreGenerator.cs" />
     <Compile Include="SystemTrackTest.cs" />
     <Compile Include="UnitTests\Appoitment_Test.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
@@ -106,7 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AggregationTests\" />
-    <Folder Include="RegressionTests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

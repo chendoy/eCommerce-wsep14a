@@ -12,16 +12,14 @@ namespace TestingSystem.AcceptanceTests
     public class BuyingPolicyStoryTest : SystemTrackTest
     {
         string guestID;
-        string username;
-        string password;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
         int storeID;
 
         [TestInitialize]
         public void SetUp()
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
-            guestID = enterSystem().Item1;
+            guestID = enterSystem().Item2;
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
@@ -37,21 +35,21 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ValidBuyingPolicyTest() 
         {
-            Assert.IsTrue(CheckBuyingPolicy(guestID, storeID).Item1, CheckBuyingPolicy(guestID, storeID).Item2);
+            Assert.IsTrue(CheckBuyingPolicy(guestID, 1, true).Item1, CheckBuyingPolicy(guestID, 1, true).Item2);
         }
 
         [TestMethod]
         //sad
         public void InvalidUserIDPolicyTest()
         {
-            Assert.IsFalse(CheckBuyingPolicy("  ", storeID).Item1, CheckBuyingPolicy("  ", storeID).Item2);
+            Assert.IsFalse(CheckBuyingPolicy("  ", 0, false).Item1, CheckBuyingPolicy("  ", 0, false).Item2);
         }
 
         [TestMethod]
         //bad
         public void InvalidUserIDAndStoreIDPurchaseTest()
         {
-            Assert.IsFalse(CheckBuyingPolicy("  ", 10^6).Item1, CheckBuyingPolicy("  ", 10 ^ 6).Item2);
+            Assert.IsFalse(CheckBuyingPolicy("  ", 0, false).Item1, CheckBuyingPolicy("  ", 0,false).Item2);
         }
 
     }
