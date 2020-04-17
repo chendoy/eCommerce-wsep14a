@@ -67,9 +67,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             return PH.checkconnection();
         }
-        public Tuple<bool,string> pay()
+        public Tuple<bool,string> pay(string PaymentDetails, double amount)
         {
-            return PH.pay();
+            return PH.pay(PaymentDetails, amount);
         }
         public Tuple<bool, string>  ProvideDeliveryForUser(string name ,bool ispayed)
         {

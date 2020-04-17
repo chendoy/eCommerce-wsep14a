@@ -36,9 +36,9 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         {
             return Commercial_System.CheckPaymentConnection();
         }
-        public Tuple<bool,string> pay()
+        public Tuple<bool,string> pay(String PaymentDetails, double Amount)
         {
-            return Commercial_System.pay();
+            return Commercial_System.pay(PaymentDetails, Amount);
         }
         public Tuple<bool, string> ProvideDeliveryForUser(string username,bool paymentFlag)
         {
