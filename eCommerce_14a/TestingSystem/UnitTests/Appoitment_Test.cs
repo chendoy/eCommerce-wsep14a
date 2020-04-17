@@ -24,7 +24,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             //pre
             UM.cleanup();
             SM.cleanup();
-            AP.SetStoreMeneger(SM);
+            AP.cleanup();
             UM.Register("owner", "Test1");
             UM.Register("Appointed", "Test1");
             UM.Login("owner", "Test1");
@@ -77,7 +77,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             //pre
             UM.cleanup();
             SM.cleanup();
-            AP.SetStoreMeneger(SM);
+            AP.cleanup();
             UM.Register("owner", "Test1");
             UM.Register("Appointed", "Test1");
             UM.Login("owner", "Test1");
@@ -123,12 +123,12 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             //pre
             UM.cleanup();
             SM.cleanup();
-            AP.SetStoreMeneger(SM);
+            AP.cleanup();
             UM.Register("owner", "Test1");
             UM.Register("Appointed", "Test1");
             UM.Login("owner", "Test1");
-            UM.Register("Second_owner", "Test1");
-            UM.Login("Second_owner", "Test1");
+            UM.Register("Secondowner", "Test1");
+            UM.Login("Secondowner", "Test1");
             UM.Login("Appointed", "Test1");
             UM.Login("", "G", true);
             UM.Register("NotLogged", "Test1");
@@ -136,7 +136,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(UM.GetAtiveUser("owner").isStoreOwner(1));
             Assert.IsTrue(SM.getStore(1).IsStoreOwner(UM.GetAtiveUser("owner")));
             Assert.IsNotNull(SM.getStore(1));
-            Assert.IsTrue(AP.AppointStoreOwner("owner", "Second_owner", 1).Item1);
+            Assert.IsTrue(AP.AppointStoreOwner("owner", "Secondowner", 1).Item1);
             Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 1).Item1);
             //Tests
             //Null args
@@ -144,11 +144,11 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             //Non exsisting Store
             Assert.IsFalse(AP.RemoveAppStoreManager(null, null, 27).Item1);
             //Not the owner
-            Assert.IsFalse(AP.RemoveAppStoreManager("Appointed", "Second_owner",1).Item1);
+            Assert.IsFalse(AP.RemoveAppStoreManager("Appointed", "Secondowner", 1).Item1);
             //Can't remove sotre owner
-            Assert.IsFalse(AP.RemoveAppStoreManager("owner", "Second_owner", 1).Item1);
+            Assert.IsFalse(AP.RemoveAppStoreManager("owner", "Secondowner", 1).Item1);
             //Not appointed by Second_Owner
-            Assert.IsFalse(AP.RemoveAppStoreManager("Second_owner", "Appointed", 1).Item1);
+            Assert.IsFalse(AP.RemoveAppStoreManager("Secondowner", "Appointed", 1).Item1);
             //Regular
             Assert.IsTrue(AP.RemoveAppStoreManager("owner", "Appointed", 1).Item1);
             //Checks that Appointed Removed

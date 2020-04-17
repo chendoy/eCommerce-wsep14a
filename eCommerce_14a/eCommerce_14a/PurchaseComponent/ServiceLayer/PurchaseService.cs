@@ -11,9 +11,7 @@ namespace eCommerce_14a.PurchaseComponent.ServiceLayer
 {
     public class PurchaseService
     {
-        // TODO: Take init of store management
-        private PurchaseManagement purchaseManagement = new PurchaseManagement(StoreManagment.Instance,
-            new PaymentHandler(), new DeliveryHandler());
+        private PurchaseManagement purchaseManagement = PurchaseManagement.Instance;
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         public Tuple<bool, string> AddProductToShoppingCart(string user, int store, int product, int amount)

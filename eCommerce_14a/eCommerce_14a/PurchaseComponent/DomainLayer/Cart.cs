@@ -50,6 +50,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             Tuple<bool, string> res =  basket.AddProduct(productId, wantedAmount, exist);
+            if (basket.IsEmpty())
+            {
+                baskets.Remove(store);
+            }
             UpdateCartPrice();
             return res;
         }
@@ -86,6 +90,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 basket.SetPurchaseTime(purchaseTime);
             }
+        }
+
+        internal bool IsEmpty()
+        {
+            return baskets.Count == 0;
         }
     }
 }
