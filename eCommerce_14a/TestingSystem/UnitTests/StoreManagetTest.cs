@@ -27,6 +27,12 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             userManger = UserManager.Instance;
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            storeManagment.cleanup();
+            userManger.cleanup();
+        }
 
         [TestMethod]
         /// <function cref ="eCommerce_14a.StoreManagment.appendProduct(int, string, int, string, double, string, string, int)
@@ -399,7 +405,8 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             storesDictionary.Add(2, store2);
             storesDictionary.Add(3, store3);
 
-            return new StoreManagment(storesDictionary);
+            StoreManagment.Instance.setStores(storesDictionary);
+            return StoreManagment.Instance;
         }
 
     }

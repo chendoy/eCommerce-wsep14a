@@ -9,7 +9,7 @@ namespace TestingSystem.UnitTests.InventroyTest
 {
     [TestClass]
     public class InventoryTest
-    {
+    { 
         
         private Inventory validInventory;
         private List<Tuple<Product, int>> validProductList;

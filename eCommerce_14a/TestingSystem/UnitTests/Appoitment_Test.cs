@@ -14,7 +14,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
     public class Appoitment_Test
     {
         //pre
-        StoreManagment SM = new StoreManagment(null);
+        StoreManagment SM = StoreManagment.Instance;
         UserManager UM = UserManager.Instance;
         AppoitmentManager AP = AppoitmentManager.Instance;
         [TestMethod]

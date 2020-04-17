@@ -44,11 +44,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
         {
             if (!owners.Contains(user) && !managers.Contains(user))
+            {
+                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg + " user: " + user.getUserName().ToString() + "store: " + this.Id, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+            }
 
             if (managers.Contains(user))
+            {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
+                {
+                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
+                }
+            }
 
             return inventory.addProductAmount(productId, amount);
         }
@@ -56,11 +64,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
         {
             if (!owners.Contains(user) && !managers.Contains(user))
+            {
+                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+            }
 
             if (managers.Contains(user))
+            {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
+                {
+                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
+                }
+            }
 
             return inventory.DecraseProductAmount(productId, amount);
         }
@@ -68,12 +84,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
         {
             if (!owners.Contains(user))
+            {
+                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+            }
 
             if (newStatus)
             {
                 if(owners.Count == 0)
                 {
+                    Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 }
             }
@@ -84,11 +104,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool, string> removeProduct(User user, int productId)
         {
             if (!owners.Contains(user) && !managers.Contains(user))
+            {
+                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+            }
 
             if (managers.Contains(user))
+            {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
+                {
+                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
+                }
+            }
 
             return inventory.removeProduct(productId);
         }
@@ -97,12 +125,20 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             
             if (!owners.Contains(user) && !managers.Contains(user))
+            {
+                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+            }
 
             if (managers.Contains(user))
+            {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
+                {
+                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
+                }
+            }
 
             return inventory.appendProduct(productParams, amount);
         }
@@ -112,11 +148,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Tuple<bool, string> UpdateProduct(User user, Dictionary<string, object> productParams)
         {
             if (!owners.Contains(user) && !managers.Contains(user))
+            {
+                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
+            }
 
             if (managers.Contains(user))
+            {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
+                {
+                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
+                }
+            }
 
             return inventory.UpdateProduct(productParams);
         }

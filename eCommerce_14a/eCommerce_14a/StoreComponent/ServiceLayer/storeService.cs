@@ -15,7 +15,7 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
         Searcher searcher;
         public StoreService()
         {
-            this.storeManagment = new StoreManagment(null);
+            this.storeManagment = StoreManagment.Instance;
             this.searcher = new Searcher(storeManagment);
 
         }

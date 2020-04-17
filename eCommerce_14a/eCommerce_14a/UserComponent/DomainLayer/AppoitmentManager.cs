@@ -15,6 +15,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         AppoitmentManager()
         {
             UM = UserManager.Instance;
+            storeManagment = StoreManagment.Instance;
             Console.WriteLine("AppoitmentManager Created\n");
         }
         private static readonly object padlock = new object();  
@@ -67,6 +68,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
         public void cleanup()
         {
+            storeManagment = StoreManagment.Instance;
             UM = UserManager.Instance;
         }
 

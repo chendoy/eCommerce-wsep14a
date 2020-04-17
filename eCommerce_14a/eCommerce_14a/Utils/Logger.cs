@@ -4,20 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using log4net;
+using System.Reflection;
 
-namespace eCommerce_14a.Utils
+namespace eCommerce_14a
 {
     /*
      * wrapper class for log4net: using two loggers (events, errors).
      * can add new loggers here
      */
 
-    static class Logger
+    public static class Logger
     {
         private static readonly log4net.ILog errorLogger = log4net.LogManager.GetLogger("errors");
         private static readonly log4net.ILog eventLogger = log4net.LogManager.GetLogger("events");
 
-        public static Boolean logError(string msg, object that)
+        public static Boolean logError(string msg, object classObj, MethodBase mb)
         {
             if (errorLogger == null)
             {
@@ -26,13 +27,13 @@ namespace eCommerce_14a.Utils
             }
             else
             {
-                errorLogger.Error("[" + getMethodName(that) + "]" + " - " + msg);
+                errorLogger.Error("[" + getClassName(classObj) + "." + getMethodName(mb) + "]" + " - " + msg);
                 return true;
             }
 
         }
 
-        public static Boolean logEvent(string msg, object that)
+        public static Boolean logEvent(string msg, object classObj, MethodBase mb)
         {
             if (eventLogger == null)
             {
@@ -41,13 +42,18 @@ namespace eCommerce_14a.Utils
             }
             else
             {
-                eventLogger.Info("[" + getMethodName(that) + "]" + " - " + msg);
+                eventLogger.Info("[" + getClassName(classObj) + "." + getMethodName(mb) + "]" + " - " + msg);
                 return true;
             }
 
         }
 
-        private static string getMethodName(object obj)
+        private static string getMethodName(MethodBase mb)
+        {
+            return mb.Name;
+        }
+
+        private static string getClassName(object obj)
         {
             return obj.GetType().Name;
         }
