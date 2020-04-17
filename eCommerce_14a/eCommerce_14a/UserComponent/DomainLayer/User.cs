@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -64,9 +65,24 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return this.isGuest;
         }
 
-        public bool getUserPermission(string permission)
+        public bool getUserPermission(int storeid,string permission)
         {
-            return true;
+            int[] perms;
+            if (!Store_options.TryGetValue(storeid, out perms))
+                return false;
+            if(permission.Equals(CommonStr.MangerPermission.Comments))
+            {
+                return perms[0] == 1;
+            }
+            if (permission.Equals(CommonStr.MangerPermission.Puarchse))
+            {
+                return perms[1] == 1;
+            }
+            if (permission.Equals(CommonStr.MangerPermission.Product))
+            {
+                return perms[2] == 1;
+            }
+            return false;
         }
 
         //This user will be store Owner 
