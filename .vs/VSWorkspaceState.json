@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\eCommerce_14a",
-    "\\eCommerce_14a\\eCommerce_14a",
-    "\\eCommerce_14a\\TestingSystem"
+    "\\eCommerce_14a\\TestingSystem",
+    "\\eCommerce_14a\\TestingSystem\\UnitTests"
   ],
+  "SelectedNode": "\\eCommerce_14a\\eCommerce_14a.sln",
   "PreviewInSolutionExplorer": false
 }
