@@ -72,6 +72,7 @@ namespace eCommerce_14a.Utils
             public static string NullInventroyErrMsg = "Inventory Cann't be Null";
             public static string NegativeProductAmountErrMsg = "Product amount cann't be negative in the inventory";
             public static string UnmatchedProductAnKeyErrMsg = " Proudct Id dos'nt matches his key";
+            public static string InvalidInventory = "Invalid Inventory";
         }
 
         public static class StoreMangmentErrorMessage

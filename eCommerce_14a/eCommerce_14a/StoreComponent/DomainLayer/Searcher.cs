@@ -23,7 +23,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 Store store = entry.Value;
                 Inventory storeInv = store.Inventory;
-                bool isValidStoreId = false;
+                bool isValidStoreId;
                 if(isValidStoreId = ValidStoreId(store, searchBy))
                 {
                     if (ValidStoreRank(store, searchBy))
