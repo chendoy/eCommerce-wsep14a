@@ -26,9 +26,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             return this.connected;
         }
-        public Tuple<bool,string> pay()
+        public Tuple<bool,string> pay(string paymentDetails, double amount)
         {
             return new Tuple<bool,string>(true,"OK");
+        }
+        public Tuple<bool, string> refund(string paymentDetails, double amount)
+        {
+            return new Tuple<bool, string>(true, "OK");
         }
         public void setConnections(bool con)
         {
