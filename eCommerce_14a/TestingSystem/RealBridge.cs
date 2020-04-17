@@ -8,6 +8,8 @@ using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.PurchaseComponent.ServiceLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.StoreComponent.ServiceLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace TestingSystem
 {
@@ -30,11 +32,10 @@ namespace TestingSystem
 
         /// ~~~~~~~~Naor~~~~~~~~:
 
-        // naor returns cart
-        //public new List<object> ViewCartDetails(string cartID)
-        //{
-            //return purchService.GetCartDetails(cartID);
-        //}
+        public new Tuple<Cart, string> ViewCartDetails(string cartID)
+        {
+            return purchService.GetCartDetails(cartID);
+        }
        
         public new Tuple<bool, string> AddProductToBasket(string userID, int storeID, int productID, int amount)
         {
@@ -171,9 +172,9 @@ namespace TestingSystem
             return userService.Registration(username, password);
         }
 
-        public new Tuple<bool, string> Init()
+        public new Tuple<bool, string> Init(bool flag = true)
         {
-            return sysService.initSystem("Admin","Admin");
+            return sysService.initSystem("Admin","Admin", flag);
         }
 
         public new Tuple<bool, string> enterSystem()

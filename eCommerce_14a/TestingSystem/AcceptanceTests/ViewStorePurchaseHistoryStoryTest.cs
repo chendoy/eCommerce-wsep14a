@@ -51,7 +51,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void BlankUsernamePurchaseHisstoryTest()
         {
-            Assert.AreEqual(0, ViewAllStorePurchase(" ", storeID).Item1.Count);
+            Assert.AreEqual(null, ViewAllStorePurchase(" ", storeID).Item1.Count);
         }
     }
 }
