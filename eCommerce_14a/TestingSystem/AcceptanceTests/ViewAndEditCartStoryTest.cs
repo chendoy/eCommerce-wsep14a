@@ -46,21 +46,23 @@ namespace TestingSystem.AcceptanceTests
         public void ViewShoppingCartTest() 
         {
             AddProductToBasket(userID, storeID, productID, 2);
-            Assert.AreNotEqual(0, ViewCartDetails(userID).Count);
+            Assert.IsNotNull(ViewCartDetails(userID).Item1, ViewCartDetails(userID).Item2);
         }
    
         [TestMethod]
         //sad
         public void ViewEmptyShoppingCartTest()
         {
-            Assert.AreEqual(0, ViewCartDetails(userID).Count);
+            AddProductToBasket(userID, storeID, productID, 2);
+            RemoveProductFromShoppingCart(userID, storeID, productID);
+            Assert.IsTrue(CartIsEmpty(userID));
         }
 
         [TestMethod]
         //bad
         public void ViewCartWithWrongUserIDShoppingCartTest()
         {
-            Assert.AreNotEqual(0, ViewCartDetails("   ").Count);
+            Assert.IsNull(ViewCartDetails("   ").Item1, ViewCartDetails("   ").Item2);
         }
     }
 }

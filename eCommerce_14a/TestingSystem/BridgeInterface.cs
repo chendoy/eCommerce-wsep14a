@@ -22,7 +22,7 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public Tuple<bool, string> Init()
+        public Tuple<bool, string> Init(bool flag = true)
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -47,9 +47,9 @@ namespace TestingSystem
             return new Dictionary<int, List<object>>();
         }
 
-        public List<object> ViewCartDetails(string id) 
+        public Tuple<Cart, string> ViewCartDetails(string id) 
         {
-            return new List<object>();
+            return new Tuple<Cart,string>(new Cart(id), "");
         }
 
         public Tuple<bool, string> enterSystem() 
@@ -174,6 +174,11 @@ namespace TestingSystem
         public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
         {
             return new Tuple<bool, String>(true, "");
+        }
+
+        public bool CartIsEmpty(string userID)
+        {
+            return true;//resCart.isEmpty();
         }
     }
 }

@@ -53,7 +53,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void ViewInvalidDetailsHistoryTest()
         {
-            Assert.AreEqual(0, ViewPurchaseUserHistory("   ").Item1.Count);
+            Assert.IsNull(ViewPurchaseUserHistory("   ").Item1, ViewPurchaseUserHistory("   ").Item2);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using eCommerce_14a;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,16 @@ namespace TestingSystem
 
         /// PurchaseService(Naor):
         
-        public List<object> ViewCartDetails(string cartID)
+        public Tuple<Cart, string> ViewCartDetails(string cartID)
         {
             return sys.ViewCartDetails(cartID);
         }
-        
+
+        public bool CartIsEmpty(string userID)
+        {
+            return sys.CartIsEmpty(userID);//resCart.isEmpty();
+        }
+
         public Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID, int amount)
         {
             return sys.AddProductToBasket(UserID, storeID, productID, amount);
@@ -151,9 +157,9 @@ namespace TestingSystem
             return sys.Register(username, password);
         }
      
-        public Tuple<bool, string> Init()
+        public Tuple<bool, string> Init(bool flag = true)
         {
-            return sys.Init();
+            return sys.Init(flag);
         }
 
         public Tuple<bool, string> enterSystem()
