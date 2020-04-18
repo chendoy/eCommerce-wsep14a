@@ -41,10 +41,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public void LogIn()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             this.isLoggedIn = true;
         }
         public void Logout()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             this.isLoggedIn = false;
         }
         public string getUserName()
@@ -57,15 +59,23 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public bool LoggedStatus()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return this.isLoggedIn;
         }
         public bool isguest()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return this.isGuest;
         }
 
         public bool getUserPermission(int storeid,string permission)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if(permission is null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return false;
+            }
             int[] perms;
             if (!Store_options.TryGetValue(storeid, out perms))
                 return false;
@@ -87,6 +97,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //This user will be store Owner 
         public Tuple<bool, string> addStoreOwnership(Store store)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
             if (Store_Ownership.ContainsValue(store))
@@ -97,6 +108,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add a user to be store Manager
         public Tuple<bool, string> addStoreManagment(Store store)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
                 return new Tuple<bool, string>(false, "Guest user cannot be store Manager\n");
             if (Store_Managment.ContainsValue(store))
@@ -107,6 +119,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Checks if User user appointed this current user to be owner or manager to this store
         public bool isAppointedBy(User user, int store_id)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User owner;
             if (!AppointedBy.TryGetValue(store_id, out owner))
                 return false;
@@ -117,36 +130,43 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //If this apppointment exist do not add.
         public void addAppointment(User owner, int id)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (!isAppointedBy(owner, id))
                 AppointedBy.Add(id, owner);
         }
         //Remove Manager
         public bool RemoveStoreManagment(int store_id)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Store_Managment.Remove(store_id);
         }
         //Remove Appoitment
         public bool RemoveAppoitment(User owner, int id)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return AppointedBy.Remove(id);
         }
         //Check if the user is Currently Store Owner
         public bool isStoreOwner(int store)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Store_Ownership.ContainsKey(store);
         }
         //Check if the user is Currently Store Manager
         public bool isStorManager(int store)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Store_Managment.ContainsKey(store);
         }
         public bool isSystemAdmin()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return this.isAdmin;
         }
         //Set User permission over spesific store
         public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (store_id < 1)
                 return new Tuple<bool, string>(false, "No such Store id\n");
             if (permission_set == null)
@@ -160,6 +180,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public bool RemovePermission(int store_id)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Store_options.Remove(store_id);
         }
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
-
+using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -49,10 +49,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)
         {
-            if (u == null || p == null)
+            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (u is null || p is null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Null Arguments\n");
+            }
             if (u == "" || p == "")
+            {
+                Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Blank Arguments\n");
+            }
             if (isUserExist(u))
                 return new Tuple<bool, string>(false, "User name Exsist\n");
             if (u.Length < 3 || u.Length > 14)
@@ -66,22 +73,31 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Check 1 or 2 arguments a=if input is valid.
         private Tuple<bool, string> check_args(string u, string p = "A")
         {
-            if (u == null || p == null)
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (u is null || p is null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Null Arguments\n");
+            }
             if (u == "" || p == "")
+            {
+                Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Blank Arguments\n");
+            }
             return new Tuple<bool, string>(true, "");
         }
         //CHecks if the user is registered somewhere 
         //Means the user entered username and password
         public bool isUserExist(string username)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             //if user name exist return false
             return Users_And_Hashes.ContainsKey(username);
         }
         //Register the system admin
         public Tuple<bool, string> RegisterMaster(string username, string pass)
         {
+            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             Tuple<bool, string> ans = name_and_pass_check(username, pass);
             if (!ans.Item1)
                 return ans;
@@ -95,6 +111,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //User name must be unique
         public Tuple<bool, string> Register(string username, string pass)
         {
+            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             Tuple<bool, string> ans = name_and_pass_check(username, pass);
             if (!ans.Item1)
                 return ans;
@@ -108,6 +125,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Login to Unlogged Register User with valid user name and pass.
         public Tuple<bool, string> Login(string username, string pass, bool isGuest = false)
         {
+            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isGuest)
             {
                 string Uname = addGuest();
@@ -136,6 +154,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public Tuple<bool, string> Logout(string sname, User user = null)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             Tuple<bool, string> ans = check_args(sname);
             if (!ans.Item1)
                 return ans;
@@ -155,6 +174,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             string tName = "Guest" + Available_ID;
             User nUser = new User(Available_ID, tName);
             Console.WriteLine(tName);
@@ -166,6 +186,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Tries to get User from users list
         public User GetUser(string username)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (username is null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return null;
+            }
             User tUser;
             if (users.TryGetValue(username, out tUser))
                 return tUser;
@@ -174,6 +200,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Tries to get user from logged in users.
         public User GetAtiveUser(string username)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (username is null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return null;
+            }
             User tUser;
             if (Active_users.TryGetValue(username, out tUser))
                 return tUser;
@@ -208,6 +240,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //For test clean the DB
         public void cleanup()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             Console.WriteLine("UserManager Created\n");
             this.Users_And_Hashes = new Dictionary<string, string>();
             this.users = new Dictionary<string, User>();

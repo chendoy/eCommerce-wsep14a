@@ -88,6 +88,11 @@ namespace eCommerce_14a.Utils
             public static string Puarchse = "ViewPuarchseHistory";
             public static string Product = "ProductPermission";
         }
+        public static class ArgsTypes
+        {
+            public static string Empty = "Blank Arguments";
+            public static string None = "NullArguments";
+        }
 
 
     }

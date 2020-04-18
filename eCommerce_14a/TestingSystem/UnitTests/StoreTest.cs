@@ -33,7 +33,6 @@ namespace TestingSystem.UnitTests.StoreTest
             userManager.Register("shmuel", "123");
             userManager.Login("shmuel", "123");
             AppoitmentManager appmgr = AppoitmentManager.Instance;
-            appmgr.SetStoreMeneger(sm);
             appmgr.AppointStoreManager("shimon", "shmuel", 1);
             appmgr.AppointStoreManager("shimon", "yosi", 1);
             userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
