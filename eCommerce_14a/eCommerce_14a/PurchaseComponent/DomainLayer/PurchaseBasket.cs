@@ -96,7 +96,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             foreach (var product in products.Keys)
             {
-                //store.decrasePrdouct(product, products[product]);
+                store.DecraseProductAmountAfterPuarchse(product, products[product]);
             }
         }
 
@@ -116,7 +116,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             foreach (var product in products.Keys)
             {
-                //store.addProductAmount(product, products[product]);
+                store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
             }
         }
     }
