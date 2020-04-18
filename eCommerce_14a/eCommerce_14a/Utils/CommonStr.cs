@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace eCommerce_14a.Utils
+﻿namespace eCommerce_14a.Utils
 {
     public static class CommonStr
     {
@@ -13,7 +7,8 @@ namespace eCommerce_14a.Utils
         {
             public static string UnKnownErr = "UnKnown Error Occured";
         }
-        public static class SearcherKeys{
+        public static class SearcherKeys
+        {
             public static string ProductKeyWord = "SearchByProductKeyWord";
             public static string ProductRank = "searchByProductRank";
             public static string ProductPriceRange = "searchByProductPriceRange";
@@ -23,7 +18,7 @@ namespace eCommerce_14a.Utils
             public static string StoreId = "SearchByStioreId";
         }
 
-        
+
         public static class StoreParams
         {
             public static string StoreId = "StoreId";

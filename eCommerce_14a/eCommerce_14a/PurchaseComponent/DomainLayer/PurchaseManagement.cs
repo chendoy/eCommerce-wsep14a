@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using eCommerce_14a.Utils;
+﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
-using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
@@ -54,7 +51,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <param name="exist">  means this product meant to be already in the cart (in case of change/remove existing product </param>
         public Tuple<bool, string> AddProductToShoppingCart(string userId, int storeId, int productId, int wantedAmount, bool exist)
         {
-            if(String.IsNullOrEmpty(userId))
+            if (String.IsNullOrEmpty(userId))
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User user = userManager.GetAtiveUser(userId);
             if (user == null)
@@ -150,7 +147,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
             userCart.UpdateCartPrice();
 
-            Tuple<bool, string> payRes = paymentHandler.pay(paymentDetails,userCart.Price);
+            Tuple<bool, string> payRes = paymentHandler.pay(paymentDetails, userCart.Price);
             if (!payRes.Item1)
             {
                 return payRes;
@@ -192,7 +189,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             if (String.IsNullOrEmpty(user))
                 return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User userObject = userManager.GetAtiveUser(user);
-            if(userObject is null)
+            if (userObject is null)
             {
                 return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
@@ -223,7 +220,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            if (!GetStoreHistoryAuthorization(userObject,storeId))
+            if (!GetStoreHistoryAuthorization(userObject, storeId))
             {
                 return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
@@ -246,14 +243,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
-        public Tuple<Dictionary<Store, List<PurchaseBasket>> , string> GetAllStoresHistory(string admin)
+        public Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
         {
             if (String.IsNullOrEmpty(admin))
                 return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User userObject = userManager.GetAtiveUser(admin);
             if (userObject is null)
             {
-                return new Tuple<Dictionary<Store, List<PurchaseBasket>>,string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
 
             if (!userObject.isSystemAdmin())

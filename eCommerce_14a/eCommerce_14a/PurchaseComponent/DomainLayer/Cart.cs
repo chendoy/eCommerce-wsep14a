@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using eCommerce_14a.StoreComponent.DomainLayer;
+﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
@@ -50,7 +47,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 baskets.Add(store, basket);
             }
 
-            Tuple<bool, string> res =  basket.AddProduct(productId, wantedAmount, exist);
+            Tuple<bool, string> res = basket.AddProduct(productId, wantedAmount, exist);
             if (basket.IsEmpty())
             {
                 baskets.Remove(store);
