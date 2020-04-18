@@ -37,7 +37,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return instance;  
             }  
         } 
-        UserManager()
+
+        /// <summary>
+        /// Public ONLY For generatin Stubs
+        /// </summary>
+        public UserManager()
         {
             Console.WriteLine("UserManager Created\n");
             Users_And_Hashes = new Dictionary<string, string>();
@@ -197,7 +201,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return null;
         }
         //Tries to get user from logged in users.
-        public User GetAtiveUser(string username)
+        public virtual User GetAtiveUser(string username)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (username is null)

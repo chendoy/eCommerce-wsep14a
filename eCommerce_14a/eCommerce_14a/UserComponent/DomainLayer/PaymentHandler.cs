@@ -22,12 +22,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return this.connected;
         }
-        public Tuple<bool,string> pay(string paymentDetails, double amount)
+        public virtual Tuple<bool,string> pay(string paymentDetails, double amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return new Tuple<bool,string>(true,"OK");
         }
-        public Tuple<bool, string> refund(string paymentDetails, double amount)
+        public virtual Tuple<bool, string> refund(string paymentDetails, double amount)
         {
             if (paymentDetails is null)
             {

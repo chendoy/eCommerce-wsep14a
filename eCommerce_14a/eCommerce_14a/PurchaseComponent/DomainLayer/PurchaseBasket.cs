@@ -92,6 +92,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             PurchaseTime = purchaseTime;
         }
 
+        internal void RemoveFromStoreStock()
+        {
+            foreach (var product in products.Keys)
+            {
+                //store.decrasePrdouct(product, products[product]);
+            }
+        }
+
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-buying-policy-282</req>
         internal Tuple<bool, string> CheckProductsValidity()
@@ -102,6 +110,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             return store.checkIsValidBasket(products);
+        }
+
+        internal void RestoreItemsToStore()
+        {
+            foreach (var product in products.Keys)
+            {
+                //store.addProductAmount(product, products[product]);
+            }
         }
     }
 }

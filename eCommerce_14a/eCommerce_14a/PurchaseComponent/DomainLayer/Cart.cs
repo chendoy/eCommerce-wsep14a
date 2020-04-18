@@ -94,5 +94,21 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             return baskets.Count == 0;
         }
+
+        internal void RemoveFromStoresStock()
+        {
+            foreach (var basket in baskets.Values)
+            {
+                basket.RemoveFromStoreStock();
+            }
+        }
+
+        internal void RestoreItemsToStores()
+        {
+            foreach (var basket in baskets.Values)
+            {
+                basket.RestoreItemsToStore();
+            }
+        }
     }
 }

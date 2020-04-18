@@ -12,10 +12,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         private Dictionary<string, Cart> carts;
         private Dictionary<string, List<Purchase>> purchasesHistoryByUser;
         private Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore;
-        private readonly StoreManagment storeManagment;
-        private readonly PaymentHandler paymentHandler;
-        private readonly DeliveryHandler deliveryHandler;
-        private readonly UserManager userManager;
+        private StoreManagment storeManagment;
+        private PaymentHandler paymentHandler;
+        private DeliveryHandler deliveryHandler;
+        private UserManager userManager;
 
         private static PurchaseManagement instance = null;
         private static readonly object padlock = new object();
@@ -153,10 +153,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return payRes;
             }
 
+            userCart.RemoveFromStoresStock();
+
             Tuple<bool, string> delvRes = deliveryHandler.ProvideDeliveryForUser(address, true);
             if (!delvRes.Item1)
             {
                 paymentHandler.refund(paymentDetails, userCart.Price);
+                userCart.RestoreItemsToStores();
                 return delvRes;
             }
 
@@ -286,6 +289,21 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             this.carts = new Dictionary<string, Cart>();
             this.purchasesHistoryByUser = new Dictionary<string, List<Purchase>>();
             this.purchasesHistoryByStore = new Dictionary<Store, List<PurchaseBasket>>();
+        }
+
+        /// <summary>
+        /// Setup the dependencies of this class for tests purposes
+        /// </summary>
+        public void SetupDependencies(
+            StoreManagment storeManagment, 
+            PaymentHandler paymentHandler,
+            DeliveryHandler deliveryHandler,
+            UserManager userManager)
+        {
+            this.storeManagment = storeManagment;
+            this.userManager = userManager;
+            this.paymentHandler = paymentHandler;
+            this.deliveryHandler = deliveryHandler;
         }
     }
 }

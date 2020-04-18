@@ -16,7 +16,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private static StoreManagment instance = null;
         private static readonly object padlock = new object();
 
-        StoreManagment()
+        /// <summary>
+        /// Public ONLY For generatin Stubs
+        /// </summary>
+        public StoreManagment()
         {
             stores = new Dictionary<int, Store>();
         }
@@ -190,7 +193,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
 
-        public Store getStore(int storeId)
+        public virtual Store getStore(int storeId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 

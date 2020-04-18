@@ -26,7 +26,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return isAlive;
         }
-        public Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
+        public virtual Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return new Tuple<bool, string>(true, "FineByNow");
