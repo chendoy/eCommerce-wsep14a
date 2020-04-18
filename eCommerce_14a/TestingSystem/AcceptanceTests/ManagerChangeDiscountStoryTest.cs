@@ -10,19 +10,15 @@ namespace TestingSystem.AcceptanceTests
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager---change-discount-511 </req>
     class ManagerChangeDiscountStoryTest : SystemTrackTest
     {
-        string username;
-        string password;
-        string userManager;
-        string passManager;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
+        string userManager = UserGenerator.GetValidUsernames()[1];
+        string passManager = UserGenerator.GetPasswords()[1];
         int storeID;
 
         [TestInitialize]
         public void SetUp()
         {
-            userManager = UserGenerator.RandomString(5);
-            passManager = UserGenerator.RandomString(5);
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
             Register(userManager, passManager);
             Login(userManager, passManager);
             Register(username, password);
@@ -37,5 +33,7 @@ namespace TestingSystem.AcceptanceTests
             ClearAllUsers();
             ClearAllShops();
         }
+
+
     }
 }
