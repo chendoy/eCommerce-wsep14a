@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace eCommerce_14a.Utils
+﻿namespace eCommerce_14a.Utils
 {
     public static class CommonStr
     {
@@ -13,7 +7,8 @@ namespace eCommerce_14a.Utils
         {
             public static string UnKnownErr = "UnKnown Error Occured";
         }
-        public static class SearcherKeys{
+        public static class SearcherKeys
+        {
             public static string ProductKeyWord = "SearchByProductKeyWord";
             public static string ProductRank = "searchByProductRank";
             public static string ProductPriceRange = "searchByProductPriceRange";
@@ -23,7 +18,7 @@ namespace eCommerce_14a.Utils
             public static string StoreId = "SearchByStioreId";
         }
 
-        
+
         public static class StoreParams
         {
             public static string StoreId = "StoreId";
@@ -68,7 +63,7 @@ namespace eCommerce_14a.Utils
             public static string ProductAlreadyExistErrMsg = "Product already exists!";
             public static string ProductNotExistErrMsg = "Product not exist!";
             public static string productAmountErrMsg = "This Action leads to invalid Product Amount";
-            public static string ProductShortageErrMsg = "There arn't enough product in the Iventorty to perform this action";
+            public static string ProductShortageErrMsg = "There arn't enough product in the Inventory to perform this action";
             public static string NullInventroyErrMsg = "Inventory Cann't be Null";
             public static string NegativeProductAmountErrMsg = "Product amount cann't be negative in the inventory";
             public static string UnmatchedProductAnKeyErrMsg = " Proudct Id dos'nt matches his key";
@@ -88,7 +83,22 @@ namespace eCommerce_14a.Utils
             public static string Puarchse = "ViewPuarchseHistory";
             public static string Product = "ProductPermission";
         }
+        public static class ArgsTypes
+        {
+            public static string Empty = "Blank Arguments";
+            public static string None = "NullArguments";
+        }
 
-
+        public static class PurchaseMangmentErrorMessage
+        {
+            public static string NegativeProductAmountErrMsg = "Cannot have negative amount of product in cart";
+            public static string ZeroProductAmountErrMsg = "Cannot add zero amount of product to cart";
+            public static string ProductNotExistInCartErrMsg = "The product is not already in the shopping cart";
+            public static string ProductExistInCartErrMsg = "The product is already in the shopping cart";
+            public static string NotValidPaymentErrMsg = "Not a valid paymentDetails";
+            public static string NotValidAddressErrMsg = "Not a valid address";
+            public static string EmptyCartPurchaseErrMsg = "Cannot add zero amount of product to cart";
+            public static string NotAdminErrMsg = "This Action is for admins only";
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Hence not null and not blank.
         public string CalcSha1(string pass)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (pass == null || pass == "")
                 return null;
             var data = Encoding.ASCII.GetBytes(pass);

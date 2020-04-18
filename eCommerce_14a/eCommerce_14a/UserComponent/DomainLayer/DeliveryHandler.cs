@@ -9,33 +9,31 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 {
     public class DeliveryHandler
     {
-        int checker;
         bool connected;
         public DeliveryHandler()
         {
             Console.WriteLine("DeliveryHandler Created\n");
-            checker = 2;
             connected = true;
-        }
-        public int getchecker()
-        {
-            return this.checker;
         }
 
         public bool checkconnection()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return this.connected;
         }
         public bool Delivered(bool isAlive = true)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return isAlive;
         }
-        public Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
+        public virtual Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return new Tuple<bool, string>(true, "FineByNow");
         }
         public void setConnection(bool con)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             this.connected = con;
         }
     }

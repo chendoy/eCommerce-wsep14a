@@ -17,6 +17,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private int rank;
         private bool activeStore;
 
+        /// <summary>
+        /// ONLY For generating Stubs
+        /// </summary>
+        public Store ()
+        {
+        }
 
         public Store(Dictionary<string, object> store_params)
         {
