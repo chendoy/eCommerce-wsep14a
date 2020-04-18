@@ -17,6 +17,7 @@ namespace TestingSystem.UnitTests.User_test
         Security bd = new Security();
         //UserManagerTest
         [TestMethod]
+        /// <function cref ="eCommerce_14a.UserManager.RegisterMaster(string,string)
         public void MasterRegistrationTest()
         {
             //Test
@@ -35,6 +36,7 @@ namespace TestingSystem.UnitTests.User_test
             
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.UserManager.Register(string,string)
         public void RegularRegistrationTest()
         {
             //Test
@@ -56,6 +58,7 @@ namespace TestingSystem.UnitTests.User_test
             
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.UserManager.Login(string,string,bool)
         public void LoginTest()
             {
             //Pre
@@ -80,6 +83,7 @@ namespace TestingSystem.UnitTests.User_test
             Assert.IsFalse(u_test.Login(null, null).Item1);
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.UserManager.Login(string,string,bool)
         public void LoginAsGuestTest()
         {
             //Pre
@@ -92,6 +96,7 @@ namespace TestingSystem.UnitTests.User_test
 
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.UserManager.Logout(string)
         public void LogoutTest()
         {
             //pre

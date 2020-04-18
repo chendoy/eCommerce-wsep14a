@@ -13,6 +13,7 @@ namespace TestingSystem.UnitTests.System_init
     public class System_init
     {
         [TestMethod]
+        /// <function cref ="eCommerce_14a.UserManager.RegisterMaster(string,string)
         public void AssigneAdmin_Test()
         {
             UserManager um = UserManager.Instance;
@@ -27,6 +28,8 @@ namespace TestingSystem.UnitTests.System_init
             Assert.IsFalse(um.RegisterMaster(null,"").Item1);
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.DeliveryHandler.checkconnection()
+        /// <function cref ="eCommerce_14a.PaymentHandler.checkconnection()
         public void ConnectToHandlers()
         {
             DeliveryHandler dh = new DeliveryHandler();
@@ -41,6 +44,7 @@ namespace TestingSystem.UnitTests.System_init
             Assert.IsTrue(dh.checkconnection());
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.Security.CalcSha1(string)
         public void SecurityTest()
         {
             Security b = new Security();

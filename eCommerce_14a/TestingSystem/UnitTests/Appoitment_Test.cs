@@ -18,6 +18,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         UserManager UM = UserManager.Instance;
         AppoitmentManager AP = AppoitmentManager.Instance;
         [TestMethod]
+        /// <function cref ="eCommerce_14a.AppoitmentManager.AppointStoreOwner(string,string,int)
         public void StoreOwnershipTest()
         {
             //Store Ownership
@@ -71,6 +72,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
 
         }
         [TestMethod]
+        /// <function cref ="eCommerce_14a.AppoitmentManager.AppointStoreManager(string,string,int)
         public void StoreManagmentTest()
         {
             //Store Ownership
@@ -117,6 +119,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         }
 
         [TestMethod]
+        /// <function cref ="eCommerce_14a.AppoitmentManager.RemoveAppStoreManager(string,string,int)
         public void Remove_StoreManagmentTest()
         {
             //Store Ownership
