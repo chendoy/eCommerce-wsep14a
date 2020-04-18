@@ -14,55 +14,36 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class PurchaseStoryTest : SystemTrackTest
     {
-        string paymentDetails = "ValidPaymentDetails";
-        string address = "hanesher38";
+        //@@@@@@@@@@@@@@@@NAOR@@@@@@@@@@@@@@@@@@@@@
         string userID;
-        string usernameOwner = UserGenerator.GetValidUsernames()[0];
-        string passwordOwner = UserGenerator.GetPasswords()[0];
-        int storeID;
-        int productID = 3;
-        int amount = 1;
-        string productDetails = "Details";
-        double productPrice = 3.02;
-        string productName = "Name";
-        string productCategory = "Category";
+        string legalPaymentDetails = "CreditCard";
+        string illegalPaymentDetails = "";
 
         [TestInitialize]
         public void SetUp()
         {
-            storeID = OpenStore(usernameOwner).Item1;
-            userID = enterSystem().Item2;
-            AddProductToStore(storeID, usernameOwner, productID, productDetails, productPrice, productName, productCategory, amount);
-            AddProductToBasket(userID, storeID, productID, amount);
+            userID = enterSystem().Item1;
+            //AddProductToUser(UserID);
+          
         }
-
         [TestCleanup]
         public void TearDown()
         {
-            ClearAllUsers();
-            ClearAllShops();
         }
-
         [TestMethod]
-        //happy
-        public void LegalPaymentDetailsTest()
+        public void LegalPurchaseTest() 
         {
-            Assert.IsTrue(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            
         }
-
         [TestMethod]
-        //sad
         public void IllegalPaymentDetailsTest()
         {
-            Assert.IsFalse(PayForProduct(userID, "", address).Item1, PayForProduct(userID, "", address).Item2);
+            
         }
-
         [TestMethod]
-        //bad
-        public void ConnectionLostWithPaymentSystemTest()
+        public void ConnectionWithPaymentSystemLostTest()
         {
-            SetPaymentSystemConnection(false);
-            Assert.IsFalse(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            
         }
 
     }

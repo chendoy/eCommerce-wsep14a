@@ -12,12 +12,16 @@ namespace TestingSystem.AcceptanceTests
     public class LoginStoryTest : SystemTrackTest
     {
         string[] validUsernames = UserGenerator.GetValidUsernames();
-        string[] incorrectUsernames = UserGenerator.GetIncorrectUsernames(); // for future using
+        string[] incorrectUsernames = UserGenerator.GetIncorrectUsernames();
         string[] passwords = UserGenerator.GetPasswords();
+        string password1;
+        string username2;
+        string password2;
 
         [TestInitialize]
         public void SetUp()
         {
+
         }
 
         [TestCleanup]
@@ -30,6 +34,7 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ExistingUsernameAndPasswordTest()
         {
+            //pre-condition
             for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE; i++)
             {
                 Register(validUsernames[i], passwords[i]);
@@ -50,6 +55,7 @@ namespace TestingSystem.AcceptanceTests
                 Register(validUsernames[i], passwords[i]);
                 Assert.IsTrue(Login(validUsernames[i], passwords[i]).Item1, Login(validUsernames[i], passwords[i]).Item2);
             }
+
         }
 
         [TestMethod]

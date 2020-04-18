@@ -13,11 +13,11 @@ namespace TestingSystem.AcceptanceTests
     //@@@@@@@NAOR@@@@@@@@@@@@@@@@@2
     public class ViewAndEditCartStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID;
         int storeID;
         string userID;
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        string username;
+        string password;
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -27,10 +27,13 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
-            userID = enterSystem().Item2;
+            userID = enterSystem().Item1;
+            productID = 3;
             AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
         }
 
@@ -46,23 +49,21 @@ namespace TestingSystem.AcceptanceTests
         public void ViewShoppingCartTest() 
         {
             AddProductToBasket(userID, storeID, productID, 2);
-            Assert.IsNotNull(ViewCartDetails(userID).Item1, ViewCartDetails(userID).Item2);
+            Assert.AreNotEqual(0, ViewCartDetails(userID).Count);
         }
    
         [TestMethod]
         //sad
         public void ViewEmptyShoppingCartTest()
         {
-            AddProductToBasket(userID, storeID, productID, 2);
-            RemoveProductFromShoppingCart(userID, storeID, productID);
-            Assert.IsTrue(CartIsEmpty(userID));
+            Assert.AreEqual(0, ViewCartDetails(userID).Count);
         }
 
         [TestMethod]
         //bad
         public void ViewCartWithWrongUserIDShoppingCartTest()
         {
-            Assert.IsNull(ViewCartDetails("   ").Item1, ViewCartDetails("   ").Item2);
+            Assert.AreNotEqual(0, ViewCartDetails("   ").Count);
         }
     }
 }

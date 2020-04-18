@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestingSystem
 {
-    class Driver
+    class StoreGenerator
     {
-        public Driver() { }
-        public static BridgeInterface GetBridge() { return new ProxyBridge(); }//return new RealBridge();
     }
 }

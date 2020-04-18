@@ -12,11 +12,11 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class OverlookStoresProductsStoryTest : SystemTrackTest
     {
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        string username;
+        string password;
         int storeID;
-        int amount = 1;
-        int productID = 3;
+        int amount;
+        int productID;
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -25,9 +25,12 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
+            productID = 3;
         }
         [TestCleanup]
         public void TearDown()
@@ -39,17 +42,20 @@ namespace TestingSystem.AcceptanceTests
         [TestMethod]
         public void ViewShopDetailsTest() 
         {
+            amount = 1;
             AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
             Assert.AreNotEqual(0, ViewStoreDetails(storeID).Count);
         }
         [TestMethod]
-        public void EmptyStoreTest()
+        public void UnExistCategoryTest()
         {
-            Assert.AreEqual(0, ViewStoreDetails(storeID).Count);// suppose to return an EmptyList
+            ViewStoreDetails(storeID);
+            Assert.Equals(0, ViewStoreProductsByCategory(storeID, " ").Count);// suppose to return an EmptyList
         }
         [TestMethod]
-        public void CloseShopViewShopDetailsTest()
+        public void CloseShopWhileViewShopDetailsTest()
         {
+            ViewStoreDetails(storeID);
             CloseStore(username, storeID);
             Assert.AreEqual(0, ViewStoreDetails(storeID).Count);
         }

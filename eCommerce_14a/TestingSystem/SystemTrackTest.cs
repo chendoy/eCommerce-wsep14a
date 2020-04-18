@@ -1,7 +1,4 @@
-﻿using eCommerce_14a;
-using eCommerce_14a.PurchaseComponent.DomainLayer;
-using eCommerce_14a.StoreComponent.DomainLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,30 +9,25 @@ namespace TestingSystem
     //from here comes all the functionality of the system
     public class SystemTrackTest
     {
-        public RealBridge sys = Driver.GetBridge();
+        public BridgeInterface sys = Driver.GetBridge();
 
         public SystemTrackTest() { }
 
-        /// PurchaseService(Naor):
+        /// ~~~~~~~~Naor~~~~~~~~:
         
-        public Tuple<Cart, string> ViewCartDetails(string cartID)
+        public List<object> ViewCartDetails(string cartID)
         {
             return sys.ViewCartDetails(cartID);
         }
-
-        public bool CartIsEmpty(string userID)
-        {
-            return sys.CartIsEmpty(userID);//resCart.isEmpty();
-        }
-
+        
         public Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID, int amount)
         {
             return sys.AddProductToBasket(UserID, storeID, productID, amount);
         }
         
-        public Tuple<bool, string> PayForProduct(string userID, string paymentDetails, string address)
+        public Tuple<bool, string> PayForProduct(string userID, string paymentDetails)
         {
-            return sys.PayForProduct(userID, paymentDetails, address);
+            return sys.PayForProduct(userID, paymentDetails);
         }
         
         public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
@@ -44,12 +36,12 @@ namespace TestingSystem
         }
 
 
-        public Tuple<List<Purchase>, string> ViewPurchaseUserHistory(string userName)
+        public Tuple<List<object>, string> ViewPurchaseUserHistory(string userName)
         {
             return sys.ViewPurchaseUserHistory(userName);
         }
 
-        public Tuple<List<PurchaseBasket>, string> ViewAllStorePurchase(string userName, int storeID)
+        public Tuple<List<object>, string> ViewAllStorePurchase(string userName, int storeID)
         {
             return sys.ViewAllStorePurchase(userName, storeID);
         }
@@ -62,16 +54,11 @@ namespace TestingSystem
 
 
 
-        /// StoreService(Liav):
+        /// ~~~~~~~~Liav~~~~~~~~:
 
-        public Tuple<bool, string> IncreaseProductAmount(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, String> ChangeProductAmount(int storeID, string username, int productID, int newAmount)
         {
-            return sys.IncreaseProductAmount(storeId, userName, productId, amount);
-        }
-
-        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
-        {
-            return sys.decraseProductAmount(storeId, userName, productId, amount);
+            return sys.ChangeProductAmount(storeID, username, productID, newAmount);
         }
 
         public Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
@@ -84,9 +71,9 @@ namespace TestingSystem
             return sys.ViewStoreDetails(storeID);
         }
         
-        public Dictionary<int, List<Product>> ViewProductsByCategory(String category) 
+        public List<object> ViewStoreProductsByCategory(int storeID, String category) 
         {
-            return sys.ViewProductsByCategory(category);
+            return sys.ViewStoreProductsByCategory(storeID, category);
         }
         
         public Tuple<bool, string> CloseStore(string username, int storeID)
@@ -94,7 +81,7 @@ namespace TestingSystem
             return sys.CloseStore(username, storeID);
         }
         
-        public Dictionary<int, List<Product>> ViewProductByName(String productName)
+        public Dictionary<int, List<object>> ViewProductByName(String productName)
         {
             return sys.ViewProductByName(productName);
         }
@@ -113,14 +100,14 @@ namespace TestingSystem
         {
             return sys.RemoveProductFromStore(username, storeID, productID);
         }
-        public Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID, bool flag)
+        public Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID)
         {
-            return sys.CheckBuyingPolicy(userID, storeID, flag);
+            return sys.CheckBuyingPolicy(userID, storeID);
         }
 
-        public Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID,bool flag)
+        public Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID)
         {
-            return sys.CheckDiscountPolicy(userID, storeID, flag);
+            return sys.CheckDiscountPolicy(userID, storeID);
         }
 
         public void ClearAllShops()
@@ -130,7 +117,7 @@ namespace TestingSystem
 
 
 
-        /// UserService + SystemService + AppointService(Sundy):
+        /// ~~~~~~~~Sundy~~~~~~~~:
 
         public void SetSupplySystemConnection(bool v)
         {
@@ -157,12 +144,12 @@ namespace TestingSystem
             return sys.Register(username, password);
         }
      
-        public Tuple<bool, string> Init(bool flag = true)
+        public Tuple<bool, string> Init()
         {
-            return sys.Init(flag);
+            return sys.Init();
         }
 
-        public Tuple<bool, string> enterSystem()
+        public Tuple<string, string> enterSystem()
         {
             return sys.enterSystem();
         }

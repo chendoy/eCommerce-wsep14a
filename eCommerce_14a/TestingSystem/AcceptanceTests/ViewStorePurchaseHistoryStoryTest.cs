@@ -11,15 +11,15 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ViewStorePurchaseHistoryStoryTest : SystemTrackTest
     {
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        string username;
         int storeID;
-        string paymentDetails = "33225554";
-        string address = "hanesher3";
+        string password;
 
         [TestInitialize]
         public void SetUp()
         {
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
@@ -36,7 +36,7 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ViewAllPurchaseTest() 
         {
-            PerformPurchase(username ,paymentDetails, address);
+            // TODO: add purchase before
             Assert.AreNotEqual(0, ViewAllStorePurchase(username, storeID).Item1.Count);
         }
 
@@ -51,7 +51,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void BlankUsernamePurchaseHisstoryTest()
         {
-            Assert.IsNull(ViewAllStorePurchase(" ", storeID).Item1, ViewAllStorePurchase(" ", storeID).Item2);
+            Assert.AreEqual(0, ViewAllStorePurchase(" ", storeID).Item1.Count);
         }
     }
 }

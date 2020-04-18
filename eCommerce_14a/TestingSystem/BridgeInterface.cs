@@ -1,5 +1,4 @@
-﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +21,7 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public Tuple<bool, string> Init(bool flag = true)
+        public Tuple<bool, string> Init()
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -32,7 +31,7 @@ namespace TestingSystem
             return new Dictionary<string, object>();
         }
 
-        public List<object> ViewProductsByCategory(String validCategory)
+        public List<object> ViewStoreProductsByCategory(int storeID, String InvalidCategory)
         {
             return new List<object>();
         }
@@ -47,27 +46,27 @@ namespace TestingSystem
             return new Dictionary<int, List<object>>();
         }
 
-        public Tuple<Cart, string> ViewCartDetails(string id) 
+        public List<object> ViewCartDetails(string id) 
         {
-            return new Tuple<Cart,string>(new Cart(id), "");
+            return new List<object>();
         }
 
-        public Tuple<bool, string> enterSystem() 
+        public Tuple<string, string> enterSystem() 
         {
-            return new Tuple<bool, string>(true, "");
+            return new Tuple<string, string>("", "");
         }
 
-        public Tuple<bool, string> PayForProduct(string userID, string paymentDetails, string address)
-        {
-            return new Tuple<bool, String>(true, "");
-        }
-
-        public Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID, bool flag)
+        public Tuple<bool, string> PayForProduct(string userID, string paymentDetails)
         {
             return new Tuple<bool, String>(true, "");
         }
 
-        public Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID, bool flag)
+        public Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID)
+        {
+            return new Tuple<bool, String>(true, "");
+        }
+
+        public Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID)
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -112,9 +111,9 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public Tuple<List<Purchase>, string> ViewPurchaseUserHistory(string userName)
+        public Tuple<List<object>, string> ViewPurchaseUserHistory(string userName)
         {
-            return new Tuple<List<Purchase>, string>(new List<Purchase>(), "");
+            return new Tuple<List<object>, string>(new List<object>(), "");
         }
 
         public Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
@@ -128,6 +127,11 @@ namespace TestingSystem
         }
 
         public Tuple<bool, string> RemoveProductFromStore(string username, int storeID, int productID)
+        {
+            return new Tuple<bool, String>(true, "");
+        }
+
+        public Tuple<bool, String> ChangeProductAmount(int storeID, string username, int productID, int newAmount)
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -152,9 +156,9 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public Tuple<List<PurchaseBasket>, string> ViewAllStorePurchase(string userName, int storeID)
+        public Tuple<List<object>, string> ViewAllStorePurchase(string userName, int storeID)
         {
-            return new Tuple<List<PurchaseBasket>, string>(new List<PurchaseBasket>(), "");
+            return new Tuple<List<object>, string>(new List<object>(), "");
         }
 
         public Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID, int amount)
@@ -164,21 +168,6 @@ namespace TestingSystem
         public Tuple<bool, string> RemoveProductFromShoppingCart(string user, int store, int product)
         {
             return new Tuple<bool, String>(true, "");
-        }
-
-        public Tuple<bool, string> IncreaseProductAmount(int storeId, string userName, int productId, int amount)
-        {
-            return new Tuple<bool, String>(true, "");
-        }
-
-        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
-        {
-            return new Tuple<bool, String>(true, "");
-        }
-
-        public bool CartIsEmpty(string userID)
-        {
-            return true;//resCart.isEmpty();
         }
     }
 }

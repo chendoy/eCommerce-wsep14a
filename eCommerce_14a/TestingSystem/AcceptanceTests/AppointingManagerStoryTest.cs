@@ -11,15 +11,20 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class AppointingManagerStoryTest : SystemTrackTest
     {
-        string username1 = UserGenerator.GetValidUsernames()[0];
-        string password1 = UserGenerator.GetPasswords()[0];
-        string username2 = UserGenerator.GetValidUsernames()[1];
-        string password2 = UserGenerator.GetPasswords()[1];
+        string username1;
+        string password1;
+        string username2;
+        string password2;
         int storeID;
 
         [TestInitialize]
         public void SetUp()
         {
+            //user1 is the owner of the store with the storeID appoints user2
+            username1 = UserGenerator.RandomString(5);
+            password1 = UserGenerator.RandomString(5);
+            username1 = UserGenerator.RandomString(5);
+            password2 = UserGenerator.RandomString(5);
             Register(username1, password1);
             Login(username1, password1);
             Register(username2, password2);

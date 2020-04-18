@@ -11,8 +11,8 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ViewUserPurchaseHistoryStoryTest : SystemTrackTest
     {
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        string username;
+        string password;
         string paymentDetails = "311546777";
         string address = "han";
         int storeID;
@@ -20,6 +20,8 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
@@ -53,7 +55,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void ViewInvalidDetailsHistoryTest()
         {
-            Assert.IsNull(ViewPurchaseUserHistory("   ").Item1, ViewPurchaseUserHistory("   ").Item2);
+            Assert.AreEqual(0, ViewPurchaseUserHistory("   ").Item1.Count);
         }
     }
 }

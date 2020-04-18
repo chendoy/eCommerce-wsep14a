@@ -17,8 +17,8 @@ namespace TestingSystem
         public static int EXTREMELYWRONG_USERNAME = 2;
         private static Random random = new Random();
         public static String[,] userNames = new String[FIXED_ROWS_SIZE, FIXED_COLUMNS_SIZE] 
-        { {"Guy11","NAor","Chen12", "Sundy"},//Max-14,no spaces, a-Z,0-9,Min-3
-          {"b","1","s","q"},
+        { {"Guy11","NAor","Chen12", "Sundy"},
+          {"b","111","s","q"},
           {"       "," ! ! ! !)DROP TABLES","       !!@", "     112 ! 1@#@#$@@#$@$#@#$@#$@$#@$#$@#  23$#@$@#$#@@$#@##@$ "} };
         public static String[] passwords = new String[FIXED_USERNAMES_SIZE] {"bbb111","aasdasasd","asdasd", "sdasda"};
 

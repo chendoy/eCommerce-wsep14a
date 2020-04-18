@@ -11,12 +11,12 @@ namespace TestingSystem
     [TestClass]
     public class OwnerEditProductStoryTest : SystemTrackTest
     {
-        int productID = 3;
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        int productID;
+        string username;
+        string password;
         int storeID;
-        int amount = 1;
-        string newName = "newName";
+        int amount;
+        string newName;
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -25,9 +25,14 @@ namespace TestingSystem
         [TestInitialize]
         public void SetUp()
         {
+            productID = 3;
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
+            newName = "Name";
+            amount = 1;
         }
 
         [TestCleanup]

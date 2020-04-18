@@ -13,8 +13,8 @@ namespace TestingSystem.AcceptanceTests
     {
          
         string validProductName = "Lego";
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        string username;
+        string password;
         int storeID;
         int amount = 3;
         int productID = 3;
@@ -24,6 +24,8 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;

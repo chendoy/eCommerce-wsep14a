@@ -39,9 +39,14 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public new Dictionary<int, List<object>> ViewProductByName(String productName)
+        public new List<object> ViewProductByName(String productName)
         {
-            return new Dictionary<int, List<object>>();
+            return new List<object>();
+        }
+
+        public new List<object> ViewProductDetails(int productID)
+        {
+            return new List<object>();
         }
 
         public new List<object> ViewCartDetails(string id)
@@ -54,7 +59,7 @@ namespace TestingSystem
             return new Tuple<string, string>("", "");
         }
 
-        public new Tuple<bool, string> PayForProduct(string userID, string paymentDetails, string address)
+        public new Tuple<bool, string> PayForProduct(string userID, string paymentDetails)
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -65,6 +70,11 @@ namespace TestingSystem
         }
 
         public new Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID)
+        {
+            return new Tuple<bool, String>(true, "");
+        }
+
+        public new Tuple<bool, string> CheckValidInventory(string userID)
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -104,14 +114,14 @@ namespace TestingSystem
             return;
         }
 
-        public new Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public new void PerformPurchase(string userName)
         {
-            return new Tuple<bool, String>(true, "");
+            return;
         }
 
-        public new Tuple<List<object>, string> ViewPurchaseUserHistory(string userName)
+        public new List<object> ViewPurchaseUserHistory(string userName)
         {
-            return new Tuple<List<object>, string>(new List<object>(), "");
+            return new List<object>();
         }
 
         public new Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
@@ -119,12 +129,17 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public new Tuple<bool, string> UpdateProductDetails(int storeId, string userId, int productId, string newDetails, double price, string name, string category)
+        public new Tuple<bool, string> UpdateProductDetails(int storeId, string userId, int productId, string newDetails)
         {
             return new Tuple<bool, String>(true, "");
         }
 
         public new Tuple<bool, string> RemoveProductFromStore(string username, int storeID, int productID)
+        {
+            return new Tuple<bool, String>(true, "");
+        }
+
+        public new Tuple<bool, String> ChangeProductAmount(int storeID, string username, int productID, int newAmount)
         {
             return new Tuple<bool, String>(true, "");
         }
@@ -149,26 +164,12 @@ namespace TestingSystem
             return new Tuple<bool, String>(true, "");
         }
 
-        public new Tuple<List<object>, string> ViewAllStorePurchase(string userName, int storeID)
+        public new List<object> ViewAllStorePurchase(string userName, int storeID)
         {
-            return new Tuple<List<object>, string>(new List<object>(), "");
+            return new List<object>();
         }
 
         public new Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID, int amount)
-        {
-            return new Tuple<bool, String>(true, "");
-        }
-        public new Tuple<bool, string> RemoveProductFromShoppingCart(string user, int store, int product)
-        {
-            return new Tuple<bool, String>(true, "");
-        }
-
-        public new Tuple<bool, string> IncreaseProductAmount(int storeId, string userName, int productId, int amount)
-        {
-            return new Tuple<bool, String>(true, "");
-        }
-
-        public new Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
         {
             return new Tuple<bool, String>(true, "");
         }

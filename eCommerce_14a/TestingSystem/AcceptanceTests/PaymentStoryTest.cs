@@ -11,44 +11,39 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class PaymentStoryTest :SystemTrackTest
     {
-        string paymentDetails = "ValidPaymentDetails";
-        string address = "hanesher38";
+        //@@@@@@@@@@@@@@@@@@@@@@NAOR@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        string paymentDetails;
         string userID;
 
         [TestInitialize]
         public void SetUp()
         {
-            userID = enterSystem().Item2;
+            paymentDetails = "ValidPaymentDetails";
+            userID = enterSystem().Item1;
         }
-
         [TestCleanup]
         public void TearDown()
         {
-            ClearAllUsers();
+            // TODO: impl
         }
-
         [TestMethod]
         //happy
         public void LegalPaymentDetailsTest() 
         {
-            //add to basket product - open store
-            Assert.IsTrue(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            Assert.IsTrue(PayForProduct(userID, paymentDetails).Item1, PayForProduct(userID, paymentDetails).Item2);
         }
-
         [TestMethod]
         //sad
         public void IllegalPaymentDetailsTest()
         {
-            Assert.IsFalse(PayForProduct(userID, "", address).Item1, PayForProduct(userID, "", address).Item2);
+            Assert.IsFalse(PayForProduct(userID, "").Item1, PayForProduct(userID, "").Item2);
         }
-
         [TestMethod]
         //bad
         public void ConnectionLostWithPaymentSystemTest()
         {
-            //to check if the connection available
             SetPaymentSystemConnection(false);
-            Assert.IsFalse(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            Assert.IsFalse(PayForProduct(userID, paymentDetails).Item1, PayForProduct(userID, paymentDetails).Item2);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
-            userID = enterSystem().Item2;
+            userID = enterSystem().Item1;
         }
 
         [TestCleanup]

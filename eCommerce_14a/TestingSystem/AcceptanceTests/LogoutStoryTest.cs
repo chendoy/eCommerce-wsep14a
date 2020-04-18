@@ -11,12 +11,14 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class LogoutStoryTest : SystemTrackTest
     {
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
+        string username;
+        string password;
 
         [TestInitialize]
         public void SetUp()
         {
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
         }
 

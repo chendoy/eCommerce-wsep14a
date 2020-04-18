@@ -10,12 +10,12 @@ namespace TestingSystem.AcceptanceTests
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---increasedecrease-amount-414- </req>
     class ChangeProductAmountStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID;
         int storeID;
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
-        int amount = 3;
-        int newAmount = 1;
+        string username;
+        string password;
+        int amount;
+        int newAmount;
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -24,9 +24,14 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            productID = 3;
+            username = UserGenerator.RandomString(5);
+            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
+            amount = 1;
+            newAmount = 2;
         }
 
         [TestCleanup]
@@ -41,14 +46,14 @@ namespace TestingSystem.AcceptanceTests
         public void ChangeValidProductAmountTest()
         {
             AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
-            Assert.IsTrue(decraseProductAmount(storeID, username, productID, newAmount).Item1, decraseProductAmount(storeID, username, productID, newAmount).Item2);
+            Assert.IsTrue(ChangeProductAmount(storeID, username, productID, newAmount).Item1, ChangeProductAmount(storeID, username, productID, newAmount).Item2);
         }
 
         [TestMethod]
         //sad
         public void ChangeAmountToUnExistingProductTest()
         {
-            Assert.IsFalse(decraseProductAmount(storeID, username, productID, newAmount).Item1, decraseProductAmount(storeID, username, productID, newAmount).Item2);
+            Assert.IsFalse(ChangeProductAmount(storeID, username, productID, newAmount).Item1, ChangeProductAmount(storeID, username, productID, newAmount).Item2);
         }
 
         [TestMethod]
@@ -57,7 +62,7 @@ namespace TestingSystem.AcceptanceTests
         {
             newAmount = -1;
             AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
-            Assert.IsFalse(decraseProductAmount(storeID, username, productID, newAmount).Item1, decraseProductAmount(storeID, username, productID, newAmount).Item2);
+            Assert.IsFalse(ChangeProductAmount(storeID, username, productID, newAmount).Item1, ChangeProductAmount(storeID, username, productID, newAmount).Item2);
         }
     }
 }
