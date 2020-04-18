@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
@@ -23,16 +24,27 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> appendProduct(Dictionary<string, object> productParams, int amount)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (amount < 0)
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
+            }
 
             int pId = (int)productParams[CommonStr.ProductParams.ProductId];
             if (invProducts.ContainsKey(pId))
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductAlreadyExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductAlreadyExistErrMsg);
+            }
 
             double pPrice = (double)productParams[CommonStr.ProductParams.ProductPrice];
             if (pPrice < 0)
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductPriceErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
+            }
 
             string pDetails = (string)productParams[CommonStr.ProductParams.ProductDetails];
             string pName = (string)productParams[CommonStr.ProductParams.ProductName];
@@ -46,24 +58,44 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> removeProduct(int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!invProducts.ContainsKey(productId))
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
+            }
+
             if (invProducts.Remove(productId))
+            {
                 return new Tuple<bool, string>(true, "");
+
+            }
             else
+            {
+                Logger.logError(CommonStr.GeneralErrMessage.UnKnownErr, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.UnKnownErr);
+            }
 
         }
 
         public Tuple<bool, string> UpdateProduct(Dictionary<string, object> productParams)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             int productId = (int)productParams[CommonStr.ProductParams.ProductId];
             if (!invProducts.ContainsKey(productId))
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
+            }
 
             double price = (double)productParams[CommonStr.ProductParams.ProductPrice];
             if (price < 0)
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductPriceErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
+            }
 
             Product product = invProducts[productId].Item1;
             product.Details = (string)productParams[CommonStr.ProductParams.ProductDetails];
@@ -79,15 +111,23 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        public Tuple<bool, string> addProductAmount(int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(int productId, int amount)
         {
             // purpose: add amount to the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (amount < 0)
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.productAmountErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
+            }
 
             if (!invProducts.ContainsKey(productId))
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
+            }
 
             int currentAmount = invProducts[productId].Item2;
             invProducts[productId] = new Tuple<Product, int>(invProducts[productId].Item1, currentAmount + amount);
@@ -102,19 +142,28 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             // purpose: decrase amount from the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
-            if (amount < 0)
-                return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if(!invProducts.ContainsKey(productId))
+            if (amount < 0)
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.productAmountErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
+            }
+
+            if (!invProducts.ContainsKey(productId))
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
+            }
 
             int currentAmount = invProducts[productId].Item2;
             int newAmount = currentAmount - amount;
             if (newAmount < 0)
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.productAmountErrMsg + " amount after decrase is less than 0", this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
-
+            }
             invProducts[productId] = new Tuple<Product, int>(invProducts[productId].Item1, newAmount);
-
             return new Tuple<bool, string>(true, "");
         }
 
@@ -122,8 +171,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         //return the product and it's amount in the inventory
         public Tuple<Product, int> getProductDetails(int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!invProducts.ContainsKey(productId))
+            {
+                Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return null;
+            }
             else
                 return invProducts[productId];
         }
@@ -131,8 +185,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public static Tuple<bool, string> isValidInventory(Dictionary<int, Tuple<Product, int>> inv)
         {
+            Logger.logEvent(new Inventory(), System.Reflection.MethodBase.GetCurrentMethod());
+
             if (inv == null)
             {
+                Logger.logError(CommonStr.InventoryErrorMessage.NullInventroyErrMsg, new Inventory(), System.Reflection.MethodBase.GetCurrentMethod()); ;
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NullInventroyErrMsg);
             }
             //checking the amount of each product is not negative and each key matches the product id
@@ -142,13 +199,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 int productAmount = entry.Value.Item2;
                 if (productAmount < 0)
                 {
+                    Logger.logError(CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg, new Inventory(), System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
 
                 }
                 if (productId != entry.Key)
                 {
+                    Logger.logError(CommonStr.InventoryErrorMessage.UnmatchedProductAnKeyErrMsg, new Inventory(), System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.UnmatchedProductAnKeyErrMsg);
-
                 }
             }
 
@@ -159,6 +217,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> loadInventory(Dictionary<int, Tuple<Product, int>> otherInv)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             Tuple<bool, string> isValidAns = isValidInventory(otherInv);
             bool isValid = isValidAns.Item1;
             if (isValid)
@@ -168,6 +228,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else
             {
+                Logger.logError(CommonStr.InventoryErrorMessage.InvalidInventory, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, isValidAns.Item2);
             }
         }
@@ -175,16 +236,25 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
      
         public Tuple<bool, string> isValidBasket(Dictionary<int, int> basket)
         {
-           foreach(KeyValuePair<int, int> entry in basket)
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
+            foreach (KeyValuePair<int, int> entry in basket)
             {
                 int id = entry.Key;
                 int amount = entry.Value;
                 if (!invProducts.ContainsKey(id))
+                {
+                    Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg + " - PID : " + id.ToString(), this, System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg + " - PID : " + id.ToString());
+                }
 
                 int invProductAmount = invProducts[id].Item2;
                 if (invProductAmount < amount)
-                    return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductShortageErrMsg + " - PID : " +  id.ToString());
+                {
+                    Logger.logError(CommonStr.InventoryErrorMessage.ProductShortageErrMsg + " - PID : " + id.ToString(), this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductShortageErrMsg + " - PID : " + id.ToString());
+
+                }
             }
 
             return new Tuple<bool, string>(true, "");
@@ -192,13 +262,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public double getBasketPrice(Dictionary<int, int> products)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             double basketPrice = 0;
             foreach(KeyValuePair<int, int> entry in products)
             {
                 int prod_id = entry.Key;
                 int amount = entry.Value;
                 if (!this.invProducts.ContainsKey(prod_id))
+                {
+                    Logger.logError(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg + " - PID : " + prod_id, this, System.Reflection.MethodBase.GetCurrentMethod());
                     return -1;
+
+                }
                 else
                     basketPrice += this.invProducts[prod_id].Item1.Price * amount;
             }
@@ -208,6 +284,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public bool productExist(int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return invProducts.ContainsKey(productId);
         }
     }

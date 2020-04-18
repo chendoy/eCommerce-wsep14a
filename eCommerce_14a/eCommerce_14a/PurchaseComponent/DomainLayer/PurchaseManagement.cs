@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using eCommerce_14a.Utils;
+﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
-using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
@@ -13,64 +10,81 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
     {
         // Holding the carts and purchases by user
         private Dictionary<string, Cart> carts;
-        private readonly Dictionary<string, List<Purchase>> purchasesHistoryByUser;
-        private readonly Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore;
+        private Dictionary<string, List<Purchase>> purchasesHistoryByUser;
+        private Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore;
         private StoreManagment storeManagment;
-        PaymentHandler paymentHandler;
-        DeliveryHandler deliveryHandler;
+        private PaymentHandler paymentHandler;
+        private DeliveryHandler deliveryHandler;
         private UserManager userManager;
 
-        public PurchaseManagement(StoreManagment storeManagment, PaymentHandler paymentHandler, DeliveryHandler deliveryHandler)
+        private static PurchaseManagement instance = null;
+        private static readonly object padlock = new object();
+
+        public static PurchaseManagement Instance
         {
-            this.carts = new Dictionary<string, Cart>();
-            this.purchasesHistoryByUser = new Dictionary<string, List<Purchase>>();
-            this.purchasesHistoryByStore = new Dictionary<Store, List<PurchaseBasket>>();
-            this.storeManagment = storeManagment;
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new PurchaseManagement(new PaymentHandler(), new DeliveryHandler());
+                    }
+                    return instance;
+                }
+            }
+        }
+
+        private PurchaseManagement(PaymentHandler paymentHandler, DeliveryHandler deliveryHandler)
+        {
+            ClearAll();
+            this.storeManagment = StoreManagment.Instance;
             this.paymentHandler = paymentHandler;
             this.deliveryHandler = deliveryHandler;
             this.userManager = UserManager.Instance;
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// Get the user ,store and product to add to the shopping cart
         /// Additionaly indicate how much items of the product should be in the cart
-        /// exist - means this product meant to be already in the cart (in case of change/remove existing product
+        /// <param name="exist">  means this product meant to be already in the cart (in case of change/remove existing product </param>
         public Tuple<bool, string> AddProductToShoppingCart(string userId, int storeId, int productId, int wantedAmount, bool exist)
         {
-            if(String.IsNullOrEmpty(userId))
-                return new Tuple<bool, string>(false, "Not a valid user");
+            if (String.IsNullOrEmpty(userId))
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User user = userManager.GetAtiveUser(userId);
             if (user == null)
             {
-                return new Tuple<bool, string>(false, "Not a valid user");
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
             Store store = storeManagment.getStore(storeId);
 
             if (store == null || !store.ActiveStore)
             {
-                return new Tuple<bool, string>(false, "Not a valid store");
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
             if (!store.productExist(productId))
             {
-                return new Tuple<bool, string>(false, "Not a valid product");
+                return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
 
             if (wantedAmount < 0)
             {
-                return new Tuple<bool, string>(false, "Cannot have negative amount of product");
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.NegativeProductAmountErrMsg);
             }
 
             if (!exist && wantedAmount == 0)
             {
-                return new Tuple<bool, string>(false, "Cannot add product to cart with zero amount");
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ZeroProductAmountErrMsg);
             }
 
             int amount = store.getProductDetails(productId).Item2;
 
             if (amount < wantedAmount)
             {
-                return new Tuple<bool, string>(false, "There is not enough products in the store");
+                return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductShortageErrMsg);
             }
 
             if (!this.carts.TryGetValue(userId, out Cart cart))
@@ -86,15 +100,16 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public Tuple<Cart, string> GetCartDetails(string userName)
         {
             if (String.IsNullOrEmpty(userName))
-                return new Tuple<Cart, string>(null, "Not a valid user");
+                return new Tuple<Cart, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User user = userManager.GetAtiveUser(userName);
             if (user is null)
             {
-                return new Tuple<Cart, string>(null, "Not a valid user");
+                return new Tuple<Cart, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
             if (!carts.TryGetValue(userName, out Cart cart))
             {
-                return new Tuple<Cart, string>(null, "No cart found for this user");
+                cart = new Cart(userName);
+                carts.Add(userName, cart);
             }
 
             return new Tuple<Cart, string>(cart, "");
@@ -104,19 +119,24 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
         {
             if (String.IsNullOrEmpty(user))
-                return new Tuple<bool, string>(false, "Not a valid user");
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             if (String.IsNullOrEmpty(paymentDetails))
-                return new Tuple<bool, string>(false, "Not a valid paymentDetails");
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.NotValidPaymentErrMsg);
             if (String.IsNullOrEmpty(address))
-                return new Tuple<bool, string>(false, "Not a valid address");
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.NotValidAddressErrMsg);
             User userObject = userManager.GetAtiveUser(user);
             if (userObject is null)
             {
-                return new Tuple<bool, string>(false, "Not a valid user");
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
             if (!carts.TryGetValue(user, out Cart userCart))
             {
-                return new Tuple<bool, string>(false, "No cart found for this user");
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.EmptyCartPurchaseErrMsg);
+            }
+
+            if (userCart.IsEmpty())
+            {
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.EmptyCartPurchaseErrMsg);
             }
 
             Tuple<bool, string> validCart = userCart.CheckProductsValidity();
@@ -127,19 +147,19 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
             userCart.UpdateCartPrice();
 
-            /// <param name="paymentDetails">Pay with this</param>
-            /// <param name="price"> with userCart.Price</param>
-            Tuple<bool, string> payRes = paymentHandler.pay(paymentDetails,userCart.Price);
+            Tuple<bool, string> payRes = paymentHandler.pay(paymentDetails, userCart.Price);
             if (!payRes.Item1)
             {
                 return payRes;
             }
 
-            // NEED TO FIX DELIVERY METHOD
+            userCart.RemoveFromStoresStock();
+
             Tuple<bool, string> delvRes = deliveryHandler.ProvideDeliveryForUser(address, true);
             if (!delvRes.Item1)
             {
                 paymentHandler.refund(paymentDetails, userCart.Price);
+                userCart.RestoreItemsToStores();
                 return delvRes;
             }
 
@@ -168,16 +188,17 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
         public Tuple<List<Purchase>, string> GetBuyerHistory(string user)
         {
+            List<Purchase> res = new List<Purchase>();
             if (String.IsNullOrEmpty(user))
-                return new Tuple<List<Purchase>, string>(null, "Not a valid user");
+                return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User userObject = userManager.GetAtiveUser(user);
-            if(userObject is null)
+            if (userObject is null)
             {
-                return new Tuple<List<Purchase>, string>(null, "Not a valid user");
+                return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
             if (!purchasesHistoryByUser.ContainsKey(user))
             {
-                return new Tuple<List<Purchase>, string>(new List<Purchase>(), "");
+                return new Tuple<List<Purchase>, string>(res, "");
             }
 
             return new Tuple<List<Purchase>, string>(purchasesHistoryByUser[user], "");
@@ -185,26 +206,26 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchases-history-view-410 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
-        /// <param name="manager"> Any Owner/Manager of the store or the admin of the system</param>
+        /// <param name="manager"> Any Owner/Manager of the store or the admin of the system </param>
         public Tuple<List<PurchaseBasket>, string> GetStoreHistory(string manager, int storeId)
         {
             List<PurchaseBasket> res = new List<PurchaseBasket>();
             if (String.IsNullOrEmpty(manager))
-                return new Tuple<List<PurchaseBasket>, string>(null, "Not a valid manager");
+                return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User userObject = userManager.GetAtiveUser(manager);
             if (userObject is null)
             {
-                return new Tuple<List<PurchaseBasket>, string>(null, "Not a valid user");
+                return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
             Store store = storeManagment.getStore(storeId);
             if (store == null)
             {
-                return new Tuple<List<PurchaseBasket>, string>(res, "Not a valid store");
+                return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            if (!GetStoreHistoryAuthorization(userObject,storeId))
+            if (!GetStoreHistoryAuthorization(userObject, storeId))
             {
-                return new Tuple<List<PurchaseBasket>, string>(res, "Not authorized to this store");
+                return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
             if (!purchasesHistoryByStore.TryGetValue(store, out List<PurchaseBasket> currHistory))
             {
@@ -214,6 +235,9 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return new Tuple<List<PurchaseBasket>, string>(currHistory, "");
         }
 
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchases-history-view-410 </req>
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
+        /// <param name="manager"> Any Owner/Manager of the store or the admin of the system </param>
         private bool GetStoreHistoryAuthorization(User manager, int storeID)
         {
             if (manager.isSystemAdmin() || manager.isStoreOwner(storeID))
@@ -222,39 +246,64 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
-        public Tuple<Dictionary<Store, List<PurchaseBasket>> , string> GetAllStoresHistory(string admin)
+        public Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
         {
             if (String.IsNullOrEmpty(admin))
-                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, "Not a valid manager");
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User userObject = userManager.GetAtiveUser(admin);
             if (userObject is null)
             {
-                return new Tuple<Dictionary<Store, List<PurchaseBasket>>,string>(null, "Not a valid user");
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
-            Dictionary<Store, List<PurchaseBasket>> res = new Dictionary<Store, List<PurchaseBasket>>();
+
             if (!userObject.isSystemAdmin())
             {
-                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(res, "Not authorized to this store");
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.PurchaseMangmentErrorMessage.NotAdminErrMsg);
             }
             return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(purchasesHistoryByStore, "");
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
-        internal Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
+        public Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
         {
             if (String.IsNullOrEmpty(admin))
-                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, "Not a valid manager");
+                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             User userObject = userManager.GetAtiveUser(admin);
             if (userObject is null)
             {
-                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, "Not a valid user");
+                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
-            Dictionary<Store, List<PurchaseBasket>> res = new Dictionary<Store, List<PurchaseBasket>>();
+
             if (!userObject.isSystemAdmin())
             {
-                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, "Not authorized to this store");
+                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, CommonStr.PurchaseMangmentErrorMessage.NotAdminErrMsg);
             }
             return new Tuple<Dictionary<string, List<Purchase>>, string>(purchasesHistoryByUser, "");
+        }
+
+        /// <summary>
+        ///  For clearing the data stored in this class for tests purposes
+        /// </summary>
+        public void ClearAll()
+        {
+            this.carts = new Dictionary<string, Cart>();
+            this.purchasesHistoryByUser = new Dictionary<string, List<Purchase>>();
+            this.purchasesHistoryByStore = new Dictionary<Store, List<PurchaseBasket>>();
+        }
+
+        /// <summary>
+        /// Setup the dependencies of this class for tests purposes
+        /// </summary>
+        public void SetupDependencies(
+            StoreManagment storeManagment, 
+            PaymentHandler paymentHandler,
+            DeliveryHandler deliveryHandler,
+            UserManager userManager)
+        {
+            this.storeManagment = storeManagment;
+            this.userManager = userManager;
+            this.paymentHandler = paymentHandler;
+            this.deliveryHandler = deliveryHandler;
         }
     }
 }

@@ -16,7 +16,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private static StoreManagment instance = null;
         private static readonly object padlock = new object();
 
-        StoreManagment()
+        /// <summary>
+        /// Public ONLY For generatin Stubs
+        /// </summary>
+        public StoreManagment()
         {
             stores = new Dictionary<int, Store>();
         }
@@ -40,6 +43,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -64,6 +69,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
@@ -85,6 +91,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -98,11 +106,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].addProductAmount(user: user, productId: productId, amount: amount);
+            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount);
         }
 
         public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -116,11 +126,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].decrasePrdouct(user:user , productId: productId, amount: amount);
+            return stores[storeId].decrasePrdouctAmount(user:user , productId: productId, amount: amount);
         }
 
         public Dictionary<string, object> getStoreInfo(int storeId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!stores.ContainsKey(storeId))
             {
                 Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -134,6 +146,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
      
         public Tuple<bool, string> changeStoreStatus(string userName, int storeId, bool status)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -153,6 +167,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         
         public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -177,8 +193,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
 
-        public Store getStore(int storeId)
+        public virtual Store getStore(int storeId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (stores.ContainsKey(storeId))
                 return stores[storeId];
             return null;
@@ -186,6 +204,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Dictionary<int, Store> getActiveSotres()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             Dictionary<int, Store> activeStores = new Dictionary<int, Store>();
             foreach (KeyValuePair<int, Store> storeEntry in stores)
             {
@@ -204,6 +224,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -240,6 +262,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         // impl on next version only!
         public Tuple<bool, string> removeStore(string userName, int storeId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
@@ -282,6 +306,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         // impl on next version only!
         private bool isMainOwner(User user, int storeId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return stores[storeId].isMainOwner(user);
         }
 
@@ -296,7 +322,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.stores = new Dictionary<int, Store>();
             this.nextStoreId = 0;
             userManager = UserManager.Instance;
-            instance = null;
         }
     }
 }

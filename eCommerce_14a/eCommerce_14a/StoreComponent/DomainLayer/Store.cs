@@ -17,6 +17,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private int rank;
         private bool activeStore;
 
+        /// <summary>
+        /// ONLY For generating Stubs
+        /// </summary>
+        public Store ()
+        {
+        }
 
         public Store(Dictionary<string, object> store_params)
         {
@@ -41,8 +47,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
 
-        public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(User user, int productId, int amount)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!owners.Contains(user) && !managers.Contains(user))
             {
                 Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg + " user: " + user.getUserName().ToString() + "store: " + this.Id, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -58,11 +66,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.addProductAmount(productId, amount);
+            return inventory.IncreaseProductAmount(productId, amount);
         }
 
-        public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
+        public Tuple<bool, string> decrasePrdouctAmount(User user, int productId, int amount)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!owners.Contains(user) && !managers.Contains(user))
             {
                 Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -83,6 +93,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!owners.Contains(user))
             {
                 Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -103,6 +115,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> removeProduct(User user, int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!owners.Contains(user) && !managers.Contains(user))
             {
                 Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -123,7 +137,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> appendProduct(User user, Dictionary<string, object> productParams, int amount)
         {
-            
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!owners.Contains(user) && !managers.Contains(user))
             {
                 Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -147,6 +162,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> UpdateProduct(User user, Dictionary<string, object> productParams)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (!owners.Contains(user) && !managers.Contains(user))
             {
                 Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -165,8 +182,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return inventory.UpdateProduct(productParams);
         }
 
+        public Tuple<bool, string> DecraseProductAmountAfterPuarchse(int productId, int amount)
+        {
+            return inventory.DecraseProductAmount(productId, amount);
+        }
+        public Tuple<bool, string> IncreaseProductAmountAfterFailedPuarchse(int productId, int amount)
+        {
+            return inventory.IncreaseProductAmount(productId, amount);
+        }
+
         public Dictionary<string, object> getSotoreInfo()
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             Dictionary<string, object> store_info = new Dictionary<string, object>();
             store_info.Add(CommonStr.StoreParams.StoreId, Id);
             if (owners.Count > 0)
@@ -182,6 +210,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public bool AddStoreOwner(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (owners.Contains(user))
                 return false;
             owners.Add(user);
@@ -190,6 +220,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public bool AddStoreManager(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (managers.Contains(user))
                 return false;
             managers.Add(user);
@@ -198,21 +230,29 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public bool IsStoreOwner(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return owners.Contains(user);
         }
         
         public bool IsStoreManager(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return managers.Contains(user);
         }
 
         public bool RemoveManager(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return managers.Remove(user);
         }
 
         public bool RemoveOwner(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return owners.Remove(user);
         }
 
@@ -265,22 +305,29 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         //return product and its amount in the inventory
         public Tuple<Product, int> getProductDetails(int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return inventory.getProductDetails(productId);
         }
 
         public bool productExist(int productId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             return inventory.productExist(productId);
         }
 
         public double getBasketPrice(Dictionary<int, int> products)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             //TODO: manage the price also according in the discountPolicy in next version
             return inventory.getBasketPrice(products);
         }
 
         public Tuple<bool, string> checkIsValidBasket(Dictionary<int, int> products)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
             //TODO: check if the basket is stands for the puarcshePolicy with puarchsepolicy object! next version
             return inventory.isValidBasket(products);
@@ -288,6 +335,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public bool isMainOwner(User user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             if (owners[0] == user)
                 return true;
             else

@@ -16,6 +16,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         // the functions search products on all stores and returns List of <storeId, List<matches products>> that matches the filters
         public Dictionary<int, List<Product>> SearchProducts(Dictionary<string, object> searchBy)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
             Dictionary<int, Store> activeStores = storeManagemnt.getActiveSotres();
             Dictionary<int,List<Product>> matchProducts = new Dictionary<int, List<Product>>();
             bool searchByStoreId = searchBy.ContainsKey(CommonStr.SearcherKeys.StoreId);
@@ -23,7 +25,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 Store store = entry.Value;
                 Inventory storeInv = store.Inventory;
-                bool isValidStoreId = false;
+                bool isValidStoreId;
                 if(isValidStoreId = ValidStoreId(store, searchBy))
                 {
                     if (ValidStoreRank(store, searchBy))

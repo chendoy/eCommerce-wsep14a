@@ -49,7 +49,6 @@
     <Compile Include="UserComponent\DomainLayer\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\Cart.cs" />
-    <Compile Include="PurchaseComponent\DomainLayer\External.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\Purchase.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseBasket.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />

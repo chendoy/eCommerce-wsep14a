@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
@@ -32,7 +33,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             if (!this.store.productExist(productId))
             {
-                return new Tuple<bool, string>(false, "Not a valid product");
+                return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
 
             Dictionary<int, int> existingProducts = new Dictionary<int, int>(products);
@@ -40,7 +41,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 if (!exist)
                 {
-                    return new Tuple<bool, string>(false, "The product is already in the shopping cart");
+                    return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ProductExistInCartErrMsg);
                 }
 
                 if (wantedAmount == 0)
@@ -56,7 +57,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 if (exist)
                 {
-                    return new Tuple<bool, string>(false, "The product is not already in the shopping cart");
+                    return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ProductNotExistInCartErrMsg);
                 }
 
                 products.Add(productId, wantedAmount);
@@ -74,6 +75,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return new Tuple<bool, string>(true, null);
         }
 
+        internal bool IsEmpty()
+        {
+            return products.Count == 0;
+        }
+
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
@@ -86,16 +92,32 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             PurchaseTime = purchaseTime;
         }
 
+        internal void RemoveFromStoreStock()
+        {
+            foreach (var product in products.Keys)
+            {
+                store.DecraseProductAmountAfterPuarchse(product, products[product]);
+            }
+        }
+
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-buying-policy-282</req>
         internal Tuple<bool, string> CheckProductsValidity()
         {
             if (store == null || !store.ActiveStore)
             {
-                return new Tuple<bool, string>(false, "Invalid store");
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
             return store.checkIsValidBasket(products);
+        }
+
+        internal void RestoreItemsToStore()
+        {
+            foreach (var product in products.Keys)
+            {
+                store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
+            }
         }
     }
 }
