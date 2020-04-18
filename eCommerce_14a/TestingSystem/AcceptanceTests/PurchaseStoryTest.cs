@@ -21,7 +21,7 @@ namespace TestingSystem.AcceptanceTests
         string passwordOwner = UserGenerator.GetPasswords()[0];
         int storeID;
         int productID = 3;
-        int amount = 1;
+        int amount = 2;
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -30,15 +30,20 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            Init();
+            Register(usernameOwner, passwordOwner);
+            Login(usernameOwner, passwordOwner);
             storeID = OpenStore(usernameOwner).Item1;
             userID = enterSystem().Item2;
-            AddProductToStore(storeID, usernameOwner, productID, productDetails, productPrice, productName, productCategory, amount);
+            AddProductToStore(storeID, usernameOwner, productID, productDetails, productPrice, productName, productCategory, 20);
             AddProductToBasket(userID, storeID, productID, amount);
         }
 
         [TestCleanup]
         public void TearDown()
         {
+            SetSupplySystemConnection(true);
+            SetPaymentSystemConnection(true);
             ClearAllUsers();
             ClearAllShops();
         }
@@ -47,7 +52,9 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void LegalPaymentDetailsTest()
         {
+            SetUp();
             Assert.IsTrue(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            TearDown();
         }
 
         [TestMethod]

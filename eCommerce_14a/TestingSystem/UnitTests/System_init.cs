@@ -32,8 +32,8 @@ namespace TestingSystem.UnitTests.System_init
         /// <function cref ="eCommerce_14a.PaymentHandler.checkconnection()
         public void ConnectToHandlers()
         {
-            DeliveryHandler dh = new DeliveryHandler();
-            PaymentHandler ph = new PaymentHandler();
+            DeliveryHandler dh = DeliveryHandler.Instance;
+            PaymentHandler ph = PaymentHandler.Instance;
             dh.setConnection(false);
             ph.setConnections(false);
             Assert.IsFalse(dh.checkconnection());

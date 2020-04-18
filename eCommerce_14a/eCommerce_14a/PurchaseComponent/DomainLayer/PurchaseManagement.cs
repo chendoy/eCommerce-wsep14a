@@ -28,13 +28,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 {
                     if (instance == null)
                     {
-                        instance = new PurchaseManagement(new PaymentHandler(), new DeliveryHandler());
+                        instance = new PurchaseManagement(PaymentHandler.Instance, DeliveryHandler.Instance);
                     }
                     return instance;
                 }
             }
         }
 
+        public PaymentHandler GetPaymentHandler() { return this.paymentHandler; }
         private PurchaseManagement(PaymentHandler paymentHandler, DeliveryHandler deliveryHandler)
         {
             ClearAll();
@@ -172,6 +173,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 }
 
                 currHistory.Add(userCart.GetBaskets()[store]);
+                purchasesHistoryByStore[store] = currHistory;
             }
             Purchase newPurchase = new Purchase(user, userCart);
             if (!purchasesHistoryByUser.TryGetValue(user, out List<Purchase> userHistory))

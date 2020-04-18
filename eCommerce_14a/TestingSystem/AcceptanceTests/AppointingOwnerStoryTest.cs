@@ -53,8 +53,8 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void AppointAlreadyManagerTest()
         {
-            AppointStoreManage(username1, username2, storeID);
-            Assert.IsFalse(AppointStoreOwner(username1, username2, storeID).Item1, AppointStoreOwner(username1, username2, storeID).Item2);
+            Assert.IsTrue(AppointStoreManage(username1, username2, storeID).Item1);
+            Assert.IsTrue(AppointStoreOwner(username1, username2, storeID).Item1, AppointStoreOwner(username1, username2, storeID).Item2);
         }
     }
 }

@@ -16,13 +16,17 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
+            Init();
             userID = enterSystem().Item2;
         }
 
         [TestCleanup]
         public void TearDown()
         {
+            SetPaymentSystemConnection(true);
+            SetSupplySystemConnection(true);
             Logout(userID);
+            ClearAllUsers();
         }
 
         [TestMethod]

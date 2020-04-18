@@ -11,10 +11,29 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     public class PaymentHandler
     {
         bool connected;
-        public PaymentHandler()
+        PaymentHandler()
         {
-            Console.WriteLine("PaymentHandler Created\n");
             connected = true;
+        }
+
+        private static readonly object padlock = new object();
+        private static PaymentHandler instance = null;
+        public static PaymentHandler Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (padlock)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new PaymentHandler();
+                        }
+                    }
+                }
+                return instance;
+            }
         }
 
         public bool checkconnection()
@@ -24,6 +43,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public virtual Tuple<bool,string> pay(string paymentDetails, double amount)
         {
+            if (!connected)
+                return new Tuple<bool, string>(false, "Not Connected");
+
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return new Tuple<bool,string>(true,"OK");
         }

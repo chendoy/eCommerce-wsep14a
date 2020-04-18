@@ -39,6 +39,8 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         public Tuple<bool, string> ChangePermissions(string owner, string appoint, int storeId, int[] permissions)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (permissions.Length == 0)
+                return new Tuple<bool, string>(false, "Empty Permission");
             return AppoitmentManager.Instance.ChangePermissions(owner, appoint, storeId, permissions);
         }
         //For Adim Uses

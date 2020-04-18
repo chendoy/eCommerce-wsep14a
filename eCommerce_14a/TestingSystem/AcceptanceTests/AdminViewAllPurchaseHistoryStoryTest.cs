@@ -9,60 +9,54 @@ namespace TestingSystem.AcceptanceTests
 {
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
     [TestClass]
-    class AdminViewAllPurchaseHistoryStoryTest : SystemTrackTest
+    public class AdminViewAllPurchaseHistoryStoryTest : SystemTrackTest
     {
-        int productID = 3;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
+        string paymentDetails = "311546777";
+        string address = "han";
         int storeID;
-        int amount = 1;
-        string productDetails = "Details";
-        double productPrice = 3.02;
-        string productName = "Name";
-        string productCategory = "Category";
 
         [TestInitialize]
         public void SetUp()
         {
+            Init();
             Register(username, password);
             Login(username, password);
+            Login("Admin","Admin");
             storeID = OpenStore(username).Item1;
+            AddProductToStore(storeID, username, 3, "lego", 3.0, "lego", "building", 2);
         }
 
         [TestCleanup]
         public void TearDown()
         {
+            ClearAllPurchase();
             ClearAllUsers();
             ClearAllShops();
         }
 
         [TestMethod]
         //happy
-        public void ValidProductAddToStoreTest()
+        public void ViewValidHistoryTest()
         {
-            amount = 1;
-            Assert.IsTrue(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
+            AddProductToBasket(username, storeID, 3, 1);
+            PerformPurchase(username, paymentDetails, address);
+            Assert.AreNotEqual(0, GetAllUsersHistory("Admin").Item1.Count);
         }
 
         [TestMethod]
         //sad
-        public void AddTwiceProductToStoreTest()
+        public void ViewNoHistoryTest()
         {
-            amount = 1;
-            Assert.IsTrue(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
-            Assert.IsFalse(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
+            Assert.AreEqual(0, GetAllStoresHistory("Admin").Item1.Keys.Count);
         }
 
         [TestMethod]
         //bad
-        public void AddProductWithNegAmountToStoreTest()
+        public void ViewNotAdminHistoryTest()
         {
-            amount = -1;
-            Assert.IsFalse(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
+            Assert.IsNull(GetAllUsersHistory(username).Item1, GetAllUsersHistory(username).Item2);
         }
     }
 }

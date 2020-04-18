@@ -68,5 +68,11 @@ namespace eCommerce_14a.PurchaseComponent.ServiceLayer
         {
             return purchaseManagement.GetAllUsersHistory(admin);
         }
+
+
+        public void ClearAll()
+        {
+            purchaseManagement.ClearAll();
+        }
     }
 }

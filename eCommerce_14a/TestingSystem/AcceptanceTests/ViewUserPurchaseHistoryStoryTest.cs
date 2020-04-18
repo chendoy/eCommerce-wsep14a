@@ -29,6 +29,7 @@ namespace TestingSystem.AcceptanceTests
         [TestCleanup]
         public void TearDown()
         {
+            ClearAllPurchase();
             ClearAllUsers();
             ClearAllShops();
         }
@@ -46,14 +47,16 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void ViewNoHistoryTest()
         {
+            SetUp();
             Assert.AreEqual(0, ViewPurchaseUserHistory(username).Item1.Count);
+            TearDown();
         }
 
         [TestMethod]
         //bad
         public void ViewInvalidDetailsHistoryTest()
         {
-            Assert.IsNull(ViewPurchaseUserHistory("   ").Item1, ViewPurchaseUserHistory("   ").Item2);
+            Assert.AreEqual(0, ViewPurchaseUserHistory(" ").Item1.Count);
         }
     }
 }

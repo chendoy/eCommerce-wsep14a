@@ -1,4 +1,5 @@
 ﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -179,6 +180,25 @@ namespace TestingSystem
         public bool CartIsEmpty(string userID)
         {
             return true;//resCart.isEmpty();
+        }
+
+        public  Dictionary<int, List<Product>> ViewProductByStoreID(int storeID)
+        {
+            return new Dictionary<int, List<Product>>();//@@@@@@@@@@@@@@@@@
+        }
+
+        public void ClearAllPurchase()
+        {
+            return;
+        }
+
+        public Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
+        {
+            return new Tuple<Dictionary<string,List<Purchase>>,string>(new Dictionary<string, List<Purchase>>(), "");
+        }
+        public Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
+        {
+            return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(new Dictionary<Store, List<PurchaseBasket>>(), "");
         }
     }
 }

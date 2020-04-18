@@ -14,23 +14,43 @@ namespace TestingSystem.AcceptanceTests
         string paymentDetails = "ValidPaymentDetails";
         string address = "hanesher38";
         string userID;
+        int storeID;
+        int amount = 1;
+        string productDetails = "Details";
+        double productPrice = 3.02;
+        string productName = "Name";
+        string productCategory = "Category";
+        int productID = 3;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
+
 
         [TestInitialize]
         public void SetUp()
         {
+            Init();
+            Register(username, password);
+            Login(username, password);
+            storeID = OpenStore(username).Item1;
             userID = enterSystem().Item2;
+
         }
 
         [TestCleanup]
         public void TearDown()
         {
+            SetPaymentSystemConnection(true);
+            SetSupplySystemConnection(true);
             ClearAllUsers();
+            ClearAllShops();
         }
 
         [TestMethod]
         //happy
         public void LegalPaymentDetailsTest()
         {
+            AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
+            AddProductToBasket(userID, storeID, productID, amount);
             Assert.IsTrue(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
         }
 
@@ -45,6 +65,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void ConnectionLostWithPaymentSystemTest()
         {
+            //to check if the connection available
             SetPaymentSystemConnection(false);
             Assert.IsFalse(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
         }

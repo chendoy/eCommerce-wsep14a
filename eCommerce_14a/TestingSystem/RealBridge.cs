@@ -32,6 +32,10 @@ namespace TestingSystem
 
         /// ~~~~~~~~Naor~~~~~~~~:
 
+        public new void ClearAllPurchase() 
+        {
+            purchService.ClearAll();
+        }
         
         public new Tuple<Cart, string> ViewCartDetails(string cartID)
         {
@@ -78,6 +82,15 @@ namespace TestingSystem
             return purchService.RemoveProductFromShoppingCart(user, store, product);
         }
 
+        public new Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
+        {
+            return purchService.GetAllUsersHistory(admin);
+        }
+        public new Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
+        {
+            return purchService.GetAllStoresHistory(admin);
+        }
+
 
         /// ~~~~~~~~Liav~~~~~~~~:
 
@@ -118,6 +131,11 @@ namespace TestingSystem
         public new Dictionary<int, List<Product>> ViewProductByName(String productName)
         {
             return StoreService.SearchProducts(new Dictionary<string, object> { { CommonStr.SearcherKeys.ProductName, productName } });//@@@@@@@@@@@@@@@@@
+        }
+
+        public new Dictionary<int, List<Product>> ViewProductByStoreID(int storeID)
+        {
+            return StoreService.SearchProducts(new Dictionary<string, object> { { CommonStr.SearcherKeys.StoreId, storeID } });//@@@@@@@@@@@@@@@@@
         }
 
         public new Tuple<int, string> OpenStore(string userName)

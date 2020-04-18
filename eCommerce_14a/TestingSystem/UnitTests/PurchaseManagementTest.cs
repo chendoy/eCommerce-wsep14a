@@ -1,4 +1,5 @@
 ﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.UserComponent.DomainLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace TestingSystem.UnitTests
             purchaseManagement = PurchaseManagement.Instance;
             purchaseManagement.SetupDependencies(
                 new StoreManagementStub(123),
-                new PaymentHandlerStub(),
-                new DeliveryHandlerStub(),
+                PaymentHandler.Instance,
+                DeliveryHandler.Instance,
                 new UserManagerStub());
         }
 

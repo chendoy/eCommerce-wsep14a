@@ -16,6 +16,12 @@ namespace TestingSystem.AcceptanceTests
         int storeID;
         string paymentDetails = "33225554";
         string address = "hanesher3";
+        int productID = 3;
+        int amount = 1;
+        string productDetails = "Details";
+        double productPrice = 3.02;
+        string productName = "Name";
+        string productCategory = "Category";
 
         [TestInitialize]
         public void SetUp()
@@ -23,6 +29,7 @@ namespace TestingSystem.AcceptanceTests
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
+            AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
         }
 
         [TestCleanup]
@@ -36,6 +43,7 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ViewAllPurchaseTest() 
         {
+            AddProductToBasket(username, storeID, productID, amount);
             PerformPurchase(username ,paymentDetails, address);
             Assert.AreNotEqual(0, ViewAllStorePurchase(username, storeID).Item1.Count);
         }
@@ -51,7 +59,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void BlankUsernamePurchaseHisstoryTest()
         {
-            Assert.IsNull(ViewAllStorePurchase(" ", storeID).Item1, ViewAllStorePurchase(" ", storeID).Item2);
+            Assert.AreEqual(0,ViewAllStorePurchase("", storeID).Item1.Count);
         }
     }
 }

@@ -40,18 +40,18 @@ namespace TestingSystem.AcceptanceTests
         public void ViewShopDetailsTest() 
         {
             AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
-            Assert.AreNotEqual(0, ViewStoreDetails(storeID).Count);
+            Assert.AreNotEqual(0, ViewStoreDetails(storeID).Keys.Count);
         }
         [TestMethod]
         public void EmptyStoreTest()
         {
-            Assert.AreEqual(0, ViewStoreDetails(storeID).Count);// suppose to return an EmptyList
+            Assert.AreEqual(0, ViewProductByStoreID(storeID).Count);// suppose to return an EmptyList
         }
         [TestMethod]
         public void CloseShopViewShopDetailsTest()
         {
-            CloseStore(username, storeID);
-            Assert.AreEqual(0, ViewStoreDetails(storeID).Count);
+            ClearAllShops();
+            Assert.AreEqual(0, ViewStoreDetails(storeID).Keys.Count);
         }
     }
 }

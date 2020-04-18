@@ -35,8 +35,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             UManagment = UserManager.Instance;
             AM = AppoitmentManager.Instance;
             bodyguard = new Security();
-            DH = new DeliveryHandler();
-            PH = new PaymentHandler();
+            DH = DeliveryHandler.Instance;
+            PH = PaymentHandler.Instance;
             PH.setConnections(paymmentconnection);
             stores = new Dictionary<int, Store>();
             if (!DH.checkconnection() || !PH.checkconnection())
@@ -51,10 +51,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "cann't connect to 3rd party system");
             }
             
-            string user_hash = bodyguard.CalcSha1(password);
             Tuple<bool, string> ans;
-            ans = UManagment.RegisterMaster(admin, user_hash);
-            if (user_hash == null || !ans.Item1)
+            ans = UManagment.RegisterMaster(admin, password);
+            if (!ans.Item1)
             {
                 return new Tuple<bool, string>(true, "System Admin didn't register");
 
@@ -109,6 +108,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Blank args");
+            }
+            if (ispayed == false) 
+            {
+                return new Tuple<bool, string>(false, "Not payed");
             }
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return DH.ProvideDeliveryForUser(name, ispayed);

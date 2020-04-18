@@ -23,6 +23,11 @@ namespace TestingSystem
             return sys.ViewCartDetails(cartID);
         }
 
+        public void ClearAllPurchase()
+        {
+            sys.ClearAllPurchase();
+        }
+
         public bool CartIsEmpty(string userID)
         {
             return sys.CartIsEmpty(userID);//resCart.isEmpty();
@@ -53,9 +58,20 @@ namespace TestingSystem
         {
             return sys.ViewAllStorePurchase(userName, storeID);
         }
+
         public Tuple<bool, string> RemoveProductFromShoppingCart(string user, int store, int product)
         {
             return sys.RemoveProductFromShoppingCart(user, store, product);
+        }
+
+        public Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
+        {
+            return sys.GetAllUsersHistory(admin);
+        }
+
+        public Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
+        {
+            return sys.GetAllStoresHistory(admin);
         }
 
 
@@ -78,7 +94,12 @@ namespace TestingSystem
         {
             return sys.AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
         }
-        
+
+        public Dictionary<int, List<Product>> ViewProductByStoreID(int storeID)
+        {
+            return sys.ViewProductByStoreID(storeID);
+        }
+
         public Dictionary<string,object> ViewStoreDetails(int storeID)
         {
             return sys.ViewStoreDetails(storeID);
