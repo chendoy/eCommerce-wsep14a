@@ -16,35 +16,19 @@ namespace TestingSystem.UnitTests.StoreTest
 {
     [TestClass]
     public class StoreTest
-    {   
-        private  Store validStore;
+    {
+        private Store validStore;
         private List<User> owners;
         private List<User> managers;
         [TestInitialize]
-        public  void TestInitialize()
+        public void TestInitialize()
         {
-            StoreManagment sm = StoreManagment.Instance;
-            UserManager userManager = UserManager.Instance;
-            userManager.Register("shimon", "123");
-            userManager.Login("shimon", "123", false);
-            sm.createStore("shimon", 1, 1);
-            userManager.Register("yosi", "123");
-            userManager.Login("yosi", "123");
-            userManager.Register("shmuel", "123");
-            userManager.Login("shmuel", "123");
-            AppoitmentManager appmgr = AppoitmentManager.Instance;
-            appmgr.AppointStoreManager("shimon", "shmuel", 1);
-            appmgr.AppointStoreManager("shimon", "yosi", 1);
-            userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
-            userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
-
-            validStore = sm.getStore(1);
-            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
-            managers = validStore.managers;
+            validStore = StoreTest.initValidStore();
             owners = validStore.owners;
-
-
+            managers = validStore.managers;
         }
+
+
         [TestCleanup]
         public void TestCleanup()
         {
@@ -157,7 +141,7 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestChangeStoreStatus_notActiveStatus()
         {
             bool isActive = false;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0],  newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, owners[0], newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -167,7 +151,7 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestChangeStoreStatus_ActiveValid()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,owners[0], newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, owners[0], newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -177,12 +161,12 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestChangeStoreStatus_ActiveNoOwner()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore,managers[0] ,newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, managers[0], newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsFalse(statusChanged);
         }
 
-        private Tuple<bool, string> changeStoreStatusDriver(Store s,User user, bool newStatus)
+        private Tuple<bool, string> changeStoreStatusDriver(Store s, User user, bool newStatus)
         {
             return s.changeStoreStatus(user, newStatus);
         }
@@ -192,11 +176,11 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.removeProduct(User, int)
         public void TestRemoveProduct_NotValidUser()
         {
-            Tuple<bool, string> res = removeProductDriver(validStore, new User(10,"shimon", false, false), 1);
+            Tuple<bool, string> res = removeProductDriver(validStore, new User(10, "shimon", false, false), 1);
             if (res.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, res.Item2);
-   
+
         }
 
         [TestMethod]
@@ -226,7 +210,7 @@ namespace TestingSystem.UnitTests.StoreTest
 
         private Tuple<bool, string> removeProductDriver(Store s, User user, int productId)
         {
-           return s.removeProduct(user, productId);
+            return s.removeProduct(user, productId);
         }
 
 
@@ -234,7 +218,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.appendProduct(User, Dictionary{string, object}, int)
         public void TestAppendProduct_NotValidUser()
         {
-            Tuple<bool, string> res = appendProductDriver(validStore, new User(44, "shmulik", false, false),new Dictionary<string, object>() ,1);
+            Tuple<bool, string> res = appendProductDriver(validStore, new User(44, "shmulik", false, false), new Dictionary<string, object>(), 1);
             if (res.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, res.Item2);
@@ -282,7 +266,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
-           
+
             Tuple<bool, string> res = appendProductDriver(validStore, owners[0], validParamDetails, 1);
             Assert.IsTrue(res.Item1);
         }
@@ -370,13 +354,13 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
-        }   
+        }
         private Dictionary<string, object> getStoreInfoDriver(Store s)
         {
             return s.getSotoreInfo();
         }
 
-       
+
         [TestMethod]
         /// <function cref ="eCommerce_14a.Store.AddStoreOwner(User)
         public void TestAddStoreOwner_AlreadyExistOwner()
@@ -417,7 +401,7 @@ namespace TestingSystem.UnitTests.StoreTest
             return s.AddStoreManager(user);
         }
 
-        public static Store openStore(int storeId, User user, Inventory inv, int rank=3)
+        public static Store openStore(int storeId, User user, Inventory inv, int rank = 3)
         {
 
             Dictionary<string, object> storeParams = new Dictionary<string, object>();
@@ -429,6 +413,28 @@ namespace TestingSystem.UnitTests.StoreTest
             storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
             return s;
+        }
+
+        public static Store initValidStore()
+        {
+            StoreManagment sm = StoreManagment.Instance;
+            UserManager userManager = UserManager.Instance;
+            userManager.Register("shimon", "123");
+            userManager.Login("shimon", "123", false);
+            sm.createStore("shimon", 1, 1);
+            userManager.Register("yosi", "123");
+            userManager.Login("yosi", "123");
+            userManager.Register("shmuel", "123");
+            userManager.Login("shmuel", "123");
+            AppoitmentManager appmgr = AppoitmentManager.Instance;
+            appmgr.AppointStoreManager("shimon", "shmuel", 1);
+            appmgr.AppointStoreManager("shimon", "yosi", 1);
+            userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
+            userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
+
+            Store validStore = sm.getStore(1);
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
+            return validStore;
         }
         
     }
