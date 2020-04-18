@@ -49,7 +49,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)
         {
-            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (u is null || p is null)
             {
                 Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -97,7 +96,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Register the system admin
         public Tuple<bool, string> RegisterMaster(string username, string pass)
         {
-            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            Logger.logSensitive(this, System.Reflection.MethodBase.GetCurrentMethod());
             Tuple<bool, string> ans = name_and_pass_check(username, pass);
             if (!ans.Item1)
                 return ans;
@@ -111,7 +110,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //User name must be unique
         public Tuple<bool, string> Register(string username, string pass)
         {
-            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            Logger.logSensitive(this, System.Reflection.MethodBase.GetCurrentMethod());
             Tuple<bool, string> ans = name_and_pass_check(username, pass);
             if (!ans.Item1)
                 return ans;
@@ -125,7 +124,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Login to Unlogged Register User with valid user name and pass.
         public Tuple<bool, string> Login(string username, string pass, bool isGuest = false)
         {
-            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            Logger.logSensitive(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isGuest)
             {
                 string Uname = addGuest();

@@ -42,13 +42,28 @@ namespace eCommerce_14a
             }
             else
             {
-                eventLogger.Info("Function '" + getMethodName(mb) + "' was called within " + getClassName(classObj) + ".cs" + " with args: [" + argsPrettify(mb) + "]");
+                eventLogger.Info("Function '" + getMethodName(mb) + "' was called within " + getClassName(classObj) + ".cs" + " with args: [" + argsPrettify(mb, false) + "]");
                 return true;
             }
 
         }
 
-        private static string argsPrettify(MethodBase mb)
+        public static Boolean logSensitive(object classObj, MethodBase mb)
+        {
+            if (eventLogger == null)
+            {
+                Console.WriteLine("Error while writing to event log.");
+                return false;
+            }
+            else
+            {
+                eventLogger.Info("Function '" + getMethodName(mb) + "' was called within " + getClassName(classObj) + ".cs" + " with args: [" + argsPrettify(mb, true) + "]");
+                return true;
+            }
+
+        }
+
+        private static string argsPrettify(MethodBase mb, Boolean sensitiveFlag)
         {
             ParameterInfo[] pis = mb.GetParameters();
             string argsStr = "";
@@ -56,9 +71,15 @@ namespace eCommerce_14a
             if (pis.Length == 0)
                 argsStr = "None";
 
-            foreach (ParameterInfo pi in pis)
+            if (sensitiveFlag) // will consider only first argument (i.e no passwords etc.)
+                argsStr += pis[0].Name + ":" + pis[0].ParameterType.Name + ", ";
+
+            else
             {
-                argsStr += pi.Name + ":" + pi.ParameterType.Name + ", ";
+                foreach (ParameterInfo pi in pis)
+                {
+                    argsStr += pi.Name + ":" + pi.ParameterType.Name + ", ";
+                }
             }
             char[] charsToTrim = { ',', ' ' };
             argsStr = argsStr.Trim(charsToTrim);
