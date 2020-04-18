@@ -218,7 +218,7 @@ namespace TestingSystem.UnitTests.InventroyTest
 
         private Tuple<bool, string> AddProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.addProductAmount(productId, amount);
+            return inv.IncreaseProductAmount(productId, amount);
         }
 
 

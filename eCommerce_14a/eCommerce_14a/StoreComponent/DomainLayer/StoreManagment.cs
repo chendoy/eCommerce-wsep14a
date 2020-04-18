@@ -103,7 +103,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].addProductAmount(user: user, productId: productId, amount: amount);
+            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount);
         }
 
         public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
@@ -123,7 +123,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].decrasePrdouct(user:user , productId: productId, amount: amount);
+            return stores[storeId].decrasePrdouctAmount(user:user , productId: productId, amount: amount);
         }
 
         public Dictionary<string, object> getStoreInfo(int storeId)

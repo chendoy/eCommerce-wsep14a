@@ -111,7 +111,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        public Tuple<bool, string> addProductAmount(int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(int productId, int amount)
         {
             // purpose: add amount to the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>

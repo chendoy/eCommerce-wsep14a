@@ -101,7 +101,7 @@ namespace TestingSystem.UnitTests.StoreTest
 
         private Tuple<bool, string> addProductAmountDriver(Store store, User user, int produtId, int amount)
         {
-            return store.addProductAmount(user, produtId, amount);
+            return store.IncreaseProductAmount(user, produtId, amount);
         }
 
 
@@ -149,7 +149,7 @@ namespace TestingSystem.UnitTests.StoreTest
 
         private Tuple<bool, string> decraseProductDriver(Store s, User user, int productId, int amount)
         {
-            return s.decrasePrdouct(user, productId, amount);
+            return s.decrasePrdouctAmount(user, productId, amount);
         }
 
 

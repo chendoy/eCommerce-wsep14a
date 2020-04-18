@@ -41,7 +41,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
 
-        public Tuple<bool, string> addProductAmount(User user, int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(User user, int productId, int amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -60,10 +60,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.addProductAmount(productId, amount);
+            return inventory.IncreaseProductAmount(productId, amount);
         }
 
-        public Tuple<bool, string> decrasePrdouct(User user, int productId, int amount)
+        public Tuple<bool, string> decrasePrdouctAmount(User user, int productId, int amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -174,6 +174,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
 
             return inventory.UpdateProduct(productParams);
+        }
+
+        public Tuple<bool, string> DecraseProductAmountAfterPuarchse(int productId, int amount)
+        {
+            return inventory.DecraseProductAmount(productId, amount);
+        }
+        public Tuple<bool, string> IncreaseProductAmountAfterFailedPuarchse(int productId, int amount)
+        {
+            return inventory.IncreaseProductAmount(productId, amount);
         }
 
         public Dictionary<string, object> getSotoreInfo()
