@@ -2,7 +2,6 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-
 /.vs/wsep_14a2/v15/.suo
 /eCommerce_14a/TestingSystem/obj/Release/TestingSystem.csproj.CoreCompileInputs.cache
 /.vs/wsep_14a/v16/.suo
