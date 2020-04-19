@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
+    /// <testclass cref ="TestingSystem.UnitTests.PurchaseManagementTest/>
     public class PurchaseManagement
     {
         // Holding the carts and purchases by user
@@ -35,7 +36,6 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
         }
 
-        public PaymentHandler GetPaymentHandler() { return this.paymentHandler; }
         private PurchaseManagement(PaymentHandler paymentHandler, DeliveryHandler deliveryHandler)
         {
             ClearAll();
@@ -52,17 +52,24 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <param name="exist">  means this product meant to be already in the cart (in case of change/remove existing product </param>
         public Tuple<bool, string> AddProductToShoppingCart(string userId, int storeId, int productId, int wantedAmount, bool exist)
         {
-            if (String.IsNullOrEmpty(userId))
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (String.IsNullOrWhiteSpace(userId))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
             User user = userManager.GetAtiveUser(userId);
             if (user == null)
             {
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
             }
             Store store = storeManagment.getStore(storeId);
 
             if (store == null || !store.ActiveStore)
             {
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -100,8 +107,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         public Tuple<Cart, string> GetCartDetails(string userName)
         {
-            if (String.IsNullOrEmpty(userName))
-                return new Tuple<Cart, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (String.IsNullOrWhiteSpace(userName))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<Cart, string>(null, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
             User user = userManager.GetAtiveUser(userName);
             if (user is null)
             {
@@ -119,12 +131,23 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28 </req>
         public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
         {
-            if (String.IsNullOrEmpty(user))
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
-            if (String.IsNullOrEmpty(paymentDetails))
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (String.IsNullOrWhiteSpace(user))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
+            if (String.IsNullOrWhiteSpace(paymentDetails))
+            {
                 return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.NotValidPaymentErrMsg);
-            if (String.IsNullOrEmpty(address))
+            }
+
+            if (String.IsNullOrWhiteSpace(address))
+            {
                 return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.NotValidAddressErrMsg);
+            }
+
             User userObject = userManager.GetAtiveUser(user);
             if (userObject is null)
             {
@@ -190,9 +213,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
         public Tuple<List<Purchase>, string> GetBuyerHistory(string user)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             List<Purchase> res = new List<Purchase>();
-            if (String.IsNullOrEmpty(user))
-                return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+            if (String.IsNullOrWhiteSpace(user))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<List<Purchase>, string>(res, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
             User userObject = userManager.GetAtiveUser(user);
             if (userObject is null)
             {
@@ -211,9 +239,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <param name="manager"> Any Owner/Manager of the store or the admin of the system </param>
         public Tuple<List<PurchaseBasket>, string> GetStoreHistory(string manager, int storeId)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             List<PurchaseBasket> res = new List<PurchaseBasket>();
-            if (String.IsNullOrEmpty(manager))
-                return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+            if (String.IsNullOrWhiteSpace(manager))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<List<PurchaseBasket>, string>(res, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
             User userObject = userManager.GetAtiveUser(manager);
             if (userObject is null)
             {
@@ -243,15 +276,23 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         private bool GetStoreHistoryAuthorization(User manager, int storeID)
         {
             if (manager.isSystemAdmin() || manager.isStoreOwner(storeID))
+            {
                 return true;
+            }
+
             return manager.getUserPermission(storeID, CommonStr.MangerPermission.Puarchse);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
         public Tuple<Dictionary<Store, List<PurchaseBasket>>, string> GetAllStoresHistory(string admin)
         {
-            if (String.IsNullOrEmpty(admin))
-                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (String.IsNullOrWhiteSpace(admin))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<Dictionary<Store, List<PurchaseBasket>>, string>(null, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
             User userObject = userManager.GetAtiveUser(admin);
             if (userObject is null)
             {
@@ -268,8 +309,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
         public Tuple<Dictionary<string, List<Purchase>>, string> GetAllUsersHistory(string admin)
         {
-            if (String.IsNullOrEmpty(admin))
-                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (String.IsNullOrWhiteSpace(admin))
+            {
+                Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<Dictionary<string, List<Purchase>>, string>(null, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
+            }
+
             User userObject = userManager.GetAtiveUser(admin);
             if (userObject is null)
             {
@@ -297,7 +343,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// Setup the dependencies of this class for tests purposes
         /// </summary>
         public void SetupDependencies(
-            StoreManagment storeManagment, 
+            StoreManagment storeManagment,
             PaymentHandler paymentHandler,
             DeliveryHandler deliveryHandler,
             UserManager userManager)

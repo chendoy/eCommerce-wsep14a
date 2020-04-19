@@ -26,6 +26,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         public Tuple<bool, string> AddProduct(Store store, int productId, int wantedAmount, bool exist)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (store == null || !store.ActiveStore)
             {
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
@@ -109,6 +110,18 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 basket.RestoreItemsToStore();
             }
+        }
+
+        // For tests
+        public int GetAmountOfUniqueProducts()
+        {
+            int res = 0;
+            foreach (var basket in baskets.Values)
+            {
+                res += basket.GetAmountOfUniqueProducts();
+            }
+
+            return res;
         }
     }
 }

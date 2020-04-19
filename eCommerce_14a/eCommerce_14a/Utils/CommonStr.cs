@@ -91,6 +91,7 @@
 
         public static class PurchaseMangmentErrorMessage
         {
+            public static string BlankOrNullInputErrMsg = "Got null or blank input";
             public static string NegativeProductAmountErrMsg = "Cannot have negative amount of product in cart";
             public static string ZeroProductAmountErrMsg = "Cannot add zero amount of product to cart";
             public static string ProductNotExistInCartErrMsg = "The product is not already in the shopping cart";

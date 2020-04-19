@@ -31,6 +31,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <param name="exist">state if it should be already in the basket</param>
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (!this.store.productExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
@@ -110,6 +111,12 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             return store.checkIsValidBasket(products);
+        }
+
+        // For tests
+        internal int GetAmountOfUniqueProducts()
+        {
+            return products.Keys.Count;
         }
 
         internal void RestoreItemsToStore()
