@@ -56,7 +56,7 @@
     <Compile Include="AcceptanceTests\AppointingOwnerStoryTest.cs" />
     <Compile Include="AcceptanceTests\ChangeProductAmountStoryTest.cs" />
     <Compile Include="AcceptanceTests\ManagerAddProductStoryTest.cs" />
-    <Compile Include="AcceptanceTests\ManagerChangeDiscountStoryTest.cs" />
+    <Compile Include="AcceptanceTests\ManagerChangeAmountStoryTest.cs" />
     <Compile Include="AcceptanceTests\ManagerEditProductStoryTest.cs" />
     <Compile Include="AcceptanceTests\ManagerRemoveProductStoryTest.cs" />
     <Compile Include="AcceptanceTests\RemoveProductStoryTest.cs" />

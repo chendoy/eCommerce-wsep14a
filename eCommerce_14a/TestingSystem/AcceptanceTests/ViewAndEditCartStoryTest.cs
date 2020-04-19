@@ -10,7 +10,6 @@ namespace TestingSystem.AcceptanceTests
 {
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
     [TestClass]
-    //@@@@@@@NAOR@@@@@@@@@@@@@@@@@2
     public class ViewAndEditCartStoryTest : SystemTrackTest
     {
         int productID = 3;
@@ -37,6 +36,7 @@ namespace TestingSystem.AcceptanceTests
         [TestCleanup]
         public void TearDown()
         {
+            ClearAllPurchase();
             ClearAllShops();
             ClearAllUsers();
         }

@@ -9,6 +9,6 @@ namespace TestingSystem
     class Driver
     {
         public Driver() { }
-        public static RealBridge GetBridge() { return new RealBridge(); }//return new ProxyBridge();
+        public static BridgeInterface GetBridge() { return new RealBridge(); }//return new ProxyBridge();
     }
 }

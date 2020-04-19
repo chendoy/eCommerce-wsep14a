@@ -11,8 +11,6 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class InitSystemStoryTest : SystemTrackTest
     {
-        string username = UserGenerator.GetValidUsernames()[0];
-        string password = UserGenerator.GetPasswords()[0];
 
         [TestCleanup]
         public void TearDown() 

@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace TestingSystem.AcceptanceTests
 {
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---increasedecrease-amount-414- </req>
-    class ChangeProductAmountStoryTest : SystemTrackTest
+    [TestClass]
+    public class ChangeProductAmountStoryTest : SystemTrackTest
     {
         int productID = 3;
         int storeID;

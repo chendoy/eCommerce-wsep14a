@@ -12,7 +12,7 @@ namespace TestingSystem
     //from here comes all the functionality of the system
     public class SystemTrackTest
     {
-        public RealBridge sys = Driver.GetBridge();
+        public BridgeInterface sys = Driver.GetBridge();
 
         public SystemTrackTest() { }
 
@@ -30,7 +30,7 @@ namespace TestingSystem
 
         public bool CartIsEmpty(string userID)
         {
-            return sys.CartIsEmpty(userID);//resCart.isEmpty();
+            return sys.CartIsEmpty(userID);
         }
 
         public Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID, int amount)

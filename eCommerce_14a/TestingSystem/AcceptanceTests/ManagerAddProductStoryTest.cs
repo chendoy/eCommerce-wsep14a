@@ -9,7 +9,7 @@ namespace TestingSystem.AcceptanceTests
 {
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager--add-product-512- </req>
     [TestClass]
-    class ManagerAddProductStoryTest : SystemTrackTest
+    public class ManagerAddProductStoryTest : SystemTrackTest
     {
         int productID = 3;
         string username = UserGenerator.GetValidUsernames()[0];
@@ -32,6 +32,7 @@ namespace TestingSystem.AcceptanceTests
             Login(username, password);
             storeID = OpenStore(username).Item1;
             AppointStoreManage(username, userManager, storeID);
+            ChangePermissions(username,userManager,storeID,new int[] { 1,1,1});
         }
 
         [TestCleanup]

@@ -40,6 +40,7 @@ namespace TestingSystem.AcceptanceTests
         {
             SetPaymentSystemConnection(true);
             SetSupplySystemConnection(true);
+            ClearAllPurchase();
             ClearAllUsers();
             ClearAllShops();
         }
@@ -64,7 +65,6 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void ConnectionLostWithPaymentSystemTest()
         {
-            //to check if the connection available
             SetPaymentSystemConnection(false);
             Assert.IsFalse(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
         }

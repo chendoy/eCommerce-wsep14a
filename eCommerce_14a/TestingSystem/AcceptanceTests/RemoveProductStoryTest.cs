@@ -9,7 +9,7 @@ namespace TestingSystem.AcceptanceTests
 {
     /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---remove-product-413- </req>
     [TestClass]
-    class RemoveProductStoryTest : SystemTrackTest
+    public class RemoveProductStoryTest : SystemTrackTest
     {
         int productID = 3;
         string username = UserGenerator.GetValidUsernames()[0];
@@ -30,6 +30,7 @@ namespace TestingSystem.AcceptanceTests
             storeID = OpenStore(username).Item1;
             anotherStoreID = OpenStore(username).Item1;
         }
+
         [TestCleanup]
         public void TearDown()
         {

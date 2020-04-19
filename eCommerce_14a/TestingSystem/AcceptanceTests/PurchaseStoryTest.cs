@@ -53,7 +53,7 @@ namespace TestingSystem.AcceptanceTests
         public void LegalPaymentDetailsTest()
         {
             SetUp();
-            Assert.IsTrue(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            Assert.IsTrue(PerformPurchase(userID, paymentDetails, address).Item1, PerformPurchase(userID, paymentDetails, address).Item2);
             TearDown();
         }
 
@@ -61,7 +61,7 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void IllegalPaymentDetailsTest()
         {
-            Assert.IsFalse(PayForProduct(userID, "", address).Item1, PayForProduct(userID, "", address).Item2);
+            Assert.IsFalse(PerformPurchase(userID, "", address).Item1, PerformPurchase(userID, "", address).Item2);
         }
 
         [TestMethod]
@@ -69,7 +69,7 @@ namespace TestingSystem.AcceptanceTests
         public void ConnectionLostWithPaymentSystemTest()
         {
             SetPaymentSystemConnection(false);
-            Assert.IsFalse(PayForProduct(userID, paymentDetails, address).Item1, PayForProduct(userID, paymentDetails, address).Item2);
+            Assert.IsFalse(PerformPurchase(userID, paymentDetails, address).Item1, PerformPurchase(userID, paymentDetails, address).Item2);
         }
 
     }

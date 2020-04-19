@@ -48,7 +48,7 @@ namespace TestingSystem.AcceptanceTests
         //bad
         public void SearchProductByInvalidNameTest()
         {
-            Assert.AreEqual(0, ViewProductByName("plane").Count); 
+            Assert.AreEqual(0, ViewProductsByCategory("plane").Count); 
         }
 
         [TestMethod]

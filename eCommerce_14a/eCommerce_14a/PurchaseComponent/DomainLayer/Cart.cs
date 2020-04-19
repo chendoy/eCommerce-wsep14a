@@ -90,7 +90,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
         }
 
-        internal bool IsEmpty()
+        public bool IsEmpty()
         {
             return baskets.Count == 0;
         }
