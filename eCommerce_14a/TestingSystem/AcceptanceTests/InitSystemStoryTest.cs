@@ -11,8 +11,8 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class InitSystemStoryTest : SystemTrackTest
     {
-        string username;
-        string password; 
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
 
         [TestCleanup]
         public void TearDown() 
@@ -23,8 +23,6 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp() 
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
         }
 
         [TestMethod]
@@ -37,16 +35,14 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void NoConnectionWithOneSystemTest()
         {
-            SetPaymentSystemConnection(false);
-            Assert.IsFalse(Init().Item1, Init().Item2);
+            Assert.IsFalse(Init(false).Item1, Init(false).Item2);
         }
 
         [TestMethod]
         //bad
         public void StartReqWhileBootingTest()
         {
-            Register(username, password);
-            Assert.IsFalse(Init().Item1, Init().Item2);
+            Assert.IsFalse(Init(false).Item1, Init(false).Item2);
         }
     }
 }

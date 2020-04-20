@@ -11,15 +11,41 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class SupplySystemStoryTest : SystemTrackTest
     {
+        string userID;
+
         [TestInitialize]
         public void SetUp()
         {
-            // TODO: impl
+            userID = enterSystem().Item2;
         }
+
         [TestCleanup]
         public void TearDown()
         {
-            // TODO: impl
+            Logout(userID);
+        }
+
+        [TestMethod]
+        //happy
+        public void LegalSupplyDetailsTest()
+        {
+            Assert.IsTrue(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
+
+        }
+
+        [TestMethod]
+        //sad
+        public void IllegalPaymentTest()
+        {
+            Assert.IsFalse(ProvideDeliveryForUser(userID, false).Item1, ProvideDeliveryForUser(userID, false).Item2);
+        }
+
+        [TestMethod]
+        //bad
+        public void ConnectionLostWithSupplySystemTest()
+        {
+            SetSupplySystemConnection(false);
+            Assert.IsFalse(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
         }
 
     }

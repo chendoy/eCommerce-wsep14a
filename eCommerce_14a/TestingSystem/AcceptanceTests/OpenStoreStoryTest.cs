@@ -11,14 +11,12 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class OpenStoreStoryTest : SystemTrackTest
     {
-        string username;
-        string password;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
 
         [TestInitialize]
         public void SetUp()
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
         }

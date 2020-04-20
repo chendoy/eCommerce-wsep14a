@@ -11,11 +11,11 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     class RemoveProductStoryTest : SystemTrackTest
     {
-        int productID;
-        string username;
+        int productID = 3;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
         int storeID;
-        string password;
-        int amount;
+        int amount = 1;
         int anotherStoreID;
         string productDetails = "Details";
         double productPrice = 3.02;
@@ -25,9 +25,6 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
-            productID = 3;
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;

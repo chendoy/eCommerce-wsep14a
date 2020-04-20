@@ -11,13 +11,13 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     class ManagerAddProductStoryTest : SystemTrackTest
     {
-        int productID;
-        string username;
-        string password;
-        string userManager;
-        string passManager;
+        int productID = 3;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
+        string userManager = UserGenerator.GetValidUsernames()[1];
+        string passManager = UserGenerator.GetPasswords()[1];
         int storeID;
-        int amount;
+        int amount = 1;
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -26,11 +26,6 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
-            productID = 3;
-            userManager = UserGenerator.RandomString(5);
-            passManager = UserGenerator.RandomString(5);
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
             Register(userManager, passManager);
             Login(userManager, passManager);
             Register(username, password);
@@ -50,7 +45,6 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ValidProductAddToStoreTest()
         {
-            amount = 1;
             Assert.IsTrue(AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
                 AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
         }
@@ -59,7 +53,6 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void AddTwiceProductToStoreTest()
         {
-            amount = 1;
             Assert.IsTrue(AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
                 AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
             Assert.IsFalse(AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item1,

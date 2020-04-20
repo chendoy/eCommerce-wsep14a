@@ -12,11 +12,11 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class StoreProductsInBasketStoryTest : SystemTrackTest
     {
-        int productID;
         int storeID;
         string userID;
-        string username;
-        string password;
+        int productID = 3;
+        string username = UserGenerator.GetValidUsernames()[0];
+        string password = UserGenerator.GetPasswords()[0];
         string productDetails = "Details";
         double productPrice = 3.02;
         string productName = "Name";
@@ -26,13 +26,10 @@ namespace TestingSystem.AcceptanceTests
         [TestInitialize]
         public void SetUp()
         {
-            username = UserGenerator.RandomString(5);
-            password = UserGenerator.RandomString(5);
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
-            userID = enterSystem().Item1;
-            productID = 3;
+            userID = enterSystem().Item2;
         }
 
         [TestCleanup]
