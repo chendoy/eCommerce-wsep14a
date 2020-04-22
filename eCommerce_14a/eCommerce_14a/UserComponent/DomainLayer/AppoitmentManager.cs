@@ -45,7 +45,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store store = storeManagment.getStore(storeId);
             if(store is null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Store Does not Exist");
             }
             if (owner == null || addto == null)
@@ -91,7 +90,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store store = storeManagment.getStore(storeId);
             if (store is null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Store Does not Exist");
             }
             if (owner == null || addto == null)
@@ -128,7 +126,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store store = storeManagment.getStore(storeId);
             if (store is null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Store Does not Exist");
             }
             if (o == null || m == null)
@@ -165,7 +162,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store store = storeManagment.getStore(storeId);
             if (store is null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Store Does not Exist");
             }
             if (ownerS == null || worker == null || permissions == null)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -11,9 +12,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     public class PaymentHandler
     {
         bool connected;
+        PaymentSystem paymentSystem;
         PaymentHandler()
         {
             connected = true;
+            paymentSystem = new PaymentSystem();
         }
 
         private static readonly object padlock = new object();
