@@ -59,9 +59,10 @@ namespace TestingSystem.AcceptanceTests
 
         [TestMethod]
         //sad
-        public void IllegalPaymentDetailsTest()
+        public void IllegalPaymentOrAddressTest()
         {
             Assert.IsFalse(PerformPurchase(userID, "", address).Item1, PerformPurchase(userID, "", address).Item2);
+            Assert.IsFalse(PerformPurchase(userID, paymentDetails, "").Item1, PerformPurchase(userID, paymentDetails, "").Item2);// fixedc from version 1
         }
 
         [TestMethod]
