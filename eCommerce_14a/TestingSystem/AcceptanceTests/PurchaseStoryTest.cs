@@ -62,7 +62,7 @@ namespace TestingSystem.AcceptanceTests
         public void IllegalPaymentOrAddressTest()
         {
             Assert.IsFalse(PerformPurchase(userID, "", address).Item1, PerformPurchase(userID, "", address).Item2);
-            Assert.IsFalse(PerformPurchase(userID, paymentDetails, "").Item1, PerformPurchase(userID, paymentDetails, "").Item2);// fixed from version 1
+            Assert.IsFalse(PerformPurchase(userID, paymentDetails, "").Item1, PerformPurchase(userID, paymentDetails, "").Item2);// fixedc from version 1
         }
 
         [TestMethod]
