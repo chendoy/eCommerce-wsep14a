@@ -28,7 +28,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (amount < 0)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
             }
 
@@ -42,7 +42,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             double pPrice = (double)productParams[CommonStr.ProductParams.ProductPrice];
             if (pPrice < 0)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.ProductPriceErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
             }
 
@@ -73,7 +73,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else
             {
-                Logger.logError(CommonStr.GeneralErrMessage.UnKnownErr, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.GeneralErrMessage.UnKnownErr);
                 return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.UnKnownErr);
             }
 
@@ -93,7 +93,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             double price = (double)productParams[CommonStr.ProductParams.ProductPrice];
             if (price < 0)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.ProductPriceErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductPriceErrMsg);
             }
 
@@ -119,7 +119,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (amount < 0)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.productAmountErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.productAmountErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
             }
 
@@ -146,7 +146,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (amount < 0)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.productAmountErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.productAmountErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
             }
 
@@ -160,7 +160,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             int newAmount = currentAmount - amount;
             if (newAmount < 0)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.productAmountErrMsg + " amount after decrase is less than 0", this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.productAmountErrMsg + " amount after decrase is less than 0");
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
             }
             invProducts[productId] = new Tuple<Product, int>(invProducts[productId].Item1, newAmount);
@@ -199,7 +199,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 int productAmount = entry.Value.Item2;
                 if (productAmount < 0)
                 {
-                    Logger.logError(CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg, new Inventory(), System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(new Inventory(), System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
 
                 }
@@ -228,7 +228,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.InvalidInventory, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.InvalidInventory);
                 return new Tuple<bool, string>(false, isValidAns.Item2);
             }
         }
@@ -251,7 +251,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 int invProductAmount = invProducts[id].Item2;
                 if (invProductAmount < amount)
                 {
-                    Logger.logError(CommonStr.InventoryErrorMessage.ProductShortageErrMsg + " - PID : " + id.ToString(), this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.ProductShortageErrMsg + " - PID : " + id.ToString());
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductShortageErrMsg + " - PID : " + id.ToString());
 
                 }
