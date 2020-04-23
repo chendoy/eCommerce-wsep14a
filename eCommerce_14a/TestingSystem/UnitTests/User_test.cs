@@ -5,80 +5,163 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a;
+using eCommerce_14a.UserComponent.DomainLayer;
 
-namespace TestingSystem.UnitTests
+namespace TestingSystem.UnitTests.User_test
 {
+
     [TestClass]
     public class User_test
     {
-        //setup
-        UserManager u_test = new UserManager();
-        Security bd = new Security();
-        //UserManagerTest
-        [TestMethod]
-        public void MasterRegistrationTest()
+        private UserManager UM;
+        [TestInitialize]
+        public void TestInitialize()
         {
-            //Test
-            Assert.IsTrue(u_test.RegisterMaster("test", "Test1").Item1);
-            Assert.IsFalse(u_test.RegisterMaster("test", null).Item1);
-            Assert.IsFalse(u_test.RegisterMaster("test", "Test1").Item1);
-            Assert.IsTrue(u_test.GetUser("test").isSystemAdmin());
-            Assert.IsFalse(u_test.RegisterMaster("", "Test1").Item1);
-            Assert.IsTrue(u_test.isUserExist("test"));
-            Assert.IsFalse(u_test.RegisterMaster(null, null).Item1);
+            UM = UserManager.Instance;
+            UM.Register("GoodUser", "Test1");
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            UM.cleanup();
+        }
+        /// <function cref ="eCommerce_14a.UserManager.RegisterMaster(string,string)
+        [TestMethod]
+        public void MasterRegistrationTestNullArgs()
+        {
+            Assert.IsFalse(UM.RegisterMaster(null, "Test1").Item1);
+            Assert.IsFalse(UM.RegisterMaster("AAAAA", null).Item1);
         }
         [TestMethod]
-        public void RegularRegistrationTest()
+        public void MasterRegistrationTestBlankArgs()
         {
-            //Test
-            Assert.IsTrue(u_test.Register("test4", "Test1").Item1);
-            Assert.IsTrue(u_test.isUserExist("test4"));
-            Assert.IsFalse(u_test.Register("test4", "Test1").Item1);
-            Assert.IsFalse(u_test.Register("test", null).Item1);
-            Assert.IsFalse(u_test.Register("", "Test1").Item1);
-            Assert.IsFalse(u_test.Register(null, null).Item1);
+            Assert.IsFalse(UM.RegisterMaster("AAAAA", "").Item1);
+            Assert.IsFalse(UM.RegisterMaster("", "Test1").Item1);
+
         }
         [TestMethod]
-        public void LoginTest()
+        public void MasterRegistrationTwiceTest()
         {
-            //setup
-            u_test.Register("test", "Test1");
-            //Tests
-            Assert.IsTrue(u_test.Login("test", "Test1").Item1);
-            Assert.IsTrue(u_test.GetAtiveUser("test").LoggedStatus());
-            Assert.IsFalse(u_test.Login("test4", "A").Item1);
-            Assert.IsFalse(u_test.Login("test4", "Test1").Item1);
-            Assert.IsFalse(u_test.Login("test", "Test1").Item1);
-            Assert.IsFalse(u_test.Login("test", null).Item1);
-            Assert.IsFalse(u_test.Login("", "A").Item1);
-            Assert.IsFalse(u_test.Login(null, null).Item1);
+            Assert.IsTrue(UM.RegisterMaster("test", "Test1").Item1);
+            Assert.IsTrue(UM.GetUser("test").isSystemAdmin());
+            Assert.IsTrue(UM.isUserExist("test"));
+            Assert.IsFalse(UM.RegisterMaster("test", "Test1").Item1);
         }
+        [TestMethod]
+        public void MasterRegistrationTestUserFailed()
+        {
+            Assert.IsFalse(UM.RegisterMaster("12", "Test1").Item1);
+            Assert.IsFalse(UM.RegisterMaster("$(*$#(*$", "Test1").Item1);
+        }
+        /// <function cref ="eCommerce_14a.UserManager.Register(string,string)
+        [TestMethod]
+        public void RegistrationTestNullArgs()
+        {
+            Assert.IsFalse(UM.Register("AAAAA", null).Item1);
+            Assert.IsFalse(UM.Register(null, "Test1").Item1);
+        }
+        [TestMethod]
+        public void RegistrationTestBlankArgs()
+        {
+            Assert.IsFalse(UM.Register("AAAAA", "").Item1);
+            Assert.IsFalse(UM.Register("", "Test1").Item1);
+        }
+        [TestMethod]
+        public void RegistrationTwiceTest()
+        {
+            Assert.IsTrue(UM.Register("test", "Test1").Item1);
+            Assert.IsTrue(UM.isUserExist("test"));
+            Assert.IsFalse(UM.Register("test", "Test1").Item1);
+        }
+        [TestMethod]
+        public void RegistrationTestUserFailed()
+        {
+            Assert.IsFalse(UM.Register("12", "Test1").Item1);
+            Assert.IsFalse(UM.Register("AAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Test1").Item1);
+            Assert.IsFalse(UM.Register("$(*$#(*$", "Test1").Item1);
+            Assert.IsFalse(UM.Register("AA43A$(*$#(*$", "Test1").Item1);
+        }
+        /// <function cref ="eCommerce_14a.UserManager.Login(string,string,bool)
+        //("GoodUser", "Test1")
+        [TestMethod]
+        public void LoginTestNullArgs()
+        {
+            Assert.IsFalse(UM.Login("GoodUser", null).Item1);
+            Assert.IsFalse(UM.Login(null, null).Item1);
+        }
+        [TestMethod]
+        public void LoginTestBlankArgs()
+        {
+            Assert.IsFalse(UM.Login("", "AA").Item1);
+            Assert.IsFalse(UM.Login("test1", "").Item1);
+        }
+        [TestMethod]
+        public void LoginTestNoUser()
+        {
+            Assert.IsFalse(UM.Login("AAAA", "AA").Item1);
+            Assert.IsFalse(UM.Login("test1", "Test1").Item1);
+        }
+        public void LoginAgainTest()
+        {
+            Assert.IsTrue(UM.Login("GoodUser", "Test1").Item1);
+            Assert.IsTrue(UM.GetAtiveUser("GoodUser").LoggedStatus());
+            Assert.IsNotNull(UM.GetAtiveUser("GoodUser"));
+            Assert.IsFalse(UM.Login("GoodUser", "Test1").Item1);
+        }
+        public void LoginWithWrongCredentialsTest()
+        {
+            Assert.IsTrue(UM.Login("GoodUser", "Test").Item1);
+            Assert.IsFalse(UM.GetAtiveUser("GoodUser").LoggedStatus());
+            Assert.IsNull(UM.GetAtiveUser("GoodUser"));
+        }
+        /// <function cref ="eCommerce_14a.UserManager.Login(string,string,bool)
         [TestMethod]
         public void LoginAsGuestTest()
         {
-            //Tests
-            Assert.IsTrue(u_test.Login("test", "Test1",true).Item1);
-            Assert.IsTrue(u_test.GetAtiveUser("Guest1").LoggedStatus());
-            Assert.IsTrue(u_test.GetAtiveUser("Guest1").isguest());
+            Assert.IsTrue(UM.Login("", "", true).Item1);
+            Assert.IsTrue(UM.GetAtiveUser("Guest2").LoggedStatus());
+            Assert.IsTrue(UM.GetAtiveUser("Guest2").isguest());
 
+        }
+        /// <function cref ="eCommerce_14a.UserManager.Logout(string)
+        [TestMethod]
+        public void LogoutTestNullArgs()
+        {
+            UM.Login("GoodUser", "Test1");
+            Assert.IsFalse(UM.Logout(null).Item1);
+        }
+        [TestMethod]
+        public void LogoutTestBlankArgs()
+        {
+            UM.Login("GoodUser", "Test1");
+            Assert.IsFalse(UM.Logout("").Item1);
+        }
+        [TestMethod]
+        public void LogoutTestNotLoggedIn()
+        {
+            Assert.IsFalse(UM.Logout("GoodUser").Item1);
+        }
+        [TestMethod]
+        public void LogoutTestDoubleLogout()
+        {
+            UM.Login("GoodUser", "Test1");
+            Assert.IsTrue(UM.Logout("GoodUser").Item1);
+            Assert.IsFalse(UM.Logout("GoodUser").Item1);
+        }
+        [TestMethod]
+        public void LogoutTestGuestUser()
+        {
+            UM.Login("", "",true);
+            Assert.IsFalse(UM.Logout("Guest1").Item1);
         }
         [TestMethod]
         public void LogoutTest()
         {
-            //pre
-            u_test.Register("test", "Test1");
-            u_test.Login("test", "Test1");
-            u_test.Login("test", "Test1", true);
-            //Tests
-            Assert.IsFalse(u_test.Logout("Guest1").Item1);
-            Assert.IsFalse(u_test.Logout("").Item1);
-            Assert.IsFalse(u_test.Logout(null).Item1);
-            Assert.IsTrue(u_test.Logout("test").Item1);
-            Assert.IsFalse(u_test.GetUser("test").LoggedStatus());
-            Assert.IsNull(u_test.GetAtiveUser("test"));
-            Assert.IsFalse(u_test.Logout("test").Item1);
-            Assert.IsTrue(u_test.GetAtiveUser("Guest2").isguest());
-            Assert.IsTrue(u_test.GetAtiveUser("Guest3").isguest());
+            UM.Login("GoodUser", "Test1");
+            Assert.IsTrue(UM.Logout("GoodUser").Item1);
+            Assert.IsFalse(UM.GetUser("GoodUser").LoggedStatus());
+            Assert.IsNull(UM.GetAtiveUser("GoodUser"));
         }
     }
 }
