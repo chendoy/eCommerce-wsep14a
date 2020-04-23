@@ -1,4 +1,6 @@
-﻿using System;
+﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +11,7 @@ namespace TestingSystem
     public interface TestsProjectInterface
     {
         /// ~~~~~~~~Naor~~~~~~~~:
-        //Tuple<Cart, string> GetCartDetails(string user)@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@cant return cart
+        Tuple<Cart, string> GetCartDetails(string user);
         List<object> ViewCartDetails(string cartID);
         //Tuple<bool, string> AddProductToShoppingCart(string user, int store, int product, int amount)
         Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID);
@@ -23,8 +25,8 @@ namespace TestingSystem
 
 
         /// ~~~~~~~~Liav~~~~~~~~:
-        // Tuple<bool, String> decraseProduct(int storeId, int userId, Product p, int amount)
-        // Tuple<bool, String> addProduct(int storeId, int userId, Product p, int amount)
+        Tuple<bool, String> decraseProduct(int storeId, int userId, Product p, int amount);
+        Tuple<bool, String> addProduct(int storeId, int userId, Product p, int amount);
         Tuple<bool, string> ChangeProductAmount(int storeID, string username, int productID, int newAmount);// changes the product amout in the store
         // Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount)
         Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount); // add product to store with storeID.
@@ -36,11 +38,11 @@ namespace TestingSystem
         Tuple<bool, string> CloseStore(string username, int storeID);// close the store with storeID.
         //check with liav
         Dictionary<int, List<object>> ViewProductByName(String productName);
-        // Tuple<bool, string> createStore(int storeId, int userId) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        // Tuple<bool, string> createStore(int storeId, int userId) 
         Tuple<int, string> OpenStore(string userName); // return -1 if fail else return unique storeID
         // Tuple<bool, string> updateProductDetails(int storeId, int userId, int productId, string newDetails)
         Tuple<bool, string> UpdateProductDetails(int storeID, string username, int productID, string productDetails, double productPrice, string newName, string productCategory); // changes the product's name.
-        //liav should add this func
+        
         Tuple<bool, string> RemoveProductFromStore(string username, int storeID, int productID);// remove the product from the store.
         Tuple<bool, string> CheckBuyingPolicy(string userID, int storeID);
         Tuple<bool, string> CheckDiscountPolicy(string userID, int storeID);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TestingSystem
 {
-    class ProxyBridge : BridgeInterface
+    public class ProxyBridge : BridgeInterface
     {
         public ProxyBridge() { }
 

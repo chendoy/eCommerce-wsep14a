@@ -12,12 +12,15 @@ namespace TestingSystem.AcceptanceTests
     public class LoginStoryTest : SystemTrackTest
     {
         string[] validUsernames = UserGenerator.GetValidUsernames();
-        string[] incorrectUsernames = UserGenerator.GetIncorrectUsernames(); // for future using
         string[] passwords = UserGenerator.GetPasswords();
 
         [TestInitialize]
         public void SetUp()
         {
+            for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE; i++) //fixed from version 1
+            {
+                Register(validUsernames[i], passwords[i]);
+            }
         }
 
         [TestCleanup]
@@ -32,7 +35,6 @@ namespace TestingSystem.AcceptanceTests
         {
             for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE; i++)
             {
-                Register(validUsernames[i], passwords[i]);
                 Assert.IsTrue(Login(validUsernames[i], passwords[i]).Item1, Login(validUsernames[i], passwords[i]).Item2);
             }
         }
@@ -41,14 +43,20 @@ namespace TestingSystem.AcceptanceTests
         //sad
         public void UnmatchUsernameAndPasswordTest()
         {
-            Register(validUsernames[1], passwords[1]);
-            Register(validUsernames[2], passwords[2]);
-            Assert.IsFalse(Login(validUsernames[1], passwords[2]).Item1, Login(validUsernames[1], passwords[2]).Item2);
+            for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE - 1; i++)
+            {
+                Assert.IsFalse(Login(validUsernames[i], passwords[i+1]).Item1, Login(validUsernames[i], passwords[i+1]).Item2);
+            }
+        }
 
+        [TestMethod]
+        //sad
+        public void LoginTwiceTest() //fixed from version 1
+        {
             for (int i = 0; i < UserGenerator.FIXED_USERNAMES_SIZE; i++)
             {
-                Register(validUsernames[i], passwords[i]);
                 Assert.IsTrue(Login(validUsernames[i], passwords[i]).Item1, Login(validUsernames[i], passwords[i]).Item2);
+                Assert.IsFalse(Login(validUsernames[i], passwords[i]).Item1, Login(validUsernames[i], passwords[i]).Item2);
             }
         }
 
