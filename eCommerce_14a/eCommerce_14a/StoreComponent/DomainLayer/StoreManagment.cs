@@ -48,13 +48,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser,this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -74,13 +74,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -96,13 +96,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -116,13 +116,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -135,7 +135,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Dictionary<string, object>();
             }
 
@@ -151,13 +151,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -172,13 +172,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
@@ -229,8 +229,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<int, string>(-1, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<int, string>(-1, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             nextStoreId += 1;
@@ -247,7 +247,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (!ownershipAdded.Item1)
             {
                 nextStoreId -= 1;
-                Logger.logError(ownershipAdded.Item2, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownershipAdded.Item2);
                 return new Tuple<int, string>(-1, ownershipAdded.Item2);
             }
             else
@@ -267,34 +267,34 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.nullUser, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nullUser);
             }
 
             if (!stores.ContainsKey(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
 
             if (!isMainOwner(user, storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.notMainOwnerErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.notMainOwnerErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.notMainOwnerErrMessage);
             }
 
 
             if (!user.isStoreOwner(storeId))
             {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.notStoreOwnerErrMessage + "- user: " + userName + " store id:" + storeId.ToString(), this, System.Reflection.MethodBase.GetCurrentMethod() );
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.notStoreOwnerErrMessage + "- user: " + userName + " store id:" + storeId.ToString());
                 return new Tuple<bool, string>(false, "user" + userName + " not store owner of " + storeId.ToString());
             }
 
             Tuple<bool, string> ownerShipedRemoved = userManager.removeAllFromStore(storeId);
             if (!ownerShipedRemoved.Item1)
             {
-                Logger.logError(ownerShipedRemoved.Item2, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownerShipedRemoved.Item2);
                 return ownerShipedRemoved;
             }
 

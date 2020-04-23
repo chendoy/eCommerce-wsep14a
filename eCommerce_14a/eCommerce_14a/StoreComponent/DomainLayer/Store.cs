@@ -53,7 +53,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!owners.Contains(user) && !managers.Contains(user))
             {
-                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg + " user: " + user.getUserName().ToString() + "store: " + this.Id, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg + " user: " + user.getUserName().ToString() + "store: " + this.Id);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
@@ -61,7 +61,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
-                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }
@@ -75,7 +75,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!owners.Contains(user) && !managers.Contains(user))
             {
-                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
@@ -83,7 +83,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
-                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }
@@ -97,7 +97,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!owners.Contains(user))
             {
-                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
@@ -105,7 +105,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 if(owners.Count == 0)
                 {
-                    Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 }
             }
@@ -119,7 +119,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!owners.Contains(user) && !managers.Contains(user))
             {
-                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
@@ -127,7 +127,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
-                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }
@@ -141,7 +141,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!owners.Contains(user) && !managers.Contains(user))
             {
-                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
@@ -149,7 +149,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
-                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
 
                 }
@@ -166,7 +166,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!owners.Contains(user) && !managers.Contains(user))
             {
-                Logger.logError(CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
@@ -174,7 +174,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
-                    Logger.logError(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
+                   
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }

@@ -33,7 +33,7 @@ namespace eCommerce_14a
 
         }
 
-        public static Boolean logEvent(object classObj, MethodBase mb)
+        public static Boolean logEvent(object classObj, MethodBase mb, String msg="")
         {
             if (eventLogger == null)
             {
@@ -42,7 +42,10 @@ namespace eCommerce_14a
             }
             else
             {
-                eventLogger.Info("Function '" + getMethodName(mb) + "' was called within " + getClassName(classObj) + ".cs" + " with args: [" + argsPrettify(mb, false) + "]");
+                if(msg.Equals(""))
+                    eventLogger.Info("Function '" + getMethodName(mb) + "' was called within " + getClassName(classObj) + ".cs" + " with args: [" + argsPrettify(mb, false) + "]");
+                else
+                    eventLogger.Info("[" + getClassName(classObj) + "." + getMethodName(mb) + "]" + " - " + msg);
                 return true;
             }
 
