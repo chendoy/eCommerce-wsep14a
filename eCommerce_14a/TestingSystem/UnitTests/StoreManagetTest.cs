@@ -41,7 +41,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string>  appendRes = appendProductDriver(1, "shimon", 1, "f", 100.0, "CoffeMachine", CommonStr.ProductCategoty.CoffeMachine, 10);
             if (appendRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, appendRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, appendRes.Item2);
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> appendRes = appendProductDriver(3, "yosef", 1, "f", 100.0, "CoffeMachine", CommonStr.ProductCategoty.CoffeMachine, 10);
             if (appendRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, appendRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, appendRes.Item2);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> removeRes = removeProductDriver(1, "yosi", 1); 
             if (removeRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, removeRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, removeRes.Item2);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> removeRes = removeProductDriver(3, "yosef", 1);
             if (removeRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, removeRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, removeRes.Item2);
         }
 
         [TestMethod]
@@ -130,7 +130,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> updateRes = storeManagment.UpdateProduct("shimon", 1, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty);
             if (updateRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, updateRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, updateRes.Item2);
         }
 
         [TestMethod]
@@ -140,7 +140,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> updateRes = storeManagment.UpdateProduct("yosef", 3, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty);
             if (updateRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, updateRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, updateRes.Item2);
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> addRes = addProductAmountDriver(1, "kuki", 1, 100);
             if (addRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, addRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, addRes.Item2);
         }
 
         [TestMethod]
@@ -186,7 +186,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> addRes = addProductAmountDriver(3, "yosef", 1, 100);
             if (addRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, addRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, addRes.Item2);
         }
 
         [TestMethod]
@@ -220,7 +220,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(1, "shimon", 1, 1);
             if (decraseRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, decraseRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, decraseRes.Item2);
         }
 
 
@@ -231,7 +231,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(3, "yosef", 1, 1);
             if (decraseRes.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, decraseRes.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, decraseRes.Item2);
         }
 
         [TestMethod]
@@ -287,7 +287,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> statusChanged = changeStoreStatusDriver("shimon", 1, true);
             if (statusChanged.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, statusChanged.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, statusChanged.Item2);
         }
 
 
@@ -298,7 +298,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             Tuple<bool, string> statusChanged = changeStoreStatusDriver("yosef", 3, true);
             if (statusChanged.Item1)
                 Assert.Fail();
-            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage, statusChanged.Item2);
+            Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, statusChanged.Item2);
         }
 
 
