@@ -1,0 +1,10 @@
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\log4net.config
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe.config
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.exe
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\eCommerce_14a.pdb
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\log4net.dll
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\bin\Debug\log4net.xml
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.csprojAssemblyReference.cache
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.csproj.CopyComplete
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.exe
+C:\Users\chend\Source\Repos\wsep_14a\eCommerce_14a\eCommerce_14a\obj\Debug\eCommerce_14a.pdb
