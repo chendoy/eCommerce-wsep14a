@@ -26,5 +26,22 @@ namespace Client.Service
             stores = JsonSerializer.Deserialize<List<Store>>(json);
             return stores;
         }
+
+        public Store GetStoreById(int storeId)
+        {
+            comm.SendRequest("GetStoreById");
+            List<Store> stores = (List<Store>)comm.Get();
+            string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
+            stores = JsonSerializer.Deserialize<List<Store>>(json);
+            foreach (Store store in stores)
+            {
+                if (store.StoreId == storeId)
+                {
+                    return store;
+                }
+            }
+
+            return null;
+        }
     }
 }
