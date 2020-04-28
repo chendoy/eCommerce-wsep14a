@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Client.Data;
+using Client.Service;
 
 namespace Client
 {
@@ -29,6 +30,8 @@ namespace Client
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<ECommerce14AService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
