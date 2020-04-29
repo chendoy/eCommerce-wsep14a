@@ -16,7 +16,6 @@ using Microsoft.Extensions.Hosting;
 using Client.Areas.Identity;
 using Client.Data;
 using Client.Service;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Client
 {

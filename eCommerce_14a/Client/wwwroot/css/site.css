@@ -133,18 +133,34 @@ app {
     border-left: 1px solid gray;
     height: 400px;
     margin-top: 50px;
-    margin-left: 150px;
-    margin-right: 150px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 .login-frame {
-    margin-left: 250px;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 10px;
+    width: 80%;
+    text-align: center;
+}
+
+.register-frame {
+    margin-left: 200px;
     margin-right: 200px;
 }
 
 .register-btn {
     margin-top: 6px;
     margin-left: 18px;
+}
+
+.register-form-btn {
+    margin-left: 50px;
 }
 
 #blazor-error-ui .dismiss {

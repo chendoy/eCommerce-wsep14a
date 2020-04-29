@@ -1,28 +1,26 @@
-﻿@page "/login"
+﻿@page "/register"
 @using Data;
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Service.ECommerce14AService service
 
 
-<div class="login-frame">
-    <div class="col-12 row">
-        <p>&nbsp;</p>
+<div class="register-frame">
+    <div class="col-12">
     </div>
     <div class="col-12 row">
         <div>
-            <br /><br /><br />
-            <img src="/resources/logo.png" height="300" width="300" alt="cart">
+            <br /><br /><br /><br /><br />
+            <img src="/resources/register.png" height="267" width="232" alt="register">
         </div>
 
         <div class="vertical-line"></div>
 
-        <EditForm Model="@user" OnValidSubmit="@ValidateUser">
+        <EditForm Model="@user" OnValidSubmit="@RegisterUser">
             <div>
                 <br /><br /><br /><br /><br />
             </div>
             <div>
-                <h3 style="font-weight:bold; color:purple">eCommerce 14A</h3>
+                <h3 style="font-weight:bold; color:purple">Please tell us who you are</h3>
             </div>
             <div>
                 <br />
@@ -36,13 +34,16 @@
             </div>
             <br />
             <div class="col-12 row">
-                <span class="col-12"></span>
-                <input type="submit" class="form-control col-6 btn btn-primary" value="Login" />
-                <a href="/register" class="register-btn">Register</a>
+                <input type="password" class="form-control col-12" @bind="user.Password" placeholder="confirm password" />
             </div>
             <br />
-            <div class="col-12 row" style="text-align:left; font-weight:bold">
-                <span class="col-12">@LoginMesssage</span>
+            <div class="col-12 row">
+                <span class="col-12"></span>
+                <input type="submit" class="register-form-btn form-control col-6 btn btn-primary" value="Register" />
+            </div>
+            <br />
+            <div class="col-12 row" style="text-align:center; font-weight:bold">
+                <span class="col-12">@RegisterMesssage</span>
             </div>
         </EditForm>
     </div>
@@ -53,16 +54,15 @@
 @code {
 
     public Client.Data.User user { get; set; }
-    public string LoginMesssage { get; set; }
+    public string RegisterMesssage { get; set; }
 
     protected override void OnInitialized()
     {
         user = new Data.User();
     }
 
-    private async Task<User> ValidateUser()
+    private async Task<User> RegisterUser()
     {
-        ((MyAuthenticationStateProvider)AuthenticationStateProvider).TryAuthenticateUser(user.Username, user.Password);
         NavigationManager.NavigateTo("/");
         return await Task.FromResult(user);
     }
