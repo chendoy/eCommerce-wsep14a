@@ -129,6 +129,24 @@ app {
     z-index: 1000;
 }
 
+.vertical-line {
+    border-left: 1px solid gray;
+    height: 400px;
+    margin-top: 50px;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+.login-frame {
+    margin-left: 250px;
+    margin-right: 200px;
+}
+
+.register-btn {
+    margin-top: 6px;
+    margin-left: 18px;
+}
+
 #blazor-error-ui .dismiss {
     cursor: pointer;
     position: absolute;
@@ -180,21 +198,4 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
-}
-    .vertical-line {
-        border-left: 1px solid gray;
-        height: 400px;
-        margin-top: 50px;
-        margin-left: 150px;
-        margin-right: 150px;
-    }
-
-    .login-frame {
-        margin-left: 250px;
-        margin-right: 200px;
-    }
-
-.register-btn {
-    margin-top: 6px;
-    margin-left: 18px;
 }
