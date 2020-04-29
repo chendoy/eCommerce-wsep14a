@@ -1,51 +1,53 @@
-﻿@page "/"
+﻿@page "/login"
+@using Data;
 @layout LoginLayout
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Service.ECommerce14AService service
 
 
-    
-    <div class="login-frame">
-        <div class="col-12 row">
-            <p>&nbsp;</p>
-        </div>
-        <div class="col-12 row">
-            <div>
-                <br /><br /><br />
-                <img src="/resources/logo.png" height="300" width="300" alt="cart">
-            </div>
-
-            <div class="vertical-line"></div>
-
-            <EditForm Model="@user">
-                <div>
-                    <br /><br /><br /><br /><br />
-                </div>
-                <div>
-                    <h3 style="font-weight:bold; color:purple">eCommerce 14A</h3>
-                </div>
-                <div>
-                    <br />
-                </div>
-                <div class="col-12 row">
-                    <input class="form-control col-12" @bind="user.Username" placeholder="Username" />
-                </div>
-                <br />
-                <div class="col-12 row">
-                    <input type="password" class="form-control col-12" @bind="user.Password" placeholder="password" />
-                </div>
-                <br />
-                <div class="col-12 row">
-                    <span class="col-12"></span>
-                    <input type="submit" class="form-control col-6 btn btn-primary" value="Login" />
-                    <a href="/register" class="register-btn">Register</a>
-                </div>
-                <br />
-                <div class="col-12 row" style="text-align:left; font-weight:bold">
-                    <span class="col-12">@LoginMesssage</span>
-                </div>
-            </EditForm>
-        </div>
+<div class="login-frame">
+    <div class="col-12 row">
+        <p>&nbsp;</p>
     </div>
+    <div class="col-12 row">
+        <div>
+            <br /><br /><br />
+            <img src="/resources/logo.png" height="300" width="300" alt="cart">
+        </div>
+
+        <div class="vertical-line"></div>
+
+        <EditForm Model="@user" OnValidSubmit="@ValidateUser">
+            <div>
+                <br /><br /><br /><br /><br />
+            </div>
+            <div>
+                <h3 style="font-weight:bold; color:purple">eCommerce 14A</h3>
+            </div>
+            <div>
+                <br />
+            </div>
+            <div class="col-12 row">
+                <input class="form-control col-12" @bind="user.Username" placeholder="Username" />
+            </div>
+            <br />
+            <div class="col-12 row">
+                <input type="password" class="form-control col-12" @bind="user.Password" placeholder="password" />
+            </div>
+            <br />
+            <div class="col-12 row">
+                <span class="col-12"></span>
+                <input type="submit" class="form-control col-6 btn btn-primary" value="Login" />
+                <a href="/register" class="register-btn">Register</a>
+            </div>
+            <br />
+            <div class="col-12 row" style="text-align:left; font-weight:bold">
+                <span class="col-12">@LoginMesssage</span>
+            </div>
+        </EditForm>
+    </div>
+</div>
 
 
 
@@ -57,6 +59,13 @@
     protected override void OnInitialized()
     {
         user = new Data.User();
+    }
+
+    private async Task<User> ValidateUser()
+    {
+        ((MyAuthenticationStateProvider)AuthenticationStateProvider).TryAuthenticateUser(user.Username, user.Password);
+        NavigationManager.NavigateTo("/");
+        return await Task.FromResult(user);
     }
 
 }
