@@ -8,9 +8,9 @@ namespace Client.Data
 {
     public class User
     {
-        [Required(ErrorMessage = "Username is required")]
+        //[Required(ErrorMessage = "Username is required")]
         public string Username { get; set; }
-        [Required(ErrorMessage = "Password is required")]
+        //[Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
         public User()

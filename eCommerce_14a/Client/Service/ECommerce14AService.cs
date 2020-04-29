@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Client.Service
 {
@@ -42,6 +43,22 @@ namespace Client.Service
             }
 
             return null;
+        }
+
+        public User ValidateUser(string username, string password)
+        {
+            comm.SendRequest("ValidateUser");
+            List<User> users = (List<User>)comm.Get();
+            string json = System.IO.File.ReadAllText("wwwroot/resources/users.json");
+            users = JsonSerializer.Deserialize<List<User>>(json);
+            foreach(User user in users)
+            {
+                if (user.Username == username && user.Password == password)
+                    return user;
+            }
+
+            return null;
+            
         }
     }
 }

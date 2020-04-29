@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Client.Areas.Identity;
 using Client.Data;
 using Client.Service;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Client
 {
@@ -42,6 +43,7 @@ namespace Client
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<ECommerce14AService>();
+            services.AddScoped<AuthenticationStateProvider, MyAuthenticationStateProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
