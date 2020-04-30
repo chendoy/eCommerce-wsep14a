@@ -5,7 +5,7 @@
 ## chen:
 
 - login/register with server instead of locally
-- display message on faield login
+- display message on failed login
 - add hover tooltips
 
 
