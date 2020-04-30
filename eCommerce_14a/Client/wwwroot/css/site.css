@@ -138,8 +138,8 @@ app {
 }
 
 .login-frame {
-    margin-left: 200px;
-    margin-right: 200px;
+    margin: auto;
+    width: 80%;
 }
 
 .footer {
@@ -150,8 +150,8 @@ app {
 }
 
 .register-frame {
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 160px;
+    margin-right: 100px;
 }
 
 .register-btn {
