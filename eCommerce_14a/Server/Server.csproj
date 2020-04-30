@@ -37,6 +37,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserComponent\Communication\Message.cs" />
+    <Compile Include="UserComponent\Communication\Publisher.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />

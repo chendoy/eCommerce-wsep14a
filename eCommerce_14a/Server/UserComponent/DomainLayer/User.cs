@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using eCommerce_14a.UserComponent;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -17,6 +19,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         private bool isGuest;
         private bool isAdmin, isLoggedIn;
         private Dictionary<int, Store> Store_Ownership;
+        private LinkedList<Message> unreadMessages;
         private Dictionary<int, Store> Store_Managment;
         private Dictionary<int, int[]> Store_options;
         //Contains the list of who appointed you to which store! not who you appointed to which store!
@@ -36,6 +39,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
+            unreadMessages = new LinkedList<Message>();
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
         }
@@ -105,6 +109,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store_Ownership.Add(store.getStoreId(), store);
             return new Tuple<bool, string>(true, "");
         }
+        //Version 2 changes
+        public void AddMessage(Message notification)
+        {
+            this.unreadMessages.AddLast(notification);
+        }
+
         //Add a user to be store Manager
         public Tuple<bool, string> addStoreManagment(Store store)
         {
