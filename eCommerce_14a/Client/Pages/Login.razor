@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Service.ECommerce14AService service
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 
 <div class="login-frame">
@@ -15,7 +16,7 @@
             <img src="/resources/logo.png" height="300" width="300" alt="cart">
         </div>
 
-        <div class="vertical-line" ></div>
+        <div class="vertical-line"></div>
 
         <EditForm Model="@user" OnValidSubmit="@ValidateUser">
             <div>
@@ -57,14 +58,29 @@
 
     protected override void OnInitialized()
     {
-        user = new Data.User();
+        user = new User();
     }
 
-    private async Task<User> ValidateUser()
+    private async Task<bool> ValidateUser()
     {
-        ((MyAuthenticationStateProvider)AuthenticationStateProvider).TryAuthenticateUser(user.Username, user.Password);
-        NavigationManager.NavigateTo("/");
-        return await Task.FromResult(user);
+        var returnedUser = await service.Login(user);
+
+        if (returnedUser.Username != "null")
+        {
+            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(returnedUser);
+            NavigationManager.NavigateTo("/");
+
+            //store user's session
+            await sessionStorage.SetItemAsync("user", returnedUser);
+        }
+        else
+        {
+            LoginMesssage = "Invalid username and/or password";
+        }
+
+        return await Task.FromResult(true);
+
+
     }
 
 }

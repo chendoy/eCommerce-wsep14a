@@ -5,45 +5,63 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Client.Service;
+using Client.Data;
+using Blazored.SessionStorage;
 
 namespace Client.Data
 {
     public class MyAuthenticationStateProvider : AuthenticationStateProvider
     {
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
+        private ISessionStorageService _sessionStorageService;
+
+        public MyAuthenticationStateProvider(ISessionStorageService sessionStorageService)
         {
-            /*    var identity = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Name, "guest"),
-                }, "guest");*/
-
-            var identity = new ClaimsIdentity();
-
-            var user = new ClaimsPrincipal(identity);
-
-            return Task.FromResult(new AuthenticationState(user));
+            _sessionStorageService = sessionStorageService;
         }
-
-        public bool TryAuthenticateUser(string username, string password)
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            ECommerce14AService service = new ECommerce14AService();
-            User user = service.ValidateUser(username, password);
+            var user = await _sessionStorageService.GetItemAsync<User>("user");
+            ClaimsIdentity identity;
 
             if (user != null)
             {
+                identity = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Roles[0])
+                }, "apiauth_type");
+            }
+            else
+            {
+                identity = new ClaimsIdentity();
+            }
+            
+            var userAuth = new ClaimsPrincipal(identity);
+            return await Task.FromResult(new AuthenticationState(userAuth));
+        }
+
+        public bool MarkUserAsAuthenticateUser(User user)
+        {
+
                 var identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Roles[0])
                 }, "apiauth_type");
 
                 var userClaim = new ClaimsPrincipal(identity);
 
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
                 return true;
-            }
+            
+        }
 
-            else
-                return false;
+        public void  MarkUserAsLoggedOut()
+        {
+            _sessionStorageService.RemoveItemAsync("user");
+            var identity = new ClaimsIdentity();
+            var user = new ClaimsPrincipal(identity);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
     }
 }

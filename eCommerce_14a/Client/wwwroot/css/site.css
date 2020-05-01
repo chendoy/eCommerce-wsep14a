@@ -70,6 +70,14 @@ app {
         padding-bottom: 0.5rem;
     }
 
+.nav-role {
+    width: 3rem;
+    font-size: 1.1rem;
+    text-align: center;
+    color: white;
+}
+
+
         .sidebar .nav-item:first-of-type {
             padding-top: 1rem;
         }
@@ -113,7 +121,7 @@ app {
     outline: 1px solid red;
 }
 
-.validation-message {
+.validaton-message {
     color: red;
 }
 

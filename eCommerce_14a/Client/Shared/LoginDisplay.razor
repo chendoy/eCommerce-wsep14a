@@ -1,12 +1,21 @@
-﻿<AuthorizeView>
+﻿@using Client.Data
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView>
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
-        <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
-        </form>
+            <button  class="nav-link btn btn-link" @onclick="(()=>Logout())">Log out</button>
     </Authorized>
     <NotAuthorized>
         <a href="register">Register</a>
         <a href="login">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
+
+
+@code {
+    public void Logout()
+    {
+        ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+    }
+}

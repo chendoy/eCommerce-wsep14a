@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Client.Areas.Identity;
 using Client.Data;
 using Client.Service;
+using Blazored.SessionStorage;
 
 namespace Client
 {
@@ -40,9 +41,9 @@ namespace Client
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            services.AddSingleton<WeatherForecastService>();
             services.AddScoped<ECommerce14AService>();
             services.AddScoped<AuthenticationStateProvider, MyAuthenticationStateProvider>();
+            services.AddBlazoredSessionStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

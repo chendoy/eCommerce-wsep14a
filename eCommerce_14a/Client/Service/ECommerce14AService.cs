@@ -45,8 +45,11 @@ namespace Client.Service
             return null;
         }
 
-        public User ValidateUser(string username, string password)
+        async public Task<User> Login(User _user)
         {
+            string username = _user.Username;
+            string password = _user.Password;
+
             comm.SendRequest("ValidateUser");
             List<User> users = (List<User>)comm.Get();
             string json = System.IO.File.ReadAllText("wwwroot/resources/users.json");
@@ -54,10 +57,10 @@ namespace Client.Service
             foreach(User user in users)
             {
                 if (user.Username == username && user.Password == password)
-                    return user;
+                    return await Task.FromResult(user);
             }
 
-            return null;
+            return await Task.FromResult(new User("null", "null", new[]{""}));
             
         }
     }
