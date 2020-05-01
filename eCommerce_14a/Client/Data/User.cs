@@ -31,6 +31,11 @@ namespace Client.Data
             this.Username = "";
             this.Password = "";
         }
+
+        public static implicit operator string(User v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

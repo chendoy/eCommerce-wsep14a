@@ -12,7 +12,7 @@
     {
         "Username": "chendoy",
         "Password": "chendoy",
-        "Roles": [ "owner", "regular" ]
+        "Roles": [ "owner", "regular", "admin" ]
     },
     {
         "Username": "brucewayne11",
