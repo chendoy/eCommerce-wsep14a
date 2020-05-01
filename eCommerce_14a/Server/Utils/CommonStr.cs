@@ -18,14 +18,22 @@
             public static string StoreId = "SearchByStioreId";
         }
 
-        public static class DiscountPreCondtion
+        public static class PuarchseBasketConditions
         {
-            public static int BasketPriceOver100 = 1;
-            public static int BasketPriceOver200 = 2;
-            public static int BasketPriceOver300 = 3;
-            public static int BasketPriceOver400 = 4;
+            public static int Above100 = 1;
+            public static int Above200 = 2;
+            public static int Above300 = 3;
+            public static int Above400 = 4;
         }
 
+
+        public static class ProductsConditions
+        {
+            public static int Above100 = 1;
+            public static int Above200 = 2;
+            public static int Above300 = 3;
+            public static int Above400 = 4;
+        }
         public static class StoreParams
         {
             public static string StoreId = "StoreId";

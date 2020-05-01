@@ -44,7 +44,7 @@
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
     <Compile Include="UserComponent\DomainLayer\DeliveryHandler.cs" />
-    <Compile Include="StoreComponent\DomainLayer\DiscountRule.cs" />
+    <Compile Include="StoreComponent\DomainLayer\DiscountPolicy.cs" />
     <Compile Include="UserComponent\DomainLayer\eSystem.cs" />
     <Compile Include="StoreComponent\DomainLayer\Inventory.cs" />
     <Compile Include="UserComponent\DomainLayer\PaymentHandler.cs" />

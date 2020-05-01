@@ -11,7 +11,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     /// <testclass cref ="TestingSystem.UnitTests.StoreTest/>
     public class Store
     {
-        private DiscountRule discountPolicy;
+        private DiscountPolicy discountPolicy;
         private PurchasePolicy puarchsePolicy;
         private Inventory inventory;
         private int rank;
@@ -36,7 +36,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (store_params.ContainsKey(CommonStr.StoreParams.StoreInventory))
                 this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
       
-            this.discountPolicy = (DiscountRule)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
+            this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
             this.puarchsePolicy = (PurchasePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
             this.activeStore = true;
 
@@ -286,7 +286,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             set { inventory = value; }
         }
 
-        public DiscountRule DiscountPolicy
+        public DiscountPolicy DiscountPolicy
         {
             get { return discountPolicy; }
             set { discountPolicy = value; }

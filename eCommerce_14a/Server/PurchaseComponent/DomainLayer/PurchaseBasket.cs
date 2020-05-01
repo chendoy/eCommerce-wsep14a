@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 
@@ -119,6 +120,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return products.Keys.Count;
         }
 
+        public double GetBasketPrice()
+        {
+            return store.getBasketPrice(products);
+        }
+
+        public Dictionary<int, int> Products
+        {
+            get { return products; }
+        }
         internal void RestoreItemsToStore()
         {
             foreach (var product in products.Keys)

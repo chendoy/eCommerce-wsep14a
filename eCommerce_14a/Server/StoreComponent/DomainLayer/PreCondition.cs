@@ -39,20 +39,8 @@ namespace Server.StoreComponent.DomainLayer
             return false;
         }
 
-
     }
 
-    public class ProductPreCondition : PreCondition
-    {
-        public ProductPreCondition(int preCondNumber, PreConditionValidator validator) : base(preCondNumber, validator)
-        {
-        }
-
-        public override bool IsFulfilled(Product p)
-        {
-            return base.Validator.ProductsValidiator[base.PreCondNumber].Invoke(p);
-        }
-    }
 
     public class BasketPreCondition : PreCondition
     {
@@ -65,6 +53,10 @@ namespace Server.StoreComponent.DomainLayer
             return base.Validator.BasketsValidator[base.PreCondNumber].Invoke(basket);
         }
     }
+
+ 
+
+
 
 
 }
