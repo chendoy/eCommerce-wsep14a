@@ -10,11 +10,6 @@ using System.Globalization;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
-    enum MergeTypes : int
-    {
-        XOR = 0,
-        AND = 1
-    }
     public interface DiscountPolicy
     {
         double CalcDiscount(PurchaseBasket basket);
@@ -24,22 +19,25 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     {
         private List<DiscountPolicy> children;
         int mergeType;
-        public CompundDiscount(int mergeType)
+        public CompundDiscount(int mergeType, List<DiscountPolicy> children)
         {
-            List<DiscountPolicy> children = new List<DiscountPolicy>();
+            if (children == null)
+                this.children = new List<DiscountPolicy>();
+            else
+                this.children = children;
             this.mergeType = mergeType;
         }
 
         public double CalcDiscount(PurchaseBasket basket)
         {
-            if (mergeType == (int)MergeTypes.AND)
+            if (mergeType == CommonStr.DiscountMergeTypes.AND)
             {
                 double sum_discounts = 0;
                 foreach (DiscountPolicy child in children)
                     sum_discounts += child.CalcDiscount(basket);
                 return sum_discounts;
             } 
-            else if (mergeType == (int)MergeTypes.XOR)
+            else if (mergeType == CommonStr.DiscountMergeTypes.XOR)
             {
                 double maxDiscount = 0;
                 foreach(DiscountPolicy child in children)
@@ -110,19 +108,20 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
  
     public class ConditionalProductDiscount : ConditionalDiscount
     {
-        Product discountProdut;
-        public ConditionalProductDiscount(PreCondition preCondition, double discount, Product discountProdut) : base(preCondition, discount)
+        int discountProdutId;
+        public ConditionalProductDiscount(int discountProdutId, PreCondition preCondition, double discount) : base(preCondition, discount)
         {
-            this.discountProdut = discountProdut;
+            this.discountProdutId = discountProdutId;
         }
 
         public override double CalcDiscount(PurchaseBasket basket)
         {
             double reduction = 0;
-            if (base.preConditon.IsFulfilled(basket))
+            if (base.preConditon.IsFulfilled(basket, discountProdutId))
             {
-                int numProducts = basket.Products[discountProdut.ProductID];
-                reduction = numProducts * ((Discount / 100) * discountProdut.Price);
+                int numProducts = basket.Products[discountProdutId];
+                double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
+                reduction = numProducts * ((Discount / 100) * price);
             }
             return reduction;
         }
@@ -136,7 +135,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override double CalcDiscount(PurchaseBasket basket)
         {
-            if (base.preConditon.IsFulfilled(basket))
+            if (base.preConditon.IsFulfilled(basket, -1))
                 return (Discount / 100) * basket.GetBasketPrice();
             return 0;
         }
@@ -148,20 +147,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class RevealdDiscount : DiscountPolicy
     {
         private double discount;
-        private Product discountProdut;
-        public RevealdDiscount(Product discountProdut, double discount)
+        private int discountProdutId;
+        public RevealdDiscount(int discountProductId, double discount)
         {
-            this.discountProdut = discountProdut;
+            this.discountProdutId = discountProductId;
             this.discount = discount;
         }
 
         public double CalcDiscount(PurchaseBasket basket)
         {
             double reduction = 0;
-            if (basket.Products.ContainsKey(discountProdut.ProductID))
+            if (basket.Products.ContainsKey(discountProdutId))
             {
-                int numProducts = basket.Products[discountProdut.ProductID];
-                reduction = numProducts * ((discount/100) * discountProdut.Price);
+                int numProducts = basket.Products[discountProdutId];
+                double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
+                reduction = numProducts * ((discount/100) * price);
             }
             return reduction; ;
         }

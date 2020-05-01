@@ -8,51 +8,27 @@ using System.Threading.Tasks;
 
 namespace Server.StoreComponent.DomainLayer
 {
-    public abstract class PreCondition
+    public  class PreCondition
     {
         int preCondNumber;
-        PreConditionValidator validator;
-        public PreCondition(int num, PreConditionValidator validator)
+        Validator validator;
+        public PreCondition(int num, Validator validator)
         {
             this.preCondNumber = num;
             this.validator = validator;
         }
 
-        public int PreCondNumber
+        public  bool IsFulfilled(PurchaseBasket basket, int productId)
         {
-            get { return preCondNumber; }
-        }
-        public PreConditionValidator Validator
-        {
-            get { return validator; }
-        }
-
-        virtual
-        public bool IsFulfilled(Product p)
-        {
-            return false;
-        }
-
-        virtual
-        public bool IsFulfilled(PurchaseBasket basket)
-        {
-            return false;
+            return validator.DiscountValidatorFuncs[preCondNumber].Invoke(basket, productId);
         }
 
     }
 
 
-    public class BasketPreCondition : PreCondition
-    {
-        public BasketPreCondition(int preCondNumber, PreConditionValidator validator) : base(preCondNumber, validator)
-        {
-        }
 
-        public override bool IsFulfilled(PurchaseBasket basket)
-        {
-            return base.Validator.BasketsValidator[base.PreCondNumber].Invoke(basket);
-        }
-    }
+
+
 
  
 

@@ -120,6 +120,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return products.Keys.Count;
         }
 
+        public Store Store
+        {
+            get { return store; }
+        }
         public double GetBasketPrice()
         {
             return store.getBasketPrice(products);

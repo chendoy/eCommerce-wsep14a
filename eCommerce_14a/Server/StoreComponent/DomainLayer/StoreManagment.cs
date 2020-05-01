@@ -238,7 +238,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
             storeParam.Add(CommonStr.StoreParams.StoreId, nextStoreId);
             storeParam.Add(CommonStr.StoreParams.mainOwner, user);
-            storeParam.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(discountType));
+            storeParam.Add(CommonStr.StoreParams.StoreDiscountPolicy, null);
             storeParam.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PurchasePolicy(puarchseType));
             Store store = new Store(storeParam);
 

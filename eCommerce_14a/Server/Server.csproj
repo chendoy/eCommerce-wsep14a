@@ -37,9 +37,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StoreComponent\BasketPreCondition.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
-    <Compile Include="StoreComponent\DomainLayer\PreConditionValidator.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Validator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
