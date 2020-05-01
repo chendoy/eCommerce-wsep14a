@@ -3,6 +3,11 @@
 
 <div class="sidebar">
     <NavMenu />
+        <AuthorizeView>
+            <Authorized>
+            <div class="nav-mode"> Mode: @context.User.Claims.ToArray()[1].Value</div>
+            </Authorized>
+        </AuthorizeView>
 </div>
 
 <div class="main">

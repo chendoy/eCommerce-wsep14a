@@ -48,6 +48,9 @@ app {
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    position: relative;
+    text-align: center;
+    width: 100%;
 }
 
     .sidebar .top-row {
@@ -222,4 +225,15 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+.login-msg {
+    color: red;
+}
+
+
+.sidebar .nav-mode {
+    color: white;
+    position: absolute;
+    bottom: 10px;
 }

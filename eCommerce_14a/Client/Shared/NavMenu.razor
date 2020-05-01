@@ -1,4 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@using Client.Data;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">eCommerce 14A</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -20,11 +23,15 @@
                         <span class="oi oi-list-rich" aria-hidden="true"></span> Stores
                     </NavLink>
                 </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="MyAccount">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> My Account
+                    </NavLink>
+                </li>
             </ul>
-            <a class="nav-role" href="SwitchRole"> Mode: @context.User.Claims.ToArray()[1].Value</a>
         </div>
 
-        
+
     </Authorized>
 
 
@@ -46,8 +53,8 @@
 
 
 @code {
-    private bool collapseNavMenu = true;
 
+    private bool collapseNavMenu = true;
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
