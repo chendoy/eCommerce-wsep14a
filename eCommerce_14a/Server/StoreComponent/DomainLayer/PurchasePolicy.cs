@@ -1,10 +1,10 @@
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
-    public class PuarchsePolicy
+    public class PurchasePolicy
     {
         private int type;
         
-        public PuarchsePolicy(int type)
+        public PurchasePolicy(int type)
         {
             this.type = type;
         }

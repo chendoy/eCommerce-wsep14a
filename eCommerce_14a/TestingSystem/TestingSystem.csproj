@@ -91,6 +91,7 @@
     <Compile Include="RegressionTests\StubClass.cs" />
     <Compile Include="SystemTrackTest.cs" />
     <Compile Include="UnitTests\Appoitment_Test.cs" />
+    <Compile Include="UnitTests\DiscountPolicyTest.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
     <Compile Include="UnitTests\PurchaseManagementTest.cs" />
     <Compile Include="UnitTests\SearcherTest.cs" />
