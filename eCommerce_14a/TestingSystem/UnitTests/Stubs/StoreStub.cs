@@ -9,6 +9,17 @@ namespace TestingSystem.UnitTests.Stubs
 {
     public class StoreStub : Store
     {
+        public StoreStub(Dictionary<string, object> store_params) : base (store_params)
+        {
+
+        }
+
+       override
+       public double getBasketPrice(Dictionary<int, int> products)
+       {
+            return 500;
+       }
+       
 
     }
 }

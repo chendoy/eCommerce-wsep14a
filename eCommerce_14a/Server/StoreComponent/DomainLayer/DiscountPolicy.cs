@@ -73,7 +73,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     abstract
     public class ConditionalDiscount : DiscountPolicy
     {
-        private PreCondition preCondtion;
+        private  PreCondition preCondtion;
         private double discount;
         public ConditionalDiscount(PreCondition preCondtion, double discount)
         {
@@ -82,9 +82,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
        
-        public PreCondition preConditon
+        public PreCondition PreCondition
         {
-            get { return preConditon; }
+            get { return preCondtion; }
         }
 
         public double Discount
@@ -99,10 +99,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return 0;
         }
 
-        public PreCondition GetPreCondition()
-        {
-            return preConditon;
-        }
     }
 
  
@@ -117,7 +113,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public override double CalcDiscount(PurchaseBasket basket)
         {
             double reduction = 0;
-            if (base.preConditon.IsFulfilled(basket, discountProdutId))
+            if (PreCondition.IsFulfilled(basket, discountProdutId))
             {
                 int numProducts = basket.Products[discountProdutId];
                 double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
@@ -135,7 +131,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override double CalcDiscount(PurchaseBasket basket)
         {
-            if (base.preConditon.IsFulfilled(basket, -1))
+            if (PreCondition.IsFulfilled(basket, -1))
                 return (Discount / 100) * basket.GetBasketPrice();
             return 0;
         }

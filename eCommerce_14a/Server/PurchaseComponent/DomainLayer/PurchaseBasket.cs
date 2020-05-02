@@ -30,6 +30,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// This method Add/Change/Remove product from this basket
         /// <param name="exist">state if it should be already in the basket</param>
+        virtual
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

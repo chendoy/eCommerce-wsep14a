@@ -350,8 +350,8 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreId], validStore.Id);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolicy);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicy);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicies);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
         }

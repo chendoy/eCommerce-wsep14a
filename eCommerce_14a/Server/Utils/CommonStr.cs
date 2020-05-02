@@ -29,7 +29,7 @@
             public static int ProductPriceAbove200 = 2;
             public static int Above1Unit = 3;
             public static int Above2Units = 4;
-            public static int basketPriceAbove400 = 5;
+            public static int basketPriceAbove1000 = 5;
         }
         public static class StoreParams
         {

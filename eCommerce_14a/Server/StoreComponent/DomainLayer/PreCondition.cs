@@ -20,6 +20,9 @@ namespace Server.StoreComponent.DomainLayer
 
         public  bool IsFulfilled(PurchaseBasket basket, int productId)
         {
+            if (productId > 0)
+                if (!basket.Products.ContainsKey(productId))
+                    return false;
             return validator.DiscountValidatorFuncs[preCondNumber].Invoke(basket, productId);
         }
 
