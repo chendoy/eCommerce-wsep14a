@@ -23,6 +23,13 @@
             public static int XOR = 0;
             public static int AND = 1;
         }
+
+        public static class PurchaseMergeTypes
+        {
+            public static int XOR = 0;
+            public static int OR = 1;
+            public static int AND = 2;
+        }
         public static class PreConditions
         {
             public static int ProductPriceAbove100 = 1;
