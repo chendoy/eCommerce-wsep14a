@@ -118,7 +118,7 @@ namespace TestingSystem.UnitTests
             Assert.AreEqual(false, eligiblePurchase);
         }
 
-         [TestMethod]
+        [TestMethod]
         public void TestSimpleBySystem1_Valid()
         {
             cart.AddProduct(store, 1, 7, false);
@@ -128,158 +128,158 @@ namespace TestingSystem.UnitTests
             Assert.AreEqual(true, eligiblePurchase);
         }
 
-        [TestMethod]
-        public void TestSimpleBySystem1_InValid()
-        {
-            cart.AddProduct(store, 1, 7, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], store);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
-            Assert.AreEqual(false, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestSimpleBySystem1_InValid()
+        //{
+        //    cart.AddProduct(store, 1, 7, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], store);
+        //    bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(false, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundAnd1_Invalid()
-        {
-            // cant buy more than 10 prods and cant buy more than 1 of item 2
-            cart.AddProduct(store, 1, 7, false);
-            cart.AddProduct(store, 2, 2, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket= new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(false, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundAnd1_Invalid()
+        //{
+        //    // cant buy more than 10 prods and cant buy more than 1 of item 2
+        //    cart.AddProduct(store, 1, 7, false);
+        //    cart.AddProduct(store, 2, 2, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(false, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundAnd1_valid()
-        {
-            // cant buy more than 10 prods and cant buy more than 1 of item 2
-            cart.AddProduct(store, 1, 7, false);
-            cart.AddProduct(store, 2, 1, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(true, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundAnd1_valid()
+        //{
+        //    // cant buy more than 10 prods and cant buy more than 1 of item 2
+        //    cart.AddProduct(store, 1, 7, false);
+        //    cart.AddProduct(store, 2, 1, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(true, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundOr1_Valid()
-        {
-            // or max 10 prod or max 1 product of 1 type but not both must occur
-            cart.AddProduct(store, 1, 7, false);
-            cart.AddProduct(store, 2, 2, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(true, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundOr1_Valid()
+        //{
+        //    // or max 10 prod or max 1 product of 1 type but not both must occur
+        //    cart.AddProduct(store, 1, 7, false);
+        //    cart.AddProduct(store, 2, 2, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(true, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundOr1_InValid()
-        {
-            // or max 10 prod or max 1 product of 1 type but not both must occur
-            cart.AddProduct(store, 1, 9, false);
-            cart.AddProduct(store, 2, 2, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(false, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundOr1_InValid()
+        //{
+        //    // or max 10 prod or max 1 product of 1 type but not both must occur
+        //    cart.AddProduct(store, 1, 9, false);
+        //    cart.AddProduct(store, 2, 2, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(false, eligiblePurchase);
+        //}
 
 
-        [TestMethod]
-        public void TestCompundXor_Valid()
-        {
-            // or max 10 prod or max 1 product of 1 type but not both must occur
-            cart.AddProduct(store, 1, 10, false);
-            cart.AddProduct(store, 2, 1, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(true, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundXor_Valid()
+        //{
+        //    // or max 10 prod or max 1 product of 1 type but not both must occur
+        //    cart.AddProduct(store, 1, 10, false);
+        //    cart.AddProduct(store, 2, 1, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(true, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundXOr1_Valid1()
-        {
-            // or you buy 10 product at most or you buy 1 product of type at most , only one of them must occur!
-            cart.AddProduct(store, 1, 8, false);
-            cart.AddProduct(store, 2, 2, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(true, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundXOr1_Valid1()
+        //{
+        //    // or you buy 10 product at most or you buy 1 product of type at most , only one of them must occur!
+        //    cart.AddProduct(store, 1, 8, false);
+        //    cart.AddProduct(store, 2, 2, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(true, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundOr1_INvalid1()
-        {
-            // or you buy 10 product at most or you buy 1 product of type at most , only one of them must occur!
-            cart.AddProduct(store, 1, 10, false);
-            cart.AddProduct(store, 2, 2, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(false, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundOr1_INvalid1()
+        //{
+        //    // or you buy 10 product at most or you buy 1 product of type at most , only one of them must occur!
+        //    cart.AddProduct(store, 1, 10, false);
+        //    cart.AddProduct(store, 2, 2, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(false, eligiblePurchase);
+        //}
 
-        [TestMethod]
-        public void TestCompundOr1_InValid2()
-        {
-            // or you buy 10 product at most or you buy 1 product of type at most , only one of them must occur!
-            cart.AddProduct(store, 1, 3, false);
-            cart.AddProduct(store, 2, 1, false);
-            PurchaseBasket basket = cart.GetBasket(store);
-            store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
-            compund.add(purchaseplcMaxPerBasket);
-            compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
-            Assert.AreEqual(false, eligiblePurchase);
-        }
+        //[TestMethod]
+        //public void TestCompundOr1_InValid2()
+        //{
+        //    // or you buy 10 product at most or you buy 1 product of type at most , only one of them must occur!
+        //    cart.AddProduct(store, 1, 3, false);
+        //    cart.AddProduct(store, 2, 1, false);
+        //    PurchaseBasket basket = cart.GetBasket(store);
+        //    store.ActiveStore = false;
+        //    PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+        //    PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+        //    CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
+        //    compund.add(purchaseplcMaxPerBasket);
+        //    compund.add(purchaseplcMaxPerProduct);
+        //    bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+        //    Assert.AreEqual(false, eligiblePurchase);
+        //}
 
     }
 
-    
 
-    
+
+
 
 }
