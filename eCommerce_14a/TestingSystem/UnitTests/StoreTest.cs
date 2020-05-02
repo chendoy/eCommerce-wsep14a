@@ -409,7 +409,7 @@ namespace TestingSystem.UnitTests.StoreTest
             storeParams.Add(CommonStr.StoreParams.mainOwner, user);
             storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
             storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy,null);
-            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PurchasePolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, null);
             storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
             return s;

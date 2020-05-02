@@ -130,6 +130,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return store.getBasketPrice(products);
         }
 
+        public int GetNumProductsAtBasket()
+        {
+            int numProducts = 0;
+            foreach(KeyValuePair<int, int> entry in products)
+            {
+                numProducts += entry.Value;
+            }
+            return numProducts;
+        }
         public Dictionary<int, int> Products
         {
             get { return products; }

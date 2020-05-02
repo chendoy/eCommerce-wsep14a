@@ -5,10 +5,10 @@ using Server.StoreComponent.DomainLayer;
 using System.Collections.Generic;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
-{
+{  
     public interface PurchasePolicy
     {
-        bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store);
+        bool IsEligiblePurchase(PurchaseBasket basket);
     }
     public class CompundPurchasePolicy : PurchasePolicy
     {
@@ -24,19 +24,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store)
+        public bool IsEligiblePurchase(PurchaseBasket basket)
         {
             if (mergeType == CommonStr.PurchaseMergeTypes.AND)
             {
                 foreach (PurchasePolicy child in children)
-                    if (!child.IsEligiblePurchase(basket, productId, user, store))
+                    if (!child.IsEligiblePurchase(basket))
                         return false;
                 return true;
             }
             else if (mergeType == CommonStr.PurchaseMergeTypes.OR)
             {
                 foreach (PurchasePolicy child in children)
-                    if (child.IsEligiblePurchase(basket, productId, user, store))
+                    if (child.IsEligiblePurchase(basket))
                         return true;
                 return false;
             }
@@ -48,11 +48,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 if (children.Count > 2)
                     return false;
                 if (children.Count == 1)
-                    return children[0].IsEligiblePurchase(basket, productId, user, store);
+                    return children[0].IsEligiblePurchase(basket);
                 if(children.Count == 2)
                 {
-                    bool firstRes = children[0].IsEligiblePurchase(basket, productId, user, store);
-                    bool secondRes = children[1].IsEligiblePurchase(basket, productId, user, store);
+                    bool firstRes = children[0].IsEligiblePurchase(basket);
+                    bool secondRes = children[1].IsEligiblePurchase(basket);
                     return firstRes & !secondRes || secondRes & !firstRes;
                 }
                 return false;   
@@ -87,7 +87,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
         abstract
-        public bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store);
+        public bool IsEligiblePurchase(PurchaseBasket basket);
 
         public PreCondition PreCondition
         {
@@ -97,25 +97,27 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class ProductPurchasePolicy : SimplePurchasePolicy
     {
-        public ProductPurchasePolicy(PreCondition pre): base(pre)
+        int policyProductId;
+        public ProductPurchasePolicy(PreCondition pre, int policyProductId) : base(pre)
         {
-
+            this.policyProductId = policyProductId;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store)
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
         {
-            return PreCondition.IsFulfilled(basket, productId, null, null);
+            return PreCondition.IsFulfilled(basket, policyProductId, null, null);
         }
     }
 
     public class BasketPurchasePolicy : SimplePurchasePolicy
     {
+
         public BasketPurchasePolicy(PreCondition pre) : base(pre)
         {
 
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store)
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
         {
             return PreCondition.IsFulfilled(basket, -1, null, null);
         }
@@ -123,12 +125,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class SystemPurchasePolicy : SimplePurchasePolicy
     {
-        public SystemPurchasePolicy(PreCondition pre) : base(pre)
+        private Store store;
+        public SystemPurchasePolicy(PreCondition pre,Store store) : base(pre)
         {
-
+            this.store = store;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store)
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
         {
             return PreCondition.IsFulfilled(basket, -1, null, store);
         }
@@ -136,12 +139,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class UserPurchasePolicy : SimplePurchasePolicy
     {
-        public UserPurchasePolicy(PreCondition pre) : base(pre)
+        private User user;
+        public UserPurchasePolicy(PreCondition pre, User user) : base(pre)
         {
-
+            this.user = user;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, int productId, User user, Store store)
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
         {
             return PreCondition.IsFulfilled(basket, -1, user, null);
         }

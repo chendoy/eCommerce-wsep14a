@@ -94,6 +94,7 @@
     <Compile Include="UnitTests\DiscountPolicyTest.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
     <Compile Include="UnitTests\PurchaseManagementTest.cs" />
+    <Compile Include="UnitTests\PurchasePolicyTest.cs" />
     <Compile Include="UnitTests\SearcherTest.cs" />
     <Compile Include="UnitTests\StoreManagetTest.cs" />
     <Compile Include="UnitTests\StoreTest.cs" />
