@@ -50,14 +50,14 @@ namespace eCommerce_14a.Communication
                 Password = "GuyTheKing!",
             };
             wsServer.Setup(config1);
-            client.Options.UseDefaultCredentials = true;
+            //client.Options.UseDefaultCredentials = true;
             wsServer.NewSessionConnected += StartSession;
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
             wsServer.Start();
-            client.Options.AddSubProtocol("Tls");
-            client.ConnectAsync(new Uri("wss://localhost:443"), new CancellationToken());
+            //client.Options.AddSubProtocol("Tls");
+            //client.ConnectAsync(new Uri("wss://localhost:443"), new CancellationToken());
             Console.WriteLine("Server is running on port " + port + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
@@ -71,11 +71,11 @@ namespace eCommerce_14a.Communication
 
         private void StartSession(WebSocketSession session)
         {
-            UserData data = new UserData("blabla", "lala"); //init new user data
-            string json = handler.Seralize(data); // seralize this object into json string
-            byte[] arr = sec.Encrypt(json); // encrypt the string using aes algorithm and convert it to byte array
-            ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
-            client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server
+            //UserData data = new UserData("blabla", "lala"); //init new user data
+            //string json = handler.Seralize(data); // seralize this object into json string
+            //byte[] arr = sec.Encrypt(json); // encrypt the string using aes algorithm and convert it to byte array
+            //ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
+            //client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server
             Console.WriteLine("NewSessionConnected");
         }
 

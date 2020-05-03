@@ -50,7 +50,8 @@ namespace Client.Service
             string username = _user.Username;
             string password = _user.Password;
 
-            comm.SendRequest("ValidateUser");
+            comm.SendRequest(_user);
+            //comm.SendRequest("ValidateUser");
             List<User> users = (List<User>)comm.Get();
             string json = System.IO.File.ReadAllText("wwwroot/resources/users.json");
             users = JsonSerializer.Deserialize<List<User>>(json);
