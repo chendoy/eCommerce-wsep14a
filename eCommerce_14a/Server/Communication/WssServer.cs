@@ -45,10 +45,10 @@ namespace eCommerce_14a.Communication
             config1.Certificate = new CertificateConfig
             {
                 FilePath = Environment.CurrentDirectory + @"\cert.pfx",
-                //FilePath = @"\Communication\cert.pfx",
                 Password = "GuyTheKing!",
             };
             wsServer.Setup(config1);
+            client.Options.UseDefaultCredentials = true;
             wsServer.NewSessionConnected += StartSession;
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
@@ -110,19 +110,16 @@ namespace eCommerce_14a.Communication
         }
 
 
-        private void HandleMessage(WebSocketSession session, string msg)
+        private void HandleMessage(WebSocketSession session, byte[] msg)
         {
             byte[] response;
-            object opObj;
-            Dictionary<string, object> msgDict = handler.Deseralize(msg);
-            if (!msgDict.TryGetValue("Opcode", out opObj))
-                return;
-            int opcode = (int)opObj;
+            int opcode = handler.GetOpCode(msg);
+            Dictionary<string, object> msgDict = handler.GetDictFromMsg(msg);
 
             switch (opcode)
             {
                 case 0:
-                    StoreUsernameAndSession(session, msg);
+                    //StoreUsernameAndSession(session, msg);
                     break;
 
                 case 1:

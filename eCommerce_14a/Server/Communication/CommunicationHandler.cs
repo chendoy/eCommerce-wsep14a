@@ -45,6 +45,22 @@ namespace eCommerce_14a.Communication
             return dict;
         }
 
+        public Dictionary<string, object> GetDictFromMsg(byte[] msg)
+        {
+            string json = security.Decrypt(msg);
+            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            return dict;
+        }
+        public int GetOpCode(byte[] msg) 
+        {
+            object opcodeObj;
+            string dec = security.Decrypt(msg); // decrypt the msg and convert it into string
+            Dictionary<string, object> msgDict = Deseralize(dec); // desarilize the decrypted string and convert it into dict
+            if (!msgDict.TryGetValue("OpCode", out opcodeObj))
+                return -1;
+            return (int)opcodeObj;
+        }
+
         public byte[] HandleLogin(Dictionary<string, object> msgDict)
         {
             string username = extract.GetUsername(msgDict);
