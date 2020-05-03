@@ -13,6 +13,7 @@ using SuperWebSocket;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.Text;
+using System.IO;
 
 namespace eCommerce_14a.Communication
 {
@@ -38,13 +39,14 @@ namespace eCommerce_14a.Communication
 
         private void InitServer()
         {
+            Console.WriteLine(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName);
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
             config1.Security = "Tls";
             config1.Certificate = new CertificateConfig
             {
-                FilePath = Environment.CurrentDirectory + @"\cert.pfx",
+                FilePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Communication\cert.pfx",
                 Password = "GuyTheKing!",
             };
             wsServer.Setup(config1);
