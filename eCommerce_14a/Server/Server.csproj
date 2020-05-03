@@ -37,6 +37,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\CommunicationHandler.cs" />
+    <Compile Include="Communication\InfoExtractor.cs" />
+    <Compile Include="Communication\NetworkSecurity.cs" />
+    <Compile Include="Communication\ResponseData.cs" />
+    <Compile Include="Communication\UserData.cs" />
+    <Compile Include="Communication\WssServer.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
