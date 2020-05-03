@@ -3,26 +3,23 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.ServiceLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
-using SuperSocket.SocketBase;
-using SuperSocket.SocketBase.Config;
-using SuperWebSocket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
-using System.Security.Authentication;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using SuperSocket.SocketEngine.Configuration;
 using CertificateConfig = SuperSocket.SocketBase.Config.CertificateConfig;
+using SuperWebSocket;
+using SuperSocket.SocketBase.Config;
+using SuperSocket.SocketBase;
+using System.Text;
 
 namespace eCommerce_14a.Communication
 {
-    class WssServer
+    public class WssServer
     {
+
+
         public CommunicationHandler handler;
         private static WebSocketServer wsServer;
         private ClientWebSocket client;
@@ -39,66 +36,72 @@ namespace eCommerce_14a.Communication
             wsServer = new WebSocketServer();
         }
 
-        private void InitServer() {
+        private void InitServer()
+        {
             port = 443;
-            //var config1 = new ServerConfig();
-            //config1.Port = port;
-            //config1.Security = "Tls";
-            //config1.Certificate = new CertificateConfig
-            //{
-            //    FilePath = @"D:\certificate\cert.pfx",
-            //    Password = "GuyTheKing!",
-            //    //StoreName = StoreName.My.ToString()
-            //};
-
-            //wsServer.Setup(config1);
-            wsServer.Setup(port);
+            var config1 = new ServerConfig();
+            config1.Port = port;
+            config1.Security = "Tls";
+            config1.Certificate = new CertificateConfig
+            {
+                FilePath = Environment.CurrentDirectory + @"\cert.pfx",
+                Password = "GuyTheKing!",
+            };
+            wsServer.Setup(config1);
+            client.Options.UseDefaultCredentials = true;
             wsServer.NewSessionConnected += StartSession;
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
             wsServer.Start();
-            //X509Certificate certificate = new X509Certificate(@"D:\certificate\OutputCert.cer", "GuyTheKing!");
-            //client.Options.ClientCertificates.Add(certificate);
-            //client.Options.AddSubProtocol("Tls");
-            //client.ConnectAsync(new Uri("ws://192.168.1.42:443"), new CancellationToken());
-            Console.WriteLine(client.State.ToString());
-            
+            client.Options.AddSubProtocol("Tls");
+            client.ConnectAsync(new Uri("wss://localhost:443"), new CancellationToken());
             Console.WriteLine("Server is running on port " + port + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
         }
 
-        private void ReceiveData(WebSocketSession session, byte[] value)
-        {
-            //
-            Console.WriteLine("NewDataReceived");
-        }
-
-        private void ReceiveMessage(WebSocketSession session, string value)
-        {
-            //string dec = sec.Decrypt(Encoding.UTF8.GetBytes(value));
-            Console.WriteLine("Receive Msg:" + value);
-            //HandleMessage(session, value);
-        }
 
         private void EndSession(WebSocketSession session, CloseReason value)
         {
             Console.WriteLine("SessionClosed");
-            //Console.WriteLine(client.State.ToString());
         }
 
         private void StartSession(WebSocketSession session)
         {
+            UserData data = new UserData("blabla", "lala"); //init new user data
+            string json = handler.Seralize(data); // seralize this object into json string
+            byte[] arr = sec.Encrypt(json); // encrypt the string using aes algorithm and convert it to byte array
+            ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
+            client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server
             Console.WriteLine("NewSessionConnected");
         }
+
+        private void ReceiveData(WebSocketSession session, byte[] value)
+        {
+            object usernameObj;
+            Console.WriteLine("NewDataReceived");
+            string dec = sec.Decrypt(value); // decrypt the msg and convert it into string
+            Dictionary<string, object> msgDict = handler.Deseralize(dec); // desarilize the decrypted string and convert it into dict
+            if (!msgDict.TryGetValue("Username", out usernameObj)) // get the username from dict
+                return;
+
+
+            Console.WriteLine("username:" + usernameObj.ToString());
+        }
+
+        private void ReceiveMessage(WebSocketSession session, string value)
+        {
+            Console.WriteLine("Receive Msg:" + value);
+        }
+
 
         private void StoreUsernameAndSession(WebSocketSession session, string value)
         {
             usersSessions.Add(value, session);
         }
 
-        private void notify(string username, string msg) 
+        private void notify(string username, string msg)
         {
             WebSocketSession session;
             if (!usersSessions.TryGetValue(username, out session))
