@@ -161,8 +161,8 @@ app {
 }
 
 .register-frame {
-    margin-left: 160px;
-    margin-right: 100px;
+    margin: auto;
+    width: 80%;
 }
 
 .register-btn {
