@@ -45,10 +45,10 @@ namespace eCommerce_14a.Communication
             config1.Certificate = new CertificateConfig
             {
                 FilePath = Environment.CurrentDirectory + @"\cert.pfx",
+                //FilePath = @"\Communication\cert.pfx",
                 Password = "GuyTheKing!",
             };
             wsServer.Setup(config1);
-            client.Options.UseDefaultCredentials = true;
             wsServer.NewSessionConnected += StartSession;
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
