@@ -38,8 +38,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\CommunicationHandler.cs" />
+    <Compile Include="Communication\DataObject\AppointManagerRequest.cs" />
+    <Compile Include="Communication\DataObject\AppointOwnerRequest.cs" />
+    <Compile Include="Communication\DataObject\BuyerHistoryRequest.cs" />
+    <Compile Include="Communication\DataObject\CartRequest.cs" />
+    <Compile Include="Communication\DataObject\DemoteRequest.cs" />
+    <Compile Include="Communication\DataObject\GetAllStoresRequest.cs" />
     <Compile Include="Communication\DataObject\LoginRequest.cs" />
+    <Compile Include="Communication\DataObject\LogoutRequest.cs" />
     <Compile Include="Communication\DataObject\Message.cs" />
+    <Compile Include="Communication\DataObject\OpenStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\ProductInfoRequest.cs" />
+    <Compile Include="Communication\DataObject\PurchaseRequest.cs" />
+    <Compile Include="Communication\DataObject\SearchProductRequest.cs" />
+    <Compile Include="Communication\DataObject\StoresProductsRequest.cs" />
     <Compile Include="Communication\InfoExtractor.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />
     <Compile Include="Communication\ResponseData.cs" />

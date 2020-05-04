@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.PurchaseComponent.ServiceLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.ServiceLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
 using Newtonsoft.Json;
+using Server.Communication.DataObject;
 
 namespace eCommerce_14a.Communication
 {
@@ -17,7 +19,7 @@ namespace eCommerce_14a.Communication
         Appoitment_Service appointService; //sundy
         UserService userService; //sundy
         System_Service sysService; //sundy
-        StoreService StoreService; //liav
+        StoreService storeService; //liav
         PurchaseService purchService; //naor
         InfoExtractor extract;
         NetworkSecurity security;
@@ -26,7 +28,7 @@ namespace eCommerce_14a.Communication
             appointService = new Appoitment_Service();
             userService = new UserService();
             sysService = new System_Service("Admin","Admin");
-            StoreService = new StoreService();
+            storeService = new StoreService();
             purchService = new PurchaseService();
             extract = new InfoExtractor();
             security = new NetworkSecurity();
@@ -45,11 +47,6 @@ namespace eCommerce_14a.Communication
             return dict;
         }
 
-        public Dictionary<string, object> GetDictFromMsg(string msg)
-        {
-            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(msg);
-            return dict;
-        }
         public int GetOpCode(string msg) 
         {
             object opcodeObj;
@@ -59,57 +56,105 @@ namespace eCommerce_14a.Communication
             return Convert.ToInt32(opcodeObj);
         }
 
-        public byte[] HandleLogin(Dictionary<string, object> msgDict)
+        public string Decrypt(byte[] cipher) 
         {
-            string username = extract.GetUsername(msgDict);
-            string password = extract.GetPassword(msgDict);
-            userService.Registration(username, password); // FOR CHECK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            Tuple<bool, string> ans = userService.Login(username, password);
+            return security.Decrypt(cipher);
+        }
+
+        public byte[] HandleLogin(string json)
+        {
+            LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleLogout(Dictionary<string, object> msgDict)
+        public byte[] HandleLogout(string json)
+        {
+            LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
+            Tuple<bool, string> ans = userService.Logout(res.Username);
+            string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleRegister(string json)
+        {
+            //RegisterRequest res = JsonConvert.DeserializeObject<RegisterRequest>(json);
+            //Tuple<bool, string> ans = userService.Registration(res.Username, res.Password);
+            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            //return security.Encrypt(jsonAns);
+            return new byte[20];
+        }
+
+        public byte[] HandleGetAllStores(string json)
+        {
+            GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json);
+            //Tuple<bool, string> ans = storeService.GetAllStores();
+            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            //return security.Encrypt(jsonAns);
+            return new byte[20];
+        }
+
+        public byte[] HandleGetProductsOfStore(string json)
+        {
+            StoresProductsRequest res = JsonConvert.DeserializeObject<StoresProductsRequest>(json);
+            //Tuple<bool, string> ans = storeService.SearchProducts(new Dictionary<string, object>(CommonStr.SearcherKeys.StoreId,res.StoreId));
+            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            //return security.Encrypt(jsonAns);
+            return new byte[20];
+        }
+
+        public byte[] HandleGetProductDetails(string json)
+        {
+            ProductInfoRequest res = JsonConvert.DeserializeObject<ProductInfoRequest>(json);
+            //Tuple<bool, string> ans = storeService.SearchProducts(new Dictionary<string, object>(CommonStr.SearcherKeys.));
+            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            //return security.Encrypt(jsonAns);
+            return new byte[20];
+        }
+
+        public byte[] HandlePurchase(string json)
+        {
+            PurchaseRequest res = JsonConvert.DeserializeObject<PurchaseRequest>(json);
+            Tuple<bool, string> ans = purchService.PerformPurchase(res.Username, res.PaymentDetails, res.Address);
+            string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleGetCart(string json)
+        {
+            CartRequest res = JsonConvert.DeserializeObject<CartRequest>(json);
+            Tuple<Cart, string> ans = purchService.GetCartDetails(res.Username);
+            string jsonAns = Seralize(ans);
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleSearchProduct(string json)
         {
             throw new NotImplementedException();
         }
 
-        internal byte[] HandleRegister(Dictionary<string, object> msgDict)
+        public byte[] HandleOpenStore(string json)
         {
             throw new NotImplementedException();
         }
 
-        internal byte[] HandleGetAllStores(Dictionary<string, object> msgDict)
+        internal byte[] HandleBuyerHistory(string json)
         {
             throw new NotImplementedException();
         }
 
-        internal byte[] HandleGetProductsOfStore(Dictionary<string, object> msgDict)
+        internal byte[] HandleAppointManager(string json)
         {
             throw new NotImplementedException();
         }
 
-        internal byte[] HandleGetProductDetails(Dictionary<string, object> msgDict)
+        internal byte[] HandleAppointOwner(string json)
         {
             throw new NotImplementedException();
         }
 
-        internal byte[] HandlePurchase(Dictionary<string, object> msgDict)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal byte[] HandleGetCart(Dictionary<string, object> msgDict)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal byte[] HandleSearchProduct(Dictionary<string, object> msgDict)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal byte[] HandleOpenStore(Dictionary<string, object> msgDict)
+        internal byte[] HandleDemoteManager(string json)
         {
             throw new NotImplementedException();
         }

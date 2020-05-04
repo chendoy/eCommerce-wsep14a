@@ -14,6 +14,8 @@ using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.Text;
 using System.IO;
+using Server.Communication.DataObject;
+using Newtonsoft.Json;
 
 namespace eCommerce_14a.Communication
 {
@@ -26,11 +28,9 @@ namespace eCommerce_14a.Communication
         private ClientWebSocket client;
         private int port;
         private Dictionary<string, WebSocketSession> usersSessions;
-        private NetworkSecurity sec;
 
         public WssServer()
         {
-            sec = new NetworkSecurity();
             client = new ClientWebSocket();
             usersSessions = new Dictionary<string, WebSocketSession>();
             handler = new CommunicationHandler();
@@ -71,11 +71,6 @@ namespace eCommerce_14a.Communication
 
         private void StartSession(WebSocketSession session)
         {
-            //UserData data = new UserData("blabla", "lala"); //init new user data
-            //string json = handler.Seralize(data); // seralize this object into json string
-            //byte[] arr = sec.Encrypt(json); // encrypt the string using aes algorithm and convert it to byte array
-            //ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
-            //client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server
             Console.WriteLine("NewSessionConnected");
         }
 
@@ -107,10 +102,9 @@ namespace eCommerce_14a.Communication
 
         private void HandleMessage(WebSocketSession session, byte[] msg)
         {
-            string json = sec.Decrypt(msg);
             byte[] response;
+            string json = handler.Decrypt(msg);
             int opcode = handler.GetOpCode(json);
-            Dictionary<string, object> msgDict = handler.GetDictFromMsg(json);
 
             switch (opcode)
             {
@@ -119,52 +113,72 @@ namespace eCommerce_14a.Communication
                     break;
 
                 case 1:
-                    response = handler.HandleLogin(msgDict);
+                    response = handler.HandleLogin(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 2:
-                    response = handler.HandleLogout(msgDict);
+                    response = handler.HandleLogout(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 3:
-                    response = handler.HandleRegister(msgDict);
+                    response = handler.HandleRegister(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 4:
-                    response = handler.HandleGetAllStores(msgDict);
+                    response = handler.HandleGetAllStores(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 5:
-                    response = handler.HandleGetProductsOfStore(msgDict);
+                    response = handler.HandleGetProductsOfStore(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 6:
-                    response = handler.HandleGetProductDetails(msgDict);
+                    response = handler.HandleGetProductDetails(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 7:
-                    response = handler.HandlePurchase(msgDict);
+                    response = handler.HandlePurchase(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 8:
-                    response = handler.HandleGetCart(msgDict);
+                    response = handler.HandleGetCart(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 9:
-                    response = handler.HandleSearchProduct(msgDict);
+                    response = handler.HandleSearchProduct(json);
                     session.Send(response, 0, response.Length);
                     break;
 
                 case 10:
-                    response = handler.HandleOpenStore(msgDict);
+                    response = handler.HandleOpenStore(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case 11:
+                    response = handler.HandleBuyerHistory(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case 12:
+                    response = handler.HandleAppointManager(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case 13:
+                    response = handler.HandleAppointOwner(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case 14:
+                    response = handler.HandleDemoteManager(json);
                     session.Send(response, 0, response.Length);
                     break;
 
@@ -177,9 +191,17 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-            CommunicationHandler hand = new CommunicationHandler();
-            WssServer notifier = new WssServer();
-            notifier.InitServer();
+            //CommunicationHandler hand = new CommunicationHandler();
+            //WssServer notifier = new WssServer();
+            //notifier.InitServer();
+            LoginRequest req = new LoginRequest("bla", "bla");
+            string json = JsonConvert.SerializeObject(req);
+            Console.WriteLine(json);
+            LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            Console.WriteLine(res.Username);
+            Console.WriteLine(res.Password);
+            Console.WriteLine(res.Opcode);
+            Console.ReadLine();
         }
     }
 }
