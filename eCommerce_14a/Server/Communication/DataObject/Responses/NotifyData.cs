@@ -10,7 +10,7 @@ namespace Server.UserComponent.Communication
     public class NotifyData : Message
     {
         public string Context {get; set;}
-        public NotifyData(string context) : base(0) 
+        public NotifyData(string context) : base(Opcode.NOTIFICATION) 
         {
             this.Context = context;
         }

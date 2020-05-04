@@ -12,7 +12,7 @@ namespace Server.Communication.DataObject
         public string Appointed { get; set; }
         public int StoreId { get; set; }
 
-        public AppointOwnerRequest(string appointer, string appointed, int storeId) : base(13)
+        public AppointOwnerRequest(string appointer, string appointed, int storeId) : base(Opcode.APPOINT_OWNER)
         {
             Appointer = appointer;
             Appointed = appointed;

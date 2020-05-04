@@ -12,7 +12,7 @@ namespace Server.Communication.DataObject
         public string ProductCategory { get; set; }
         public string KeyWord { get; set; }
 
-        public SearchProductRequest(string prodName = null, string prodCategory = null, string keyword = null) : base(9)
+        public SearchProductRequest(string prodName = null, string prodCategory = null, string keyword = null) : base(Opcode.SEARCH_PROD)
         {
             ProductName = prodName;
             ProductCategory = prodCategory;

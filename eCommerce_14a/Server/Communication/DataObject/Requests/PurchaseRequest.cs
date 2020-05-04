@@ -12,7 +12,7 @@ namespace Server.Communication.DataObject
         public string Address { get; set; }
         public string PaymentDetails { get; set; }
 
-        public PurchaseRequest(string username, string address, string paymentDetails) : base(7)
+        public PurchaseRequest(string username, string address, string paymentDetails) : base(Opcode.PURCHASE)
         {
             Username = username;
             Address = address;

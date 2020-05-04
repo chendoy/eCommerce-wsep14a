@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject
     {
         public string Username { get; set; }
 
-        public BuyerHistoryRequest(string username) : base(11)
+        public BuyerHistoryRequest(string username) : base(Opcode.HISTORY)
         {
             Username = username;
         }

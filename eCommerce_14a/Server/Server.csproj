@@ -38,20 +38,35 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\CommunicationHandler.cs" />
-    <Compile Include="Communication\DataObject\AppointManagerRequest.cs" />
-    <Compile Include="Communication\DataObject\AppointOwnerRequest.cs" />
-    <Compile Include="Communication\DataObject\BuyerHistoryRequest.cs" />
-    <Compile Include="Communication\DataObject\CartRequest.cs" />
-    <Compile Include="Communication\DataObject\DemoteRequest.cs" />
-    <Compile Include="Communication\DataObject\GetAllStoresRequest.cs" />
-    <Compile Include="Communication\DataObject\LoginRequest.cs" />
-    <Compile Include="Communication\DataObject\LogoutRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\AppointManagerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DemoteRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\LogoutRequest.cs" />
     <Compile Include="Communication\DataObject\Message.cs" />
-    <Compile Include="Communication\DataObject\OpenStoreRequest.cs" />
-    <Compile Include="Communication\DataObject\ProductInfoRequest.cs" />
-    <Compile Include="Communication\DataObject\PurchaseRequest.cs" />
-    <Compile Include="Communication\DataObject\SearchProductRequest.cs" />
-    <Compile Include="Communication\DataObject\StoresProductsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\OpenStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\ProductInfoRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\SearchProductRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\StoresProductsRequest.cs" />
+    <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\DemoteManagerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\ErrorResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetProductsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStoresResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetUsersCartResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\HistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\LoginResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\LogoutResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\OpenStoreResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\ProductInfoResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\PurchaseResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\RegisterResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\SearchProductResponse.cs" />
     <Compile Include="Communication\InfoExtractor.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />
     <Compile Include="Communication\ResponseData.cs" />
@@ -67,7 +82,7 @@
     <Compile Include="UserComponent\DomainLayer\PaymentHandler.cs" />
     <Compile Include="StoreComponent\DomainLayer\Product.cs" />
     <Compile Include="UserComponent\DomainLayer\Program.cs" />
-    <Compile Include="Communication\DataObject\NotifyData.cs" />
+    <Compile Include="Communication\DataObject\Responses\NotifyData.cs" />
     <Compile Include="UserComponent\Communication\Publisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\Cart.cs" />
@@ -118,5 +133,6 @@
     <Compile Include="UserComponent\DomainLayer\UserManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\UserService.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

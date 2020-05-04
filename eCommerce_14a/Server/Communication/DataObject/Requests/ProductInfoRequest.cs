@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject
     {
         public int StoreId { get; set; }
         public int ProductId { get; set; }
-        public ProductInfoRequest(int storeID, int productID) : base(6)
+        public ProductInfoRequest(int storeID, int productID) : base(Opcode.PROD_INFO)
         {
             StoreId = storeID;
             ProductId = productID;

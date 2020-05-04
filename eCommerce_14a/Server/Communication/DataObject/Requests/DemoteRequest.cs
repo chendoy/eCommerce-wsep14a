@@ -11,7 +11,7 @@ namespace Server.Communication.DataObject
         public string Appointer { get; set; }
         public string Appointed { get; set; }
 
-        public DemoteRequest(string appointer, string appointed) : base(14)
+        public DemoteRequest(string appointer, string appointed) : base(Opcode.DEMOTE)
         {
             Appointer = appointer;
             Appointed = appointed;

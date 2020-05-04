@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject
     {
         public string Username { get; set; }
 
-        public LogoutRequest(string username) : base(2)
+        public LogoutRequest(string username) : base(Opcode.LOGOUT)
         {
             Username = username;
         }

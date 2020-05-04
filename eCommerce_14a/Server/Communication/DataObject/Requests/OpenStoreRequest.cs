@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject
     {
         public string Username { get; set; }
 
-        public OpenStoreRequest(string username) : base(10)
+        public OpenStoreRequest(string username) : base(Opcode.OPEN_STORE)
         {
             Username = username;
         }
