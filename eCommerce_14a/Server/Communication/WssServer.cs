@@ -192,17 +192,17 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-            //CommunicationHandler hand = new CommunicationHandler();
-            //WssServer notifier = new WssServer();
-            //notifier.InitServer();
-            LoginRequest req = new LoginRequest("bla", "bla");
-            string json = JsonConvert.SerializeObject(req);
-            Console.WriteLine(json);
-            LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
-            Console.WriteLine(res.Username);
-            Console.WriteLine(res.Password);
-            Console.WriteLine(res.Opcode);
-            Console.ReadLine();
+            CommunicationHandler hand = new CommunicationHandler();
+            WssServer notifier = new WssServer();
+            notifier.InitServer();
+            //LoginRequest req = new LoginRequest("bla", "bla");
+            //string json = JsonConvert.SerializeObject(req);
+            //Console.WriteLine(json);
+            //LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            //Console.WriteLine(res.Username);
+            //Console.WriteLine(res.Password);
+            //Console.WriteLine(res.Opcode);
+            //Console.ReadLine();
         }
     }
 }
