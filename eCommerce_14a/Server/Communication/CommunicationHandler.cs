@@ -45,26 +45,25 @@ namespace eCommerce_14a.Communication
             return dict;
         }
 
-        public Dictionary<string, object> GetDictFromMsg(byte[] msg)
+        public Dictionary<string, object> GetDictFromMsg(string msg)
         {
-            string json = security.Decrypt(msg);
-            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(msg);
             return dict;
         }
-        public int GetOpCode(byte[] msg) 
+        public int GetOpCode(string msg) 
         {
             object opcodeObj;
-            string dec = security.Decrypt(msg); // decrypt the msg and convert it into string
-            Dictionary<string, object> msgDict = Deseralize(dec); // desarilize the decrypted string and convert it into dict
-            if (!msgDict.TryGetValue("OpCode", out opcodeObj))
+            Dictionary<string, object> msgDict = Deseralize(msg); // desarilize the decrypted string and convert it into dict
+            if (!msgDict.TryGetValue("Opcode", out opcodeObj))
                 return -1;
-            return (int)opcodeObj;
+            return Convert.ToInt32(opcodeObj);
         }
 
         public byte[] HandleLogin(Dictionary<string, object> msgDict)
         {
             string username = extract.GetUsername(msgDict);
             string password = extract.GetPassword(msgDict);
+            userService.Registration(username, password); // FOR CHECK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             Tuple<bool, string> ans = userService.Login(username, password);
             string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
