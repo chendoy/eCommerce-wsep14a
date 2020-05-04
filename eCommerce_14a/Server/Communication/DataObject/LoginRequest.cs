@@ -11,7 +11,7 @@ namespace Server.Communication.DataObject
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public LoginRequest(string username, string password) : base(1)
+        public LoginRequest(string username, string password) : base(Opcode.LOGIN)
         {
             Username = username;
             Password = password;

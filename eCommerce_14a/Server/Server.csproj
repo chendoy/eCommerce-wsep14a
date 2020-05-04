@@ -39,7 +39,10 @@
   <ItemGroup>
     <Compile Include="Communication\CommunicationHandler.cs" />
     <Compile Include="Communication\DataObject\LoginRequest.cs" />
+    <Compile Include="Communication\DataObject\LoginResponse.cs" />
     <Compile Include="Communication\DataObject\Message.cs" />
+    <Compile Include="Communication\DataObject\RegisterRequest.cs" />
+    <Compile Include="Communication\DataObject\RegisterResponse.cs" />
     <Compile Include="Communication\InfoExtractor.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />
     <Compile Include="Communication\ResponseData.cs" />

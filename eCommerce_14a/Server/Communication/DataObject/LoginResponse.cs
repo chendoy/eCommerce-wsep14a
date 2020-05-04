@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class LoginResponse
+    class LoginResponse : Message
     {
+        bool Success { get; set; }
+
+        public LoginResponse(bool success) : base(Opcode.RESPONSE)
+        {
+            this.Success = Success;
+        }
     }
 }

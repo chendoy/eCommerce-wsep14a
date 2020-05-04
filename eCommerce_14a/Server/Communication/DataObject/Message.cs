@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
+    public enum Opcode
+    {
+        LOGIN = 1,
+        REGISTER,
+        RESPONSE
+    }
     public class Message
     {
-        public int Opcode { get; set; }
+        public Opcode _Opcode { get; set; }
 
-        public Message(int opcode)
+        public Message(Opcode opcode)
         {
-            Opcode = opcode;
+            _Opcode = opcode;
         }
     }
 }
