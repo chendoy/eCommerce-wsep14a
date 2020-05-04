@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Server.Communication.DataObject;
 
 namespace Client.Service
 {
@@ -47,10 +48,14 @@ namespace Client.Service
 
         async public Task<User> Login(User _user)
         {
+            LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);
+
+
+
             string username = _user.Username;
             string password = _user.Password;
 
-            comm.SendRequest(_user);
+            comm.SendRequest(loginRequest);
             //comm.SendRequest("ValidateUser");
             List<User> users = (List<User>)comm.Get();
             string json = System.IO.File.ReadAllText("wwwroot/resources/users.json");

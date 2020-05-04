@@ -4,19 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eCommerce_14a.Utils
+namespace Server.Communication.DataObject
 {
-    class UserData
+    public class LoginRequest : Message
     {
-        public int Opcode { get; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public UserData(string username, string password)
+
+        public LoginRequest(string username, string password) : base(1)
         {
-            Opcode = 1;
             Username = username;
             Password = password;
         }
-
     }
 }

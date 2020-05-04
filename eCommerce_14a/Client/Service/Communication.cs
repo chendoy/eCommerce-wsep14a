@@ -26,10 +26,10 @@ namespace Client.Service
         public void SendRequest(Object obj)
         {
             string json = JsonSerializer.Serialize(obj); // seralize this object into json string
+            Console.WriteLine(json);
             byte[] arr = security.Encrypt(json); // encrypt the string using aes algorithm and convert it to byte array
             ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
             client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server
-            Console.WriteLine("NewSessionConnected");
         }
 
         public Object Get()

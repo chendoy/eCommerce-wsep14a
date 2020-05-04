@@ -81,15 +81,8 @@ namespace eCommerce_14a.Communication
 
         private void ReceiveData(WebSocketSession session, byte[] value)
         {
-            object usernameObj;
             Console.WriteLine("NewDataReceived");
-            string dec = sec.Decrypt(value); // decrypt the msg and convert it into string
-            Dictionary<string, object> msgDict = handler.Deseralize(dec); // desarilize the decrypted string and convert it into dict
-            if (!msgDict.TryGetValue("Username", out usernameObj)) // get the username from dict
-                return;
-
-
-            Console.WriteLine("username:" + usernameObj.ToString());
+            HandleMessage(session, value);
         }
 
         private void ReceiveMessage(WebSocketSession session, string value)
@@ -114,9 +107,10 @@ namespace eCommerce_14a.Communication
 
         private void HandleMessage(WebSocketSession session, byte[] msg)
         {
+            string json = sec.Decrypt(msg);
             byte[] response;
-            int opcode = handler.GetOpCode(msg);
-            Dictionary<string, object> msgDict = handler.GetDictFromMsg(msg);
+            int opcode = handler.GetOpCode(json);
+            Dictionary<string, object> msgDict = handler.GetDictFromMsg(json);
 
             switch (opcode)
             {
