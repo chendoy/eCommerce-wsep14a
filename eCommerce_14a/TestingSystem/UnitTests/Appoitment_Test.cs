@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using Server.UserComponent.Communication;
 
 namespace TestingSystem.UnitTests.Appoitment_Test
 {
@@ -49,6 +50,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             SM.cleanup();
             UM.cleanup();
             AP.cleanup();
+            Publisher.Instance.cleanup();
         }
         /// <function cref ="eCommerce_14a.AppoitmentManager.AppointStoreOwner(string,string,int)
         [TestMethod]

@@ -1,6 +1,7 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
 
@@ -197,6 +198,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 currHistory.Add(userCart.GetBaskets()[store]);
                 purchasesHistoryByStore[store] = currHistory;
+                //Version 2 Addition
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new Message("Purchase was made from"+user));
+                if (!ans.Item1)
+                    return ans;
             }
             Purchase newPurchase = new Purchase(user, userCart);
             if (!purchasesHistoryByUser.TryGetValue(user, out List<Purchase> userHistory))
