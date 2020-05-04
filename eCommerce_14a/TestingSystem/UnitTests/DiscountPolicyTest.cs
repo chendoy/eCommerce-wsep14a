@@ -161,7 +161,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             List<DiscountPolicy> policies_lst_2 = new List<DiscountPolicy>();
             policies_lst_2.Add(compund_above_1_xor_2);
             policies_lst_2.Add(contitionalAboveSingleUnitp3);
-            DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.AND, policies_lst_2);
+            DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.OR, policies_lst_2);
             double discount = compundDiscount.CalcDiscount(basket);
             double expected = 805;
             Assert.AreEqual(expected, discount);

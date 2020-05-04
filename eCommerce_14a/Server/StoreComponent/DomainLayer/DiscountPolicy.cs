@@ -30,7 +30,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public double CalcDiscount(PurchaseBasket basket)
         {
-            if (mergeType == CommonStr.DiscountMergeTypes.AND)
+            if (mergeType == CommonStr.DiscountMergeTypes.OR)
             {
                 double sum_discounts = 0;
                 foreach (DiscountPolicy child in children)
@@ -47,6 +47,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                         maxDiscount = discount;
                 }
                 return maxDiscount;
+            }
+            else if (mergeType == CommonStr.DiscountMergeTypes.AND)
+            {
+                return 0;
             }
             else
             {

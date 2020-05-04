@@ -5,14 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     /// <testclass cref ="TestingSystem.UnitTests.StoreTest/>
     public class Store
     {
-        private List<DiscountPolicy> discountPolicy;
-        private List<PurchasePolicy> puarchsePolicy;
+        private DiscountPolicy discountPolicy;
+        private PurchasePolicy puarchsePolicy;
+        private Validator policyValidator;
         private Inventory inventory;
         private int rank;
         private bool activeStore;
@@ -36,8 +38,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (store_params.ContainsKey(CommonStr.StoreParams.StoreInventory))
                 this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
       
-            this.discountPolicy = (List<DiscountPolicy>)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
-            this.puarchsePolicy = (List<PurchasePolicy>)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
+            this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
+            this.puarchsePolicy = (PurchasePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
+            this.policyValidator = (Validator)store_params[CommonStr.StoreParams.Validator];
             this.activeStore = true;
 
             if (store_params.ContainsKey(CommonStr.StoreParams.StoreRank))
@@ -209,7 +212,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return store_info;
         }
 
-
         public bool AddStoreOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -287,13 +289,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             set { inventory = value; }
         }
 
-        public List<DiscountPolicy> DiscountPolices
+        public DiscountPolicy DiscountPolices
         {
             get { return discountPolicy; }
             set { discountPolicy = value; }
         }
 
-        public List<PurchasePolicy> PuarchsePolicies
+        public PurchasePolicy PuarchsePolicies
         {
             get { return puarchsePolicy; }
             set { puarchsePolicy = value; }

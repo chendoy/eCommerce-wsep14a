@@ -11,6 +11,7 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using TestingSystem.UnitTests.InventroyTest;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
 
 namespace TestingSystem.UnitTests.StoreTest
 {
@@ -395,6 +396,8 @@ namespace TestingSystem.UnitTests.StoreTest
             User newManager = new User(10, "shimon", false, false);
             Assert.IsTrue(AddStoreMangerDriver(validStore, newManager));
         }
+
+
 
         private bool AddStoreMangerDriver(Store s, User user)
         {

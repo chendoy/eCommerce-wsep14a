@@ -21,7 +21,8 @@
         public static class DiscountMergeTypes
         {
             public static int XOR = 0;
-            public static int AND = 1;
+            public static int OR = 1;
+            public static int AND = 2;
         }
 
         public static class PurchaseMergeTypes
@@ -56,6 +57,7 @@
             public static string StoreInventory = "StoreInventory";
             public static string StoreRank = "StoreRank";
             public static string IsActiveStore = "isActive";
+            public static string Validator = "Validator";
         }
 
         public static class ProductParams
