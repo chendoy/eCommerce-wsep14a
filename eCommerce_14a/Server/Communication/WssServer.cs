@@ -1,21 +1,10 @@
-﻿using eCommerce_14a.PurchaseComponent.ServiceLayer;
-using eCommerce_14a.StoreComponent.DomainLayer;
-using eCommerce_14a.StoreComponent.ServiceLayer;
-using eCommerce_14a.UserComponent.ServiceLayer;
-using eCommerce_14a.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net.WebSockets;
-using System.Threading;
 using CertificateConfig = SuperSocket.SocketBase.Config.CertificateConfig;
 using SuperWebSocket;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
-using System.Text;
 using System.IO;
-using Server.Communication.DataObject;
-using Newtonsoft.Json;
 using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.Communication
@@ -26,14 +15,11 @@ namespace eCommerce_14a.Communication
 
         public CommunicationHandler handler;
         private static WebSocketServer wsServer;
-        private ClientWebSocket client;
         private int port;
-        private Dictionary<string, WebSocketSession> usersSessions;
+        
 
         public WssServer()
         {
-            client = new ClientWebSocket();
-            usersSessions = new Dictionary<string, WebSocketSession>();
             handler = new CommunicationHandler();
             wsServer = new WebSocketServer();
         }
@@ -51,14 +37,11 @@ namespace eCommerce_14a.Communication
                 Password = "GuyTheKing!",
             };
             wsServer.Setup(config1);
-            //client.Options.UseDefaultCredentials = true;
             wsServer.NewSessionConnected += StartSession;
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
             wsServer.Start();
-            //client.Options.AddSubProtocol("Tls");
-            //client.ConnectAsync(new Uri("wss://localhost:443"), new CancellationToken());
             Console.WriteLine("Server is running on port " + port + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
@@ -86,20 +69,15 @@ namespace eCommerce_14a.Communication
             Console.WriteLine("Receive Msg:" + value);
         }
 
-
-        private void StoreUsernameAndSession(WebSocketSession session, string value)
-        {
-            usersSessions.Add(value, session);
-        }
-
         public void notify(string username, NotifyData msg)
         {
-            WebSocketSession session;
-            if (!usersSessions.TryGetValue(username, out session))
-                return; // user isn't found.
-            //session.Send(msg);
+            byte[] response;
+            WebSocketSession session = handler.GetSession(username);
+            if (session == null)
+                return;
+            response = handler.HandleNotification(msg);
+            session.Send(response, 0, response.Length);
         }
-
 
         private void HandleMessage(WebSocketSession session, byte[] msg)
         {
@@ -109,12 +87,8 @@ namespace eCommerce_14a.Communication
 
             switch (opcode)
             {
-                case 0:
-                    //StoreUsernameAndSession(session, msg);
-                    break;
-
                 case 1:
-                    response = handler.HandleLogin(json);
+                    response = handler.HandleLogin(json, session);
                     session.Send(response, 0, response.Length);
                     break;
 
@@ -185,7 +159,6 @@ namespace eCommerce_14a.Communication
 
                 default:
                     break;
-
             }
         }
 

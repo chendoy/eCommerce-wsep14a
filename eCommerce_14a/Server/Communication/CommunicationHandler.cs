@@ -11,6 +11,8 @@ using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
 using Newtonsoft.Json;
 using Server.Communication.DataObject;
+using Server.UserComponent.Communication;
+using SuperWebSocket;
 
 namespace eCommerce_14a.Communication
 {
@@ -21,8 +23,8 @@ namespace eCommerce_14a.Communication
         System_Service sysService; //sundy
         StoreService storeService; //liav
         PurchaseService purchService; //naor
-        InfoExtractor extract;
         NetworkSecurity security;
+        private Dictionary<string, WebSocketSession> usersSessions;
         public CommunicationHandler()
         {
             appointService = new Appoitment_Service();
@@ -30,8 +32,8 @@ namespace eCommerce_14a.Communication
             sysService = new System_Service("Admin","Admin");
             storeService = new StoreService();
             purchService = new PurchaseService();
-            extract = new InfoExtractor();
             security = new NetworkSecurity();
+            usersSessions = new Dictionary<string, WebSocketSession>();
         }
 
         public string Seralize(object obj)
@@ -61,10 +63,20 @@ namespace eCommerce_14a.Communication
             return security.Decrypt(cipher);
         }
 
-        public byte[] HandleLogin(string json)
+        public WebSocketSession GetSession(string username)
+        {
+            WebSocketSession session;
+            if (!usersSessions.TryGetValue(username, out session))
+                return null;
+            return session;
+        }
+
+        public byte[] HandleLogin(string json, WebSocketSession session)
         {
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
+            if (ans.Item1)
+                usersSessions.Add(res.Username, session);
             string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
@@ -93,6 +105,12 @@ namespace eCommerce_14a.Communication
             //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
             //return security.Encrypt(jsonAns);
             return new byte[20];
+        }
+
+        internal byte[] HandleNotification(NotifyData msg)
+        {
+            string json = Seralize(msg);
+            return security.Encrypt(json);
         }
 
         public byte[] HandleGetProductsOfStore(string json)
