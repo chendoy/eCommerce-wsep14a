@@ -199,7 +199,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 currHistory.Add(userCart.GetBaskets()[store]);
                 purchasesHistoryByStore[store] = currHistory;
                 //Version 2 Addition
-                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new Message("Purchase was made from"+user));
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new NotifyData("Purchase was made from"+user));
                 if (!ans.Item1)
                     return ans;
             }

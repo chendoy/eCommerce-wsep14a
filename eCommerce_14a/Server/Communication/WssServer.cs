@@ -16,6 +16,7 @@ using System.Text;
 using System.IO;
 using Server.Communication.DataObject;
 using Newtonsoft.Json;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.Communication
 {
@@ -91,12 +92,12 @@ namespace eCommerce_14a.Communication
             usersSessions.Add(value, session);
         }
 
-        private void notify(string username, string msg)
+        public void notify(string username, NotifyData msg)
         {
             WebSocketSession session;
             if (!usersSessions.TryGetValue(username, out session))
                 return; // user isn't found.
-            session.Send(msg);
+            //session.Send(msg);
         }
 
 

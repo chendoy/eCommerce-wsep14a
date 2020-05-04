@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.Communication;
 using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace Server.UserComponent.Communication
@@ -11,8 +12,10 @@ namespace Server.UserComponent.Communication
     {
         private Dictionary<int, LinkedList<string>> StoreSubscribers;
         private UserManager UM;
+        private WssServer ws;
         Publisher()
         {
+            ws = new WssServer();
             StoreSubscribers = new Dictionary<int, LinkedList<string>>();
             UM = UserManager.Instance;
         }
@@ -90,7 +93,7 @@ namespace Server.UserComponent.Communication
 
         }
 
-        public Tuple<bool, string> Notify(int store,Message notification)
+        public Tuple<bool, string> Notify(int store,NotifyData notification)
         {
             LinkedList<string> users;
             if (!StoreSubscribers.TryGetValue(store, out users))
@@ -103,10 +106,20 @@ namespace Server.UserComponent.Communication
                 if (!user.LoggedStatus())
                     user.AddMessage(notification);
                 else
-                    continue;
-                    //SendMessage(username, notification);
+                    ws.notify(username, notification);
             }
             return new Tuple<bool, string>(true, "");
+        }
+
+        public Tuple<bool, string> Notify(string username, NotifyData notification)
+        {
+           User user = UM.GetUser(username);
+           if (!user.LoggedStatus())
+                user.AddMessage(notification);
+           else
+                ws.notify(username, notification);
+            
+           return new Tuple<bool, string>(true, "");
         }
         public void cleanup()
         {

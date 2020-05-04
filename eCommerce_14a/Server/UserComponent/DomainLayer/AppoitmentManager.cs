@@ -167,7 +167,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             manager.RemoveStoreManagment(store.getStoreId());
             manager.RemovePermission(store.getStoreId());
             //Version 2 Addition
-            Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new Message(m + "is not a Manager any More"));
+            Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a Manager any More"));
             if (!message.Item1)
                 return message;
             Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(m, storeId);
