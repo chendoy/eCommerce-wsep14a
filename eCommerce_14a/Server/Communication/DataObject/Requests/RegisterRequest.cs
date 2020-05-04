@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    public class LoginRequest : Message
+    class RegisterRequest : Message
     {
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public LoginRequest(string username, string password) : base(Opcode.LOGIN)
+        public RegisterRequest(string username, string password) : base(Opcode.REGISTER)
         {
             Username = username;
             Password = password;

@@ -50,8 +50,6 @@ namespace Client.Service
         {
             LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);
 
-
-
             string username = _user.Username;
             string password = _user.Password;
 
