@@ -14,7 +14,7 @@ namespace Server.Communication.DataObject
         LOGIN = 1,
         LOGOUT,
         REGISTER,
-        STORES,
+        STORES, // get all stores in the system
         PRODUCTS,
         PROD_INFO,
         PURCHASE,
