@@ -8,11 +8,12 @@ namespace Server.Communication.DataObject.Responses
 {
     class PurchaseResponse : Message
     {
-        int _itemsPurchased { get; set; } // how many items were actually purchased
-                                          // additional fields here?
-        public PurchaseResponse(int itemsPurchased) : base(Opcode.RESPONSE)
+        bool Success { get; set; }
+        string Error { get; set; }
+        public PurchaseResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
-            _itemsPurchased = itemsPurchased;
+            this.Success = success;
+            this.Error = error;
         }
     }
 }

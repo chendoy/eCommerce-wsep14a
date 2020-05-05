@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using eCommerce_14a.UserComponent;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -17,6 +19,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         private bool isGuest;
         private bool isAdmin, isLoggedIn;
         private Dictionary<int, Store> Store_Ownership;
+        private LinkedList<NotifyData> unreadMessages;
         private Dictionary<int, Store> Store_Managment;
         private Dictionary<int, int[]> Store_options;
         //Contains the list of who appointed you to which store! not who you appointed to which store!
@@ -36,6 +39,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
+            unreadMessages = new LinkedList<NotifyData>();
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
         }
@@ -44,6 +48,22 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             this.isLoggedIn = true;
         }
+
+        public LinkedList<NotifyData> GetPendingMessages() 
+        {
+            return this.unreadMessages;
+        }
+
+        public bool HasPendingMessages() 
+        {
+            return this.unreadMessages.Count != 0;
+        }
+
+        public void RemovePendingMessage(NotifyData msg) 
+        {
+            this.unreadMessages.Remove(msg);
+        }
+
         public void Logout()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -105,6 +125,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store_Ownership.Add(store.getStoreId(), store);
             return new Tuple<bool, string>(true, "");
         }
+        //Version 2 changes
+        public void AddMessage(NotifyData notification)
+        {
+            this.unreadMessages.AddLast(notification);
+        }
+
         //Add a user to be store Manager
         public Tuple<bool, string> addStoreManagment(Store store)
         {

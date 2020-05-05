@@ -9,10 +9,12 @@ namespace Server.Communication.DataObject.Responses
     class AppointManagerResponse : Message
     {
         bool Success { get; set; }
+        string Error { get; set; }
 
-        public AppointManagerResponse(bool success) : base(Opcode.RESPONSE)
+        public AppointManagerResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
-            this.Success = Success;
+            this.Success = success;
+            this.Error = error;
         }
     }
 }

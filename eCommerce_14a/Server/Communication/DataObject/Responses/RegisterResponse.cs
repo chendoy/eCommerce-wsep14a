@@ -9,10 +9,12 @@ namespace Server.Communication.DataObject
     class RegisterResponse : Message
     {
         bool Success { get; set; }
+        string Error { get; set; }
 
-        public RegisterResponse(bool success) : base(Opcode.RESPONSE)
+        public RegisterResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
-            this.Success = Success;
+            this.Success = success;
+            this.Error = error;
         }
     }
 }

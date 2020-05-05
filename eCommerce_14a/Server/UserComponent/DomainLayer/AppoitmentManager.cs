@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -12,10 +13,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     {
         //All store appointer
         StoreManagment storeManagment;
+        //Publisher publisher;
         UserManager UM;
         AppoitmentManager()
         {
             UM = UserManager.Instance;
+            //publisher = Publisher.Instance;
             storeManagment = StoreManagment.Instance;
         }
         private static readonly object padlock = new object();  
@@ -72,6 +75,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             int[] p = { 1, 1, 1 };
             appointed.setPermmisions(store.getStoreId(), p);
             appointed.addAppointment(appointer, id: store.getStoreId());
+            //Version 2 Addition
+            Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
+            if (!ans.Item1)
+                return ans;
             return appointed.addStoreOwnership(store);
         }
 
@@ -80,6 +87,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             storeManagment = StoreManagment.Instance;
             UM = UserManager.Instance;
+            //publisher = Publisher.Instance;
         }
 
         //Owner appoints addto to be Store Manager.
@@ -117,6 +125,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             appointed.addAppointment(appointer, store.getStoreId());
             int[] p = { 1, 1, 0 };
             appointed.setPermmisions(store.getStoreId(), p);
+            //Version 2 Addition
+            Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
+            if (!ans.Item1)
+                return ans;
             return appointed.addStoreManagment(store);
         }
         //Remove appoitment only if owner gave the permissions to the Appointed user
@@ -154,6 +166,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             store.RemoveManager(manager);
             manager.RemoveStoreManagment(store.getStoreId());
             manager.RemovePermission(store.getStoreId());
+            //Version 2 Addition
+            Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a Manager any More"));
+            if (!message.Item1)
+                return message;
+            Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(m, storeId);
+            if (!ans.Item1)
+                return ans;
             return new Tuple<bool, string>(manager.RemoveAppoitment(owner, store.getStoreId()), "");
         }
         public Tuple<bool, string> ChangePermissions(string ownerS, string worker, int storeId, int[] permissions)

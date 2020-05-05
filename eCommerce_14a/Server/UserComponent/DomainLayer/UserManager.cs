@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -150,6 +151,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 Active_users.Add(tUser.getUserName(), tUser);
+                if (tUser.HasPendingMessages()) 
+                {
+                    LinkedList<NotifyData> messages = tUser.GetPendingMessages();
+                    foreach (NotifyData msg in messages) 
+                    {
+                        Publisher.Instance.Notify(tUser.getUserName(), msg);
+                        tUser.RemovePendingMessage(msg);
+                    }  
+                }
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
             return new Tuple<bool, string>(false, "Wrong Credentials\n");

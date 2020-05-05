@@ -10,6 +10,7 @@ using TestingSystem.UnitTests.Stubs;
 using TestingSystem.UnitTests.StoreTest;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using System.Security.AccessControl;
+using Server.UserComponent.Communication;
 
 namespace TestingSystem.UnitTests
 {
@@ -42,6 +43,7 @@ namespace TestingSystem.UnitTests
         {
             purchaseManagement.ClearAll();
             UserManager.Instance.cleanup();
+            Publisher.Instance.cleanup();
             StoreManagment.Instance.cleanup();
         }
 

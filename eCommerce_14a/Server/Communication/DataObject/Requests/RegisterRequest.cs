@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Communication.DataObject
+namespace Server.Communication.DataObject.Requests
 {
     class RegisterRequest : Message
     {

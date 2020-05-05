@@ -9,10 +9,12 @@ namespace Server.Communication.DataObject.Responses
     class DemoteManagerResponse : Message
     {
         bool Success { get; set; }
+        string Error { get; set; }
 
-        public DemoteManagerResponse(bool success) : base(Opcode.RESPONSE)
+        public DemoteManagerResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
-            this.Success = Success;
+            this.Success = success;
+            this.Error = error;
         }
     }
 }
