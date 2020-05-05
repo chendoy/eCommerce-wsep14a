@@ -55,7 +55,7 @@ namespace eCommerce_14a.Communication
         {
             object opcodeObj;
             Dictionary<string, object> msgDict = Deseralize(msg); // desarilize the decrypted string and convert it into dict
-            if (!msgDict.TryGetValue("Opcode", out opcodeObj))
+            if (!msgDict.TryGetValue("_Opcode", out opcodeObj))
                 return -1;
             return Convert.ToInt32(opcodeObj);
         }
