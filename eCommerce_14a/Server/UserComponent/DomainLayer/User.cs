@@ -91,6 +91,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 return perms[2] == 1;
             }
+            if (permission.Equals(CommonStr.MangerPermission.DiscountPolicy))
+            {
+                return perms[3] == 1;
+            }
+            if (permission.Equals(CommonStr.MangerPermission.PurachsePolicy))
+            {
+                return perms[4] == 1;
+            }
             return false;
         }
 

@@ -31,7 +31,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             UM.Login("owner", "Test1");
             UM.Login("Appointed", "Test1");
             UM.Login("", "G", true);
-            SM.createStore("owner", 1, 1);
+            SM.createStore("owner",null, null, null);
             UM.Register("NotLogged", "Test1");
             
             Assert.IsNotNull(UM.GetAtiveUser("owner"));

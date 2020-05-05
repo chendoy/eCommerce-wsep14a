@@ -352,7 +352,7 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicies);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PurchasePolicies);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
         }
@@ -413,6 +413,7 @@ namespace TestingSystem.UnitTests.StoreTest
             storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
             storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy,null);
             storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, null);
+            storeParams.Add(CommonStr.StoreParams.Validator, null);
             storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
             return s;
@@ -424,7 +425,7 @@ namespace TestingSystem.UnitTests.StoreTest
             UserManager userManager = UserManager.Instance;
             userManager.Register("shimon", "123");
             userManager.Login("shimon", "123", false);
-            sm.createStore("shimon", 1, 1);
+            sm.createStore("shimon", null, null, null);
             userManager.Register("yosi", "123");
             userManager.Login("yosi", "123");
             userManager.Register("shmuel", "123");

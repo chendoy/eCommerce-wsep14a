@@ -33,6 +33,7 @@
         }
         public static class DiscountPreConditions
         {
+            public static int NoDiscount = 0;
             public static int ProductPriceAbove100 = 1;
             public static int ProductPriceAbove200 = 2;
             public static int Above1Unit = 3;
@@ -42,6 +43,7 @@
 
         public static class PurchasePreCondition
         {
+            public static int allwaysTrue = 0;
             public static int singleOfProductType = 1;
             public static int Max10ProductPerBasket = 2;
             public static int StoreMustBeActive = 3;
@@ -67,6 +69,7 @@
             public static string ProductDetails = "ProductDetails";
             public static string ProductName = "ProductName";
             public static string ProductCategory = "ProductCategory";
+
         }
 
         public static class ProductCategoty
@@ -113,6 +116,8 @@
             public static string Comments = "CommentsPermission";
             public static string Puarchse = "ViewPuarchseHistory";
             public static string Product = "ProductPermission";
+            public static string PurachsePolicy = "PurachsePolicy";
+            public static string DiscountPolicy = "DiscountPolicy";
         }
         public static class ArgsTypes
         {

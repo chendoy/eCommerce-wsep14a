@@ -69,7 +69,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!store.IsStoreOwner(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreOwner(appointed);
-            int[] p = { 1, 1, 1 };
+            int[] p = { 1, 1, 1 , 1, 1};
             appointed.setPermmisions(store.getStoreId(), p);
             appointed.addAppointment(appointer, id: store.getStoreId());
             return appointed.addStoreOwnership(store);
@@ -115,7 +115,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreManager(appointed);
             appointed.addAppointment(appointer, store.getStoreId());
-            int[] p = { 1, 1, 0 };
+            int[] p = {1, 1, 0, 0, 0};
             appointed.setPermmisions(store.getStoreId(), p);
             return appointed.addStoreManagment(store);
         }
