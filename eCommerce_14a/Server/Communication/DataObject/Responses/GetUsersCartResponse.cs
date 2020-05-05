@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetUsersCartResponse : Message
+    public class GetUsersCartResponse : Message
     {
         Cart _cart { get; set; }
         public GetUsersCartResponse(Cart cart) : base(Opcode.RESPONSE)

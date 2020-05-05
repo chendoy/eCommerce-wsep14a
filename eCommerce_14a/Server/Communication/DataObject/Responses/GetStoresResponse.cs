@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class GetStoresResponse : Message
+    public class GetStoresResponse : Message
     {
         List<Store> _stores { get; set; }
 

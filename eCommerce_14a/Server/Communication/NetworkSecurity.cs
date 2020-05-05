@@ -16,11 +16,12 @@ namespace eCommerce_14a.Communication
 
         public NetworkSecurity()
         {
-            aesAlg = Aes.Create();
+            aesAlg = Aes.Create("AES");
             aesAlg.Key = GetKey();
             aesAlg.IV = GetInitialVector();
             encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
             decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+            aesAlg.Padding = PaddingMode.PKCS7;
         }
 
         public byte[] Encrypt(string plainText) 
@@ -53,9 +54,9 @@ namespace eCommerce_14a.Communication
                     {
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
-                            // Read the decrypted bytes from the decrypting stream
-                            // and place them in a string.
-                            plaintext = srDecrypt.ReadToEnd();
+                        // Read the decrypted bytes from the decrypting stream
+                        // and place them in a string.
+                        plaintext = srDecrypt.ReadToEnd();
                         }
                     }
                 }

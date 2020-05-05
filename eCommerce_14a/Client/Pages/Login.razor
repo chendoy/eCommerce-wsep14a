@@ -60,15 +60,15 @@
 
     private async Task<bool> ValidateUser()
     {
-        var returnedUser = await service.Login(user);
+        var validated = await service.Login(user);
 
-        if (returnedUser.Username != "null")
+        if (validated)
         {
-            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(returnedUser);
+            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user);
             NavigationManager.NavigateTo("/");
 
             //store user's session
-            await sessionStorage.SetItemAsync("user", returnedUser);
+            await sessionStorage.SetItemAsync("user", user);
         }
         else
         {

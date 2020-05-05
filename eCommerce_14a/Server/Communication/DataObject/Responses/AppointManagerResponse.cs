@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class AppointManagerResponse : Message
+    public class AppointManagerResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }

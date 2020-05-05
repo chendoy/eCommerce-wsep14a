@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class LogoutResponse : Message
+    public class LogoutResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class RegisterResponse : Message
+    public class RegisterResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }

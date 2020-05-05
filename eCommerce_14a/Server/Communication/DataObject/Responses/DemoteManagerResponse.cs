@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class DemoteManagerResponse : Message
+    public class DemoteManagerResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }

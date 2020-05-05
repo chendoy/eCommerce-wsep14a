@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class LoginResponse : Message
+    public class LoginResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
 
         public LoginResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
             this.Success = success;
             this.Error = error;
+        }
+
+        public LoginResponse() : base()
+        {  
         }
     }
 }

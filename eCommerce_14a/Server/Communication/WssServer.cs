@@ -60,13 +60,12 @@ namespace eCommerce_14a.Communication
 
         private void ReceiveData(WebSocketSession session, byte[] value)
         {
-            Console.WriteLine("NewDataReceived");
             HandleMessage(session, value);
         }
 
         private void ReceiveMessage(WebSocketSession session, string value)
         {
-            Console.WriteLine("Receive Msg:" + value);
+            //Console.WriteLine("Receive Msg:" + value);
         }
 
         public void notify(string username, NotifyData msg)
@@ -83,6 +82,7 @@ namespace eCommerce_14a.Communication
         {
             byte[] response;
             string json = handler.Decrypt(msg);
+            Console.WriteLine("received: " + json);
             int opcode = handler.GetOpCode(json);
 
             switch (opcode)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class ErrorResponse : Message
+    public class ErrorResponse : Message
     {
         string _errorMessage { get; set; }
 

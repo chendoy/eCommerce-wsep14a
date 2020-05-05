@@ -20,52 +20,41 @@ namespace Client.Service
 
         public DateTime Time { get; private set; }
 
-        public List<Store> GetAllActiveStores()
-        {
-            comm.SendRequest("GetAllActiveStores");
-            List<Store> stores = (List<Store>)comm.Get();
-            string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
-            stores = JsonSerializer.Deserialize<List<Store>>(json);
-            return stores;
-        }
+        //public List<Store> GetAllActiveStores()
+        //{
+        //    comm.SendRequest("GetAllActiveStores");
+        //    List<Store> stores = (List<Store>)comm.GetAsync();
+        //    string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
+        //    stores = JsonSerializer.Deserialize<List<Store>>(json);
+        //    return stores;
+        //}
 
-        public Store GetStoreById(int storeId)
-        {
-            comm.SendRequest("GetStoreById");
-            List<Store> stores = (List<Store>)comm.Get();
-            string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
-            stores = JsonSerializer.Deserialize<List<Store>>(json);
-            foreach (Store store in stores)
-            {
-                if (store.StoreId == storeId)
-                {
-                    return store;
-                }
-            }
+        //public Store GetStoreById(int storeId)
+        //{
+        //    comm.SendRequest("GetStoreById");
+        //    //List<Store> stores = (List<Store>)comm.Get();
+        //    string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
+        //    stores = JsonSerializer.Deserialize<List<Store>>(json);
+        //    foreach (Store store in stores)
+        //    {
+        //        if (store.StoreId == storeId)
+        //        {
+        //            return store;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        async public Task<User> Login(User _user)
+        async public Task<bool> Login(User _user)
         {
             LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);
-
-            string username = _user.Username;
-            string password = _user.Password;
-
             comm.SendRequest(loginRequest);
-            //comm.SendRequest("ValidateUser");
-            List<User> users = (List<User>)comm.Get();
-            string json = System.IO.File.ReadAllText("wwwroot/resources/users.json");
-            users = JsonSerializer.Deserialize<List<User>>(json);
-            foreach(User user in users)
-            {
-                if (user.Username == username && user.Password == password)
-                    return await Task.FromResult(user);
-            }
-
-            return await Task.FromResult(new User("null", "null", new[]{""}));
+            LoginResponse response = await comm.Get<LoginResponse>();
+            return response.Success;
             
         }
+
+        //async public Task<bool> Register()
     }
 }

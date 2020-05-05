@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class HistoryResponse : Message
+       public class HistoryResponse : Message
     {
         List<Purchase> _historyItems { get; set; } // not sure about that
         string Error;
