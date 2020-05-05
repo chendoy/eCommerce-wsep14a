@@ -10,11 +10,13 @@ namespace Server.Communication.DataObject
     {
         public string Appointer { get; set; }
         public string Appointed { get; set; }
+        public int StoreId { get; set; }
 
-        public DemoteRequest(string appointer, string appointed) : base(Opcode.DEMOTE)
+        public DemoteRequest(string appointer, string appointed, int storeID) : base(Opcode.DEMOTE)
         {
             Appointer = appointer;
             Appointed = appointed;
+            StoreId = storeID;
         }
     }
 }

@@ -11,6 +11,8 @@ using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
 using Newtonsoft.Json;
 using Server.Communication.DataObject;
+using Server.Communication.DataObject.Requests;
+using Server.Communication.DataObject.Responses;
 using Server.UserComponent.Communication;
 using SuperWebSocket;
 
@@ -77,7 +79,7 @@ namespace eCommerce_14a.Communication
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (ans.Item1)
                 usersSessions.Add(res.Username, session);
-            string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            string jsonAns = Seralize(new LoginResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
@@ -85,22 +87,21 @@ namespace eCommerce_14a.Communication
         {
             LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
             Tuple<bool, string> ans = userService.Logout(res.Username);
-            string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            string jsonAns = Seralize(new LogoutResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
         public byte[] HandleRegister(string json)
         {
-            //RegisterRequest res = JsonConvert.DeserializeObject<RegisterRequest>(json);
-            //Tuple<bool, string> ans = userService.Registration(res.Username, res.Password);
-            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
-            //return security.Encrypt(jsonAns);
-            return new byte[20];
+            RegisterRequest res = JsonConvert.DeserializeObject<RegisterRequest>(json);
+            Tuple<bool, string> ans = userService.Registration(res.Username, res.Password);
+            string jsonAns = Seralize(new RegisterResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
         }
 
         public byte[] HandleGetAllStores(string json)
         {
-            GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json);
+            //GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json); //liav should had func get all stores
             //Tuple<bool, string> ans = storeService.GetAllStores();
             //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
             //return security.Encrypt(jsonAns);
@@ -113,7 +114,7 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(json);
         }
 
-        public byte[] HandleGetProductsOfStore(string json)
+        public byte[] HandleGetProductsOfStore(string json) //help with searcher from liav
         {
             StoresProductsRequest res = JsonConvert.DeserializeObject<StoresProductsRequest>(json);
             //Tuple<bool, string> ans = storeService.SearchProducts(new Dictionary<string, object>(CommonStr.SearcherKeys.StoreId,res.StoreId));
@@ -122,7 +123,7 @@ namespace eCommerce_14a.Communication
             return new byte[20];
         }
 
-        public byte[] HandleGetProductDetails(string json)
+        public byte[] HandleGetProductDetails(string json)//help with searcher from liav
         {
             ProductInfoRequest res = JsonConvert.DeserializeObject<ProductInfoRequest>(json);
             //Tuple<bool, string> ans = storeService.SearchProducts(new Dictionary<string, object>(CommonStr.SearcherKeys.));
@@ -135,7 +136,7 @@ namespace eCommerce_14a.Communication
         {
             PurchaseRequest res = JsonConvert.DeserializeObject<PurchaseRequest>(json);
             Tuple<bool, string> ans = purchService.PerformPurchase(res.Username, res.PaymentDetails, res.Address);
-            string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
+            string jsonAns = Seralize(new PurchaseResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
@@ -143,38 +144,58 @@ namespace eCommerce_14a.Communication
         {
             CartRequest res = JsonConvert.DeserializeObject<CartRequest>(json);
             Tuple<Cart, string> ans = purchService.GetCartDetails(res.Username);
-            string jsonAns = Seralize(ans);
+            string jsonAns = Seralize(new GetUsersCartResponse(ans.Item1));
             return security.Encrypt(jsonAns);
         }
 
-        public byte[] HandleSearchProduct(string json)
+        public byte[] HandleSearchProduct(string json) //help from liav with searcher
         {
-            throw new NotImplementedException();
+            SearchProductRequest res = JsonConvert.DeserializeObject<SearchProductRequest>(json);
+            //Tuple<Cart, string> ans = storeService.SearchProducts();
+            //string jsonAns = Seralize(new GetUsersCartResponse(ans.Item1));
+            //return security.Encrypt(jsonAns);
+            return new byte[20];
         }
 
         public byte[] HandleOpenStore(string json)
         {
-            throw new NotImplementedException();
+            OpenStoreRequest res = JsonConvert.DeserializeObject<OpenStoreRequest>(json);
+            Tuple<int, string> ans = storeService.createStore(res.Username, 0, 0);
+            bool success = ans.Item1 == -1 ? false : true;
+            string jsonAns = Seralize(new OpenStoreResponse(success,ans.Item2, ans.Item1));
+            return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleBuyerHistory(string json)
+        public byte[] HandleBuyerHistory(string json)
         {
-            throw new NotImplementedException();
+            BuyerHistoryRequest res = JsonConvert.DeserializeObject<BuyerHistoryRequest>(json);
+            Tuple<List<Purchase>, string> ans = purchService.GetBuyerHistory(res.Username);
+            string jsonAns = Seralize(new HistoryResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleAppointManager(string json)
+        public byte[] HandleAppointManager(string json)
         {
-            throw new NotImplementedException();
+            AppointManagerRequest res = JsonConvert.DeserializeObject<AppointManagerRequest>(json);
+            Tuple<bool, string> ans = appointService.AppointStoreManage(res.Appointer,res.Appointed,res.StoreId);
+            string jsonAns = Seralize(new AppointManagerResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleAppointOwner(string json)
+        public byte[] HandleAppointOwner(string json)
         {
-            throw new NotImplementedException();
+            AppointOwnerRequest res = JsonConvert.DeserializeObject<AppointOwnerRequest>(json);
+            Tuple<bool, string> ans = appointService.AppointStoreOwner(res.Appointer, res.Appointed, res.StoreId);
+            string jsonAns = Seralize(new AppointOwnerResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleDemoteManager(string json)
+        public byte[] HandleDemoteManager(string json)
         {
-            throw new NotImplementedException();
+            DemoteRequest res = JsonConvert.DeserializeObject<DemoteRequest>(json);
+            Tuple<bool, string> ans = appointService.RemoveStoreManager(res.Appointer, res.Appointed, res.StoreId);
+            string jsonAns = Seralize(new DemoteManagerResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
         }
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="Communication\DataObject\Requests\OpenStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ProductInfoRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\RegisterRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\SearchProductRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\StoresProductsRequest.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />

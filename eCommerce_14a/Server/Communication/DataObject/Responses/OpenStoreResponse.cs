@@ -9,10 +9,14 @@ namespace Server.Communication.DataObject.Responses
     class OpenStoreResponse : Message
     {
         bool Success { get; set; }
+        string Error { get; set; }
+        int StoreId { get; set; }
 
-        public OpenStoreResponse(bool success) : base(Opcode.RESPONSE)
+        public OpenStoreResponse(bool success, string error, int storeID) : base(Opcode.RESPONSE)
         {
-            this.Success = Success;
+            this.Success = success;
+            this.Error = error;
+            this.StoreId = storeID;
         }
     }
 }
