@@ -39,8 +39,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
         }
 
-      
 
+        public List<Store> GetAllStores() 
+        {
+            return stores.Values.ToList();
+        }
         public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

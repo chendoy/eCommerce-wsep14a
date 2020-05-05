@@ -101,11 +101,10 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleGetAllStores(string json)
         {
-            //GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json); //liav should had func get all stores
-            //Tuple<bool, string> ans = storeService.GetAllStores();
-            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
-            //return security.Encrypt(jsonAns);
-            return new byte[20];
+            GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json);
+            List<Store> ans = storeService.GetAllStores();
+            string jsonAns = Seralize(new GetStoresResponse(ans));
+            return security.Encrypt(jsonAns);
         }
 
         internal byte[] HandleNotification(NotifyData msg)
@@ -114,22 +113,35 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(json);
         }
 
-        public byte[] HandleGetProductsOfStore(string json) //help with searcher from liav
+        public byte[] HandleGetProductsOfStore(string json)
         {
             StoresProductsRequest res = JsonConvert.DeserializeObject<StoresProductsRequest>(json);
-            //Tuple<bool, string> ans = storeService.SearchProducts(new Dictionary<string, object>(CommonStr.SearcherKeys.StoreId,res.StoreId));
-            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
-            //return security.Encrypt(jsonAns);
-            return new byte[20];
+            Dictionary<string, object> filters = new Dictionary<string, object>();
+            filters.Add(CommonStr.SearcherKeys.StoreId, res.StoreId);
+            Dictionary<int, List<Product>> ans = storeService.SearchProducts(filters);
+            List<Product> prodList = ans[res.StoreId];
+            string jsonAns = Seralize(new SearchProductResponse(prodList));
+            return security.Encrypt(jsonAns);
         }
 
-        public byte[] HandleGetProductDetails(string json)//help with searcher from liav
+        public byte[] HandleGetProductDetails(string json)
         {
+            Product prod = null;
             ProductInfoRequest res = JsonConvert.DeserializeObject<ProductInfoRequest>(json);
-            //Tuple<bool, string> ans = storeService.SearchProducts(new Dictionary<string, object>(CommonStr.SearcherKeys.));
-            //string jsonAns = Seralize(new ResponseData(ans.Item1, ans.Item2));
-            //return security.Encrypt(jsonAns);
-            return new byte[20];
+            Dictionary<string, object> filters = new Dictionary<string, object>();
+            filters.Add(CommonStr.SearcherKeys.StoreId, res.StoreId);
+            Dictionary<int, List<Product>> ans = storeService.SearchProducts(filters);
+            List<Product> prodList = ans[res.StoreId];
+            foreach (Product product in prodList) 
+            {
+                if (product.ProductID == res.ProductId)
+                {
+                    prod = product;
+                    break;
+                }
+            }
+            string jsonAns = Seralize(new ProductInfoResponse(prod));
+            return security.Encrypt(jsonAns);
         }
 
         public byte[] HandlePurchase(string json)
@@ -148,13 +160,13 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
-        public byte[] HandleSearchProduct(string json) //help from liav with searcher
+        public byte[] HandleSearchProduct(string json) //deal with doytsh
         {
             SearchProductRequest res = JsonConvert.DeserializeObject<SearchProductRequest>(json);
-            //Tuple<Cart, string> ans = storeService.SearchProducts();
-            //string jsonAns = Seralize(new GetUsersCartResponse(ans.Item1));
-            //return security.Encrypt(jsonAns);
-            return new byte[20];
+            Dictionary<int, List<Product>> ans = storeService.SearchProducts(res.Filters);
+            List<Product> prodList = ans.Values.ToList().SelectMany(x => x).ToList();
+            string jsonAns = Seralize(new SearchProductResponse(prodList));
+            return security.Encrypt(jsonAns);
         }
 
         public byte[] HandleOpenStore(string json)

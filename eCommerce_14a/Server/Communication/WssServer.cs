@@ -168,14 +168,6 @@ namespace eCommerce_14a.Communication
             CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
-        //    LoginRequest req = new LoginRequest("bla", "bla");
-        //    string json = JsonConvert.SerializeObject(req);
-        //    Console.WriteLine(json);
-        //    LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
-        //    Console.WriteLine(res.Username);
-        //    Console.WriteLine(res.Password);
-        //    Console.WriteLine(res._Opcode);
-        //    Console.ReadLine();
         }
     }
 }
