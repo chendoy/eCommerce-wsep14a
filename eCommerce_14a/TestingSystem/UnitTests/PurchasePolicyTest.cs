@@ -40,11 +40,16 @@ namespace TestingSystem.UnitTests
                 (PurchaseBasket basket, int productId, User user, Store store) => store.ActiveStore);
 
 
+            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
+                (PurchaseBasket basket, int productId, User user, Store store) => true);
+
+
+
             preConditionsDict = new Dictionary<int, PreCondition>();
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.singleOfProductType, new PurchasePreCondition(CommonStr.PurchasePreCondition.singleOfProductType, validator));
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, new PurchasePreCondition(CommonStr.PurchasePreCondition.Max10ProductPerBasket, validator));
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, new PurchasePreCondition(CommonStr.PurchasePreCondition.StoreMustBeActive, validator));
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.GuestCantBuy, new PurchasePreCondition(CommonStr.PurchasePreCondition.GuestCantBuy, validator));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.singleOfProductType, new PurchasePreCondition(CommonStr.PurchasePreCondition.singleOfProductType));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, new PurchasePreCondition(CommonStr.PurchasePreCondition.Max10ProductPerBasket));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, new PurchasePreCondition(CommonStr.PurchasePreCondition.StoreMustBeActive));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.GuestCantBuy, new PurchasePreCondition(CommonStr.PurchasePreCondition.GuestCantBuy));
 
             store = StoreTest.StoreTest.initValidStore();
             cart = new Cart("liav");
@@ -66,7 +71,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 3, 3, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc= new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -78,7 +83,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 3, 3, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -90,7 +95,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 3, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -102,7 +107,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 3, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -112,7 +117,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc = new UserPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.GuestCantBuy], new User(1, "liav", false, false));
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -122,7 +127,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc = new UserPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.GuestCantBuy], new User(1, "liav", true, false));
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -134,7 +139,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
             PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], store);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -145,7 +150,7 @@ namespace TestingSystem.UnitTests
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
             PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], store);
-            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket);
+            bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -162,7 +167,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -179,7 +184,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -196,7 +201,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -213,7 +218,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -231,7 +236,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -248,7 +253,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
 
@@ -265,7 +270,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 
@@ -282,7 +287,7 @@ namespace TestingSystem.UnitTests
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
-            bool eligiblePurchase = compund.IsEligiblePurchase(basket);
+            bool eligiblePurchase = compund.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
 

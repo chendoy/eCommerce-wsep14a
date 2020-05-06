@@ -12,17 +12,11 @@ namespace Server.StoreComponent.DomainLayer
     public  class PreCondition
     {
         int preCondNumber;
-        Validator validator;
-        public PreCondition(int num, Validator validator)
+        public PreCondition(int num)
         {
             this.preCondNumber = num;
-            this.validator = validator;
         }
 
-        public Validator Validator
-        {
-            get { return validator;}
-        }
 
         public int PreConditionNumber
         {
@@ -30,13 +24,13 @@ namespace Server.StoreComponent.DomainLayer
         }
 
         virtual
-        public bool IsFulfilled(PurchaseBasket basket, int productId)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, Validator validator)
         {
             return false;
         }
 
         virtual
-        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, Validator validator)
         {
             return false;
         }
@@ -45,36 +39,36 @@ namespace Server.StoreComponent.DomainLayer
 
     public class DiscountPreCondition : PreCondition
     {
-        public DiscountPreCondition(int num, Validator validator) : base (num, validator)
+        public DiscountPreCondition(int num) : base (num)
         {
 
         }
 
         override
-        public bool IsFulfilled(PurchaseBasket basket, int productId)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, Validator validator)
         {
             if (productId > 0)
                 if (!basket.Products.ContainsKey(productId))
                     return false;
-            return Validator.DiscountValidatorFuncs[PreConditionNumber].Invoke(basket, productId);
+            return validator.DiscountValidatorFuncs[PreConditionNumber].Invoke(basket, productId);
         }
 
     }
 
     public class PurchasePreCondition : PreCondition
     {
-        public PurchasePreCondition(int num, Validator validator): base (num, validator)
+        public PurchasePreCondition(int num): base (num)
         {
 
         }
 
         override
-        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, Validator validator)
         {
             if (productId > 0)
                 if (!basket.Products.ContainsKey(productId))
                     return false;
-            return Validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, user, store);
+            return validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, user, store);
         }
     }
 

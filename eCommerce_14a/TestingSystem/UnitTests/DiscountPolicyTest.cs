@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using TestingSystem.UnitTests.Stubs;
 using TestingSystem.UnitTests.StoreTest;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace TestingSystem.UnitTests.DiscountPolicyTest
 {
@@ -41,13 +43,16 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove200,
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 200 : false);
 
-            preConditionsDict = new Dictionary<int, PreCondition>();
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.Above1Unit, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above1Unit, validator));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.Above2Units, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above2Units, validator));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, new DiscountPreCondition(CommonStr.DiscountPreConditions.basketPriceAbove1000, validator));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAbove100, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAbove100, validator));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAbove200, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAbove200, validator));
+            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
+                (PurchaseBasket basket, int productId, User user, Store store) => true);
 
+            preConditionsDict = new Dictionary<int, PreCondition>();
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.Above1Unit, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above1Unit));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.Above2Units, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above2Units));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, new DiscountPreCondition(CommonStr.DiscountPreConditions.basketPriceAbove1000));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAbove100, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAbove100));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAbove200, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAbove200));
+           
             store = StoreTest.StoreTest.initValidStore();
             cart = new Cart("liav");
         }
@@ -58,7 +63,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 1, 10, false);
             PurchaseBasket basket = cart.GetBasket(store);
             DiscountPolicy discountplc = new RevealdDiscount(1, 30);
-            double discount = discountplc.CalcDiscount(basket);
+            double discount = discountplc.CalcDiscount(basket, validator);
             double expected = 30000;
             Assert.AreEqual(expected, discount);
         }
@@ -71,7 +76,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             DiscountPolicy discountplc = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
-            double discount = discountplc.CalcDiscount(basket);
+            double discount = discountplc.CalcDiscount(basket, validator);
             double expected = 2180;
             Assert.AreEqual(expected, discount);    
         }
@@ -82,7 +87,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             DiscountPolicy discountplc = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
-            double discount = discountplc.CalcDiscount(basket);
+            double discount = discountplc.CalcDiscount(basket, validator);
             double expected = 0;
             Assert.AreEqual(expected, discount);
         }
@@ -92,7 +97,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 2, 5, false);
             PurchaseBasket basket = cart.GetBasket(store);
             DiscountPolicy discountplc = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above2Units], 30);
-            double discount = discountplc.CalcDiscount(basket);
+            double discount = discountplc.CalcDiscount(basket, validator);
             double expected = 675;
             Assert.AreEqual(expected, discount);
         }
@@ -102,7 +107,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             DiscountPolicy discountplc = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above2Units], 30);
-            double discount = discountplc.CalcDiscount(basket);
+            double discount = discountplc.CalcDiscount(basket, validator);
             double expected = 0;
             Assert.AreEqual(expected, discount);
         }
@@ -120,7 +125,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             policies_lst.Add(contitionalAboveSingleUnit);
             policies_lst.Add(conditionalWholeBasket);
             DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.XOR, policies_lst);
-            double discount = compundDiscount.CalcDiscount(basket);
+            double discount = compundDiscount.CalcDiscount(basket, validator);
             double expected = 380;
             Assert.AreEqual(expected, discount);
         }
@@ -138,7 +143,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             policies_lst.Add(contitionalAboveSingleUnit);
             policies_lst.Add(conditionalWholeBasket);
             DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.XOR, policies_lst);
-            double discount = compundDiscount.CalcDiscount(basket);
+            double discount = compundDiscount.CalcDiscount(basket, validator);
             double expected = 1102.5;
             Assert.AreEqual(expected, discount);
         }
@@ -162,7 +167,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             policies_lst_2.Add(compund_above_1_xor_2);
             policies_lst_2.Add(contitionalAboveSingleUnitp3);
             DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.OR, policies_lst_2);
-            double discount = compundDiscount.CalcDiscount(basket);
+            double discount = compundDiscount.CalcDiscount(basket, validator);
             double expected = 805;
             Assert.AreEqual(expected, discount);
         }
