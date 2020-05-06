@@ -16,7 +16,7 @@ namespace Client.Service
         // Can be called from anywhere
         public async Task Update(string context)
         {
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(1000);
             if (Notify != null)
             {
                 notifications.Add(context);
