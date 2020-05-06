@@ -25,6 +25,7 @@ namespace TestingSystem.UnitTests
         [TestInitialize]
         public void TestInitialize()
         {
+
             store = StoreTest.StoreTest.initValidStore();
             purchaseManagement = PurchaseManagement.Instance;
             UserManager.Instance.Register(buyer, "123");

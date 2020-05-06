@@ -14,12 +14,7 @@ namespace TestingSystem.UnitTests.Stubs
 
         }
 
-       override
-       public double getBasketPrice(Dictionary<int, int> products)
-       {
-            return 500;
-       }
-       
+    
 
     }
 }

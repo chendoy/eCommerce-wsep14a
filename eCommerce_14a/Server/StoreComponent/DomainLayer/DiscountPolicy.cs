@@ -12,7 +12,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public interface DiscountPolicy
     {
-        double CalcDiscount(PurchaseBasket basket);
+        double CalcDiscount(PurchaseBasket basket, Validator validator);
     }
 
     public class CompundDiscount : DiscountPolicy
@@ -28,13 +28,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public double CalcDiscount(PurchaseBasket basket)
+        public double CalcDiscount(PurchaseBasket basket, Validator validator)
         {
             if (mergeType == CommonStr.DiscountMergeTypes.OR)
             {
                 double sum_discounts = 0;
                 foreach (DiscountPolicy child in children)
-                    sum_discounts += child.CalcDiscount(basket);
+                    sum_discounts += child.CalcDiscount(basket, validator);
                 return sum_discounts;
             } 
             else if (mergeType == CommonStr.DiscountMergeTypes.XOR)
@@ -42,7 +42,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 double maxDiscount = 0;
                 foreach(DiscountPolicy child in children)
                 {
-                    double discount = child.CalcDiscount(basket);
+                    double discount = child.CalcDiscount(basket, validator);
                     if (discount > maxDiscount)
                         maxDiscount = discount;
                 }
@@ -98,7 +98,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
        
         virtual
-        public double CalcDiscount(PurchaseBasket basket)
+        public double CalcDiscount(PurchaseBasket basket, Validator validator)
         {
             return 0;
         }
@@ -114,10 +114,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discountProdutId = discountProdutId;
         }
 
-        public override double CalcDiscount(PurchaseBasket basket)
+        public override double CalcDiscount(PurchaseBasket basket, Validator validator)
         {
             double reduction = 0;
-            if (PreCondition.IsFulfilled(basket, discountProdutId))
+            if (PreCondition.IsFulfilled(basket, discountProdutId, validator))
             {
                 int numProducts = basket.Products[discountProdutId];
                 double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
@@ -133,9 +133,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
         }
 
-        public override double CalcDiscount(PurchaseBasket basket)
+        public override double CalcDiscount(PurchaseBasket basket, Validator validator)
         {
-            if (PreCondition.IsFulfilled(basket, -1))
+            if (PreCondition.IsFulfilled(basket, -1, validator))
                 return (Discount / 100) * basket.GetBasketPrice();
             return 0;
         }
@@ -154,7 +154,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discount = discount;
         }
 
-        public double CalcDiscount(PurchaseBasket basket)
+        public double CalcDiscount(PurchaseBasket basket, Validator validator)
         {
             double reduction = 0;
             if (basket.Products.ContainsKey(discountProdutId))
