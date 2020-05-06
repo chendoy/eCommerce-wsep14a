@@ -26,7 +26,6 @@ namespace eCommerce_14a.Communication
 
         private void InitServer()
         {
-            Console.WriteLine(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName);
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
