@@ -12,6 +12,7 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using TestingSystem.UnitTests.InventroyTest;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
+using Server.StoreComponent.DomainLayer;
 
 namespace TestingSystem.UnitTests.StoreTest
 {
@@ -352,7 +353,7 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PurchasePolicies);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PurchasePolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
         }
@@ -419,7 +420,7 @@ namespace TestingSystem.UnitTests.StoreTest
             return s;
         }
 
-        public static Store initValidStore()
+        public static Store initValidStore(Validator validator=null)
         {
             StoreManagment sm = StoreManagment.Instance;
             UserManager userManager = UserManager.Instance;
@@ -437,6 +438,10 @@ namespace TestingSystem.UnitTests.StoreTest
             userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
 
             Store validStore = sm.getStore(1);
+            if(validator!=null)
+            {
+                validStore.PolicyValidator = validator;
+            }
             validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
             return validStore;
         }
