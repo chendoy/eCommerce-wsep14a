@@ -73,6 +73,8 @@
     <Compile Include="Communication\ResponseData.cs" />
     <Compile Include="Communication\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
+    <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Validator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
@@ -123,7 +125,7 @@
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="StoreComponent\DomainLayer\PuarchsePolicy.cs" />
+    <Compile Include="StoreComponent\DomainLayer\PurchasePolicy.cs" />
     <Compile Include="StoreComponent\DomainLayer\Searcher.cs" />
     <Compile Include="UserComponent\DomainLayer\Security.cs" />
     <Compile Include="StoreComponent\DomainLayer\Store.cs" />

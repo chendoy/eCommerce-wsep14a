@@ -4,6 +4,7 @@ using System.Linq;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.UserComponent.Communication;
+using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -90,6 +91,43 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return stores[storeId].removeProduct(user, productId);
         }
 
+
+        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, DiscountPolicy discount_policy)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+            return stores[storeId].UpdateDiscountPolicy(user, discount_policy);
+
+        }
+
+
+        public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, PurchasePolicy purchase_policy)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+            return stores[storeId].UpdatePurchasePolicy(user, purchase_policy);
+
+        }
 
 
         public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
@@ -225,7 +263,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        public Tuple<int, string> createStore(string userName, int discountType, int puarchseType)
+        public Tuple<int, string> createStore(string userName, DiscountPolicy discountPolicy, PurchasePolicy purchasePolicy, Validator validator)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -241,8 +279,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
             storeParam.Add(CommonStr.StoreParams.StoreId, nextStoreId);
             storeParam.Add(CommonStr.StoreParams.mainOwner, user);
-            storeParam.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(discountType));
-            storeParam.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(puarchseType));
+            storeParam.Add(CommonStr.StoreParams.StoreDiscountPolicy, discountPolicy);
+            storeParam.Add(CommonStr.StoreParams.StorePuarchsePolicy, purchasePolicy);
+            storeParam.Add(CommonStr.StoreParams.Validator, validator);
             Store store = new Store(storeParam);
 
             Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store);

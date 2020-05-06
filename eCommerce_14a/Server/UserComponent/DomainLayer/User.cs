@@ -43,6 +43,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
         }
+
+        public Dictionary<int, int[]> GetUserPermissions() 
+        {
+            return Store_options;
+        }
         public void LogIn()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -110,6 +115,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (permission.Equals(CommonStr.MangerPermission.Product))
             {
                 return perms[2] == 1;
+            }
+            if (permission.Equals(CommonStr.MangerPermission.DiscountPolicy))
+            {
+                return perms[3] == 1;
+            }
+            if (permission.Equals(CommonStr.MangerPermission.PurachsePolicy))
+            {
+                return perms[4] == 1;
             }
             return false;
         }
