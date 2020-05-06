@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Server.Communication.DataObject;
+using Server.Communication.DataObject.Requests;
 
 namespace Client.Service
 {
@@ -55,6 +56,12 @@ namespace Client.Service
             
         }
 
-        //async public Task<bool> Register()
+        async public Task<bool> Register(User _user)
+        {
+            RegisterRequest registerRequest = new RegisterRequest(_user.Username, _user.Password);
+            comm.SendRequest(registerRequest);
+            RegisterResponse response = await comm.Get<RegisterResponse>();
+            return response.Success;
+        }
     }
 }

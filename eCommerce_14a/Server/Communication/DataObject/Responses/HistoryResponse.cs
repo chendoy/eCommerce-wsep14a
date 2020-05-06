@@ -17,5 +17,10 @@ namespace Server.Communication.DataObject.Responses
             _historyItems = historyItems;
             this.Error = error;
         }
+
+        public HistoryResponse() : base()
+        {
+
+        }
     }
 }

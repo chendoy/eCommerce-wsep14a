@@ -18,5 +18,10 @@ namespace Server.Communication.DataObject.Responses
             this.Error = error;
             this.StoreId = storeID;
         }
+
+        public OpenStoreResponse() : base()
+        {
+
+        }
     }
 }

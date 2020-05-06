@@ -16,5 +16,9 @@ namespace Server.Communication.DataObject.Responses
             this.Success = success;
             this.Error = error;
         }
+        public DemoteManagerResponse() : base()
+        {
+
+        }
     }
 }

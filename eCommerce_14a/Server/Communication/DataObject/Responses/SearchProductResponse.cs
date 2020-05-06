@@ -15,5 +15,10 @@ namespace Server.Communication.DataObject.Responses
         {
             _searchResults = searchResults;
         }
+
+        public SearchProductResponse() : base()
+        {
+
+        }
     }
 }

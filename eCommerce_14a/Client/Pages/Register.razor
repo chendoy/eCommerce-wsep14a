@@ -34,7 +34,7 @@
             </div>
             <br />
             <div class="col-12 row">
-                <input type="password" class="form-control col-12" @bind="user.Password" placeholder="confirm password" />
+                <input type="password" class="form-control col-12"  placeholder="confirm password" />
             </div>
             <br />
             <div class="col-12 row">
@@ -61,10 +61,19 @@
         user = new Data.User();
     }
 
-    private async Task<User> RegisterUser()
+    private async void RegisterUser()
     {
-        NavigationManager.NavigateTo("/");
-        return await Task.FromResult(user);
+        var registered = await service.Register(user);
+
+        if (registered)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // insert register message here
+        }
+
     }
 
 }

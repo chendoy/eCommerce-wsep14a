@@ -15,5 +15,10 @@ namespace Server.Communication.DataObject.Responses
         {
             _cart = cart;
         }
+
+        public GetUsersCartResponse() : base()
+        {
+
+        }
     }
 }

@@ -16,5 +16,10 @@ namespace Server.Communication.DataObject
             this.Success = success;
             this.Error = error;
         }
+
+        public LogoutResponse() : base()
+        {
+
+        }
     }
 }
