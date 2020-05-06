@@ -17,8 +17,6 @@ namespace Server.Communication.DataObject
             this.Error = error;
         }
 
-        public LoginResponse() : base()
-        {  
-        }
+        public LoginResponse() : base(){  }
     }
 }

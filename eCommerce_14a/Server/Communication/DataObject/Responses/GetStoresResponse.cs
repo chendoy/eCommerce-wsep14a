@@ -16,5 +16,10 @@ namespace Server.Communication.DataObject
             _stores = Stores;
         }
 
+        public GetStoresResponse() : base()
+        {
+
+        }
+
     }
 }

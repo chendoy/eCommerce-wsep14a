@@ -15,5 +15,10 @@ namespace Server.Communication.DataObject
         {
             _products = products;
         }
+
+        public GetProductsResponse() : base()
+        {
+
+        }
     }
 }

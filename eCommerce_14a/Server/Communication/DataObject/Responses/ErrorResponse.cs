@@ -14,5 +14,10 @@ namespace Server.Communication.DataObject.Responses
         {
             _errorMessage = errorMessage;
         }
+
+        public ErrorResponse() : base()
+        {
+
+        }
     }
 }

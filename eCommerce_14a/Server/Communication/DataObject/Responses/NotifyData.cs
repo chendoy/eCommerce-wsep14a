@@ -14,5 +14,10 @@ namespace Server.UserComponent.Communication
         {
             this.Context = context;
         }
+
+        public NotifyData() : base()
+        {
+
+        }
     }
 }
