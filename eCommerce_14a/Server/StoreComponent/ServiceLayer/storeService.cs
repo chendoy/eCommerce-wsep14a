@@ -97,6 +97,11 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             storeManagment.cleanup();
         }
 
+        public List<Store> GetAllStores()
+        {
+            return storeManagment.GetAllStores();
+        }
+
 
 
     }

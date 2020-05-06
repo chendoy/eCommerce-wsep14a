@@ -48,6 +48,9 @@ app {
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    position: relative;
+    text-align: center;
+    width: 100%;
 }
 
     .sidebar .top-row {
@@ -69,6 +72,14 @@ app {
         font-size: 0.9rem;
         padding-bottom: 0.5rem;
     }
+
+.nav-role {
+    width: 3rem;
+    font-size: 1.1rem;
+    text-align: center;
+    color: white;
+}
+
 
         .sidebar .nav-item:first-of-type {
             padding-top: 1rem;
@@ -113,7 +124,7 @@ app {
     outline: 1px solid red;
 }
 
-.validation-message {
+.validaton-message {
     color: red;
 }
 
@@ -127,6 +138,40 @@ app {
     position: fixed;
     width: 100%;
     z-index: 1000;
+}
+
+.vertical-line {
+    border-left: 1px solid gray;
+    height: 400px;
+    margin-top: 50px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.login-frame {
+    margin: auto;
+    width: 80%;
+}
+
+.footer {
+    position: absolute;
+    bottom: 10px;
+    width: 80%;
+    text-align: center;
+}
+
+.register-frame {
+    margin: auto;
+    width: 80%;
+}
+
+.register-btn {
+    margin-top: 6px;
+    margin-left: 18px;
+}
+
+.register-form-btn {
+    margin-left: 50px;
 }
 
 #blazor-error-ui .dismiss {
@@ -181,3 +226,58 @@ app {
         display: block;
     }
 }
+
+.login-msg {
+    color: red;
+}
+
+.sidebar .nav-mode {
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    left: 70px;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #3498DB;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover, .dropbtn:focus {
+        background-color: #2980B9;
+    }
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd
+        }

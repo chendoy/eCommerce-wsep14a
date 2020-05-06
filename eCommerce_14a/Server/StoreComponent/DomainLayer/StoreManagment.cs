@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
@@ -39,8 +40,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
         }
 
-      
 
+        public List<Store> GetAllStores() 
+        {
+            return stores.Values.ToList();
+        }
         public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -295,6 +299,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             else
             {
                 stores.Add(nextStoreId, store);
+                //Version 2 Addition
+                Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, nextStoreId);
+                if (!ans.Item1)
+                    return new Tuple<int, string>(-1, ans.Item2);
                 return new Tuple<int, string>(nextStoreId, "");
             }
 
@@ -339,7 +347,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownerShipedRemoved.Item2);
                 return ownerShipedRemoved;
             }
-
+            //Version 2 Addition
+            Tuple<bool,string> ans =  Publisher.Instance.Notify(storeId, new NotifyData("Store Closed by Main Owner"));
+            if (!ans.Item1)
+                return ans;
+            if (!Publisher.Instance.RemoveSubscriptionStore(storeId))
+                return new Tuple<bool, string>(false,"Cannot Remove Subscription Store");
             stores.Remove(storeId);
             return new Tuple<bool, string>(true, "");
         }

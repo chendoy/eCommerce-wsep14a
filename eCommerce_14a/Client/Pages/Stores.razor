@@ -1,0 +1,51 @@
+﻿@page "/Stores"
+@using Data;
+@inject Service.ECommerce14AService service
+
+<h1>StoresView</h1>
+
+@if (stores == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @if (stores.Count == 0)
+    {
+        <p><em>Sorry, there are no available stores at this moment :(</em></p>
+    }
+    else
+    {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Store Id</th>
+                <th>Owner of the store</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var store in stores)
+            {
+                <tr>
+                    <td><a href=Stores/@store.StoreId>@store.StoreId</a></td>
+                    <td>@store.Owner</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+}
+
+@code {
+    private List<Store> stores;
+
+    protected override void OnInitialized()
+    {
+        stores = service.GetAllActiveStores();
+    }
+
+    private string StoreIdToLink(int storeId)
+    {
+        return "/Stores/" + storeId.ToString();
+    }
+}

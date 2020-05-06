@@ -1,0 +1,62 @@
+﻿@page "/Stores/{storeid:int}"
+@using Data;
+@inject Service.ECommerce14AService service
+
+<h2>StoreDetails</h2>
+@if (Store == null)
+{
+    <p>No such store</p>
+}
+else
+{
+    <div>
+        <p>Store Id: @StoreId</p>
+        <p>Store Owner: @Store.Owner</p>
+    </div>
+    @if (Store.Products == null || Store.Products.Count == 0)
+    {
+        <p><em>Sorry, there are no available products in this store right now :(</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product Id</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Details</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Product product in Store.Products)
+                {
+                    <tr>
+                        <td><a href=Stores/@StoreId/@product.ProductId>@product.ProductId</a></td>
+                        <td>@product.Name</td>
+                        <td>@product.Category</td>
+                        <td>@product.Details</td>
+                        <td>@product.Price</td>
+                        <td>@product.Amount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
+}
+
+
+@code {
+    [Parameter]
+    public int StoreId { get; set; }
+    public Store Store { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Store = service.GetStoreById(StoreId);
+    }
+}

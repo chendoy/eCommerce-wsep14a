@@ -11,6 +11,7 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using TestingSystem.UnitTests.InventroyTest;
+using Server.UserComponent.Communication;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 
 namespace TestingSystem.UnitTests.StoreTest
@@ -35,6 +36,7 @@ namespace TestingSystem.UnitTests.StoreTest
         {
             UserManager.Instance.cleanup();
             StoreManagment.Instance.cleanup();
+            Publisher.Instance.cleanup();
         }
 
 
