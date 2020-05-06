@@ -1,23 +1,18 @@
 ﻿@inject Client.Service.ECommerce14AService service
-@inject NotifierService notifier
 @implements IDisposable
 
 <a href="/notifications">You have @NotificationCount notifications</a>
 
 
 @code {
+    private NotifierService notifier;
     public int NotificationCount { get; set; }
 
     protected override void OnInitialized()
     {
+        notifier = service.NotifierService();
         notifier.Notify += OnNotify;
         NotificationCount = notifier.notifications.Count;
-    }
-
-
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        return service.GetNotifications(notifier);
     }
 
 

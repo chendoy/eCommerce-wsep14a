@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using Server.Communication.DataObject;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Server.UserComponent.Communication;
 
 namespace Client.Service
 {
@@ -29,6 +30,7 @@ namespace Client.Service
             
             security = new NetworkSecurity();
             responses = new BlockingCollection<string>();
+            NotifierService = new NotifierService();
 
             client = new WebSocket(URL);
             //client.cre
@@ -36,10 +38,11 @@ namespace Client.Service
             client.OnMessage += Client_OnMessage;
         }
 
-        private void Client_OnMessage(object sender, MessageEventArgs e)
+        public NotifierService NotifierService { get; set; }
+
+        private async void Client_OnMessage(object sender, MessageEventArgs e)
         {
             byte[] byteMsg = e.RawData;
-            //byte[] ans = byteArr.TakeWhile((v, index) => byteArr.Skip(index).Any(w => w != 0x00)).ToArray();
             string json = security.Decrypt(byteMsg);
             Dictionary<string, object> resDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             if (resDict.TryGetValue("_Opcode", out object opcodeObj))
@@ -47,7 +50,8 @@ namespace Client.Service
                 int opcode = Convert.ToInt32(opcodeObj);
                 if (opcode == (int)Opcode.NOTIFICATION)
                 {
-
+                    NotifyData notifyData = JsonConvert.DeserializeObject<NotifyData>(json);
+                    await NotifierService.Update(notifyData.Context);
                 }
                 else
                 {

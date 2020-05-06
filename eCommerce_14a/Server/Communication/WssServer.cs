@@ -44,9 +44,7 @@ namespace eCommerce_14a.Communication
             wsServer.NewDataReceived += ReceiveData;
             wsServer.Start();
             handler.HandleRegister(JsonConvert.SerializeObject(new RegisterRequest("admin", "admin")));
-            Console.WriteLine("Server is running on port " + port + ". Press ENTER to exit....");
-            Console.ReadKey();
-            wsServer.Stop();
+            
         }
 
 
@@ -73,9 +71,10 @@ namespace eCommerce_14a.Communication
         public void notify(string username, NotifyData msg)
         {
             byte[] response;
+            get_session:
             WebSocketSession session = handler.GetSession(username);
             if (session == null)
-                return;
+                goto get_session;
             response = handler.HandleNotification(msg);
             session.Send(response, 0, response.Length);
         }
@@ -170,6 +169,19 @@ namespace eCommerce_14a.Communication
             CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
+
+            for (int i = 0; i < 10; i++)
+            {
+                notifier.notify("admin", new NotifyData("Notify Number : " + i.ToString()));
+                for (int j = 0; j < 1000; j++)
+                {
+
+                }
+            }
+
+            Console.WriteLine("Server is running on port " +  ". Press ENTER to exit....");
+            Console.ReadKey();
+            wsServer.Stop();
         }
     }
 }
