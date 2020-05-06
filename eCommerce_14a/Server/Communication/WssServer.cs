@@ -11,8 +11,6 @@ namespace eCommerce_14a.Communication
 {
     public class WssServer
     {
-
-
         public CommunicationHandler handler;
         private static WebSocketServer wsServer;
         private int port;
