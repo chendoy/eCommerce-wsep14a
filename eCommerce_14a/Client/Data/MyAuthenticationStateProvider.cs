@@ -48,7 +48,7 @@ namespace Client.Data
                 var identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Roles[0])
+                    new Claim(ClaimTypes.Role, "TestRole")
                 }, "apiauth_type");
 
                 var userClaim = new ClaimsPrincipal(identity);

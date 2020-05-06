@@ -6,6 +6,8 @@ using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.IO;
 using Server.UserComponent.Communication;
+using Server.Communication.DataObject.Requests;
+using Newtonsoft.Json;
 
 namespace eCommerce_14a.Communication
 {
@@ -41,6 +43,7 @@ namespace eCommerce_14a.Communication
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
             wsServer.Start();
+            handler.HandleRegister(JsonConvert.SerializeObject(new RegisterRequest("admin", "admin")));
             Console.WriteLine("Server is running on port " + port + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
