@@ -1,13 +1,16 @@
 ﻿@inherits LayoutComponentBase
 @inject Client.Service.ECommerce14AService service
+@inject NotifierService notifier
 
 <div class="sidebar">
     <NavMenu />
-        <AuthorizeView>
-            <Authorized>
+    <AuthorizeView>
+        <Authorized>
             <div class="nav-mode"> Mode: @context.User.Claims.ToArray()[1].Value</div>
-            </Authorized>
-        </AuthorizeView>
+            <NotifyIcon />
+        </Authorized>
+    </AuthorizeView>
+    
 </div>
 
 <div class="main">
