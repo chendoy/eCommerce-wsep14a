@@ -12,6 +12,7 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using TestingSystem.UnitTests.InventroyTest;
 using Server.UserComponent.Communication;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
 
 namespace TestingSystem.UnitTests.StoreTest
 {
@@ -352,8 +353,8 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreId], validStore.Id);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolicy);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicy);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicies);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
         }
@@ -398,6 +399,8 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.IsTrue(AddStoreMangerDriver(validStore, newManager));
         }
 
+
+
         private bool AddStoreMangerDriver(Store s, User user)
         {
             return s.AddStoreManager(user);
@@ -410,8 +413,8 @@ namespace TestingSystem.UnitTests.StoreTest
             storeParams.Add(CommonStr.StoreParams.StoreId, storeId);
             storeParams.Add(CommonStr.StoreParams.mainOwner, user);
             storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
-            storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(1));
-            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy,null);
+            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, null);
             storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
             return s;

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -12,7 +13,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class Store
     {
         private DiscountPolicy discountPolicy;
-        private PuarchsePolicy puarchsePolicy;
+        private PurchasePolicy puarchsePolicy;
+        private Validator policyValidator;
         private Inventory inventory;
         private int rank;
         private bool activeStore;
@@ -37,7 +39,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
       
             this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
-            this.puarchsePolicy = (PuarchsePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
+            this.puarchsePolicy = (PurchasePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
+            this.policyValidator = (Validator)store_params[CommonStr.StoreParams.Validator];
             this.activeStore = true;
 
             if (store_params.ContainsKey(CommonStr.StoreParams.StoreRank))
@@ -47,6 +50,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
 
+  
         public Tuple<bool, string> IncreaseProductAmount(User user, int productId, int amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -208,7 +212,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return store_info;
         }
 
-
         public bool AddStoreOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -286,13 +289,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             set { inventory = value; }
         }
 
-        public DiscountPolicy DiscountPolicy
+        public DiscountPolicy DiscountPolices
         {
             get { return discountPolicy; }
             set { discountPolicy = value; }
         }
 
-        public PuarchsePolicy PuarchsePolicy
+        public PurchasePolicy PuarchsePolicies
         {
             get { return puarchsePolicy; }
             set { puarchsePolicy = value; }
@@ -318,6 +321,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return inventory.productExist(productId);
         }
 
+        virtual
         public double getBasketPrice(Dictionary<int, int> products)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

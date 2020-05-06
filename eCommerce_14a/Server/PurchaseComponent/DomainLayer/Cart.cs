@@ -123,5 +123,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
             return res;
         }
+
+        public PurchaseBasket GetBasket(Store store)
+        {
+            if (baskets.ContainsKey(store))
+                return baskets[store];
+            else
+                return null;
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 
@@ -29,6 +30,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// This method Add/Change/Remove product from this basket
         /// <param name="exist">state if it should be already in the basket</param>
+        virtual
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -119,6 +121,28 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return products.Keys.Count;
         }
 
+        public Store Store
+        {
+            get { return store; }
+        }
+        public double GetBasketPrice()
+        {
+            return store.getBasketPrice(products);
+        }
+
+        public int GetNumProductsAtBasket()
+        {
+            int numProducts = 0;
+            foreach(KeyValuePair<int, int> entry in products)
+            {
+                numProducts += entry.Value;
+            }
+            return numProducts;
+        }
+        public Dictionary<int, int> Products
+        {
+            get { return products; }
+        }
         internal void RestoreItemsToStore()
         {
             foreach (var product in products.Keys)

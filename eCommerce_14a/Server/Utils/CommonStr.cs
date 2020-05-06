@@ -18,7 +18,36 @@
             public static string StoreId = "SearchByStioreId";
         }
 
+        public static class DiscountMergeTypes
+        {
+            public static int XOR = 0;
+            public static int OR = 1;
+            public static int AND = 2;
+        }
 
+        public static class PurchaseMergeTypes
+        {
+            public static int XOR = 0;
+            public static int OR = 1;
+            public static int AND = 2;
+        }
+        public static class DiscountPreConditions
+        {
+            public static int ProductPriceAbove100 = 1;
+            public static int ProductPriceAbove200 = 2;
+            public static int Above1Unit = 3;
+            public static int Above2Units = 4;
+            public static int basketPriceAbove1000 = 5;
+        }
+
+        public static class PurchasePreCondition
+        {
+            public static int singleOfProductType = 1;
+            public static int Max10ProductPerBasket = 2;
+            public static int StoreMustBeActive = 3;
+            public static int GuestCantBuy = 4;
+
+        }
         public static class StoreParams
         {
             public static string StoreId = "StoreId";
@@ -28,6 +57,7 @@
             public static string StoreInventory = "StoreInventory";
             public static string StoreRank = "StoreRank";
             public static string IsActiveStore = "isActive";
+            public static string Validator = "Validator";
         }
 
         public static class ProductParams
