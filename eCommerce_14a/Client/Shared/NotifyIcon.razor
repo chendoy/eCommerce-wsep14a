@@ -10,23 +10,34 @@
 
     protected override void OnInitialized()
     {
-        notifier = service.NotifierService();
-        notifier.Notify += OnNotify;
-        NotificationCount = notifier.notifications.Count;
+        notifier = service.NotifierService;
+        notifier.NotifyReceived += OnNotify;
+        notifier.NotifyRemoved += OnRemoveNotify;
+        NotificationCount = 0;
     }
 
 
-    public async Task OnNotify(int count)
+    public async Task OnNotify(string notification)
     {
         await InvokeAsync(() =>
         {
-            NotificationCount = count;
+            NotificationCount++;
+            StateHasChanged();
+        });
+    }
+
+    public async Task OnRemoveNotify()
+    {
+        await InvokeAsync(() =>
+        {
+            NotificationCount--;
             StateHasChanged();
         });
     }
 
     public void Dispose()
     {
-        notifier.Notify -= OnNotify;
+        notifier.NotifyReceived -= OnNotify;
+        notifier.NotifyRemoved -= OnRemoveNotify;
     }
 }

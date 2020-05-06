@@ -2,34 +2,41 @@
 @inject Client.Service.ECommerce14AService service
 @implements IDisposable
 
-@foreach (string notification in Notifications)
+@foreach (string notification in service.NotifierService.Notifications)
 {
-    <p>@notification</p>
+    <div @key="notification" class="col-10 alert alert-info row">
+        <div class="col-11" style="text-align:left">
+            <span>@notification</span>
+        </div>
+        <div class="col-1" style="text-align:right">
+            <a style="text-underline-position:below; cursor:pointer" @onclick="@(() => CloseNotification(notification))">x</a>
+        </div>
+    </div>
 }
 
 
 @code {
-    public List<string> Notifications { get; set; }
-    private NotifierService notifier;
 
     protected override void OnInitialized()
     {
-        notifier = service.NotifierService();
-        notifier.Notify += OnNotify;
-        Notifications = notifier.notifications;
+        service.NotifierService.NotifyReceived += OnNotify;
     }
 
-    public async Task OnNotify(int count)
+    public async Task OnNotify(string notification)
     {
         await InvokeAsync(() =>
         {
-            Notifications = notifier.notifications;
             StateHasChanged();
         });
     }
 
     public void Dispose()
     {
-        notifier.Notify -= OnNotify;
+        service.NotifierService.NotifyReceived -= OnNotify;
+    }
+
+    public async void CloseNotification(string notification)
+    {
+        await service.NotifierService.Remove(notification);
     }
 }

@@ -22,9 +22,9 @@ namespace Client.Service
 
         public DateTime Time { get; private set; }
         
-        public NotifierService NotifierService()
+        public NotifierService NotifierService
         {
-            return comm.NotifierService;
+            get { return comm.NotifierService; }
         }
 
 
