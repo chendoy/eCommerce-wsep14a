@@ -9,6 +9,7 @@ using WebSocketSharp;
 using System.Collections.Concurrent;
 using Server.Communication.DataObject;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Client.Service
 {
@@ -27,8 +28,10 @@ namespace Client.Service
             //client.ConnectAsync(new Uri("wss://localhost:"+PORT), new CancellationToken());
             
             security = new NetworkSecurity();
+            responses = new BlockingCollection<string>();
 
-            client = new WebSocket(URL, "Tls");
+            client = new WebSocket(URL);
+            //client.cre
             client.Connect();
             client.OnMessage += Client_OnMessage;
         }
@@ -38,7 +41,7 @@ namespace Client.Service
             byte[] byteMsg = e.RawData;
             //byte[] ans = byteArr.TakeWhile((v, index) => byteArr.Skip(index).Any(w => w != 0x00)).ToArray();
             string json = security.Decrypt(byteMsg);
-            Dictionary<string, object> resDict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+            Dictionary<string, object> resDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             if (resDict.TryGetValue("_Opcode", out object opcodeObj))
             {
                 int opcode = Convert.ToInt32(opcodeObj);
@@ -55,7 +58,7 @@ namespace Client.Service
 
         public void SendRequest(Object obj)
         {
-            string json = JsonSerializer.Serialize(obj); // seralize this object into json string
+            string json = JsonConvert.SerializeObject(obj); // seralize this object into json string
             Console.WriteLine("sent: " + json);
             byte[] arr = security.Encrypt(json); // encrypt the string using aes algorithm and convert it to byte array
             //ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
@@ -66,7 +69,7 @@ namespace Client.Service
         public async Task<T> Get<T>()
         {
             string json = responses.Take();
-            T response = JsonSerializer.Deserialize<T>(json);
+            T response = JsonConvert.DeserializeObject<T>(json);
             return response;
         }
 
