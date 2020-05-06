@@ -21,7 +21,7 @@ namespace Client.Service
         }
 
         public DateTime Time { get; private set; }
-
+        
         public async Task GetNotifications(NotifierService notifier)
         {
             NotifyData response = await comm.Get<NotifyData>();
