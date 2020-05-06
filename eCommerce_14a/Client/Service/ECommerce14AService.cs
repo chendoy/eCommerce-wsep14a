@@ -7,6 +7,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Server.Communication.DataObject;
 using Server.Communication.DataObject.Requests;
+using Server.UserComponent.Communication;
 
 namespace Client.Service
 {
@@ -20,6 +21,13 @@ namespace Client.Service
         }
 
         public DateTime Time { get; private set; }
+
+        public async Task GetNotifications(NotifierService notifier)
+        {
+            NotifyData response = await comm.Get<NotifyData>();
+            await notifier.Update(response.Context);
+        }
+
 
         //public List<Store> GetAllActiveStores()
         //{

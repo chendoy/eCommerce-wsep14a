@@ -26,7 +26,6 @@ namespace eCommerce_14a.Communication
 
         private void InitServer()
         {
-            Console.WriteLine(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName);
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
@@ -168,14 +167,6 @@ namespace eCommerce_14a.Communication
             CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
-        //    LoginRequest req = new LoginRequest("bla", "bla");
-        //    string json = JsonConvert.SerializeObject(req);
-        //    Console.WriteLine(json);
-        //    LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
-        //    Console.WriteLine(res.Username);
-        //    Console.WriteLine(res.Password);
-        //    Console.WriteLine(res._Opcode);
-        //    Console.ReadLine();
         }
     }
 }

@@ -1,0 +1,33 @@
+﻿@page "/notifications"
+@inject NotifierService notifier
+@implements IDisposable
+
+@foreach (string notification in Notifications)
+{
+    <p>notification</p>
+}
+
+
+@code {
+    public List<string> Notifications { get; set; }
+
+    protected override void OnInitialized()
+    {
+        notifier.Notify += OnNotify;
+        Notifications = notifier.notifications;
+    }
+
+    public async Task OnNotify(int count)
+    {
+        await InvokeAsync(() =>
+        {
+            Notifications = notifier.notifications;
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        notifier.Notify -= OnNotify;
+    }
+}
