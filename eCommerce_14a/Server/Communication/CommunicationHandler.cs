@@ -169,10 +169,11 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        //TODO: need to change nulls
         public byte[] HandleOpenStore(string json)
         {
             OpenStoreRequest res = JsonConvert.DeserializeObject<OpenStoreRequest>(json);
-            Tuple<int, string> ans = storeService.createStore(res.Username, 0, 0);
+            Tuple<int, string> ans = storeService.createStore(res.Username, null, null, null);
             bool success = ans.Item1 == -1 ? false : true;
             string jsonAns = Seralize(new OpenStoreResponse(success,ans.Item2, ans.Item1));
             return security.Encrypt(jsonAns);

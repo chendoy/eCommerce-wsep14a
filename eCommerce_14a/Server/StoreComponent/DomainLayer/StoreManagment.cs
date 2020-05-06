@@ -110,10 +110,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
 
-        public List<Store> GetAllStores()
-        {
-            return stores.Values.ToList();
-        }
+
 
         public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, PurchasePolicy purchase_policy)
         {
