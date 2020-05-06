@@ -2,9 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\eCommerce_14a",
-    "\\eCommerce_14a\\Server",
-    "\\eCommerce_14a\\Server\\StoreComponent",
-    "\\eCommerce_14a\\Server\\StoreComponent\\DomainLayer"
+    "\\eCommerce_14a\\Client"
   ],
+  "SelectedNode": "\\eCommerce_14a\\eCommerce_14a.sln",
   "PreviewInSolutionExplorer": false
 }

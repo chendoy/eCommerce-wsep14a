@@ -43,6 +43,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
         }
+
+        public Dictionary<int, int[]> GetUserPermissions() 
+        {
+            return Store_options;
+        }
         public void LogIn()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

@@ -15,6 +15,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         {
             UM = UserManager.Instance;
         }
+
+        public Dictionary<int, int[]> GetUserPermissions(string username) 
+        {
+            return UM.GetUserPermissions(username);
+        }
+
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-registration-22 </req>
         public Tuple<bool,string> Registration(string username, string password)
         {
