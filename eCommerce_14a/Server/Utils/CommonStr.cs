@@ -37,6 +37,7 @@
             public static string ProductDetails = "ProductDetails";
             public static string ProductName = "ProductName";
             public static string ProductCategory = "ProductCategory";
+            public static string ProductImgUrl = "ImageUrl";
         }
 
         public static class ProductCategoty

@@ -44,7 +44,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return stores.Values.ToList();
         }
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount)
+        public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount, string imgUrl)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -67,6 +67,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
             productParams.Add(CommonStr.ProductParams.ProductName, pName);
             productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
+            productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
             return stores[storeId].appendProduct(user, productParams, amount);
         }
 
@@ -168,7 +169,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
         
-        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
+        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -191,7 +192,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
             productParams.Add(CommonStr.ProductParams.ProductName, pName);
             productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
-            
+            productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
+
+
             return stores[storeId].UpdateProduct(user, productParams);
         }
 
