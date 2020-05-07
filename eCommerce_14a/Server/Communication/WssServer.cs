@@ -6,6 +6,9 @@ using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.IO;
 using Server.UserComponent.Communication;
+using eCommerce_14a.UserComponent.DomainLayer;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace eCommerce_14a.Communication
 {
@@ -162,9 +165,9 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-            CommunicationHandler hand = new CommunicationHandler();
-            WssServer notifier = new WssServer();
-            notifier.InitServer();
+            //CommunicationHandler hand = new CommunicationHandler();
+            //WssServer notifier = new WssServer();
+            //notifier.InitServer();
         }
     }
 }
