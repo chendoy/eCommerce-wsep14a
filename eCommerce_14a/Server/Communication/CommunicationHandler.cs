@@ -75,7 +75,7 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
-            Dictionary<int, int[]> permissions = new Dictionary<int, int[]>();
+            Dictionary<int, int[]> permissions = null;
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (ans.Item1)
@@ -93,6 +93,7 @@ namespace eCommerce_14a.Communication
             LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
             Tuple<bool, string> ans = userService.Logout(res.Username);
             string jsonAns = Seralize(new LogoutResponse(ans.Item1, ans.Item2));
+            usersSessions.Remove(res.Username);
             return security.Encrypt(jsonAns);
         }
 

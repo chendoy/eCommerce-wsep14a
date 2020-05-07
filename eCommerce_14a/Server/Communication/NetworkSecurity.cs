@@ -16,15 +16,17 @@ namespace eCommerce_14a.Communication
 
         public NetworkSecurity()
         {
-            aesAlg = Aes.Create();
-            aesAlg.Key = GetKey();
-            aesAlg.IV = GetInitialVector();
-            encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-            decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+            aesAlg = Aes.Create("AES");
+            //aesAlg.Key = GetKey();
+            //aesAlg.IV = GetInitialVector();
+
+
+            aesAlg.Padding = PaddingMode.PKCS7;
         }
 
         public byte[] Encrypt(string plainText) 
         {
+            encryptor = aesAlg.CreateEncryptor(GetKey(), GetInitialVector());
             byte[] encrypted;
             using (MemoryStream msEncrypt = new MemoryStream())
             {
@@ -45,6 +47,7 @@ namespace eCommerce_14a.Communication
 
         public string Decrypt(byte[] cipherText) 
         {
+            decryptor = aesAlg.CreateDecryptor(GetKey(), GetInitialVector());
             string plaintext = null;
                 // Create the streams used for decryption.
             using (MemoryStream msDecrypt = new MemoryStream(cipherText))
@@ -53,9 +56,9 @@ namespace eCommerce_14a.Communication
                     {
                         using (StreamReader srDecrypt = new StreamReader(csDecrypt))
                         {
-                            // Read the decrypted bytes from the decrypting stream
-                            // and place them in a string.
-                            plaintext = srDecrypt.ReadToEnd();
+                        // Read the decrypted bytes from the decrypting stream
+                        // and place them in a string.
+                        plaintext = srDecrypt.ReadToEnd();
                         }
                     }
                 }

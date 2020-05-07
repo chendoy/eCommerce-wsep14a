@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class GetStoresResponse : Message
+    public class GetStoresResponse : Message
     {
         List<Store> _stores { get; set; }
 
         public GetStoresResponse(List<Store> Stores): base(Opcode.RESPONSE)
         {
             _stores = Stores;
+        }
+
+        public GetStoresResponse() : base()
+        {
+
         }
 
     }

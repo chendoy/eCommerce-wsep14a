@@ -43,6 +43,7 @@ namespace Client
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<ECommerce14AService>();
             services.AddScoped<AuthenticationStateProvider, MyAuthenticationStateProvider>();
+
             services.AddBlazoredSessionStorage();
         }
 

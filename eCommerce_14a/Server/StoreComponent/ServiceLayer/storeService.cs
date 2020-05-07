@@ -27,17 +27,17 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---add-product-411- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager--add-product-512- </req
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount)
+        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl)
         {
-            return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount);
+            return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount, imgUrl);
         }
 
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---edit-product-412- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager---edit-product-513- </req>
-        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
+        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)
         {
-            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory);
+            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory, imgUrl);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---remove-product-413- </req>

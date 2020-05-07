@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class AppointManagerResponse : Message
+    public class AppointManagerResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }
@@ -15,6 +15,11 @@ namespace Server.Communication.DataObject.Responses
         {
             this.Success = success;
             this.Error = error;
+        }
+
+        public AppointManagerResponse() : base()
+        {
+               
         }
     }
 }

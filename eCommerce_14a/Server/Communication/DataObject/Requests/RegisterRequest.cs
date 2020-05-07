@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class RegisterRequest : Message
+    public class RegisterRequest : Message
     {
         public string Username { get; set; }
         public string Password { get; set; }

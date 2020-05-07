@@ -8,7 +8,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private int rank;
         private string name;
         private string category;
-        public Product(int product_id, string details="this is product", double price=100, string name="", int rank=3, string category="Electricity")
+        private string imgUrl;
+        public Product(int product_id, string details="this is product", double price=100, string name="", int rank=3, string category="Electricity", string imgUrl="")
         {
             this.id = product_id;
             this.details = details;
@@ -16,6 +17,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.name = name;
             this.rank = rank;
             this.category = category;
+            this.imgUrl = imgUrl;
         }
 
         public string Category
@@ -50,6 +52,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             get { return price; }
             set { price = value; }
+        }
+
+        public string ImgUrl
+        {
+            get { return imgUrl; }
+            set { imgUrl = value; }
         }
     }
 }

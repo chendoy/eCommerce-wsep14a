@@ -44,7 +44,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         /// </summary>
         public UserManager()
         {
-            Console.WriteLine("UserManager Created\n");
+            //Console.WriteLine("UserManager Created\n");
             Users_And_Hashes = new Dictionary<string, string>();
             users = new Dictionary<string, User>();
             Active_users = new Dictionary<string, User>();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class OpenStoreResponse : Message
+    public class OpenStoreResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }
@@ -17,6 +17,11 @@ namespace Server.Communication.DataObject.Responses
             this.Success = success;
             this.Error = error;
             this.StoreId = storeID;
+        }
+
+        public OpenStoreResponse() : base()
+        {
+
         }
     }
 }

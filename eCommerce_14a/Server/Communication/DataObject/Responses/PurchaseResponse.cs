@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class PurchaseResponse : Message
+    public class PurchaseResponse : Message
     {
         bool Success { get; set; }
         string Error { get; set; }
@@ -14,6 +14,10 @@ namespace Server.Communication.DataObject.Responses
         {
             this.Success = success;
             this.Error = error;
+        }
+        public PurchaseResponse() : base()
+        {
+
         }
     }
 }
