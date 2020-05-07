@@ -8,8 +8,8 @@ namespace Server.Communication.DataObject
 {
     public class LoginResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
         public Dictionary<int, int[]> Permissions { get; set; }
 
         public LoginResponse(bool success, string error, Dictionary<int, int[]> permissions) : base(Opcode.RESPONSE)

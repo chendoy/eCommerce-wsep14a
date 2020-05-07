@@ -54,12 +54,12 @@ namespace Client.Service
         //    return null;
         //}
 
-        async public Task<bool> Login(User _user)
+        async public Task<Dictionary<int, int[]>> Login(User _user)
         {
             LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);
             comm.SendRequest(loginRequest);
             LoginResponse response = await comm.Get<LoginResponse>();
-            return response.Success;
+            return response.Permissions;
             
         }
 

@@ -58,13 +58,13 @@
         user = new User();
     }
 
-    private async Task<bool> ValidateUser()
+    private async void ValidateUser()
     {
-        var validated = await service.Login(user);
+        Dictionary<int, int[]> Permissions = await service.Login(user);
 
-        if (validated)
+        if (Permissions != null)
         {
-            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user);
+            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, Permissions);
             NavigationManager.NavigateTo("/");
 
             //store user's session
@@ -74,8 +74,6 @@
         {
             LoginMesssage = "Invalid username and/or password";
         }
-
-        return await Task.FromResult(true);
 
 
     }
