@@ -12,6 +12,8 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using TestingSystem.UnitTests.InventroyTest;
 using Server.UserComponent.Communication;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
+using Server.StoreComponent.DomainLayer;
 
 namespace TestingSystem.UnitTests.StoreTest
 {
@@ -358,8 +360,8 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreId], validStore.Id);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolicy);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PuarchsePolicy);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PurchasePolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
         }
@@ -404,6 +406,8 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.IsTrue(AddStoreMangerDriver(validStore, newManager));
         }
 
+
+
         private bool AddStoreMangerDriver(Store s, User user)
         {
             return s.AddStoreManager(user);
@@ -416,20 +420,21 @@ namespace TestingSystem.UnitTests.StoreTest
             storeParams.Add(CommonStr.StoreParams.StoreId, storeId);
             storeParams.Add(CommonStr.StoreParams.mainOwner, user);
             storeParams.Add(CommonStr.StoreParams.StoreRank, rank);
-            storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy, new DiscountPolicy(1));
-            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, new PuarchsePolicy(1));
+            storeParams.Add(CommonStr.StoreParams.StoreDiscountPolicy,null);
+            storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, null);
+            storeParams.Add(CommonStr.StoreParams.Validator, null);
             storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
             Store s = new Store(storeParams);
             return s;
         }
 
-        public static Store initValidStore()
+        public static Store initValidStore(Validator validator=null)
         {
             StoreManagment sm = StoreManagment.Instance;
             UserManager userManager = UserManager.Instance;
             userManager.Register("shimon", "123");
             userManager.Login("shimon", "123", false);
-            sm.createStore("shimon", 1, 1);
+            sm.createStore("shimon", null, null, null);
             userManager.Register("yosi", "123");
             userManager.Login("yosi", "123");
             userManager.Register("shmuel", "123");
@@ -441,6 +446,10 @@ namespace TestingSystem.UnitTests.StoreTest
             userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
 
             Store validStore = sm.getStore(1);
+            if(validator!=null)
+            {
+                validStore.PolicyValidator = validator;
+            }
             validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
             return validStore;
         }

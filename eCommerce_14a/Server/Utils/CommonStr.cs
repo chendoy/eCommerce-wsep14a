@@ -18,7 +18,38 @@
             public static string StoreId = "SearchByStioreId";
         }
 
+        public static class DiscountMergeTypes
+        {
+            public static int XOR = 0;
+            public static int OR = 1;
+            public static int AND = 2;
+        }
 
+        public static class PurchaseMergeTypes
+        {
+            public static int XOR = 0;
+            public static int OR = 1;
+            public static int AND = 2;
+        }
+        public static class DiscountPreConditions
+        {
+            public static int NoDiscount = 0;
+            public static int ProductPriceAbove100 = 1;
+            public static int ProductPriceAbove200 = 2;
+            public static int Above1Unit = 3;
+            public static int Above2Units = 4;
+            public static int basketPriceAbove1000 = 5;
+        }
+
+        public static class PurchasePreCondition
+        {
+            public static int allwaysTrue = 0;
+            public static int singleOfProductType = 1;
+            public static int Max10ProductPerBasket = 2;
+            public static int StoreMustBeActive = 3;
+            public static int GuestCantBuy = 4;
+
+        }
         public static class StoreParams
         {
             public static string StoreId = "StoreId";
@@ -28,6 +59,7 @@
             public static string StoreInventory = "StoreInventory";
             public static string StoreRank = "StoreRank";
             public static string IsActiveStore = "isActive";
+            public static string Validator = "Validator";
         }
 
         public static class ProductParams
@@ -56,6 +88,7 @@
             public static string noStoreOwnersAtAllErrMsg = "The Action can't be performed because there is no store owner";
             public static string notAOwnerOrManagerErrMsg = "This user isn't a store owner or manager, thus he can't perform this action";
             public static string ManagerNoPermissionErrMsg = "This manager doesn't have permission to perform this action";
+            public static string BasketNotAcceptPurchasePolicy = "The baske not accepted the store's purchase policy";
         }
 
         public static class InventoryErrorMessage
@@ -84,6 +117,8 @@
             public static string Comments = "CommentsPermission";
             public static string Puarchse = "ViewPuarchseHistory";
             public static string Product = "ProductPermission";
+            public static string PurachsePolicy = "PurachsePolicy";
+            public static string DiscountPolicy = "DiscountPolicy";
         }
         public static class ArgsTypes
         {

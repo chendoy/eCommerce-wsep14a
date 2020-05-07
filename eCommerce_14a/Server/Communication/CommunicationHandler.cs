@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +31,7 @@ namespace eCommerce_14a.Communication
         {
             appointService = new Appoitment_Service();
             userService = new UserService();
-            sysService = new System_Service("Admin", "Admin");
+            sysService = new System_Service("Admin","Admin");
             storeService = new StoreService();
             purchService = new PurchaseService();
             security = new NetworkSecurity();
@@ -45,13 +45,13 @@ namespace eCommerce_14a.Communication
             return jsonString;
         }
 
-        public Dictionary<string, object> Deseralize(string json)
+        public Dictionary<string, object> Deseralize(string json) 
         {
-            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            Dictionary<string,object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
             return dict;
         }
 
-        public int GetOpCode(string msg)
+        public int GetOpCode(string msg) 
         {
             object opcodeObj;
             Dictionary<string, object> msgDict = Deseralize(msg); // desarilize the decrypted string and convert it into dict
@@ -60,7 +60,7 @@ namespace eCommerce_14a.Communication
             return Convert.ToInt32(opcodeObj);
         }
 
-        public string Decrypt(byte[] cipher)
+        public string Decrypt(byte[] cipher) 
         {
             return security.Decrypt(cipher);
         }
@@ -75,11 +75,16 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
+            Dictionary<int, int[]> permissions = null;
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (ans.Item1)
+            {
                 usersSessions.Add(res.Username, session);
-            string jsonAns = Seralize(new LoginResponse(ans.Item1, ans.Item2));
+                permissions = userService.GetUserPermissions(res.Username);
+
+            }
+            string jsonAns = Seralize(new LoginResponse(ans.Item1, ans.Item2, permissions));
             return security.Encrypt(jsonAns);
         }
 
@@ -88,6 +93,7 @@ namespace eCommerce_14a.Communication
             LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
             Tuple<bool, string> ans = userService.Logout(res.Username);
             string jsonAns = Seralize(new LogoutResponse(ans.Item1, ans.Item2));
+            usersSessions.Remove(res.Username);
             return security.Encrypt(jsonAns);
         }
 
@@ -132,7 +138,7 @@ namespace eCommerce_14a.Communication
             filters.Add(CommonStr.SearcherKeys.StoreId, res.StoreId);
             Dictionary<int, List<Product>> ans = storeService.SearchProducts(filters);
             List<Product> prodList = ans[res.StoreId];
-            foreach (Product product in prodList)
+            foreach (Product product in prodList) 
             {
                 if (product.ProductID == res.ProductId)
                 {
@@ -172,9 +178,9 @@ namespace eCommerce_14a.Communication
         public byte[] HandleOpenStore(string json)
         {
             OpenStoreRequest res = JsonConvert.DeserializeObject<OpenStoreRequest>(json);
-            Tuple<int, string> ans = storeService.createStore(res.Username, 0, 0);
+            Tuple<int, string> ans = storeService.createStore(res.Username, null, null, null);
             bool success = ans.Item1 == -1 ? false : true;
-            string jsonAns = Seralize(new OpenStoreResponse(success, ans.Item2, ans.Item1));
+            string jsonAns = Seralize(new OpenStoreResponse(success,ans.Item2, ans.Item1));
             return security.Encrypt(jsonAns);
         }
 
@@ -189,7 +195,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleAppointManager(string json)
         {
             AppointManagerRequest res = JsonConvert.DeserializeObject<AppointManagerRequest>(json);
-            Tuple<bool, string> ans = appointService.AppointStoreManage(res.Appointer, res.Appointed, res.StoreId);
+            Tuple<bool, string> ans = appointService.AppointStoreManage(res.Appointer,res.Appointed,res.StoreId);
             string jsonAns = Seralize(new AppointManagerResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }

@@ -20,15 +20,15 @@ namespace Client.Data
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var user = await _sessionStorageService.GetItemAsync<User>("user");
+            Tuple<User, Dictionary<int, int[]>> userWithPerms = await _sessionStorageService.GetItemAsync<Tuple<User, Dictionary<int, int[]>>>("user");
             ClaimsIdentity identity;
 
-            if (user != null)
+            if (userWithPerms != null)
             {
                 identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Roles[0])
+                    new Claim(ClaimTypes.Name, userWithPerms.Item1.Username),
+                    new Claim(ClaimTypes.Role, "TestRole")
                 }, "apiauth_type");
             }
             else
@@ -40,10 +40,10 @@ namespace Client.Data
             return await Task.FromResult(new AuthenticationState(userAuth));
         }
 
-        public bool MarkUserAsAuthenticateUser(User user)
+        public bool MarkUserAsAuthenticateUser(User user, Dictionary<int, int[]> permissions)
         {
 
-            _sessionStorageService.SetItemAsync("user", user);
+            _sessionStorageService.SetItemAsync("user", (User: user, Permissions: permissions));
 
                 var identity = new ClaimsIdentity(new[]
                 {
@@ -69,8 +69,8 @@ namespace Client.Data
         public async void ChangeRole(string newRole)
         {
 
-            User user = await _sessionStorageService.GetItemAsync<User>("user");
-            string username = user.Username;
+            Tuple<User, Dictionary<int, int[]>> userWithPerms = await _sessionStorageService.GetItemAsync<Tuple<User, Dictionary<int, int[]>>>("user");
+            string username = userWithPerms.Item1.Username;
 
             var identity = new ClaimsIdentity(new[]
                 {
