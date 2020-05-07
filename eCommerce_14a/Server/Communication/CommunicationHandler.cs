@@ -93,6 +93,7 @@ namespace eCommerce_14a.Communication
             LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
             Tuple<bool, string> ans = userService.Logout(res.Username);
             string jsonAns = Seralize(new LogoutResponse(ans.Item1, ans.Item2));
+            usersSessions.Remove(res.Username);
             return security.Encrypt(jsonAns);
         }
 

@@ -54,13 +54,14 @@ namespace Client.Service
         //    return null;
         //}
 
-        async public Task<Dictionary<int, int[]>> Login(User _user)
+        async public Task<LoginResponse> Login(User _user)
         {
             LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);
             comm.SendRequest(loginRequest);
             LoginResponse response = await comm.Get<LoginResponse>();
-            return response.Permissions;
-            
+            return response;
+
+
         }
 
         async public Task<bool> Register(User _user)
@@ -69,6 +70,14 @@ namespace Client.Service
             comm.SendRequest(registerRequest);
             RegisterResponse response = await comm.Get<RegisterResponse>();
             return response.Success;
+        }
+
+        async public Task<LogoutResponse> Logout(string username)
+        {
+            LogoutRequest logoutResponse = new LogoutRequest(username);
+            comm.SendRequest(logoutResponse);
+            LogoutResponse response = await comm.Get<LogoutResponse>();
+            return response;
         }
     }
 }

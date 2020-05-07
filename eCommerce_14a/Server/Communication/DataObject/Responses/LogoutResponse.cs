@@ -8,8 +8,8 @@ namespace Server.Communication.DataObject
 {
     public class LogoutResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
 
         public LogoutResponse(bool success, string error) : base(Opcode.RESPONSE)
         {

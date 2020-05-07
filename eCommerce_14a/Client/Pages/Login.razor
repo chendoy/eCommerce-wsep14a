@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @using Data;
+@using Server.Communication.DataObject; 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Service.ECommerce14AService service
@@ -60,15 +61,13 @@
 
     private async void ValidateUser()
     {
-        Dictionary<int, int[]> Permissions = await service.Login(user);
+        LoginResponse response = await service.Login(user);
 
-        if (Permissions != null)
+        if (response.Success)
         {
-            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, Permissions);
+            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, response.Permissions);
             NavigationManager.NavigateTo("/");
 
-            //store user's session
-            await sessionStorage.SetItemAsync("user", user);
         }
         else
         {
