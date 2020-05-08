@@ -71,6 +71,12 @@
     <Compile Include="Communication\InfoExtractor.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />
     <Compile Include="Communication\ResponseData.cs" />
+    <Compile Include="DomainLayer\ThinObjects\Cart.cs" />
+    <Compile Include="DomainLayer\ThinObjects\Product.cs" />
+    <Compile Include="DomainLayer\ThinObjects\Purchase.cs" />
+    <Compile Include="DomainLayer\ThinObjects\PurchaseBasket.cs" />
+    <Compile Include="DomainLayer\ThinObjects\Store.cs" />
+    <Compile Include="DomainLayer\ThinObjects\User.cs" />
     <Compile Include="Communication\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />

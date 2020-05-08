@@ -1,0 +1,47 @@
+﻿@page "/ManageStores"
+@using Client.Data;
+
+<h3>Manage Stores</h3>
+
+@if (storesImanage == null)
+{
+<p><em>Loading...</em></p>
+}
+else
+{
+@if (storesImanage.Count == 0)
+{
+    <p><em>Sorry, you havn't opened any stores...yet :(</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Store Id</th>
+                <th>Owner of the store</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var store in storesImanage)
+            {
+                <tr>
+                    <td><a href=Stores/@store.StoreId>@store.StoreId</a></td>
+                    <td>@store.Owner</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+}
+
+@code {
+
+    private List<Store> storesImanage = new List<Store>();
+
+    protected override void OnInitialized()
+    {
+
+    }
+
+}
