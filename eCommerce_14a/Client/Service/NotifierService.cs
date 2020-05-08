@@ -16,24 +16,24 @@ namespace Client.Service
         // Can be called from anywhere
         public async Task Update(string context)
         {
-            System.Threading.Thread.Sleep(2000);
-            if (NotifyReceived != null)
+            //System.Threading.Thread.Sleep(2000);
+            Notifications.Add(context);
+            if (OnNotifyReceived != null)
             {
-                Notifications.Add(context);
-                await NotifyReceived.Invoke(context);
+                await OnNotifyReceived.Invoke(context);
             }
         }
 
         public async Task Remove(string context)
         {
-            if (NotifyRemoved != null)
+            Notifications.Remove(context);
+            if (OnNotifyRemoved != null)
             {
-                Notifications.Remove(context);
-                await NotifyRemoved.Invoke();
+                await OnNotifyRemoved.Invoke();
             }
         }
 
-        public event Func<string, Task> NotifyReceived;
-        public event Func<Task> NotifyRemoved;
+        public event Func<string, Task> OnNotifyReceived;
+        public event Func<Task> OnNotifyRemoved;
     }
 }

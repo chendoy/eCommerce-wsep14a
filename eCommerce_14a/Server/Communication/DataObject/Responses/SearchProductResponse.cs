@@ -1,4 +1,4 @@
-﻿using eCommerce_14a.StoreComponent.DomainLayer;
+﻿using Server.DomainLayer.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +9,11 @@ namespace Server.Communication.DataObject.Responses
 {
     public class SearchProductResponse : Message
     {
-        List<Product> _searchResults { get; set; }
+        List<Product> SearchResults { get; set; }
         
         public SearchProductResponse(List<Product> searchResults) : base(Opcode.RESPONSE)
         {
-            _searchResults = searchResults;
+            SearchResults = searchResults;
         }
 
         public SearchProductResponse() : base()

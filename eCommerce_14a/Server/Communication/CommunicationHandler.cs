@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.PurchaseComponent.ServiceLayer;
-using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.ServiceLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
@@ -15,6 +13,7 @@ using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
 using Server.UserComponent.Communication;
 using SuperWebSocket;
+using Server.DomainLayer.ThinObjects;
 
 namespace eCommerce_14a.Communication
 {
