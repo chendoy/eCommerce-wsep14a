@@ -19,7 +19,7 @@
 
     protected override void OnInitialized()
     {
-        service.NotifierService.NotifyReceived += OnNotify;
+        service.NotifierService.OnNotifyReceived += OnNotify;
     }
 
     public async Task OnNotify(string notification)
@@ -32,7 +32,7 @@
 
     public void Dispose()
     {
-        service.NotifierService.NotifyReceived -= OnNotify;
+        service.NotifierService.OnNotifyReceived -= OnNotify;
     }
 
     public async void CloseNotification(string notification)

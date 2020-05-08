@@ -11,9 +11,9 @@
     protected override void OnInitialized()
     {
         notifier = service.NotifierService;
-        notifier.NotifyReceived += OnNotify;
-        notifier.NotifyRemoved += OnRemoveNotify;
-        NotificationCount = 0;
+        NotificationCount = service.NotifierService.Notifications.Count;
+        notifier.OnNotifyReceived += OnNotify;
+        notifier.OnNotifyRemoved += OnRemoveNotify;
     }
 
 
@@ -37,7 +37,7 @@
 
     public void Dispose()
     {
-        notifier.NotifyReceived -= OnNotify;
-        notifier.NotifyRemoved -= OnRemoveNotify;
+        notifier.OnNotifyReceived -= OnNotify;
+        notifier.OnNotifyRemoved -= OnRemoveNotify;
     }
 }
