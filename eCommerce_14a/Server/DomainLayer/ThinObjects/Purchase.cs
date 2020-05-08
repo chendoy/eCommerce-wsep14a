@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Client.Data.ClientObjects
+namespace Server.DomainLayer.ThinObjects
 {
     public class Purchase
     {

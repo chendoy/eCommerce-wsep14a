@@ -1,4 +1,4 @@
-﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+﻿using Server.DomainLayer.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +9,12 @@ namespace Server.Communication.DataObject.Responses
 {
        public class HistoryResponse : Message
     {
-        List<Purchase> _historyItems { get; set; } // not sure about that
+        List<Purchase> HistoryItems { get; set; } // not sure about that
         string Error;
 
         public HistoryResponse(List<Purchase> historyItems, string error) : base(Opcode.RESPONSE)
         {
-            _historyItems = historyItems;
+            HistoryItems = historyItems;
             this.Error = error;
         }
 

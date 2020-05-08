@@ -2,7 +2,7 @@
 
 ## Requests from server team:
 
-- Sending thin objects over communication layer (See Client.Data.ClientObjects).
+- Sending thin objects over communication layer (See Server.DomainLayer.ThinObjects).
 - Adding name to stores
 
 

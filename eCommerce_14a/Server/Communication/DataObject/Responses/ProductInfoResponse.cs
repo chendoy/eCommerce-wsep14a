@@ -1,4 +1,4 @@
-﻿using eCommerce_14a.StoreComponent.DomainLayer;
+﻿using Server.DomainLayer.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace Server.Communication.DataObject
 {
     public class ProductInfoResponse : Message
     {
-        Product _product { get; set; }
+        Product Product { get; set; }
         public ProductInfoResponse(Product p) : base(Opcode.RESPONSE)
         {
-            _product = p;
+            Product = p;
         }
 
         public ProductInfoResponse() : base()
