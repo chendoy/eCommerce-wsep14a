@@ -9,8 +9,8 @@ namespace Server.Communication.DataObject
 {
     public class ProductInfoResponse : Message
     {
-        Product Product { get; set; }
-        public ProductInfoResponse(Product p) : base(Opcode.RESPONSE)
+        public ProductData Product { get; set; }
+        public ProductInfoResponse(ProductData p) : base(Opcode.RESPONSE)
         {
             Product = p;
         }

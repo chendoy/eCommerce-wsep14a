@@ -8,8 +8,8 @@ namespace Server.Communication.DataObject.Responses
 {
     public class PurchaseResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
         public PurchaseResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
             this.Success = success;

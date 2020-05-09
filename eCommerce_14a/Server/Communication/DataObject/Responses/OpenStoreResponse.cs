@@ -8,9 +8,9 @@ namespace Server.Communication.DataObject.Responses
 {
     public class OpenStoreResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
-        int StoreId { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
+        public int StoreId { get; set; }
 
         public OpenStoreResponse(bool success, string error, int storeID) : base(Opcode.RESPONSE)
         {

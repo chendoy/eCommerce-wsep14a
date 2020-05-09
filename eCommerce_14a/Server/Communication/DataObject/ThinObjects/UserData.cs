@@ -5,24 +5,21 @@ using System.Threading.Tasks;
 
 namespace Server.DomainLayer.ThinObjects
 {
-    public class User
+    public class UserData
     {
         public string Username { get; set; }
-        public string Password { get; set; }
 
-        public User() { }
+        public UserData() { }
 
 
-        public User(string Username, string Password)
+        public UserData(string Username)
         {
             this.Username = Username;
-            this.Password = Password;
         }
 
         public void clear()
         {
             this.Username = "";
-            this.Password = "";
         }
     }
 

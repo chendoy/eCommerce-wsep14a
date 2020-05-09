@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\CommunicationHandler.cs" />
+    <Compile Include="Communication\DataConverter.cs" />
     <Compile Include="Communication\DataObject\Requests\AppointManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
@@ -68,16 +69,14 @@
     <Compile Include="Communication\DataObject\Responses\PurchaseResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\RegisterResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\SearchProductResponse.cs" />
-    <Compile Include="Communication\InfoExtractor.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />
-    <Compile Include="Communication\ResponseData.cs" />
-    <Compile Include="DomainLayer\ThinObjects\Cart.cs" />
-    <Compile Include="DomainLayer\ThinObjects\Product.cs" />
-    <Compile Include="DomainLayer\ThinObjects\Purchase.cs" />
-    <Compile Include="DomainLayer\ThinObjects\PurchaseBasket.cs" />
-    <Compile Include="DomainLayer\ThinObjects\Store.cs" />
-    <Compile Include="DomainLayer\ThinObjects\User.cs" />
-    <Compile Include="Communication\UserData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\CartData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\InventoryData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\ProductData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\PurchaseData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\PurchaseBasketData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\StoreData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
     <Compile Include="StoreComponent\DomainLayer\Validator.cs" />

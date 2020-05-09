@@ -9,9 +9,9 @@ namespace Server.Communication.DataObject
 {
     public class GetProductsResponse : Message
     {
-        List<Product> Products { get; set; }
+        List<ProductData> Products { get; set; }
 
-        public GetProductsResponse(List<Product> products) : base(Opcode.RESPONSE)
+        public GetProductsResponse(List<ProductData> products) : base(Opcode.RESPONSE)
         {
             Products = products;
         }

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Net.WebSockets;
 using CertificateConfig = SuperSocket.SocketBase.Config.CertificateConfig;
 using SuperWebSocket;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.IO;
 using Server.UserComponent.Communication;
-using eCommerce_14a.UserComponent.DomainLayer;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using Server.Communication.DataObject.Requests;
-using Newtonsoft.Json;
 
 namespace eCommerce_14a.Communication
 {

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Client.Service;
 using Client.Data;
 using Blazored.SessionStorage;
+using eCommerce_14a.UserComponent.DomainLayer;
+using Server.DomainLayer.ThinObjects;
 
 namespace Client.Data
 {
@@ -40,7 +42,7 @@ namespace Client.Data
             return await Task.FromResult(new AuthenticationState(userAuth));
         }
 
-        public bool MarkUserAsAuthenticateUser(User user, Dictionary<int, int[]> permissions)
+        public bool MarkUserAsAuthenticateUser(UserData user, Dictionary<int, int[]> permissions)
         {
 
             _sessionStorageService.SetItemAsync("user", (User: user, Permissions: permissions));
@@ -69,7 +71,7 @@ namespace Client.Data
         public async void ChangeRole(string newRole)
         {
 
-            Tuple<User, Dictionary<int, int[]>> userWithPerms = await _sessionStorageService.GetItemAsync<Tuple<User, Dictionary<int, int[]>>>("user");
+            Tuple<UserData, Dictionary<int, int[]>> userWithPerms = await _sessionStorageService.GetItemAsync<Tuple<UserData, Dictionary<int, int[]>>>("user");
             string username = userWithPerms.Item1.Username;
 
             var identity = new ClaimsIdentity(new[]
