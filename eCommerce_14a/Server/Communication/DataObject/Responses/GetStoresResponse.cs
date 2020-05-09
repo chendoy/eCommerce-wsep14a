@@ -1,5 +1,5 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
-using Server.DomainLayer.ThinObjects;
+using Server.Communication.DataObject.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

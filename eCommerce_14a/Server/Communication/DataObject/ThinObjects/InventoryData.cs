@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.DomainLayer.ThinObjects
+namespace Server.Communication.DataObject.ThinObjects
 {
     public class InventoryData
     {

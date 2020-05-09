@@ -1,4 +1,5 @@
 ﻿@page "/ManageStores"
+@using Server.Communication.DataObject.ThinObjects; 
 @using Client.Data;
 
 <h3>Manage Stores</h3>
@@ -27,7 +28,7 @@ else
             {
                 <tr>
                     <td><a href=Stores/@store.StoreId>@store.StoreId</a></td>
-                    <td>@store.Owner</td>
+                    <td>@store.Owners[0]</td>
                 </tr>
             }
         </tbody>
@@ -37,7 +38,7 @@ else
 
 @code {
 
-    private List<Store> storesImanage = new List<Store>();
+    private List<StoreData> storesImanage = new List<StoreData>();
 
     protected override void OnInitialized()
     {

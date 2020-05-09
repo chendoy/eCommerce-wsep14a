@@ -1,5 +1,5 @@
 ﻿@page "/register"
-@using Data;
+@using Server.Communication.DataObject.ThinObjects;
 @inject NavigationManager NavigationManager
 @inject Service.ECommerce14AService service
 
@@ -34,7 +34,7 @@
             </div>
             <br />
             <div class="col-12 row">
-                <input type="password" class="form-control col-12"  placeholder="confirm password" />
+                <input type="password" class="form-control col-12" placeholder="confirm password" />
             </div>
             <br />
             <div class="col-12 row">
@@ -53,12 +53,12 @@
 
 @code {
 
-    public Client.Data.User user { get; set; }
+    public UserData user { get; set; }
     public string RegisterMesssage { get; set; }
 
     protected override void OnInitialized()
     {
-        user = new Data.User();
+        user = new UserData();
     }
 
     private async void RegisterUser()

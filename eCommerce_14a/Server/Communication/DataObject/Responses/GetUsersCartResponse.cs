@@ -1,4 +1,4 @@
-﻿using Server.DomainLayer.ThinObjects;
+﻿using Server.Communication.DataObject.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

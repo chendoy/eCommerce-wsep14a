@@ -1,12 +1,10 @@
 ﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
-using Server.DomainLayer.ThinObjects;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Server.Communication.DataObject.ThinObjects;
+using System.Collections.Generic;
+using System;
 
 namespace Server.Communication
 {
@@ -30,15 +28,15 @@ namespace Server.Communication
 
         public StoreData ToStoreData(Store store) 
         {
-            return new StoreData(store.Id, ToUserDataList(store.owners), ToUserDataList(store.managers), ToInventoryData(store.Inventory));
+            return new StoreData(store.Id, ToUserNameList(store.owners), ToUserNameList(store.managers), ToInventoryData(store.Inventory));
         }
 
-        public UserData ToUserData(User user)
-        {
-            return new UserData(user.getUserName());
-        }
+        //public UserData ToUserData(User user)
+        //{
+        //    return new UserData(user.getUserName());
+        //}
 
-        public PurchaseBasketData ToPurchaseBasketData(PurchaseBasket pBasket) 
+        public PurchaseBasketData ToPurchaseBasketData(PurchaseBasket pBasket)
         {
             return new PurchaseBasketData(ToStoreData(pBasket.Store), pBasket.user, pBasket.Price, pBasket.PurchaseTime, pBasket.Products);
         }
@@ -74,14 +72,14 @@ namespace Server.Communication
             return retList;
         }
 
-        public List<UserData> ToUserDataList(List<User> users)
+        public List<string> ToUserNameList(List<User> users)
         {
-            List<UserData> retList = new List<UserData>();
+            List<string> retlist = new List<string>();
             foreach (User user in users)
             {
-                retList.Add(ToUserData(user));
+                retlist.Add(user.getUserName());
             }
-            return retList;
+            return retlist;
         }
 
         public List<PurchaseBasketData> ToPurchaseBasketDataList(List<PurchaseBasket> pBaskets)

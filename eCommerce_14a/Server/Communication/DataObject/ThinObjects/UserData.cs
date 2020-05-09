@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server.DomainLayer.ThinObjects
+namespace Server.Communication.DataObject.ThinObjects
 {
     public class UserData
     {
         public string Username { get; set; }
+        public string Password { get; set; }
 
-        public UserData() { }
+    public UserData() { }
 
 
-        public UserData(string Username)
+    public UserData(string Username, string Password, string[] Roles)
         {
             this.Username = Username;
+            this.Password = Password;
         }
 
         public void clear()
         {
             this.Username = "";
+            this.Password = "";
         }
     }
 

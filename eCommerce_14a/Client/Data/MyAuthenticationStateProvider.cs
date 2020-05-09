@@ -8,7 +8,7 @@ using Client.Service;
 using Client.Data;
 using Blazored.SessionStorage;
 using eCommerce_14a.UserComponent.DomainLayer;
-using Server.DomainLayer.ThinObjects;
+using Server.Communication.DataObject.ThinObjects;
 
 namespace Client.Data
 {
@@ -22,7 +22,7 @@ namespace Client.Data
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            Tuple<User, Dictionary<int, int[]>> userWithPerms = await _sessionStorageService.GetItemAsync<Tuple<User, Dictionary<int, int[]>>>("user");
+            Tuple<UserData, Dictionary<int, int[]>> userWithPerms = await _sessionStorageService.GetItemAsync<Tuple<UserData, Dictionary<int, int[]>>>("user");
             ClaimsIdentity identity;
 
             if (userWithPerms != null)

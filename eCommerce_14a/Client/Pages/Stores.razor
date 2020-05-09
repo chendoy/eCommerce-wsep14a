@@ -1,5 +1,9 @@
 ﻿@page "/Stores"
 @using Data;
+@using System.Collections.Generic; 
+@using Server.Communication.DataObject.Requests;
+@using Server.Communication.DataObject.Responses;
+@using Server.Communication.DataObject.ThinObjects;
 @inject Service.ECommerce14AService service
 
 <h1>StoresView</h1>
@@ -28,7 +32,7 @@ else
             {
                 <tr>
                     <td><a href=Stores/@store.StoreId>@store.StoreId</a></td>
-                    <td>@store.Owner</td>
+                    <td>@store.Owners[0]</td>
                 </tr>
             }
         </tbody>
@@ -37,11 +41,11 @@ else
 }
 
 @code {
-    private List<Store> stores;
+    private List<StoreData> stores;
 
-    protected override void OnInitialized()
+    async protected override void OnInitialized()
     {
-        //stores = service.GetAllActiveStores();
+        stores = await service.GetAllActiveStores();
     }
 
     private string StoreIdToLink(int storeId)

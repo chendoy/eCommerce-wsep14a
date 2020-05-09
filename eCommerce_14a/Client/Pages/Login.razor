@@ -1,5 +1,8 @@
 ﻿@page "/login"
 @using Data;
+@using Server.Communication.DataObject.ThinObjects;
+@using Server.Communication.DataObject.Requests;
+@using Server.Communication.DataObject.Responses;
 @using Server.Communication.DataObject; 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -41,7 +44,7 @@
             </div>
             <br />
             <div class="login-msg" style="text-align:left; font-weight:bold">
-                <span >@LoginMesssage</span>
+                <span>@LoginMesssage</span>
             </div>
         </EditForm>
     </div>
@@ -51,12 +54,12 @@
 
 @code {
 
-    public Client.Data.User user { get; set; }
+    public UserData user { get; set; }
     public string LoginMesssage { get; set; }
 
     protected override void OnInitialized()
     {
-        user = new User();
+        user = new UserData();
     }
 
     private async void ValidateUser()
