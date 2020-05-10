@@ -1,0 +1,22 @@
+﻿@page "/ShoppingCart"
+<h3>ShoppingCart</h3>
+@if (Cart.baskets.Count == 0)
+{
+    <p>You didn't buy anything yet :(</p>
+}
+else
+{
+    @foreach (PurchaseBasketData basketData in Cart.baskets)
+    {
+        <PurchaseBasket purchaseBasket="@basketData" Modifiable="true"></PurchaseBasket>
+        <br />
+    }
+}
+
+@code { 
+    public CartData Cart { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        Cart = await service.GetCart("admin");
+    }
+}

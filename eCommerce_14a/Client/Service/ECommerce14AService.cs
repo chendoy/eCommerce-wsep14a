@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Server.Communication.DataObject;
 using Server.Communication.DataObject.ThinObjects;
 using Server.Communication.DataObject.Requests;
-using Server.UserComponent.Communication;
+using Server.Communication.DataObject.Responses;
 
 namespace Client.Service
 {
@@ -53,6 +53,14 @@ namespace Client.Service
 
         //    return null;
         //}
+
+        async public Task<CartData> GetCart(string username)
+        {
+            CartRequest cartRequest = new CartRequest(username);
+            comm.SendRequest(cartRequest);
+            GetUsersCartResponse getCartResponse = await comm.Get<GetUsersCartResponse>();
+            return getCartResponse.Cart;
+        }
 
         async public Task<LoginResponse> Login(UserData _user)
         {

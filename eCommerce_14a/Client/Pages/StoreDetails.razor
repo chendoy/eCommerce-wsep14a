@@ -25,7 +25,6 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th>Product Id</th>
                     <th>Name</th>
                     <th>Category</th>
                     <th>Details</th>
@@ -37,11 +36,8 @@ else
                 @foreach (Tuple<ProductData, int> product in Store.Products.invProducts)
                 {
                     <tr>
-                        <td><a href=Stores/@StoreId/@product.Item1.ProductId>@product.Item1.ProductId</a></td>
-                        <td>@product.Item1.Name</td>
-                        <td>@product.Item1.Category</td>
-                        <td>@product.Item1.Details</td>
-                        <td>@product.Item1.Price</td>
+                        <ProductRow StoreId="@StoreId" Product="@product.Item1"/>
+                        <td>@product.Item2</td>
                     </tr>
                 }
             </tbody>
