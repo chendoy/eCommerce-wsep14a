@@ -13,7 +13,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class CompundPurchasePolicy : PurchasePolicy
     {
         private List<PurchasePolicy> children;
-        int mergeType;
+        public int mergeType { get; set; }
 
         public CompundPurchasePolicy(int mergeType, List<PurchasePolicy> children)
         {
@@ -97,7 +97,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class ProductPurchasePolicy : SimplePurchasePolicy
     {
-        int policyProductId;
+        public int policyProductId { get; set; }
         public ProductPurchasePolicy(PreCondition pre, int policyProductId) : base(pre)
         {
             this.policyProductId = policyProductId;
@@ -125,7 +125,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class SystemPurchasePolicy : SimplePurchasePolicy
     {
-        private Store store;
+        public  Store store { get; set; }
         public SystemPurchasePolicy(PreCondition pre,Store store) : base(pre)
         {
             this.store = store;
@@ -139,7 +139,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class UserPurchasePolicy : SimplePurchasePolicy
     {
-        private User user;
+        public User user { get; set; }
         public UserPurchasePolicy(PreCondition pre, User user) : base(pre)
         {
             this.user = user;

@@ -14,8 +14,19 @@ namespace Server.Communication.DataObject.ThinObjects
     //public static int Above1Unit = 3;
     //public static int Above2Units = 4;
     //public static int basketPriceAbove1000 = 5;
+
     public class DiscountPolicyData
     {
+    }
+
+    public class CompoundDiscountPolicyData : DiscountPolicyData
+    {
+        public CompoundDiscountPolicyData(int mergeType, List<DiscountPolicyData> discountChildren)
+        {
+            MergeType = mergeType;
+            DiscountChildren = discountChildren;
+        }
+
         public int MergeType { get; set; }
         public List<DiscountPolicyData> DiscountChildren { get; set; }
         //{{{1 xor 2 } or 3} xor 4}
@@ -58,7 +69,9 @@ namespace Server.Communication.DataObject.ThinObjects
         public DiscountBasket() : base()
         {
         }
-
+        public DiscountBasket(int preCondition, double discount) : base(preCondition, discount)
+        {
+        }
     }
 
    public class DiscountReveald : DiscountPolicyData
