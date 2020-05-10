@@ -25,6 +25,7 @@ namespace Server.Communication.DataObject
         APPOINT_MANAGER,
         APPOINT_OWNER,
         DEMOTE,
+        LOGIN_AS_GUEST,
         NOTIFICATION,
         RESPONSE,
         ERROR

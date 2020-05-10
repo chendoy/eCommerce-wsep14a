@@ -154,6 +154,13 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleLoginAsGuest(string json)
+        {
+            Tuple<bool,string> ans = userService.LoginAsGuest();
+            string jsonAns = Seralize(new LoginAsGuestResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandlePurchase(string json)
         {
             PurchaseRequest res = JsonConvert.DeserializeObject<PurchaseRequest>(json);

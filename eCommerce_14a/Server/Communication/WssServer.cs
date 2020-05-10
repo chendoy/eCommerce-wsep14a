@@ -158,6 +158,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case 15:
+                    response = handler.HandleLoginAsGuest(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }
