@@ -12,7 +12,9 @@ namespace Server.Communication.DataObject.ThinObjects
 
     public UserData() { }
 
-
+    public UserData(string Username) {
+            this.Username = Username;
+    }
     public UserData(string Username, string Password)
         {
             this.Username = Username;

@@ -31,10 +31,10 @@ namespace Server.Communication
             return new StoreData(store.Id, ToUserNameList(store.owners), ToUserNameList(store.managers), ToInventoryData(store.Inventory));
         }
 
-        //public UserData ToUserData(User user)
-        //{
-        //    return new UserData(user.getUserName());
-        //}
+        public UserData ToUserData(User user)
+        {
+            return new UserData(user.getUserName());
+        }
 
         public PurchaseBasketData ToPurchaseBasketData(PurchaseBasket pBasket)
         {
