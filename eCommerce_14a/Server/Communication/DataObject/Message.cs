@@ -37,5 +37,9 @@ namespace Server.Communication.DataObject
         {
             _Opcode = opcode;
         }
+
+        public Message()
+        {
+        }
     }
 }

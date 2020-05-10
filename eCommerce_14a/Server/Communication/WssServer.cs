@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Net.WebSockets;
 using CertificateConfig = SuperSocket.SocketBase.Config.CertificateConfig;
 using SuperWebSocket;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase;
 using System.IO;
 using Server.UserComponent.Communication;
-using eCommerce_14a.UserComponent.DomainLayer;
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using Server.Communication.DataObject.Requests;
 
 namespace eCommerce_14a.Communication
 {
@@ -42,7 +40,7 @@ namespace eCommerce_14a.Communication
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
             wsServer.Start();
-            Console.WriteLine("Server is running on port " + port + ". Press ENTER to exit....");
+            Console.WriteLine("Server is running on port " + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
         }
@@ -55,25 +53,27 @@ namespace eCommerce_14a.Communication
 
         private void StartSession(WebSocketSession session)
         {
+            checkFunc(); // for tests
             Console.WriteLine("NewSessionConnected");
         }
 
         private void ReceiveData(WebSocketSession session, byte[] value)
         {
-            Console.WriteLine("NewDataReceived");
             HandleMessage(session, value);
         }
 
         private void ReceiveMessage(WebSocketSession session, string value)
         {
-            Console.WriteLine("Receive Msg:" + value);
+            //Console.WriteLine("Receive Msg:" + value);
         }
 
         public void notify(string username, NotifyData msg)
         {
             byte[] response;
+            //get_session:
             WebSocketSession session = handler.GetSession(username);
             if (session == null)
+                //goto get_session;
                 return;
             response = handler.HandleNotification(msg);
             session.Send(response, 0, response.Length);
@@ -83,6 +83,7 @@ namespace eCommerce_14a.Communication
         {
             byte[] response;
             string json = handler.Decrypt(msg);
+            Console.WriteLine("received: " + json);
             int opcode = handler.GetOpCode(json);
 
             switch (opcode)
@@ -162,12 +163,22 @@ namespace eCommerce_14a.Communication
             }
         }
 
+        public void checkFunc() 
+        {
+            handler.HandleRegister(JsonConvert.SerializeObject(new RegisterRequest("admin", "admin")));
+            for (int i = 0; i < 10; i++)
+            {
+                notify("admin", new NotifyData("Notify Number : " + i.ToString()));
+            }
+
+        }
+
 
         public static void Main(string[] argv)
         {
-            //CommunicationHandler hand = new CommunicationHandler();
-            //WssServer notifier = new WssServer();
-            //notifier.InitServer();
+            CommunicationHandler hand = new CommunicationHandler();
+            WssServer notifier = new WssServer();
+            notifier.InitServer();
         }
     }
 }

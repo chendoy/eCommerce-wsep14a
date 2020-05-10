@@ -41,6 +41,8 @@ namespace TestingSystem.UnitTests.InventroyTest
             validProdParamsNewId.Add(CommonStr.ProductParams.ProductDetails, "High Quality Mixer");
             validProdParamsNewId.Add(CommonStr.ProductParams.ProductName, "MegaMix 990");
             validProdParamsNewId.Add(CommonStr.ProductParams.ProductPrice, 1500.0);
+            validProdParamsNewId.Add(CommonStr.ProductParams.ProductImgUrl, "");
+
 
 
             negativePriceProdParamsNonExistingProdId.Add(CommonStr.ProductParams.ProductId, 12);
@@ -48,12 +50,16 @@ namespace TestingSystem.UnitTests.InventroyTest
             negativePriceProdParamsNonExistingProdId.Add(CommonStr.ProductParams.ProductDetails, "High Quality Mixer");
             negativePriceProdParamsNonExistingProdId.Add(CommonStr.ProductParams.ProductName, "MegaMix 990");
             negativePriceProdParamsNonExistingProdId.Add(CommonStr.ProductParams.ProductPrice, -1500.0);
+            negativePriceProdParamsNonExistingProdId.Add(CommonStr.ProductParams.ProductImgUrl,"");
+
+
 
             negativePriceProdParamsExistingProdId.Add(CommonStr.ProductParams.ProductId, 1);
             negativePriceProdParamsExistingProdId.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Kitchen);
             negativePriceProdParamsExistingProdId.Add(CommonStr.ProductParams.ProductDetails, "High Quality Mixer");
             negativePriceProdParamsExistingProdId.Add(CommonStr.ProductParams.ProductName, "MegaMix 990");
             negativePriceProdParamsExistingProdId.Add(CommonStr.ProductParams.ProductPrice, -1500.0);
+            negativePriceProdParamsExistingProdId.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
 
             existingProductIdParams.Add(CommonStr.ProductParams.ProductId, 1);
@@ -61,6 +67,7 @@ namespace TestingSystem.UnitTests.InventroyTest
             existingProductIdParams.Add(CommonStr.ProductParams.ProductDetails, " strong ninja");
             existingProductIdParams.Add(CommonStr.ProductParams.ProductPrice, 1000.0);
             existingProductIdParams.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Kitchen);
+            existingProductIdParams.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
             basketValid.Add(1, 10);
             basketValid.Add(2, 20);

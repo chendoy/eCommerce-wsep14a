@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Server.Communication.DataObject;
+using Server.Communication.DataObject.ThinObjects;
+using Server.Communication.DataObject.Requests;
+using Server.Communication.DataObject.Responses;
 
 namespace Client.Service
 {
@@ -19,53 +22,70 @@ namespace Client.Service
         }
 
         public DateTime Time { get; private set; }
-
-        public List<Store> GetAllActiveStores()
+        
+        public NotifierService NotifierService
         {
-            comm.SendRequest("GetAllActiveStores");
-            List<Store> stores = (List<Store>)comm.Get();
-            string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
-            stores = JsonSerializer.Deserialize<List<Store>>(json);
-            return stores;
+            get { return comm.NotifierService; }
         }
 
-        public Store GetStoreById(int storeId)
-        {
-            comm.SendRequest("GetStoreById");
-            List<Store> stores = (List<Store>)comm.Get();
-            string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
-            stores = JsonSerializer.Deserialize<List<Store>>(json);
-            foreach (Store store in stores)
-            {
-                if (store.StoreId == storeId)
-                {
-                    return store;
-                }
-            }
 
-            return null;
+        async public Task<List<StoreData>> GetAllActiveStores()
+        {
+            GetAllStoresRequest getAllStoresRequest = new GetAllStoresRequest();
+            comm.SendRequest(getAllStoresRequest);
+            GetStoresResponse getStoresResponse = await comm.Get<GetStoresResponse>(); 
+            return getStoresResponse.Stores;
         }
 
-        async public Task<User> Login(User _user)
+        //public Get GetStoreById(int storeId)
+        //{
+        //    comm.SendRequest("GetStoreById");
+        //    //List<Store> stores = (List<Store>)comm.Get();
+        //    string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
+        //    stores = JsonSerializer.Deserialize<List<Store>>(json);
+        //    foreach (Store store in stores)
+        //    {
+        //        if (store.StoreId == storeId)
+        //        {
+        //            return store;
+        //        }
+        //    }
+
+        //    return null;
+        //}
+
+        async public Task<CartData> GetCart(string username)
+        {
+            CartRequest cartRequest = new CartRequest(username);
+            comm.SendRequest(cartRequest);
+            GetUsersCartResponse getCartResponse = await comm.Get<GetUsersCartResponse>();
+            return getCartResponse.Cart;
+        }
+
+        async public Task<LoginResponse> Login(UserData _user)
         {
             LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);
-
-            string username = _user.Username;
-            string password = _user.Password;
-
             comm.SendRequest(loginRequest);
-            //comm.SendRequest("ValidateUser");
-            List<User> users = (List<User>)comm.Get();
-            string json = System.IO.File.ReadAllText("wwwroot/resources/users.json");
-            users = JsonSerializer.Deserialize<List<User>>(json);
-            foreach(User user in users)
-            {
-                if (user.Username == username && user.Password == password)
-                    return await Task.FromResult(user);
-            }
+            LoginResponse response = await comm.Get<LoginResponse>();
+            return response;
 
-            return await Task.FromResult(new User("null", "null", new[]{""}));
-            
+
+        }
+
+        async public Task<bool> Register(UserData _user)
+        {
+            RegisterRequest registerRequest = new RegisterRequest(_user.Username, _user.Password);
+            comm.SendRequest(registerRequest);
+            RegisterResponse response = await comm.Get<RegisterResponse>();
+            return response.Success;
+        }
+
+        async public Task<LogoutResponse> Logout(string username)
+        {
+            LogoutRequest logoutResponse = new LogoutRequest(username);
+            comm.SendRequest(logoutResponse);
+            LogoutResponse response = await comm.Get<LogoutResponse>();
+            return response;
         }
     }
 }

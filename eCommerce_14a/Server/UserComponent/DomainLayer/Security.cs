@@ -11,7 +11,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     {
         public Security()
         {
-            Console.WriteLine("Security Created\n");
+            //Console.WriteLine("Security Created\n");
         }
         //String that are sent are already checked to be valid -
         //Hence not null and not blank.

@@ -242,6 +242,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+            validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
             Tuple<bool, string> res = appendProductDriver(validStore, managers[0], validParamDetails, 1);
             Assert.IsTrue(res.Item1);
@@ -274,6 +275,8 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+            validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
+
 
             Tuple<bool, string> res = appendProductDriver(validStore, owners[0], validParamDetails, 1);
             Assert.IsTrue(res.Item1);
@@ -305,6 +308,8 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+            validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
+
 
             Tuple<bool, string> res = UpdateProductDriver(validStore, managers[0], validParamDetails);
             Assert.IsTrue(res.Item1);
@@ -338,6 +343,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductName, "PlayStation V5");
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
+            validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
             Tuple<bool, string> res = UpdateProductDriver(validStore, owners[0], validParamDetails);
             Assert.IsTrue(res.Item1);

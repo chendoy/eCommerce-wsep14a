@@ -1,5 +1,8 @@
 ﻿@page "/Stores/{storeid:int}"
 @using Data;
+@using Server.Communication.DataObject.Requests;
+@using Server.Communication.DataObject.Responses;
+@using Server.Communication.DataObject.ThinObjects;
 @inject Service.ECommerce14AService service
 
 <h2>StoreDetails</h2>
@@ -11,9 +14,9 @@ else
 {
     <div>
         <p>Store Id: @StoreId</p>
-        <p>Store Owner: @Store.Owner</p>
+        <p>Store Owner: @Store.Owners[0]</p>
     </div>
-    @if (Store.Products == null || Store.Products.Count == 0)
+    @if (Store.Products == null || Store.Products.invProducts.Count == 0)
     {
         <p><em>Sorry, there are no available products in this store right now :(</em></p>
     }
@@ -22,7 +25,6 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th>Product Id</th>
                     <th>Name</th>
                     <th>Category</th>
                     <th>Details</th>
@@ -31,15 +33,11 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (Product product in Store.Products)
+                @foreach (Tuple<ProductData, int> product in Store.Products.invProducts)
                 {
                     <tr>
-                        <td><a href=Stores/@StoreId/@product.ProductId>@product.ProductId</a></td>
-                        <td>@product.Name</td>
-                        <td>@product.Category</td>
-                        <td>@product.Details</td>
-                        <td>@product.Price</td>
-                        <td>@product.Amount</td>
+                        <ProductRow StoreId="@StoreId" Product="@product.Item1"/>
+                        <td>@product.Item2</td>
                     </tr>
                 }
             </tbody>
@@ -53,10 +51,10 @@ else
 @code {
     [Parameter]
     public int StoreId { get; set; }
-    public Store Store { get; set; }
+    public StoreData Store { get; set; }
 
     protected override void OnInitialized()
     {
-        Store = service.GetStoreById(StoreId);
+        //Store = service.GetStoreById(StoreId);
     }
 }

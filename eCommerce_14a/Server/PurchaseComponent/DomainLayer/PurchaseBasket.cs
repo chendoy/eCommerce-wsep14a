@@ -12,10 +12,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseBasket
     {
-        private string user;
-        private readonly Store store;
-        private Dictionary<int, int> products;
-        private double Price { get; set; }
+        public string user { get; set; }
+        public  Store store { get; set; }
+        public Dictionary<int, int> products { get; set; }
+        public double Price { get; set; }
         public DateTime PurchaseTime { get; private set; }
 
         public PurchaseBasket(string user, Store store)

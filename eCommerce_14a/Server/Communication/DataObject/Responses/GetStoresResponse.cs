@@ -1,4 +1,5 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
+using Server.Communication.DataObject.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,18 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class GetStoresResponse : Message
+    public class GetStoresResponse : Message
     {
-        List<Store> _stores { get; set; }
+        public List<StoreData> Stores { get; set; }
 
-        public GetStoresResponse(List<Store> Stores): base(Opcode.RESPONSE)
+        public GetStoresResponse(List<StoreData> stores): base(Opcode.RESPONSE)
         {
-            _stores = Stores;
+            Stores = stores;
+        }
+
+        public GetStoresResponse() : base()
+        {
+
         }
 
     }

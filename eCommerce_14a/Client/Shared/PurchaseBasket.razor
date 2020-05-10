@@ -1,0 +1,67 @@
+﻿<div class="row">
+    <a class="col-sm-2 font-weight-bold" href=Stores/@purchaseBasket.Store.StoreId>@purchaseBasket.Store.StoreName</a>
+    <div class="col-sm-2">
+        <label>Price: @purchaseBasket.Price</label>
+    </div>
+    <div class="col-sm-4">
+        <button @onclick="@(e => Collapse = !Collapse)">
+            @( Collapse ? "+" : "-")
+        </button>
+    </div>
+</div>
+<div class="panel panel-default border @Collapsed">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Details</th>
+                <th>Price</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (int productId in purchaseBasket.Product.Keys) 
+            { 
+                <tr>
+                    <ProductRow StoreId="@purchaseBasket.Store.StoreId" Product="@GetProduct(productId)" />
+                    <td>@purchaseBasket.Product[productId]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public PurchaseBasketData purchaseBasket { get; set; }
+    [Parameter]
+    public bool Modifiable { get; set; }
+    [Parameter]
+    public bool Collapse { get; set; }
+
+    public string Collapsed {
+        get
+        {
+            return Collapse ? "collapse" : "";
+        }
+    }
+
+    public ProductData GetProduct(int productId)
+    {
+        foreach (var productTuple in purchaseBasket.Store.Products.invProducts)
+        {
+            if (productTuple.Item1.ProductId == productId)
+            {
+                return productTuple.Item1;
+            }
+        }
+
+        return null; // Reached?
+    }
+
+
+    // https://stackoverflow.com/questions/58538154/how-to-collapse-expand-razor-components-using-blazor-syntax
+
+}

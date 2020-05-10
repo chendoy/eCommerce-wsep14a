@@ -105,7 +105,7 @@ namespace TestingSystem
 
         public override Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
         {
-            return StoreService.appendProduct(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount);
+            return StoreService.appendProduct(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount, "");
         }
 
         public override Dictionary<string, object> ViewStoreDetails(int storeID)
@@ -141,7 +141,7 @@ namespace TestingSystem
 
         public override Tuple<bool, string> UpdateProductDetails(int storeId, string userId, int productId, string newDetails, double price, string name, string category)
         {
-            return StoreService.UpdateProduct(userId, storeId, productId, newDetails, price, name, category);
+            return StoreService.UpdateProduct(userId, storeId, productId, newDetails, price, name, category, "");
         }
 
         public override Tuple<bool, string> RemoveProductFromStore(string username, int storeID, int productID)

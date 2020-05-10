@@ -1,4 +1,4 @@
-﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+﻿using Server.Communication.DataObject.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class HistoryResponse : Message
+       public class HistoryResponse : Message
     {
-        List<Purchase> _historyItems { get; set; } // not sure about that
-        string Error;
+        public List<PurchaseData> HistoryItems { get; set; } // not sure about that
+        public string Error;
 
-        public HistoryResponse(List<Purchase> historyItems, string error) : base(Opcode.RESPONSE)
+        public HistoryResponse(List<PurchaseData> historyItems, string error) : base(Opcode.RESPONSE)
         {
-            _historyItems = historyItems;
+            HistoryItems = historyItems;
             this.Error = error;
+        }
+
+        public HistoryResponse() : base()
+        {
+
         }
     }
 }

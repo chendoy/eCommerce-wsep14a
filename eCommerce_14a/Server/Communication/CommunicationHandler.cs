@@ -10,11 +10,13 @@ using eCommerce_14a.StoreComponent.ServiceLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
 using Newtonsoft.Json;
+using Server.Communication;
 using Server.Communication.DataObject;
 using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
 using Server.UserComponent.Communication;
 using SuperWebSocket;
+
 
 namespace eCommerce_14a.Communication
 {
@@ -27,6 +29,7 @@ namespace eCommerce_14a.Communication
         PurchaseService purchService; //naor
         NetworkSecurity security;
         private Dictionary<string, WebSocketSession> usersSessions;
+        DataConverter converter;
         public CommunicationHandler()
         {
             appointService = new Appoitment_Service();
@@ -36,6 +39,7 @@ namespace eCommerce_14a.Communication
             purchService = new PurchaseService();
             security = new NetworkSecurity();
             usersSessions = new Dictionary<string, WebSocketSession>();
+            converter = new DataConverter();
         }
 
         public string Seralize(object obj)
@@ -75,7 +79,7 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
-            Dictionary<int, int[]> permissions = new Dictionary<int, int[]>();
+            Dictionary<int, int[]> permissions = null;
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (ans.Item1)
@@ -93,6 +97,7 @@ namespace eCommerce_14a.Communication
             LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
             Tuple<bool, string> ans = userService.Logout(res.Username);
             string jsonAns = Seralize(new LogoutResponse(ans.Item1, ans.Item2));
+            usersSessions.Remove(res.Username);
             return security.Encrypt(jsonAns);
         }
 
@@ -108,7 +113,7 @@ namespace eCommerce_14a.Communication
         {
             GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json);
             List<Store> ans = storeService.GetAllStores();
-            string jsonAns = Seralize(new GetStoresResponse(ans));
+            string jsonAns = Seralize(new GetStoresResponse(converter.ToProductDataList(ans)));
             return security.Encrypt(jsonAns);
         }
 
@@ -125,7 +130,7 @@ namespace eCommerce_14a.Communication
             filters.Add(CommonStr.SearcherKeys.StoreId, res.StoreId);
             Dictionary<int, List<Product>> ans = storeService.SearchProducts(filters);
             List<Product> prodList = ans[res.StoreId];
-            string jsonAns = Seralize(new SearchProductResponse(prodList));
+            string jsonAns = Seralize(new SearchProductResponse(converter.ToProductDataList(prodList)));
             return security.Encrypt(jsonAns);
         }
 
@@ -145,7 +150,7 @@ namespace eCommerce_14a.Communication
                     break;
                 }
             }
-            string jsonAns = Seralize(new ProductInfoResponse(prod));
+            string jsonAns = Seralize(new ProductInfoResponse(converter.ToProductData(prod)));
             return security.Encrypt(jsonAns);
         }
 
@@ -161,7 +166,7 @@ namespace eCommerce_14a.Communication
         {
             CartRequest res = JsonConvert.DeserializeObject<CartRequest>(json);
             Tuple<Cart, string> ans = purchService.GetCartDetails(res.Username);
-            string jsonAns = Seralize(new GetUsersCartResponse(ans.Item1));
+            string jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1)));
             return security.Encrypt(jsonAns);
         }
 
@@ -170,7 +175,7 @@ namespace eCommerce_14a.Communication
             SearchProductRequest res = JsonConvert.DeserializeObject<SearchProductRequest>(json);
             Dictionary<int, List<Product>> ans = storeService.SearchProducts(res.Filters);
             List<Product> prodList = ans.Values.ToList().SelectMany(x => x).ToList();
-            string jsonAns = Seralize(new SearchProductResponse(prodList));
+            string jsonAns = Seralize(new SearchProductResponse(converter.ToProductDataList(prodList)));
             return security.Encrypt(jsonAns);
         }
 
@@ -187,7 +192,7 @@ namespace eCommerce_14a.Communication
         {
             BuyerHistoryRequest res = JsonConvert.DeserializeObject<BuyerHistoryRequest>(json);
             Tuple<List<Purchase>, string> ans = purchService.GetBuyerHistory(res.Username);
-            string jsonAns = Seralize(new HistoryResponse(ans.Item1, ans.Item2));
+            string jsonAns = Seralize(new HistoryResponse(converter.ToPurchaseDataList(ans.Item1), ans.Item2));
             return security.Encrypt(jsonAns);
         }
 

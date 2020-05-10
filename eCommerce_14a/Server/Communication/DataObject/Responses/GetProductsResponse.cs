@@ -1,19 +1,24 @@
-﻿using eCommerce_14a.StoreComponent.DomainLayer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Server.Communication.DataObject.ThinObjects;
 
 namespace Server.Communication.DataObject
 {
-    class GetProductsResponse : Message
+    public class GetProductsResponse : Message
     {
-        List<Product> _products { get; set; }
+        List<ProductData> Products { get; set; }
 
-        public GetProductsResponse(List<Product> products) : base(Opcode.RESPONSE)
+        public GetProductsResponse(List<ProductData> products) : base(Opcode.RESPONSE)
         {
-            _products = products;
+            Products = products;
+        }
+
+        public GetProductsResponse() : base()
+        {
+
         }
     }
 }

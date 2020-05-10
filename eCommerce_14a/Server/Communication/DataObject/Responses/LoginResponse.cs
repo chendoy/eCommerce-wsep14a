@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject
 {
-    class LoginResponse : Message
+    public class LoginResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
         public Dictionary<int, int[]> Permissions { get; set; }
 
         public LoginResponse(bool success, string error, Dictionary<int, int[]> permissions) : base(Opcode.RESPONSE)
@@ -18,5 +18,7 @@ namespace Server.Communication.DataObject
             this.Error = error;
             this.Permissions = permissions;
         }
+
+        public LoginResponse() : base(){  }
     }
 }

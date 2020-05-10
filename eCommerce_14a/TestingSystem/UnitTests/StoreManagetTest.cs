@@ -76,7 +76,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
 
         private Tuple<bool, string> appendProductDriver(int storeId, string userName, int Pid, string pDetails, double price, string pName, string pCategory, int amount)
         {
-            return storeManagment.appendProduct(storeId, userName, Pid, pDetails, price, pName, pCategory, amount);
+            return storeManagment.appendProduct(storeId, userName, Pid, pDetails, price, pName, pCategory, amount, "");
         }
 
 
@@ -127,7 +127,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.UpdateProduct(string, int, int, string, double, string, string)
         public void updateProduct_nonExistingUser()
         {
-            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("shimon", 1, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty);
+            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("shimon", 1, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty, "");
             if (updateRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, updateRes.Item2);
@@ -137,7 +137,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.UpdateProduct(string, int, int, string, double, string, string)
         public void updateProduct_nonActiveUser()
         {
-            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("yosef", 3, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty);
+            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("yosef", 3, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty, "");
             if (updateRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, updateRes.Item2);
@@ -147,7 +147,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.UpdateProduct(string, int, int, string, double, string, string)
         public void updateProduct_nonExistingStore()
         {
-            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("liav", 8, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty);
+            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("liav", 8, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty, "");
             if (updateRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, updateRes.Item2);
@@ -157,14 +157,14 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.UpdateProduct(string, int, int, string, double, string, string)
         public void updateProduct_valid()
         {
-            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("liav", 1, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty);
+            Tuple<bool, string> updateRes = storeManagment.UpdateProduct("liav", 1, 1, "dsfds", 11.4, "fdfd", CommonStr.ProductCategoty.Beauty, "");
             Assert.IsTrue(updateRes.Item1);        
         }
 
         /// <function cref ="eCommerce_14a.StoreManagment.UpdateProduct(string, int, int, string, double, string, string)
         public Tuple<bool, string> UpdateProductDriver(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
         {
-            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory);
+            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory, "");
         }
 
 

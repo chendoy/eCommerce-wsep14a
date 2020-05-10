@@ -1,5 +1,4 @@
-﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
-using eCommerce_14a.StoreComponent.DomainLayer;
+﻿using Server.Communication.DataObject.ThinObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +7,17 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetUsersCartResponse : Message
+    public class GetUsersCartResponse : Message
     {
-        Cart _cart { get; set; }
-        public GetUsersCartResponse(Cart cart) : base(Opcode.RESPONSE)
+        public CartData Cart { get; set; }
+        public GetUsersCartResponse(CartData cart) : base(Opcode.RESPONSE)
         {
-            _cart = cart;
+            Cart = cart;
+        }
+
+        public GetUsersCartResponse() : base()
+        {
+
         }
     }
 }
