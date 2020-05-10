@@ -4,14 +4,14 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<AuthorizeView>
+<AuthorizeView Roles="User">
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
         <button class="nav-link btn btn-link" @onclick="(()=>Logout(context.User.Identity.Name))">Log out</button>
     </Authorized>
     <NotAuthorized>
         <a href="register">Register</a>
-        <a href="login">Log in</a>
+        <a href="/">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -25,7 +25,7 @@
         if (response.Success)
         {
             ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/index");
         }
 
         else

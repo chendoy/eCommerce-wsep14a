@@ -50,7 +50,7 @@ namespace Client.Data
                 var identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, "TestRole")
+                    new Claim(ClaimTypes.Role, "User")
                 }, "apiauth_type");
 
                 var userClaim = new ClaimsPrincipal(identity);
@@ -58,6 +58,21 @@ namespace Client.Data
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
                 return true;
             
+        }
+
+        public bool MarkUserAsAGuest(UserData user)
+        {
+            _sessionStorageService.SetItemAsync("user", user);
+            var identity = new ClaimsIdentity(new[]
+{
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, "Guest")
+                }, "apiauth_type");
+
+            var userClaim = new ClaimsPrincipal(identity);
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
+            return true;
         }
 
         public void  MarkUserAsLoggedOut()

@@ -88,11 +88,10 @@
 
     private async void LoginAsGuest()
     {
-        UserData guest = new UserData("___guest___", "___guest___");
-        LoginResponse response = await service.Login(guest);
-        ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, response.Permissions);
+        LoginAsGuestResponse response = await service.LoginAsaGuest();
+        UserData guest = new UserData(response.Username,"");
+        ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAGuest(guest);
         NavigationManager.NavigateTo("/index");
 
     }
-
 }
