@@ -87,5 +87,13 @@ namespace Client.Service
             LogoutResponse response = await comm.Get<LogoutResponse>();
             return response;
         }
+
+        async public Task<LoginAsGuestResponse> LoginAsaGuest()
+        {
+            LoginAsGuestRequest loginAsGuestRequest = new LoginAsGuestRequest();
+            comm.SendRequest(loginAsGuestRequest);
+            LoginAsGuestResponse loginAsGuestResponse = await comm.Get<LoginAsGuestResponse>();
+            return loginAsGuestResponse;
+        }
     }
 }
