@@ -69,6 +69,8 @@
     <Compile Include="Communication\DataObject\Responses\PurchaseResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\RegisterResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\SearchProductResponse.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\DiscountPolicyData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\PurchasePolicyData.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\CartData.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\InventoryData.cs" />
