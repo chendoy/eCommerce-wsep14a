@@ -62,6 +62,15 @@ namespace Client.Service
             return getCartResponse;
         }
 
+        async public Task<TResponse> GetResponse<TRequest, TResponse>(TRequest request)
+        {
+            comm.SendRequest(request);
+            TResponse response = await comm.Get<TResponse>();
+            return response;
+        }
+
+
+
         async public Task<LoginResponse> Login(UserData _user)
         {
             LoginRequest loginRequest = new LoginRequest(_user.Username, _user.Password);

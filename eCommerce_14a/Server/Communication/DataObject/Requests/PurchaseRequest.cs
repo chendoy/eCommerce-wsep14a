@@ -18,5 +18,12 @@ namespace Server.Communication.DataObject
             Address = address;
             PaymentDetails = paymentDetails;
         }
+
+        public void Clear()
+        {
+            Username = "";
+            Address = "";
+            PaymentDetails = "";
+        }
     }
 }
