@@ -173,7 +173,7 @@ namespace eCommerce_14a.Communication
         {
             CartRequest res = JsonConvert.DeserializeObject<CartRequest>(json);
             Tuple<Cart, string> ans = purchService.GetCartDetails(res.Username);
-            string jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1)));
+            string jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1), ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
