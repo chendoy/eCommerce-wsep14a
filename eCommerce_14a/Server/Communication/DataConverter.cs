@@ -101,5 +101,90 @@ namespace Server.Communication
             }
             return retList;
         }
+
+        public DiscountPolicyData ToDiscountPolicyData(DiscountPolicy discountPolicy)
+        {
+            if (discountPolicy.GetType() == typeof(ConditionalProductDiscount))
+            {
+                int discountProdutId = ((ConditionalProductDiscount)discountPolicy).discountProdutId;
+                int preCondition = ((ConditionalProductDiscount)discountPolicy).PreCondition.PreConditionNumber;
+                double discountPrecentage = ((ConditionalProductDiscount)discountPolicy).Discount;
+                return new DiscountProduct(discountProdutId, preCondition, discountPrecentage);
+            }
+
+            else if (discountPolicy.GetType() == typeof(ConditionalBasketDiscount))
+            {
+                int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.PreConditionNumber;
+                double discountPrecentage = ((ConditionalBasketDiscount)discountPolicy).Discount;
+                return new DiscountBasket(preCondition, discountPrecentage);
+            }
+
+            else if (discountPolicy.GetType() == typeof(RevealdDiscount))
+            {
+                int discountProdutId = ((RevealdDiscount)discountPolicy).discountProdutId;
+                double discountPrecentage = ((RevealdDiscount)discountPolicy).discount;
+                return new DiscountReveald(discountProdutId, discountPrecentage);
+            }
+
+            else if (discountPolicy.GetType() == typeof(CompundDiscount))
+            {
+                int mergetype = ((CompundDiscount)discountPolicy).GetMergeType();
+                List<DiscountPolicy> policies = ((CompundDiscount)discountPolicy).getChildren();
+                List<DiscountPolicyData> retList = new List<DiscountPolicyData>();
+                foreach (DiscountPolicy policy in policies) 
+                {
+                    DiscountPolicyData newPolicyData = ToDiscountPolicyData(policy);
+                    retList.Add(newPolicyData);
+                }
+                return new CompoundDiscountPolicyData(mergetype, retList);
+            }
+            return new DiscountPolicyData(); // not reached
+
+        }
+
+        public PurchasePolicyData ToPurchasePolicyData(PurchasePolicy policyData)
+        {
+            if (policyData.GetType() == typeof(ProductPurchasePolicy))
+            {
+                int policyProdutId = ((ProductPurchasePolicy)policyData).policyProductId;
+                int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                return new PurchasePolicyProduct(preCondition, policyProdutId);
+            }
+
+            else if (policyData.GetType() == typeof(BasketPurchasePolicy))
+            {
+                int preCondition = ((BasketPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                return new PurchasePolicyBasket(preCondition);
+            }
+
+            else if (policyData.GetType() == typeof(SystemPurchasePolicy))
+            { 
+                int storeId = ((SystemPurchasePolicy)policyData).store.Id;
+                int preCondition = ((SystemPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                return new PurchasePolicySystem(preCondition, storeId);
+            }
+
+            else if (policyData.GetType() == typeof(UserPurchasePolicy))
+            {
+                string username = ((UserPurchasePolicy)policyData).user.getUserName();
+                int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                return new PurchasePolicyUser(preCondition, username);
+            }
+
+            else if (policyData.GetType() == typeof(CompundPurchasePolicy))
+            {
+                int mergetype = ((CompundPurchasePolicy)policyData).mergeType;
+                List<PurchasePolicy> policies = ((CompundPurchasePolicy)policyData).getChildren();
+                List<PurchasePolicyData> retList = new List<PurchasePolicyData>();
+                foreach (PurchasePolicy policy in policies)
+                {
+                    PurchasePolicyData newPolicyData = ToPurchasePolicyData(policy);
+                    retList.Add(newPolicyData);
+                }
+                return new CompoundPurchasePolicyData(mergetype, retList);
+            }
+            return new PurchasePolicyData(); // not reached
+
+        }
     }
 }

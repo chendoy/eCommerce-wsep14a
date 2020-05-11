@@ -10,9 +10,11 @@ namespace Server.Communication.DataObject.Responses
     public class GetUsersCartResponse : Message
     {
         public CartData Cart { get; set; }
-        public GetUsersCartResponse(CartData cart) : base(Opcode.RESPONSE)
+        public string Error { get; set; }
+        public GetUsersCartResponse(CartData cart, string error) : base(Opcode.RESPONSE)
         {
             Cart = cart;
+            Error = error;
         }
 
         public GetUsersCartResponse() : base()

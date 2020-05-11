@@ -17,8 +17,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class CompundDiscount : DiscountPolicy
     {
-        private List<DiscountPolicy> children;
-        int mergeType;
+        public List<DiscountPolicy> children;
+        public int mergeType;
         public CompundDiscount(int mergeType, List<DiscountPolicy> children)
         {
             if (children == null)
@@ -72,6 +72,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return children;
         }
 
+        public int GetMergeType() 
+        {
+            return mergeType;
+        }
+
     }
 
     abstract
@@ -108,7 +113,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
  
     public class ConditionalProductDiscount : ConditionalDiscount
     {
-        int discountProdutId;
+        public int discountProdutId { get; set; }
         public ConditionalProductDiscount(int discountProdutId, PreCondition preCondition, double discount) : base(preCondition, discount)
         {
             this.discountProdutId = discountProdutId;
@@ -146,8 +151,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class RevealdDiscount : DiscountPolicy
     {
-        private double discount;
-        private int discountProdutId;
+        public double discount { get; set; }
+        public int discountProdutId { get; set; }
         public RevealdDiscount(int discountProductId, double discount)
         {
             this.discountProdutId = discountProductId;
