@@ -89,6 +89,7 @@
             public static string notAOwnerOrManagerErrMsg = "This user isn't a store owner or manager, thus he can't perform this action";
             public static string ManagerNoPermissionErrMsg = "This manager doesn't have permission to perform this action";
             public static string BasketNotAcceptPurchasePolicy = "The baske not accepted the store's purchase policy";
+            public static string PurchasePolicyErrMessage = "Purchase policy not updated due to incorrect data";
         }
 
         public static class InventoryErrorMessage

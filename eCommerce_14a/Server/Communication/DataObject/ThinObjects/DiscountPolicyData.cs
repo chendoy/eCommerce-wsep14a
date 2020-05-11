@@ -49,41 +49,41 @@ namespace Server.Communication.DataObject.ThinObjects
         }
     }
 
-    public class DiscountProduct : Discount
+    public class DiscountConditionalProductData : Discount
     {
         public int ProductId { get; set; }
 
-        public DiscountProduct() : base()
+        public DiscountConditionalProductData() : base()
         {
         }
 
-        public DiscountProduct(int productId, int discountType, double discountPrecent) : base(discountType, discountPrecent)
+        public DiscountConditionalProductData(int productId, int discountType, double discountPrecent) : base(discountType, discountPrecent)
         {
             ProductId = productId;
         }
     }
 
-    public class DiscountBasket : Discount
+    public class DiscountConditionalBasketData : Discount
     {
 
-        public DiscountBasket() : base()
+        public DiscountConditionalBasketData() : base()
         {
         }
-        public DiscountBasket(int preCondition, double discount) : base(preCondition, discount)
+        public DiscountConditionalBasketData(int preCondition, double discount) : base(preCondition, discount)
         {
         }
     }
 
-   public class DiscountReveald : DiscountPolicyData
+   public class DiscountRevealdData : DiscountPolicyData
     {
         public int ProductId { get; set; }
         public double DiscountPrecent { get; set; }
 
-        public DiscountReveald() : base()
+        public DiscountRevealdData() : base()
         {
         }
 
-        public DiscountReveald(int productId, double discountPrecent) : base()
+        public DiscountRevealdData(int productId, double discountPrecent) : base()
         {
             ProductId = productId;
             DiscountPrecent = discountPrecent;
