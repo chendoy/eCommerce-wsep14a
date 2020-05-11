@@ -14,7 +14,6 @@ namespace Server.Communication.DataObject.ThinObjects
         public List<string> Mangers { get; set; }
         public InventoryData Products { get; set; }
         public string StoreThumbnail { get; set; }
-        public 
 
 
         public StoreData() { }
