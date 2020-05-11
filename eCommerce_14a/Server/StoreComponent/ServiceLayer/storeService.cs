@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using Server.Communication.DataObject.ThinObjects;
 using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.ServiceLayer
@@ -62,9 +63,19 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--open-store-32 </req>
-        public Tuple<int, string> createStore(string userName, DiscountPolicy discuntPolicy, PurchasePolicy purchasePolicy, Validator validator)
+        public Tuple<int, string> createStore(string userName)
         {
-            return storeManagment.createStore(userName, discuntPolicy, purchasePolicy, validator);
+            return storeManagment.createStore(userName);
+        }
+
+        public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , PurchasePolicyData purchasePolicy)
+        {
+            return storeManagment.UpdatePurchasePolicy(storeId, userName, purchasePolicy);
+        }
+
+        public Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicy)
+        {
+            return storeManagment.UpdateDiscountPolicy(storeId, userName, discountPolicy);
         }
 
 
