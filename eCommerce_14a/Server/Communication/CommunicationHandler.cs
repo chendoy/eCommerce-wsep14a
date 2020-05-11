@@ -32,14 +32,18 @@ namespace eCommerce_14a.Communication
         DataConverter converter;
         public CommunicationHandler()
         {
-            appointService = new Appoitment_Service();
             userService = new UserService();
-            sysService = new System_Service("Admin","Admin");
             storeService = new StoreService();
+            appointService = new Appoitment_Service();
             purchService = new PurchaseService();
             security = new NetworkSecurity();
+            sysService = new System_Service("Admin","Admin");
             usersSessions = new Dictionary<string, WebSocketSession>();
             converter = new DataConverter();
+        }
+        public void loaddata()
+        {
+            sysService.loaddata();
         }
 
         public string Seralize(object obj)

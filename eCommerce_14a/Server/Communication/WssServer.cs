@@ -19,10 +19,16 @@ namespace eCommerce_14a.Communication
 
         public WssServer()
         {
+            //Start all services 
+            //Services will start the domain layer
             handler = new CommunicationHandler();
             wsServer = new WebSocketServer();
+            Publisher.Instance.setServer(this);
         }
-
+        private void LoadData()
+        {
+            handler.loaddata();
+        }
         private void InitServer()
         {
             port = 443;

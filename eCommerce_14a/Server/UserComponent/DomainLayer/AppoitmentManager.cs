@@ -18,7 +18,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         AppoitmentManager()
         {
             UM = UserManager.Instance;
-            //publisher = Publisher.Instance;
             storeManagment = StoreManagment.Instance;
         }
         private static readonly object padlock = new object();  

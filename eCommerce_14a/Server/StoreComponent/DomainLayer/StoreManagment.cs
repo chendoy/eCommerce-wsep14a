@@ -71,7 +71,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
             return stores[storeId].appendProduct(user, productParams, amount);
         }
-
+        public void LoadStores()
+        {
+            createStore("user4", null, null, null); //id 1
+            createStore("user5", null, null, null); //id 2
+        }
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

@@ -82,6 +82,7 @@
     <Compile Include="Communication\DataObject\ThinObjects\StoreData.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
+    <Compile Include="ServerStart.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
     <Compile Include="StoreComponent\DomainLayer\Validator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using Server.UserComponent.Communication;
+using eCommerce_14a.Communication;
 
 namespace TestingSystem.UnitTests.Appoitment_Test
 {
@@ -17,6 +18,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         private StoreManagment SM;
         private UserManager UM;
         private AppoitmentManager AP;
+        private WssServer ws;
         private int[] fullpermissions = { 1, 1, 1 };
         private int[] ManagerPermissions = { 1, 1, 0 };
         private int[] OdPermissions = { 0, 1, 0 };

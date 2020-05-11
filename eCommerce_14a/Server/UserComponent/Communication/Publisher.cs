@@ -15,7 +15,7 @@ namespace Server.UserComponent.Communication
         private WssServer ws;
         Publisher()
         {
-            ws = new WssServer();
+            //ws = new WssServer();
             StoreSubscribers = new Dictionary<int, LinkedList<string>>();
             UM = UserManager.Instance;
         }
@@ -37,6 +37,10 @@ namespace Server.UserComponent.Communication
                 }
                 return instance;
             }
+        }
+        public void setServer(WssServer server)
+        {
+            ws = server;
         }
         public Tuple<bool,string> subscribe(string username, int storeID)
         {
@@ -95,6 +99,10 @@ namespace Server.UserComponent.Communication
 
         public Tuple<bool, string> Notify(int store,NotifyData notification)
         {
+            if(ws is null)
+            {
+                return new Tuple<bool, string>(true, "ws undefiened");
+            }
             LinkedList<string> users;
             if (!StoreSubscribers.TryGetValue(store, out users))
             {

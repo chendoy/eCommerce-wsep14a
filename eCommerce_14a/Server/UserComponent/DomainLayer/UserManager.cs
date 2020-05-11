@@ -51,7 +51,19 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             SB = new Security();
             Available_ID = 1;
         }
-
+        public void LoadUsers()
+        {
+            //system Admin is id - 0
+            Register("user1", "Test1"); //id 1
+            Register("user2", "Test2"); //id 2
+            Register("user3", "Test3"); //id 3
+            Register("user4", "Test4"); //id 4
+            Register("user5", "Test5"); //id 5
+            Login("Guest6", "bla", true);//Guest 6
+            Login("Guest7", "bla", true);//Guest 7
+            Login("user4", "Test4");
+            Login("user5", "Test5");
+        }
         public Dictionary<int, int[]> GetUserPermissions(string username) 
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
