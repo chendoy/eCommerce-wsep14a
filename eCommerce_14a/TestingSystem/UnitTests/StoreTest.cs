@@ -12,7 +12,6 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using TestingSystem.UnitTests.InventroyTest;
 using Server.UserComponent.Communication;
-using Newtonsoft.Json;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 
 using Server.StoreComponent.DomainLayer;
@@ -29,8 +28,6 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestInitialize()
         {
             validStore = StoreTest.initValidStore();
-            string json = JsonConvert.SerializeObject(validStore);
-            System.IO.File.WriteAllText("C:\\Users\\LiavB\\OneDrive\\Desktop\\semester 6\\gg.txt", json);
             owners = validStore.owners;
             managers = validStore.managers;
         }
@@ -438,7 +435,7 @@ namespace TestingSystem.UnitTests.StoreTest
             UserManager userManager = UserManager.Instance;
             userManager.Register("shimon", "123");
             userManager.Login("shimon", "123", false);
-            sm.createStore("shimon", null, null, null);
+            sm.createStore("shimon");
             userManager.Register("yosi", "123");
             userManager.Login("yosi", "123");
             userManager.Register("shmuel", "123");

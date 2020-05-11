@@ -181,7 +181,7 @@ namespace eCommerce_14a.Communication
         {
             RemoveProductFromCartRequest res = JsonConvert.DeserializeObject<RemoveProductFromCartRequest>(json);
             Tuple<bool, string> ans = purchService.RemoveProductFromShoppingCart(res.Username, res.StoreId, res.ProductId);
-            string jsonAns = Seralize(new RemoveProductFromCartResponse(ans.Item1, ans.Item2);
+            string jsonAns = Seralize(new RemoveProductFromCartResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
@@ -197,7 +197,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleOpenStore(string json)
         {
             OpenStoreRequest res = JsonConvert.DeserializeObject<OpenStoreRequest>(json);
-            Tuple<int, string> ans = storeService.createStore(res.Username, null, null, null);
+            Tuple<int, string> ans = storeService.createStore(res.Username);
             bool success = ans.Item1 == -1 ? false : true;
             string jsonAns = Seralize(new OpenStoreResponse(success,ans.Item2, ans.Item1));
             return security.Encrypt(jsonAns);
