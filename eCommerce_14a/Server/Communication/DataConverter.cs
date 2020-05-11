@@ -52,7 +52,7 @@ namespace Server.Communication
             return new InventoryData(retList);
         }
 
-        public List<StoreData> ToProductDataList(List<Store> stores)
+        public List<StoreData> ToStoreDataList(List<Store> stores)
         {
             List<StoreData> retList = new List<StoreData>();
             foreach (Store store in stores)

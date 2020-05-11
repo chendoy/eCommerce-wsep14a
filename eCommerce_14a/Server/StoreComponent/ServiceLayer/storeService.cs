@@ -102,6 +102,11 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.GetAllStores();
         }
 
+        public List<Store> GetStoresOwnedBy(string username) 
+        {
+            return storeManagment.GetStoresOwnedBy(username);
+        }
+
         //For Admin Uses
         public void cleanup()
         {
