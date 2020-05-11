@@ -27,6 +27,8 @@ namespace Server.Communication.DataObject
         DEMOTE,
         LOGIN_AS_GUEST,
         REMOVE_PRODUCT_FROM_CART,
+        UPDATE_DISCOUNT_POLICY,
+        UPDATE_PURCHASE_POLICY,
         NOTIFICATION,
         RESPONSE,
         ERROR
