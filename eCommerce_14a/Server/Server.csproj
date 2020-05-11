@@ -56,6 +56,8 @@
     <Compile Include="Communication\DataObject\Requests\RemoveProductFromCartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\SearchProductRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\StoresProductsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\UpdateDiscountPolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\UpdatePurchasePolicyRequest.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\DemoteManagerResponse.cs" />
@@ -73,6 +75,8 @@
     <Compile Include="Communication\DataObject\Responses\RegisterResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\RemoveProductFromCartResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\SearchProductResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\UpdateDiscountPolicyResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\UpdatePurchasePolicyResponse.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\DiscountPolicyData.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\PurchasePolicyData.cs" />
     <Compile Include="Communication\NetworkSecurity.cs" />

@@ -49,10 +49,45 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (!store_params.ContainsKey(CommonStr.StoreParams.Validator) || store_params[CommonStr.StoreParams.Validator] == null)
             {
                 policyValidator = new Validator(null, null);
+
+                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000,
+                  (PurchaseBasket basket, int productId) => basket.GetBasketPrice() > 1000);
+
+                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above1Unit,
+                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 1 : false);
+
+                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above2Units,
+                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 2 : false);
+
+                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove100,
+                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 100 : false);
+
+                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove200,
+                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 200 : false);
+
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                (PurchaseBasket basket, int productId, User user, Store store) => true);
+                    (PurchaseBasket basket, int productId, User user, Store store) => true);
+
                 policyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.NoDiscount,
                     (PurchaseBasket basket, int productId) => true);
+
+
+                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
+                     (PurchaseBasket basket, int productId, User user, Store store) => true);
+
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
+                    (PurchaseBasket basket, int productId, User user, Store store) => basket.Products.ContainsKey(productId) ? basket.Products[productId] <= 1 : false);
+
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
+                    (PurchaseBasket basket, int productId, User user, Store store) => basket.GetNumProductsAtBasket() <= 10);
+
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.GuestCantBuy,
+                    (PurchaseBasket basket, int productId, User user, Store store) => !user.isguest());
+
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.StoreMustBeActive,
+                    (PurchaseBasket basket, int productId, User user, Store store) => store.ActiveStore);
+
+
             }
             else
             {

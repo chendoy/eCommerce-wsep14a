@@ -189,6 +189,22 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public byte[] HandleUpdateDiscountPolicy(string json)
+        {
+            UpdateDiscountPolicyRequest res = JsonConvert.DeserializeObject<UpdateDiscountPolicyRequest>(json);
+            Tuple<bool, string> ans = storeService.updateDiscountPolicy(res.storeId, res.userName, res.DiscountPolicy);
+            string jsonAns = Seralize(new UpdateDiscountPolicyResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleUpdatePurchasePolicy(string json)
+        {
+            UpdatePurchasePolicyRequest res = JsonConvert.DeserializeObject<UpdatePurchasePolicyRequest>(json);
+            Tuple<bool, string> ans = storeService.updatePurchasePolicy(res.storeId, res.userName, res.purchasePolicy);
+            string jsonAns = Seralize(new UpdatePurchasePolicyResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleSearchProduct(string json) //deal with doytsh
         {
             SearchProductRequest res = JsonConvert.DeserializeObject<SearchProductRequest>(json);
