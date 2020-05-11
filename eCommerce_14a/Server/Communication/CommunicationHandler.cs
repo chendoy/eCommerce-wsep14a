@@ -177,6 +177,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public byte[] HandleRemovePoductFromCart(string json)
+        {
+            RemoveProductFromCartRequest res = JsonConvert.DeserializeObject<RemoveProductFromCartRequest>(json);
+            Tuple<bool, string> ans = purchService.RemoveProductFromShoppingCart(res.Username, res.StoreId, res.ProductId);
+            string jsonAns = Seralize(new RemoveProductFromCartResponse(ans.Item1, ans.Item2);
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleSearchProduct(string json) //deal with doytsh
         {
             SearchProductRequest res = JsonConvert.DeserializeObject<SearchProductRequest>(json);
