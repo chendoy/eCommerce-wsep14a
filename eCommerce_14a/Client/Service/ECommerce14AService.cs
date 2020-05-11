@@ -54,12 +54,12 @@ namespace Client.Service
         //    return null;
         //}
 
-        async public Task<CartData> GetCart(string username)
+        async public Task<GetUsersCartResponse> GetCart(string username)
         {
             CartRequest cartRequest = new CartRequest(username);
             comm.SendRequest(cartRequest);
             GetUsersCartResponse getCartResponse = await comm.Get<GetUsersCartResponse>();
-            return getCartResponse.Cart;
+            return getCartResponse;
         }
 
         async public Task<LoginResponse> Login(UserData _user)

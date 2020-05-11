@@ -1,22 +1,33 @@
 ﻿@page "/ShoppingCart"
 <h3>ShoppingCart</h3>
-@if (Cart.baskets.Count == 0)
+<ErrorMessage ErrorMsg="@Error"/>
+@if (Cart != null)
 {
-    <p>You didn't buy anything yet :(</p>
-}
-else
-{
-    @foreach (PurchaseBasketData basketData in Cart.baskets)
+    @if (Cart.baskets.Count == 0)
     {
-        <PurchaseBasket purchaseBasket="@basketData" Modifiable="true"></PurchaseBasket>
-        <br />
+        <p>You didn't buy anything yet :(</p>
+    }
+    else
+    {
+        @foreach (PurchaseBasketData basketData in Cart.baskets)
+        {
+            <PurchaseBasket purchaseBasket="@basketData" Modifiable="true"></PurchaseBasket>
+            <br />
+        }
     }
 }
 
-@code { 
+
+@code {
     public CartData Cart { get; set; }
+    public string Error { get; set; }
     protected async override Task OnInitializedAsync()
     {
-        Cart = await service.GetCart("admin");
+        GetUsersCartResponse response = await service.GetCart("admin");
+        Cart = response.Cart;
+        if (Cart is null)
+        {
+            Error = "";
+        }
     }
 }
