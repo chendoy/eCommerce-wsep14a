@@ -113,7 +113,7 @@ namespace eCommerce_14a.Communication
         {
             GetAllStoresRequest res = JsonConvert.DeserializeObject<GetAllStoresRequest>(json);
             List<Store> ans = storeService.GetAllStores();
-            string jsonAns = Seralize(new GetStoresResponse(converter.ToProductDataList(ans)));
+            string jsonAns = Seralize(new GetStoresResponse(converter.ToStoreDataList(ans)));
             return security.Encrypt(jsonAns);
         }
 
@@ -158,6 +158,14 @@ namespace eCommerce_14a.Communication
         {
             Tuple<bool,string> ans = userService.LoginAsGuest();
             string jsonAns = Seralize(new LoginAsGuestResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleGetStoresOwnedBy(string json)
+        {
+            GetStoresOwnedByRequest res = JsonConvert.DeserializeObject<GetStoresOwnedByRequest>(json);
+            List<Store> ans = storeService.GetStoresOwnedBy(res.User);
+            string jsonAns = Seralize(new GetStoresOwnedByResponse(converter.ToStoreDataList(ans),""));
             return security.Encrypt(jsonAns);
         }
 

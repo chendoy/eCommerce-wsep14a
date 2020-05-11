@@ -178,6 +178,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case 19:
+                    response = handler.HandleGetStoresOwnedBy(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
 
                 default:
                     break;
