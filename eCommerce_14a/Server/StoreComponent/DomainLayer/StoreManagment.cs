@@ -74,8 +74,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public void LoadStores()
         {
-            createStore("user4", null, null, null); //id 1
-            createStore("user5", null, null, null); //id 2
+            //Products
+            //Buying Policy
+            //Discount Policy
+            createStore("user4"); //id 1
+            createStore("user5"); //id 2
         }
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
