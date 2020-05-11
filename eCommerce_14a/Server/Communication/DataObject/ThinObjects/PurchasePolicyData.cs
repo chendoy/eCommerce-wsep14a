@@ -45,56 +45,56 @@ namespace Server.Communication.DataObject.ThinObjects
         }
     }
 
-    public class PurchasePolicyProduct : ThinPurchasePolicy
+    public class PurchasePolicyProductData : ThinPurchasePolicy
     {
         public int ProductId { get; set; }
 
-        public PurchasePolicyProduct() : base()
+        public PurchasePolicyProductData() : base()
         {
         }
 
-        public PurchasePolicyProduct(int preCondition, int productId) : base(preCondition)
+        public PurchasePolicyProductData(int preCondition, int productId) : base(preCondition)
         {
             ProductId = productId;
         }
 
     }
 
-    public class PurchasePolicyBasket : ThinPurchasePolicy
+    public class PurchasePolicyBasketData : ThinPurchasePolicy
     {
 
-        public PurchasePolicyBasket() : base()
+        public PurchasePolicyBasketData() : base()
         {
         }
 
-        public PurchasePolicyBasket(int preCondition) : base(preCondition)
+        public PurchasePolicyBasketData(int preCondition) : base(preCondition)
         {
         }
 
     }
 
-    public class PurchasePolicySystem : ThinPurchasePolicy
+    public class PurchasePolicySystemData : ThinPurchasePolicy
     {
         public int StoreId { get; set; }
-        public PurchasePolicySystem() : base()
+        public PurchasePolicySystemData() : base()
         {
         }
 
-        public PurchasePolicySystem(int preCondition, int storeId) : base(preCondition)
+        public PurchasePolicySystemData(int preCondition, int storeId) : base(preCondition)
         {
             StoreId = storeId;
         }
 
     }
 
-    public class PurchasePolicyUser : ThinPurchasePolicy
+    public class PurchasePolicyUserData : ThinPurchasePolicy
     {
         public string UserName { get; set; }
-        public PurchasePolicyUser() : base()
+        public PurchasePolicyUserData() : base()
         {
         }
 
-        public PurchasePolicyUser(int preCondition, string userName) : base(preCondition)
+        public PurchasePolicyUserData(int preCondition, string userName) : base(preCondition)
         {
             UserName = userName;
         }

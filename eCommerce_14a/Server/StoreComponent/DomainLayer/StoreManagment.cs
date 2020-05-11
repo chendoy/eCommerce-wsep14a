@@ -5,6 +5,7 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.UserComponent.Communication;
 using Server.StoreComponent.DomainLayer;
+using Server.Communication.DataObject.ThinObjects;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -97,7 +98,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
 
-        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, DiscountPolicy discount_policy)
+        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicyData)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);
@@ -111,12 +112,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
-            return stores[storeId].UpdateDiscountPolicy(user, discount_policy);
+            return stores[storeId].UpdateDiscountPolicy(user, discountPolicyData);
 
         }
 
 
-        public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, PurchasePolicy purchase_policy)
+        public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, PurchasePolicyData purchasePolicyData)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);
@@ -130,7 +131,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
-            return stores[storeId].UpdatePurchasePolicy(user, purchase_policy);
+            return stores[storeId].UpdatePurchasePolicy(user, purchasePolicyData);
 
         }
 
@@ -270,7 +271,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        public Tuple<int, string> createStore(string userName, DiscountPolicy discountPolicy, PurchasePolicy purchasePolicy, Validator validator)
+        public Tuple<int, string> createStore(string userName)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -286,9 +287,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
             storeParam.Add(CommonStr.StoreParams.StoreId, nextStoreId);
             storeParam.Add(CommonStr.StoreParams.mainOwner, user);
-            storeParam.Add(CommonStr.StoreParams.StoreDiscountPolicy, discountPolicy);
-            storeParam.Add(CommonStr.StoreParams.StorePuarchsePolicy, purchasePolicy);
-            storeParam.Add(CommonStr.StoreParams.Validator, validator);
             Store store = new Store(storeParam);
 
             Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store);

@@ -136,7 +136,7 @@ namespace TestingSystem
 
         public override Tuple<int, string> OpenStore(string userName)
         {
-            return StoreService.createStore(userName, null, null, null); // without discount or buying policy
+            return StoreService.createStore(userName); // without discount or buying policy
         }
 
         public override Tuple<bool, string> UpdateProductDetails(int storeId, string userId, int productId, string newDetails, double price, string name, string category)

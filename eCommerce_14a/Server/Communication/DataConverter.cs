@@ -109,21 +109,21 @@ namespace Server.Communication
                 int discountProdutId = ((ConditionalProductDiscount)discountPolicy).discountProdutId;
                 int preCondition = ((ConditionalProductDiscount)discountPolicy).PreCondition.PreConditionNumber;
                 double discountPrecentage = ((ConditionalProductDiscount)discountPolicy).Discount;
-                return new DiscountProduct(discountProdutId, preCondition, discountPrecentage);
+                return new DiscountConditionalProductData(discountProdutId, preCondition, discountPrecentage);
             }
 
             else if (discountPolicy.GetType() == typeof(ConditionalBasketDiscount))
             {
                 int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.PreConditionNumber;
                 double discountPrecentage = ((ConditionalBasketDiscount)discountPolicy).Discount;
-                return new DiscountBasket(preCondition, discountPrecentage);
+                return new DiscountConditionalBasketData(preCondition, discountPrecentage);
             }
 
             else if (discountPolicy.GetType() == typeof(RevealdDiscount))
             {
                 int discountProdutId = ((RevealdDiscount)discountPolicy).discountProdutId;
                 double discountPrecentage = ((RevealdDiscount)discountPolicy).discount;
-                return new DiscountReveald(discountProdutId, discountPrecentage);
+                return new DiscountRevealdData(discountProdutId, discountPrecentage);
             }
 
             else if (discountPolicy.GetType() == typeof(CompundDiscount))
@@ -148,27 +148,27 @@ namespace Server.Communication
             {
                 int policyProdutId = ((ProductPurchasePolicy)policyData).policyProductId;
                 int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                return new PurchasePolicyProduct(preCondition, policyProdutId);
+                return new PurchasePolicyProductData(preCondition, policyProdutId);
             }
 
             else if (policyData.GetType() == typeof(BasketPurchasePolicy))
             {
                 int preCondition = ((BasketPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                return new PurchasePolicyBasket(preCondition);
+                return new PurchasePolicyBasketData(preCondition);
             }
 
             else if (policyData.GetType() == typeof(SystemPurchasePolicy))
             { 
                 int storeId = ((SystemPurchasePolicy)policyData).store.Id;
                 int preCondition = ((SystemPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                return new PurchasePolicySystem(preCondition, storeId);
+                return new PurchasePolicySystemData(preCondition, storeId);
             }
 
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
                 string username = ((UserPurchasePolicy)policyData).user.getUserName();
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                return new PurchasePolicyUser(preCondition, username);
+                return new PurchasePolicyUserData(preCondition, username);
             }
 
             else if (policyData.GetType() == typeof(CompundPurchasePolicy))

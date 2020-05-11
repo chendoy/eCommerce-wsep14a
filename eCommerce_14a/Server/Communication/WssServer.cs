@@ -169,6 +169,12 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case 16:
+                    response = handler.HandleRemovePoductFromCart(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+                    
+
                 default:
                     break;
             }
