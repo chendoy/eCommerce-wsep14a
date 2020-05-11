@@ -19,15 +19,26 @@
                 <th>Details</th>
                 <th>Price</th>
                 <th>Amount</th>
+                @if (Modifiable)
+                {
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
         <tbody>
             @foreach (int productId in purchaseBasket.Product.Keys) 
             { 
-                <tr>
-                    <ProductRow StoreId="@purchaseBasket.Store.StoreId" Product="@GetProduct(productId)" />
-                    <td>@purchaseBasket.Product[productId]</td>
-                </tr>
+            <tr>
+                <ProductRow StoreId="@purchaseBasket.Store.StoreId" Product="@GetProduct(productId)" />
+                <td>@purchaseBasket.Product[productId]</td>
+                @if (Modifiable)
+                {
+            <th>
+               
+                <a style="text-underline-position:below; cursor:pointer; color:blue" @onclick="(() => Remove(productId))">Remove</a>
+            </th>
+                }
+            </tr>
             }
         </tbody>
     </table>
@@ -59,6 +70,11 @@
         }
 
         return null; // Reached?
+    }
+
+    public void Remove(int productId)
+    {
+        // TODO
     }
 
 
