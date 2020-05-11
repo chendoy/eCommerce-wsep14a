@@ -76,7 +76,7 @@
 
         if (response.Success)
         {
-            ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, response.Permissions);
+            await ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, response.Permissions);
             NavigationManager.NavigateTo("/index");
 
         }

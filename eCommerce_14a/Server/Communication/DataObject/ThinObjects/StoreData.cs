@@ -18,7 +18,7 @@ namespace Server.Communication.DataObject.ThinObjects
 
         public StoreData() { }
 
-        public StoreData(int storeId, List<string> owners, List<string> managers, InventoryData products, string storeThumbnail = "", string storeName = "")
+        public StoreData(int storeId, List<string> owners, List<string> managers, InventoryData products, string storeName, string storeThumbnail = "")
         {
             StoreId = storeId;
             StoreName = storeName;

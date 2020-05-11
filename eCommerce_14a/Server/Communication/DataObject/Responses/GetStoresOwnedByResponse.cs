@@ -9,8 +9,8 @@ namespace Server.Communication.DataObject.Responses
 {
     public class GetStoresOwnedByResponse : Message
     {
-        List<StoreData> Stores { get; set; }
-        string Error { get; set; }
+        public List<StoreData> Stores { get; set; }
+        public string Error { get; set; }
 
         public GetStoresOwnedByResponse(List<StoreData> stores, string error) : base(Opcode.RESPONSE)
         {

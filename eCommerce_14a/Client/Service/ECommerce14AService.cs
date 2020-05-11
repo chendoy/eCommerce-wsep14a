@@ -91,18 +91,26 @@ namespace Client.Service
 
         async public Task<LogoutResponse> Logout(string username)
         {
-            LogoutRequest logoutResponse = new LogoutRequest(username);
-            comm.SendRequest(logoutResponse);
+            LogoutRequest request = new LogoutRequest(username);
+            comm.SendRequest(request);
             LogoutResponse response = await comm.Get<LogoutResponse>();
             return response;
         }
 
         async public Task<LoginAsGuestResponse> LoginAsaGuest()
         {
-            LoginAsGuestRequest loginAsGuestRequest = new LoginAsGuestRequest();
-            comm.SendRequest(loginAsGuestRequest);
+            LoginAsGuestRequest request = new LoginAsGuestRequest();
+            comm.SendRequest(request);
             LoginAsGuestResponse loginAsGuestResponse = await comm.Get<LoginAsGuestResponse>();
             return loginAsGuestResponse;
+        }
+
+        async public Task<GetStoresOwnedByResponse> GetStoresOwnedBy(string username)
+        {
+            GetStoresOwnedByRequest request = new GetStoresOwnedByRequest(username);
+            comm.SendRequest(request);
+            GetStoresOwnedByResponse response = await comm.Get<GetStoresOwnedByResponse>();
+            return response;
         }
     }
 }

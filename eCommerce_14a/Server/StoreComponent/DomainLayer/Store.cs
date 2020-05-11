@@ -585,5 +585,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             else
                 return false;
         }
+
+        public string GetName()
+        {
+            return this.storeName;
+        }
     }
 }

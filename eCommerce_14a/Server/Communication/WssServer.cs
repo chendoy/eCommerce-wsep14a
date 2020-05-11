@@ -24,6 +24,7 @@ namespace eCommerce_14a.Communication
             handler = new CommunicationHandler();
             wsServer = new WebSocketServer();
             Publisher.Instance.setServer(this);
+            LoadData();
         }
         private void LoadData()
         {
