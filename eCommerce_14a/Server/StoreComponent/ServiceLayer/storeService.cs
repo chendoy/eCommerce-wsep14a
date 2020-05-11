@@ -28,7 +28,7 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---add-product-411- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager--add-product-512- </req
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl)
+        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl = @"Image/bana.png")
         {
             return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount, imgUrl);
         }
@@ -63,9 +63,9 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--open-store-32 </req>
-        public Tuple<int, string> createStore(string userName)
+        public Tuple<int, string> createStore(string userName, string storename = "Store")
         {
-            return storeManagment.createStore(userName);
+            return storeManagment.createStore(userName,storename);
         }
 
         public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , PurchasePolicyData purchasePolicy)

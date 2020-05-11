@@ -54,6 +54,7 @@
         {
             public static string StoreId = "StoreId";
             public static string mainOwner = "StoreOwner";
+            public static string StoreName = "StoreName";
             public static string StoreDiscountPolicy = "StoreDiscountPolicy";
             public static string StorePuarchsePolicy = "StorePuarchsePolicy";
             public static string StoreInventory = "StoreInventory";

@@ -6,6 +6,7 @@ using eCommerce_14a.Utils;
 using Server.UserComponent.Communication;
 using Server.StoreComponent.DomainLayer;
 using Server.Communication.DataObject.ThinObjects;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -74,11 +75,41 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public void LoadStores()
         {
+            createStore("user4","Store1"); //id 1
+            createStore("user5", "Store2"); //id 2
             //Products
+            appendProduct(1, "user4", 1, "Banana", 7.5, "banana", CommonStr.ProductCategoty.Health, 80, @"Image/bana.png");
+            appendProduct(2, "user5", 1, "Banana", 7.5, "banana", CommonStr.ProductCategoty.Health, 80, @"Image/bana.png");
+            appendProduct(1, "user4", 2, "Choco", 5, "coco", CommonStr.ProductCategoty.Health, 70, @"Image/bana.png");
+            appendProduct(2, "user5", 2, "Choco", 5, "coco", CommonStr.ProductCategoty.Health, 70, @"Image/bana.png");
+            appendProduct(1, "user4", 3, "Moka", 10, "Moka", CommonStr.ProductCategoty.Health, 120, @"Image/bana.png");
+            appendProduct(2, "user5", 3, "Moka", 10, "Moka", CommonStr.ProductCategoty.Health, 120, @"Image/bana.png");
+            appendProduct(1, "user4", 4, "Apple", 40, "Apple", CommonStr.ProductCategoty.Health, 10, @"Image/bana.png");
+            appendProduct(2, "user5", 4, "Apple", 40, "Apple", CommonStr.ProductCategoty.Health, 10, @"Image/bana.png");
+            appendProduct(1, "user4", 5, "WaterMellon", 2, "WaterMellon", CommonStr.ProductCategoty.Health, 45, @"Image/bana.png");
+            appendProduct(2, "user5", 5, "WaterMellon", 2, "WaterMellon", CommonStr.ProductCategoty.Health, 45, @"Image/bana.png");
             //Buying Policy
+            PurchasePolicyData max1bBanansStore2 = new PurchasePolicyProductData(CommonStr.PurchasePreCondition.singleOfProductType, 1);
+            PurchasePolicyData max10ItemsBasket = new PurchasePolicyBasketData(CommonStr.PurchasePreCondition.Max10ProductPerBasket);
+            List<PurchasePolicyData> childrenPurchase = new List<PurchasePolicyData>();
+            childrenPurchase.Add(max1bBanansStore2);
+            childrenPurchase.Add(max10ItemsBasket);
+            PurchasePolicyData purchasePolicyData = new CompoundPurchasePolicyData(CommonStr.PurchaseMergeTypes.AND, childrenPurchase);
+            UpdatePurchasePolicy(2, "user5", purchasePolicyData);
             //Discount Policy
-            createStore("user4"); //id 1
-            createStore("user5"); //id 2
+
+            DiscountPolicyData discountPerProductAbove1Unit_1 = new DiscountConditionalProductData(3,CommonStr.DiscountPreConditions.Above1Unit, 10.0);
+            DiscountPolicyData discountPerProductAbove2Unit_1 = new DiscountConditionalProductData(3, CommonStr.DiscountPreConditions.Above2Units, 15.0);
+            List<DiscountPolicyData> Units_children = new List<DiscountPolicyData>();
+            Units_children.Add(discountPerProductAbove1Unit_1);
+            Units_children.Add(discountPerProductAbove2Unit_1);
+            DiscountPolicyData discount_xor_aboveUnits = new CompoundDiscountPolicyData(CommonStr.DiscountMergeTypes.XOR, Units_children);
+            DiscountPolicyData basketDiscount = new DiscountConditionalBasketData(CommonStr.DiscountPreConditions.basketPriceAbove1000, 10.0);
+            List<DiscountPolicyData> discountAllChildren = new List<DiscountPolicyData>();
+            discountAllChildren.Add(discount_xor_aboveUnits);
+            discountAllChildren.Add(basketDiscount);
+            DiscountPolicyData discountPolicyfinal = new CompoundDiscountPolicyData(CommonStr.DiscountMergeTypes.AND, discountAllChildren);
+            UpdateDiscountPolicy(2, "user5", discountPolicyfinal);
         }
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
@@ -274,7 +305,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        public Tuple<int, string> createStore(string userName)
+        public Tuple<int, string> createStore(string userName, string storename)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -289,6 +320,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
             storeParam.Add(CommonStr.StoreParams.StoreId, nextStoreId);
+            storeParam.Add(CommonStr.StoreParams.StoreName, storename);
             storeParam.Add(CommonStr.StoreParams.mainOwner, user);
             Store store = new Store(storeParam);
 

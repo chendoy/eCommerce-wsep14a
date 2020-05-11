@@ -152,6 +152,8 @@
     <Compile Include="UserComponent\DomainLayer\UserManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\UserService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Image\bana.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

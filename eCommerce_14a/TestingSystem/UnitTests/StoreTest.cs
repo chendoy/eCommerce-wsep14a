@@ -438,7 +438,7 @@ namespace TestingSystem.UnitTests.StoreTest
             UserManager userManager = UserManager.Instance;
             userManager.Register("shimon", "123");
             userManager.Login("shimon", "123", false);
-            sm.createStore("shimon", null, null, null);
+            sm.createStore("shimon","Store");
             userManager.Register("yosi", "123");
             userManager.Login("yosi", "123");
             userManager.Register("shmuel", "123");

@@ -57,6 +57,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             UManagment.LoadUsers();
             StoreManagment.Instance.LoadStores();
+            AppoitmentManager.Instance.LoadAppointments();
+            
         }
         public bool SetDeliveryConnection(bool conn)
         {

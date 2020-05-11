@@ -19,6 +19,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private Validator policyValidator;
         private Inventory inventory;
         private int rank;
+        private string storeName;
         private bool activeStore;
 
         /// <summary>
@@ -31,12 +32,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public Store(Dictionary<string, object> store_params)
         {
             this.Id = (int)store_params[CommonStr.StoreParams.StoreId];
+            this.storeName = (string)store_params[CommonStr.StoreParams.StoreName];
             this.owners = new List<User>();
             User storeOwner = (User)store_params[CommonStr.StoreParams.mainOwner];
             this.owners.Add(storeOwner);
-            this.managers = new List<User>();       
-            
-            if(!store_params.ContainsKey(CommonStr.StoreParams.StoreInventory) || store_params[CommonStr.StoreParams.StoreInventory] == null)
+            this.managers = new List<User>(); 
+
+            if (!store_params.ContainsKey(CommonStr.StoreParams.StoreInventory) || store_params[CommonStr.StoreParams.StoreInventory] == null)
             {
                 this.inventory = new Inventory();
             }
