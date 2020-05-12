@@ -44,6 +44,7 @@
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllActiveUsersRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginAsGuestRequest.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\DemoteManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\ErrorResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAllActiveUsersResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetProductsResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoresOwnedByResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoresResponse.cs" />

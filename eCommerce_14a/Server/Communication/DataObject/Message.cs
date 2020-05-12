@@ -29,6 +29,7 @@ namespace Server.Communication.DataObject
         REMOVE_PRODUCT_FROM_CART,
         UPDATE_DISCOUNT_POLICY,
         UPDATE_PURCHASE_POLICY,
+        GET_ALL_USERS,
         STORES_BY,
         NOTIFICATION,
         RESPONSE,

@@ -23,7 +23,7 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Store Id</th>
+                <th>Store name</th>
                 <th>Owner of the store</th>
             </tr>
         </thead>
@@ -31,7 +31,7 @@ else
             @foreach (var store in stores)
             {
                 <tr>
-                    <td><a href=Stores/@store.StoreId>@store.StoreId</a></td>
+                    <td><a href=Stores/@store.StoreId>@store.StoreName</a></td>
                     <td>@store.Owners[0]</td>
                 </tr>
             }

@@ -59,8 +59,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Register("user3", "Test3"); //id 3
             Register("user4", "Test4"); //id 4
             Register("user5", "Test5"); //id 5
-            Login("Guest6", "bla", true);//Guest 6
-            Login("Guest7", "bla", true);//Guest 7
+            Register("user6", "Test6"); //id 6
+            //Login("Guest6", "bla", true);//Guest 6
+            //Login("Guest7", "bla", true);//Guest 7
             Login("user4", "Test4");
             Login("user5", "Test5");
         }

@@ -44,6 +44,13 @@ namespace eCommerce_14a.Communication
         public void loaddata()
         {
             sysService.loaddata();
+            userService.Login("user6", "Test6");
+            purchService.AddProductToShoppingCart("user6", 1, 1, 3);
+            purchService.AddProductToShoppingCart("user6", 2, 1, 1);
+            purchService.AddProductToShoppingCart("user6", 2, 3, 2);
+            userService.Logout("user6");
+            userService.Logout("user4");
+            userService.Logout("user5");
         }
 
         public string Seralize(object obj)
@@ -183,9 +190,17 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleGetCart(string json)
         {
+            string jsonAns;
             CartRequest res = JsonConvert.DeserializeObject<CartRequest>(json);
             Tuple<Cart, string> ans = purchService.GetCartDetails(res.Username);
-            string jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1), ans.Item2));
+            if (ans.Item1 == null)
+            {
+                jsonAns = Seralize(new GetUsersCartResponse(null, ans.Item2));
+            }
+            else
+            {
+                jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1), ans.Item2));
+            }
             return security.Encrypt(jsonAns);
         }
 

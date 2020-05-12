@@ -28,7 +28,7 @@ namespace Server.Communication
 
         public StoreData ToStoreData(Store store) 
         {
-            return new StoreData(store.Id, ToUserNameList(store.owners), ToUserNameList(store.managers), ToInventoryData(store.Inventory));
+            return new StoreData(store.Id, ToUserNameList(store.owners), ToUserNameList(store.managers), ToInventoryData(store.Inventory), store.GetName());
         }
 
         public UserData ToUserData(User user)

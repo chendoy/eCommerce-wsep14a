@@ -42,12 +42,12 @@ namespace Client.Data
             return await Task.FromResult(new AuthenticationState(userAuth));
         }
 
-        public bool MarkUserAsAuthenticateUser(UserData user, Dictionary<int, int[]> permissions)
+        public async Task<bool> MarkUserAsAuthenticateUser(UserData user, Dictionary<int, int[]> permissions)
         {
 
-            _sessionStorageService.SetItemAsync("user", (User: user, Permissions: permissions));
-
-                var identity = new ClaimsIdentity(new[]
+            await _sessionStorageService.SetItemAsync("user", user);
+            ////await _sessionStorageService.SetItemAsync("permissions", permissions);
+            var identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, "User")
@@ -98,6 +98,12 @@ namespace Client.Data
             var userClaim = new ClaimsPrincipal(identity);
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
+        }
+
+        public async Task<string> GetLoggedInUsername()
+        {
+            UserData user = await _sessionStorageService.GetItemAsync<UserData>("user");
+            return user.Username;
         }
     }
 }
