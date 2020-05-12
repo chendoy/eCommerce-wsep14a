@@ -112,13 +112,44 @@ namespace Client.Service
             GetStoresOwnedByResponse response = await comm.Get<GetStoresOwnedByResponse>();
             return response;
         }
-
         async public Task<GetAllActiveUsersResponse> GetAllActiveUsers()
         {
             GetAllActiveUsersRequest request = new GetAllActiveUsersRequest();
             comm.SendRequest(request);
             GetAllActiveUsersResponse response = await comm.Get<GetAllActiveUsersResponse>();
             return response;
+        }
+
+        async public Task<Tuple<bool, string>> AppointOwner(string appointer, string appointed, int storeId)
+        {
+            AppointOwnerRequest request = new AppointOwnerRequest(appointer, appointed, storeId);
+            comm.SendRequest(request);
+            AppointOwnerResponse response = await comm.Get<AppointOwnerResponse>();
+            return new Tuple<bool, string>(response.Success, response.Error);
+        }
+
+        async public Task<Tuple<bool, string>> AppointManager(string appointer, string appointed, int storeId)
+        {
+            AppointManagerRequest request = new AppointManagerRequest(appointer, appointed, storeId);
+            comm.SendRequest(request);
+            AppointManagerResponse response = await comm.Get<AppointManagerResponse>();
+            return new Tuple<bool, string>(response.Success, response.Error);
+        }
+
+        async public Task<Tuple<bool, string>> DemoteOwner(string appointer, string appointed, int storeId)
+        {
+            DemoteOwnerRequest request = new DemoteOwnerRequest(appointer, appointed, storeId);
+            comm.SendRequest(request);
+            DemoteManagerResponse response = await comm.Get<DemoteManagerResponse>();
+            return new Tuple<bool, string>(response.Success, response.Error);
+        }
+
+        async public Task<Tuple<bool, string>> DemoteManager(string appointer, string appointed, int storeId)
+        {
+            DemoteManagerRequest request = new DemoteManagerRequest(appointer, appointed, storeId);
+            comm.SendRequest(request);
+            DemoteManagerResponse response = await comm.Get<DemoteManagerResponse>();
+            return new Tuple<bool, string> (response.Success, response.Error);
         }
     }
 }

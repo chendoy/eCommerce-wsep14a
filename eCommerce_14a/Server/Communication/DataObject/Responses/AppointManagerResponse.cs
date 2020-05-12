@@ -8,8 +8,8 @@ namespace Server.Communication.DataObject.Responses
 {
     public class AppointManagerResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
 
         public AppointManagerResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
