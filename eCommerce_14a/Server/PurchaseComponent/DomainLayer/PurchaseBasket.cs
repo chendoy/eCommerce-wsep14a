@@ -73,7 +73,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return isValidBasket;
             }
 
-            Price = store.getBasketPrice(this);
+            Price = store.getBasketPriceWithDiscount(this);
 
             return new Tuple<bool, string>(true, null);
         }
@@ -86,7 +86,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
-            Price = store.getBasketPrice(this);
+            Price = store.getBasketPriceWithDiscount(this);
             return Price;
         }
 
@@ -125,9 +125,18 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             get { return store; }
         }
-        public double GetBasketPrice()
+        public double GetBasketPriceWithDiscount()
         {
-            return store.getBasketPrice(this);
+            return store.getBasketPriceWithDiscount(this);
+        }
+        public double GetBasketOrigPrice()
+        {
+            return store.getBasketOrigPrice(this);
+        }
+
+        public double getBasketDiscount()
+        {
+            return GetBasketOrigPrice() - GetBasketPriceWithDiscount();
         }
 
         public int GetNumProductsAtBasket()
