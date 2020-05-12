@@ -53,7 +53,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 policyValidator = new Validator(null, null);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000,
-                  (PurchaseBasket basket, int productId) => basket.GetBasketPrice() > 1000);
+                  (PurchaseBasket basket, int productId) => basket.GetBasketOrigPrice() > 1000);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above1Unit,
                     (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 1 : false);
@@ -551,12 +551,18 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return inventory.productExist(productId);
         }
 
-        virtual
-        public double getBasketPrice(PurchaseBasket basket)
+
+        public double getBasketOrigPrice(PurchaseBasket basket)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return inventory.getBasketPrice(basket.products);
+        }
+
+        public double getBasketPriceWithDiscount(PurchaseBasket basket)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            double basketPrice = inventory.getBasketPrice(basket.Products);
+            double basketPrice = getBasketOrigPrice(basket);
             double overallDiscount = discountPolicy.CalcDiscount(basket, policyValidator);
             double priceAfterDiscount = basketPrice - overallDiscount;
 
