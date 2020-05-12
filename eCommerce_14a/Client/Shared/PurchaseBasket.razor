@@ -48,6 +48,8 @@
     public bool Modifiable { get; set; }
     [Parameter]
     public bool Collapse { get; set; }
+    [Parameter]
+    public EventCallback OnRemoveProduct { get; set; }
 
     protected override void OnInitialized()
     {
@@ -74,9 +76,11 @@
         return null; // Reached?
     }
 
-    public void Remove(int productId)
+    public async void Remove(int productId)
     {
-        // TODO
+        RemoveProductFromCartRequest request = new RemoveProductFromCartRequest(purchaseBasket.Username, purchaseBasket.Store.StoreId, productId);
+        RemoveProductFromCartResponse response = await service.GetResponse<RemoveProductFromCartRequest, RemoveProductFromCartResponse>(request);
+        await OnRemoveProduct.InvokeAsync(null);
     }
 
 

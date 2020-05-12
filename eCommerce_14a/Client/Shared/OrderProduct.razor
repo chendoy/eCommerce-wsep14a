@@ -1,0 +1,32 @@
+﻿<div class="row">
+    <input type="number" @bind-value="@NumberChosen" />
+</div>
+<div class="row">
+    <input type="submit" class="form-control col-6 btn btn-primary" value="Submit" />
+    @if (ProductInCart)
+    {
+        <input type="submit" class="form-control col-6 btn btn-primary" value="Clear" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int ProductID { get; set; }
+    [Parameter]
+    public int StoreID { get; set; }
+    //public int MaxBound { get; set; }
+    [Parameter]
+    public bool ProductInCart { get; set; }
+    public int NumberChosen { get; set; }
+
+    public async void Submit()
+    {
+        string username = await((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        bool responseResult = true;
+        if (ProductInCart)
+        {
+            //sendRequest add Request
+        }
+    }
+
+}

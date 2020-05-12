@@ -13,7 +13,7 @@
             @foreach (PurchaseBasketData basketData in Cart.baskets)
             {
                 <tr>
-                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true"></PurchaseBasket>
+                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true" OnRemoveProduct="@UpdateCart"></PurchaseBasket>
                 </tr>
             }
         </table>
