@@ -65,6 +65,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Login("user4", "Test4");
             Login("user5", "Test5");
         }
+
+        public List<User> GetAllActiveUsers() 
+        {
+            return Active_users.Values.ToList();
+        }
         public Dictionary<int, int[]> GetUserPermissions(string username) 
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

@@ -54,6 +54,8 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Commercial_System.ProvideDeliveryForUser(username, paymentFlag);
         }
+
+
         public void clean(string n, string p)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

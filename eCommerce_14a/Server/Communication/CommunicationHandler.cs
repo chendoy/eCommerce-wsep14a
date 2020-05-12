@@ -7,6 +7,7 @@ using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.PurchaseComponent.ServiceLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.ServiceLayer;
+using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
 using eCommerce_14a.Utils;
 using Newtonsoft.Json;
@@ -66,13 +67,13 @@ namespace eCommerce_14a.Communication
             return dict;
         }
 
-        public int GetOpCode(string msg) 
+        public Opcode GetOpCode(string msg) 
         {
             object opcodeObj;
             Dictionary<string, object> msgDict = Deseralize(msg); // desarilize the decrypted string and convert it into dict
             if (!msgDict.TryGetValue("_Opcode", out opcodeObj))
-                return -1;
-            return Convert.ToInt32(opcodeObj);
+                return Opcode.ERROR;
+            return (Opcode)Convert.ToInt32(opcodeObj);
         }
 
         public string Decrypt(byte[] cipher) 
@@ -177,6 +178,14 @@ namespace eCommerce_14a.Communication
             GetStoresOwnedByRequest res = JsonConvert.DeserializeObject<GetStoresOwnedByRequest>(json);
             List<Store> ans = storeService.GetStoresOwnedBy(res.User);
             string jsonAns = Seralize(new GetStoresOwnedByResponse(converter.ToStoreDataList(ans),""));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleGetAllActiveUsers(string json)
+        {
+            GetAllActiveUsersRequest res = JsonConvert.DeserializeObject<GetAllActiveUsersRequest>(json);
+            List<User> ans = userService.GetAllActiveUsers();
+            string jsonAns = Seralize(new GetAllActiveUsersResponse(converter.ToUserNameList(ans),""));
             return security.Encrypt(jsonAns);
         }
 

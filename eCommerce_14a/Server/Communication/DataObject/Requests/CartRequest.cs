@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject
     {
         public string Username { get; set; }
 
-        public CartRequest(string username) : base(Opcode.CART)
+        public CartRequest(string username) : base(Opcode.USER_CART)
         {
             Username = username;
         }

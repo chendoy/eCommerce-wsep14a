@@ -48,6 +48,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             return UM.Logout(user);
         
         }
+
+        public List<User> GetAllActiveUsers()
+        {
+            return UM.GetAllActiveUsers();
+        }
+
         //For Admin Usage
         public void cleanup()
         {

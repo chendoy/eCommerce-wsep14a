@@ -9,7 +9,7 @@ namespace Server.Communication.DataObject
     public class StoresProductsRequest : Message
     {
         public int StoreId { get; set; }
-        public StoresProductsRequest(int storeID) : base(Opcode.PRODUCTS)
+        public StoresProductsRequest(int storeID) : base(Opcode.PRODUCTS_OF_STORE)
         {
             StoreId = storeID;
         }
