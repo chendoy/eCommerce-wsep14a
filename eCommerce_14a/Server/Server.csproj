@@ -43,7 +43,8 @@
     <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
-    <Compile Include="Communication\DataObject\Requests\DemoteRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DemoteManagerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DemoteOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllActiveUsersRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\DemoteManagerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\DemoteOwnerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\ErrorResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAllActiveUsersResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetProductsResponse.cs" />
