@@ -8,7 +8,7 @@ namespace Server.Communication.DataObject
 {
     public class GetAllStoresRequest : Message
     {
-        public GetAllStoresRequest() : base(Opcode.STORES)
+        public GetAllStoresRequest() : base(Opcode.ALL_STORES)
         {
 
         }

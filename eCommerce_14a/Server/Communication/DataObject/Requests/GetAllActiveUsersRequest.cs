@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject.Requests
     public class GetAllActiveUsersRequest : Message
     {
 
-        public GetAllActiveUsersRequest() : base(Opcode.GET_ALL_USERS)
+        public GetAllActiveUsersRequest() : base(Opcode.GET_ALL_ACTIVE_USERS)
         {
             
         }

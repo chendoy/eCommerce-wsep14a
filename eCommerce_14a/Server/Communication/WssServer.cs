@@ -7,6 +7,8 @@ using System.IO;
 using Server.UserComponent.Communication;
 using Newtonsoft.Json;
 using Server.Communication.DataObject.Requests;
+using System.Reflection.Emit;
+using Server.Communication.DataObject;
 
 namespace eCommerce_14a.Communication
 {
@@ -91,102 +93,107 @@ namespace eCommerce_14a.Communication
             byte[] response;
             string json = handler.Decrypt(msg);
             Console.WriteLine("received: " + json);
-            int opcode = handler.GetOpCode(json);
+            Opcode opcode = handler.GetOpCode(json);
 
             switch (opcode)
             {
-                case 1:
+                case Opcode.LOGIN:
                     response = handler.HandleLogin(json, session);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 2:
+                case Opcode.LOGOUT:
                     response = handler.HandleLogout(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 3:
+                case Opcode.REGISTER:
                     response = handler.HandleRegister(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 4:
+                case Opcode.ALL_STORES:
                     response = handler.HandleGetAllStores(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 5:
+                case Opcode.PRODUCTS_OF_STORE:
                     response = handler.HandleGetProductsOfStore(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 6:
+                case Opcode.PROD_INFO:
                     response = handler.HandleGetProductDetails(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 7:
+                case Opcode.PURCHASE:
                     response = handler.HandlePurchase(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 8:
+                case Opcode.USER_CART:
                     response = handler.HandleGetCart(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 9:
+                case Opcode.SEARCH_PROD:
                     response = handler.HandleSearchProduct(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 10:
+                case Opcode.OPEN_STORE:
                     response = handler.HandleOpenStore(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 11:
+                case Opcode.BUYER_HISTORY:
                     response = handler.HandleBuyerHistory(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 12:
+                case Opcode.APPOINT_MANAGER:
                     response = handler.HandleAppointManager(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 13:
+                case Opcode.APPOINT_OWNER:
                     response = handler.HandleAppointOwner(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 14:
+                case Opcode.DEMOTE:
                     response = handler.HandleDemoteManager(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 15:
+                case Opcode.LOGIN_AS_GUEST:
                     response = handler.HandleLoginAsGuest(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 16:
+                case Opcode.REMOVE_PRODUCT_FROM_CART:
                     response = handler.HandleRemovePoductFromCart(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 17:
+                case Opcode.UPDATE_DISCOUNT_POLICY:
                     response = handler.HandleUpdateDiscountPolicy(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 18:
+                case Opcode.UPDATE_PURCHASE_POLICY:
                     response = handler.HandleUpdatePurchasePolicy(json);
                     session.Send(response, 0, response.Length);
                     break;
 
-                case 19:
+                case Opcode.STORES_OWNED_BY:
                     response = handler.HandleGetStoresOwnedBy(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_ALL_ACTIVE_USERS:
+                    response = handler.HandleGetAllActiveUsers(json);
                     session.Send(response, 0, response.Length);
                     break;
 

@@ -10,7 +10,7 @@ namespace Server.Communication.DataObject.Requests
     {
         public string User { get; set; }
 
-        public GetStoresOwnedByRequest(string user) : base(Opcode.STORES_BY)
+        public GetStoresOwnedByRequest(string user) : base(Opcode.STORES_OWNED_BY)
         {
             User = user;
         }

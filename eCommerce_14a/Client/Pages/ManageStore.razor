@@ -56,13 +56,13 @@
     public int StoreId { get; set; }
     public StoreData Store { get; set; }
     private string[] options = new string[] { "Promote", "Demote" };
-    private string[] RegisteredUsers;
+    private List<string> RegisteredUsers;
     private string[] roles = new string[] { "Manager", "Owner" };
 
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
-        //RegisteredUsers = service.GetAllActiveUsers();
-        RegisteredUsers = new List<UserData> { };
+        GetAllActiveUsersResponse response = await service.GetAllActiveUsers();
+        RegisteredUsers = response.Users;
     }
 
 }
