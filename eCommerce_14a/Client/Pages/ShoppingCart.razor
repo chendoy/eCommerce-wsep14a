@@ -22,7 +22,7 @@
             <div class="col-12 row" style="text-align:right; font:bold 16px">Total Price: @Price&#8362 </div>
         </div>
 
-            @*<EditForm Model="@PurchaseRequestModel" OnValidSubmit="@Submit">
+            <EditForm Model="@PurchaseRequestModel" OnValidSubmit="@Submit">
                     <div>
                         <br /><br /><br /><br /><br />
                     </div>
@@ -45,62 +45,64 @@
                         <input type="submit" class="form-control col-6 btn btn-primary" value="Purchase" />
                     </div>
                     <br />
-                </EditForm>*@
-            }
-            }
+                </EditForm>
+    }
+}
 
 
             @code {
-    public CartData Cart { get; set; }
-        public string Msg { get; set; }
-        public string PurchaseMesssage { get; set; }
-        public double Price
-        {
-            get
-            {
-                double price = 0;
-                if (Cart != null && Cart.baskets.Count != 0)
+                public CartData Cart { get; set; }
+                public string Msg { get; set; }
+                public string PurchaseMesssage { get; set; }
+                public double Price
                 {
-                    foreach (PurchaseBasketData purchaseBasket in Cart.baskets)
+                    get
                     {
-                        price += purchaseBasket.Price;
+                        double price = 0;
+                        if (Cart != null && Cart.baskets.Count != 0)
+                        {
+                            foreach (PurchaseBasketData purchaseBasket in Cart.baskets)
+                            {
+                                price += purchaseBasket.Price;
+                            }
+                        }
+
+                        return price;
                     }
                 }
+                public bool IsError { get; set; }
 
-                return price;
-            }
-        }
-        public bool IsError { get; set; }
+                public PurchaseRequest PurchaseRequestModel { get; set; }
+                protected async override Task OnInitializedAsync()
+                {
+                    string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+                    GetUsersCartResponse response = await service.GetCart(username);
+                    Cart = response.Cart;
+                    if (Cart is null)
+                    {
+                        Msg = response.Error;
+                        IsError = true;
+                    }
 
-        public PurchaseRequest PurchaseRequestModel { get; set; }
-        protected async override Task OnInitializedAsync()
-        {
-            string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
-            GetUsersCartResponse response = await service.GetCart(username);
-            Cart = response.Cart;
-            if (Cart is null)
-            {
-                Msg = response.Error;
-                IsError = true;
-            }
-        }
+                    PurchaseRequestModel = new PurchaseRequest(username, "", "");
+                }
 
-        private async void Submit()
-        {
-            PurchaseResponse response = await service.GetResponse<PurchaseRequest, PurchaseResponse>(PurchaseRequestModel);
+                private async void Submit()
+                {
+                    PurchaseResponse response = await service.GetResponse<PurchaseRequest, PurchaseResponse>(PurchaseRequestModel);
 
-            if (response.Success)
-            {
-                Msg = "The purchase was perfomed successfully";
-                IsError = false;
-                PurchaseRequestModel.Clear();
-            }
-            else
-            {
-                Msg = response.Error;
-                IsError = true;
-            }
+                    if (response.Success)
+                    {
+                        Msg = "The purchase was perfomed successfully";
+                        IsError = false;
+                        PurchaseRequestModel.Clear();
+                    }
+                    else
+                    {
+                        Msg = response.Error;
+                        IsError = true;
+                    }
 
-            StateHasChanged();
-        }
+                    StateHasChanged();
+                }
             }
