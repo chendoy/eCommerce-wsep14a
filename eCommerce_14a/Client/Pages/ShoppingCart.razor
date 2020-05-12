@@ -73,7 +73,8 @@
     public PurchaseRequest PurchaseRequestModel { get; set; }
     protected async override Task OnInitializedAsync()
     {
-        GetUsersCartResponse response = await service.GetCart("admin");
+        string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        GetUsersCartResponse response = await service.GetCart(username);
         Cart = response.Cart;
         if (Cart is null)
         {
