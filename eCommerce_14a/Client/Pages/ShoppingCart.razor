@@ -5,7 +5,7 @@
 {
     @if (Cart.baskets.Count == 0)
     {
-        <p>You didn't buy anything yet :(</p>
+        <p>Your cart is empty</p>
     }
     else
     {
@@ -52,6 +52,7 @@
 
             @code {
                 public CartData Cart { get; set; }
+                public string Username { get; set; }
                 public string Msg { get; set; }
                 public string PurchaseMesssage { get; set; }
                 public double Price
@@ -75,16 +76,20 @@
                 public PurchaseRequest PurchaseRequestModel { get; set; }
                 protected async override Task OnInitializedAsync()
                 {
-                    string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
-                    GetUsersCartResponse response = await service.GetCart(username);
+                    Username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+                    PurchaseRequestModel = new PurchaseRequest(Username, "", "");
+                    UpdateCart();
+                }
+
+                private async void UpdateCart()
+                {
+                    GetUsersCartResponse response = await service.GetCart(Username);
                     Cart = response.Cart;
                     if (Cart is null)
                     {
                         Msg = response.Error;
                         IsError = true;
                     }
-
-                    PurchaseRequestModel = new PurchaseRequest(username, "", "");
                 }
 
                 private async void Submit()
@@ -96,13 +101,13 @@
                         Msg = "The purchase was perfomed successfully";
                         IsError = false;
                         PurchaseRequestModel.Clear();
+                        UpdateCart();
+                        StateHasChanged();
                     }
                     else
                     {
                         Msg = response.Error;
                         IsError = true;
                     }
-
-                    StateHasChanged();
                 }
             }

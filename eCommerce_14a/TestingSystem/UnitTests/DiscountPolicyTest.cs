@@ -29,7 +29,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             validator = new Validator(null, null);
             
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000, 
-                (PurchaseBasket basket, int productId) => basket.GetBasketPrice() > 1000);
+                (PurchaseBasket basket, int productId) => basket.GetBasketPriceWithDiscount() > 1000);
 
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above1Unit, 
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId)? basket.Products[productId] > 1 : false);

@@ -53,7 +53,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 policyValidator = new Validator(null, null);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000,
-                  (PurchaseBasket basket, int productId) => basket.GetBasketPrice() > 1000);
+                  (PurchaseBasket basket, int productId) => basket.GetBasketOrigPrice() > 1000);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above1Unit,
                     (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 1 : false);
@@ -98,7 +98,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             
             if(!store_params.ContainsKey(CommonStr.StoreParams.StoreDiscountPolicy) || store_params[CommonStr.StoreParams.StoreDiscountPolicy] == null)
             {
-                this.discountPolicy = new ConditionalBasketDiscount(new PreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
+                this.discountPolicy = new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
             }
             else
             {
@@ -107,7 +107,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             
             if(!store_params.ContainsKey(CommonStr.StoreParams.StorePuarchsePolicy) || store_params[CommonStr.StoreParams.StorePuarchsePolicy] == null)
             {
-                this.purchasePolicy = purchasePolicy = new BasketPurchasePolicy(new PurchasePreCondition(CommonStr.PurchasePreCondition.allwaysTrue));
+                this.purchasePolicy = new BasketPurchasePolicy(new PurchasePreCondition(CommonStr.PurchasePreCondition.allwaysTrue));
             }
             else
             {
@@ -262,19 +262,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 int policyProdutId = ((PurchasePolicyProductData)thinPurchasePolicy).ProductId;
                 int preCondition = ((PurchasePolicyProductData)thinPurchasePolicy).PreCondition;
-                return new ProductPurchasePolicy(new PreCondition(preCondition), policyProdutId);
+                return new ProductPurchasePolicy(new PurchasePreCondition(preCondition), policyProdutId);
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyBasketData))
             {
                 int preCondition = ((PurchasePolicyBasketData)thinPurchasePolicy).PreCondition;
-                return new BasketPurchasePolicy(new PreCondition(preCondition));
+                return new BasketPurchasePolicy(new PurchasePreCondition(preCondition));
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicySystemData))
             {
                 int preCondition = ((PurchasePolicySystemData)thinPurchasePolicy).PreCondition;
-                return new SystemPurchasePolicy(new PreCondition(preCondition), this);
+                return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), this);
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyUserData))
@@ -282,7 +282,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 int preCondition = ((PurchasePolicyUserData)thinPurchasePolicy).PreCondition;
                 string userName = ((PurchasePolicyUserData)thinPurchasePolicy).UserName;
                 User user = UserManager.Instance.GetUser(userName);
-                return new UserPurchasePolicy(new PreCondition(preCondition), user);
+                return new UserPurchasePolicy(new PurchasePreCondition(preCondition), user);
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(CompoundPurchasePolicyData))
@@ -307,14 +307,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 int discountProdutId = ((DiscountConditionalProductData)thinDiscountPolicy).ProductId;
                 int preCondition = ((DiscountConditionalProductData)thinDiscountPolicy).PreCondition;
                 double discountPrecentage = ((DiscountConditionalProductData)thinDiscountPolicy).DiscountPercent;
-                return new ConditionalProductDiscount(discountProdutId, new PreCondition(preCondition), discountPrecentage);
+                return new ConditionalProductDiscount(discountProdutId, new DiscountPreCondition(preCondition), discountPrecentage);
             }
 
             else if (discountPolicy.GetType() == typeof(DiscountConditionalBasketData))
             {
                 int preCondition = ((DiscountConditionalBasketData)thinDiscountPolicy).PreCondition;
                 double discountPrecentage = ((DiscountConditionalBasketData)thinDiscountPolicy).DiscountPercent;
-                return new ConditionalBasketDiscount(new PreCondition(preCondition), discountPrecentage);
+                return new ConditionalBasketDiscount(new DiscountPreCondition(preCondition), discountPrecentage);
             }
 
             else if (discountPolicy.GetType() == typeof(DiscountRevealdData))
@@ -551,12 +551,18 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return inventory.productExist(productId);
         }
 
-        virtual
-        public double getBasketPrice(PurchaseBasket basket)
+
+        public double getBasketOrigPrice(PurchaseBasket basket)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return inventory.getBasketPrice(basket.products);
+        }
+
+        public double getBasketPriceWithDiscount(PurchaseBasket basket)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            double basketPrice = inventory.getBasketPrice(basket.Products);
+            double basketPrice = getBasketOrigPrice(basket);
             double overallDiscount = discountPolicy.CalcDiscount(basket, policyValidator);
             double priceAfterDiscount = basketPrice - overallDiscount;
 

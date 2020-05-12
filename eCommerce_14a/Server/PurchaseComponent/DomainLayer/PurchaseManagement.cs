@@ -212,6 +212,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             userHistory.Add(newPurchase);
             purchasesHistoryByUser[user] = userHistory;
 
+            carts[user] = new Cart(user);
             return new Tuple<bool, string>(true, "");
         }
 

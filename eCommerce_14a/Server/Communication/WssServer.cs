@@ -162,8 +162,13 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
-                case Opcode.DEMOTE:
+                case Opcode.DEMOTE_MANAGER:
                     response = handler.HandleDemoteManager(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.DEMOTE_OWNER:
+                    response = handler.HandleDemoteOwner(json);
                     session.Send(response, 0, response.Length);
                     break;
 
