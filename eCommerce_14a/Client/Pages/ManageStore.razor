@@ -1,7 +1,6 @@
 ﻿@page "/ManageStore/{storeid:int}"
-@inject ECommerce14AService service
 
-<h1>Mange Store</h1>
+<h1>Store Dashboard</h1>
 
 <div>
     <h2>Current store setup</h2>
@@ -50,7 +49,7 @@
     </Dropdown>
 
     <br /><br />
-    <button class="col-6 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
+    <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
 
     <br /><br />
     <div class="login-msg" style="text-align:left; font-weight:bold">
