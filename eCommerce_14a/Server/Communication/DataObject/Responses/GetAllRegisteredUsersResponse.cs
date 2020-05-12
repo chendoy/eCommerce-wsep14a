@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    public class GetAllActiveUsersResponse : Message
+    public class GetAllRegisteredUsersResponse : Message
     {
         List<string> Users { get; set; }
         string Error { get; set; }
 
-        public GetAllActiveUsersResponse(List<string> users, string error) : base(Opcode.RESPONSE)
+        public GetAllRegisteredUsersResponse(List<string> users, string error) : base(Opcode.RESPONSE)
         {
             this.Users = users;
             this.Error = error;
         }
 
-        public GetAllActiveUsersResponse() : base()
+        public GetAllRegisteredUsersResponse() : base()
         {
 
         }

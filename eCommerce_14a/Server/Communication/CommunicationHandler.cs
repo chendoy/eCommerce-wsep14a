@@ -191,9 +191,9 @@ namespace eCommerce_14a.Communication
 
         internal byte[] HandleGetAllActiveUsers(string json)
         {
-            GetAllActiveUsersRequest res = JsonConvert.DeserializeObject<GetAllActiveUsersRequest>(json);
-            List<User> ans = userService.GetAllActiveUsers();
-            string jsonAns = Seralize(new GetAllActiveUsersResponse(converter.ToUserNameList(ans),""));
+            GetAllRegisteredUsersRequest res = JsonConvert.DeserializeObject<GetAllRegisteredUsersRequest>(json);
+            List<User> ans = userService.GetAllRegisteredUsers();
+            string jsonAns = Seralize(new GetAllRegisteredUsersResponse(converter.ToUserNameList(ans),""));
             return security.Encrypt(jsonAns);
         }
 
