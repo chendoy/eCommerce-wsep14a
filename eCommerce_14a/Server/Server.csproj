@@ -40,6 +40,7 @@
     <Compile Include="Communication\CommunicationHandler.cs" />
     <Compile Include="Communication\DataConverter.cs" />
     <Compile Include="Communication\DataObject\Requests\AddProductToCartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\AddProductToStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\AppointManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
@@ -49,6 +50,8 @@
     <Compile Include="Communication\DataObject\Requests\DemoteManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAvailableRawDiscountsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginAsGuestRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
@@ -59,10 +62,14 @@
     <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\RegisterRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\RemoveProductFromCartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\RemoveProductFromStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\SearchProductRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\StoresProductsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdateDiscountPolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\UpdateProductOfStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdatePurchasePolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAvailableRawDiscountsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStaffOfStoreResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />

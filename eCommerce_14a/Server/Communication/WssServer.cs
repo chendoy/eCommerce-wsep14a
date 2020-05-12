@@ -198,7 +198,7 @@ namespace eCommerce_14a.Communication
                     break;
 
                 case Opcode.GET_ALL_REGISTERED_USERS:
-                    response = handler.HandleGetAllActiveUsers(json);
+                    response = handler.HandleGetAllRegisteredUsers(json);
                     session.Send(response, 0, response.Length);
                     break;
 
@@ -209,6 +209,31 @@ namespace eCommerce_14a.Communication
 
                 case Opcode.CHANGE_PRODUCT_AMOUNT_CART:
                     response = handler.HandleChangeProductAmountInCart(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2
+                case Opcode.GET_STAFF_OF_STORE:
+                    response = handler.HandleGetStaffOfStore(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_AVAILABLE_DISCOUNTS:
+                    response = handler.HandleGetAvailableDiscounts(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.ADD_PRODUCT_TO_STORE:
+                    response = handler.HandleAddProductToStore(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.REMOVE_PRODUCT_FROM_STORE:
+                    response = handler.HandleRemoveProductFromStore(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.UPDATE_PRODUCT_OF_STORE:
+                    response = handler.HandleUpdateProductOfStore(json);
                     session.Send(response, 0, response.Length);
                     break;
 

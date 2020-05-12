@@ -189,7 +189,7 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleGetAllActiveUsers(string json)
+        public byte[] HandleGetAllRegisteredUsers(string json)
         {
             GetAllRegisteredUsersRequest res = JsonConvert.DeserializeObject<GetAllRegisteredUsersRequest>(json);
             List<User> ans = userService.GetAllRegisteredUsers();
@@ -197,10 +197,52 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public byte[] HandleGetAvailableDiscounts(string json)
+        {
+            GetAvailableRawDiscountsRequest res = JsonConvert.DeserializeObject<GetAvailableRawDiscountsRequest>(json);
+            Dictionary<int, string> ans = storeService.GetAvailableRawDiscount();
+            string jsonAns = Seralize(new GetAvailableRawDiscountsResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleGetStaffOfStore(string json)
+        {
+            GetStaffOfStoreRequest res = JsonConvert.DeserializeObject<GetStaffOfStoreRequest>(json);
+            Dictionary<string,string> ans = storeService.GetStaffOfStore(res.StoreId);
+            string jsonAns = Seralize(new GetStaffOfStoreResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleAddProductToStore(string json)
+        {
+            AddProductToStoreRequest res = JsonConvert.DeserializeObject<AddProductToStoreRequest>(json);
+            Tuple<bool,string> ans = storeService.appendProduct(res.StoreId, res.UserName, res.ProductId, res.ProductDetails, res.ProductPrice,
+                res.ProductName, res.ProductCategory, res.Pamount, res.ImgUrl);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1,ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleRemoveProductFromStore(string json)
+        {
+            RemoveProductFromStoreRequest res = JsonConvert.DeserializeObject<RemoveProductFromStoreRequest>(json);
+            Tuple<bool, string> ans = storeService.removeProduct(res.storeId, res.userName, res.productId);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         internal byte[] HandleChangeProductAmountInCart(string json)
         {
             ChangeProductAmountInCartRequest res = JsonConvert.DeserializeObject<ChangeProductAmountInCartRequest>(json);
             Tuple<bool, string> ans = purchService.ChangeProductAmoountInShoppingCart(res.User, res.Store, res.Product, res.Amount);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleUpdateProductOfStore(string json)
+        {
+            UpdateProductOfStoreRequest res = JsonConvert.DeserializeObject<UpdateProductOfStoreRequest>(json);
+            Tuple<bool, string> ans = storeService.UpdateProduct(res.UserName, res.StoreId, res.ProductId, res.PDetails,
+                res.PPrice, res.PName, res.PCategory, res.ImgUrl);
             string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
