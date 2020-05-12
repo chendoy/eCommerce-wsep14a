@@ -1,4 +1,5 @@
 ﻿@page "/ManageStore/{storeid:int}"
+@inject ECommerce14AService service
 
 <h1>Mange Store</h1>
 
@@ -16,7 +17,7 @@
     <br />
     <h3>Promote or demote users</h3>
     <br />
-    <Dropdown TItem="string">
+    <Dropdown TItem="string" OnSelected="@OnSelected1">
         <InitialTip>Action</InitialTip>
         <ChildContent>
             @foreach (var option in options)
@@ -26,10 +27,10 @@
         </ChildContent>
     </Dropdown>
 
-    <Dropdown TItem="string">
+    <Dropdown TItem="string" OnSelected="@OnSelected2">
         <InitialTip>User</InitialTip>
         <ChildContent>
-            @foreach (var user in RegisteredUsers)
+            @foreach (var user in registeredUsers)
             {
                 <DropdownListItem Item="@user">@user</DropdownListItem>
             }
@@ -38,7 +39,7 @@
 
     <h5 style="display: inline">to be &nbsp &nbsp </h5>
 
-    <Dropdown TItem="string">
+    <Dropdown TItem="string" OnSelected="@OnSelected3">
         <InitialTip>New Role</InitialTip>
         <ChildContent>
             @foreach (var role in roles)
@@ -48,21 +49,79 @@
         </ChildContent>
     </Dropdown>
 
+    <br />
+    <button class="form-control col-6 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
+
+    <br />
+    <div class="login-msg" style="text-align:left; font-weight:bold">
+        <span>@AppointmentMessage</span>
+    </div>
+
 </div>
 
 @code {
 
     [Parameter]
     public int StoreId { get; set; }
-    public StoreData Store { get; set; }
-    private string[] options = new string[] { "Promote", "Demote" };
-    private List<string> RegisteredUsers;
-    private string[] roles = new string[] { "Manager", "Owner" };
 
-    protected async override void OnInitialized()
+    public StoreData store { get; set; }
+    private List<string> registeredUsers;
+    private string[] roles = new string[] { "Manager", "Owner" };
+    private string[] options = new string[] { "Promote", "Demote" };
+    private string loggedInUser;
+    public string AppointmentMessage { get; set; }
+
+    private string selectedUser;
+    private string selectedRole;
+    private string selectedOption;
+
+    protected async override Task OnInitializedAsync()
     {
         GetAllActiveUsersResponse response = await service.GetAllActiveUsers();
-        RegisteredUsers = response.Users;
+        registeredUsers = response.Users;
+        loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+    }
+
+    private async void ApplyAction()
+    {
+
+        Tuple<bool, string> successErrorTuple = new Tuple<bool, string>(false, "default error");
+
+        if (selectedOption == "Promote" && selectedRole == "Owner")
+            successErrorTuple = await service.AppointOwner(loggedInUser, selectedUser, StoreId);
+
+
+        if (selectedOption == "Promote" && selectedRole == "Manager")
+            successErrorTuple = await service.AppointManager(loggedInUser, selectedUser, StoreId);
+
+        if (selectedOption == "Demote" && selectedRole == "Owner")
+            successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
+
+        if (selectedOption == "Demote" && selectedRole == "Manager")
+            successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
+
+
+        if (successErrorTuple.Item1)
+            AppointmentMessage = "Operation applied successfully";
+
+        else
+            AppointmentMessage = successErrorTuple.Item2; // the error
+
+    }
+
+    private void OnSelected1(string selection)
+    {
+        selectedOption = selection;
+    }
+
+    private void OnSelected2(string selection)
+    {
+        selectedUser = selection;
+    }
+
+    private void OnSelected3(string selection)
+    {
+        selectedRole = selection;
     }
 
 }
