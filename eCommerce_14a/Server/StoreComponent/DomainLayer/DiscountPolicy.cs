@@ -141,7 +141,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public override double CalcDiscount(PurchaseBasket basket, Validator validator)
         {
             if (PreCondition.IsFulfilled(basket, -1, validator))
-                return (Discount / 100) * basket.GetBasketPrice();
+                return (Discount / 100) * basket.Price;
             return 0;
         }
 
