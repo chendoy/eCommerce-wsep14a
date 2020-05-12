@@ -39,10 +39,12 @@
   <ItemGroup>
     <Compile Include="Communication\CommunicationHandler.cs" />
     <Compile Include="Communication\DataConverter.cs" />
+    <Compile Include="Communication\DataObject\Requests\AddProductToCartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\AppointManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\ChangeProductAmountInCartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllActiveUsersRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Communication\DataObject\Requests\StoresProductsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdateDiscountPolicyRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdatePurchasePolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\DemoteManagerResponse.cs" />

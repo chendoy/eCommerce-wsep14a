@@ -31,6 +31,8 @@ namespace Server.Communication.DataObject
         UPDATE_PURCHASE_POLICY,
         GET_ALL_ACTIVE_USERS,
         STORES_OWNED_BY,
+        ADD_PRODUCT_TO_CART,
+        CHANGE_PRODUCT_AMOUNT_CART,
         NOTIFICATION,
         RESPONSE,
         ERROR
