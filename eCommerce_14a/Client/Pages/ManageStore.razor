@@ -61,7 +61,8 @@
 
     protected override void OnInitialized()
     {
-        RegisteredUsers = service.GetAllActiveUsers();
+        //RegisteredUsers = service.GetAllActiveUsers();
+        RegisteredUsers = new List<UserData> { };
     }
 
 }
