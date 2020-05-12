@@ -45,7 +45,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             this.deliveryHandler = deliveryHandler;
             this.userManager = UserManager.Instance;
         }
-
+        public PaymentHandler GetPaymentHandler()
+        {
+            return this.paymentHandler;
+        }
+        public DeliveryHandler GetDeliveryHandler()
+        {
+            return this.deliveryHandler;
+        }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// Get the user ,store and product to add to the shopping cart
