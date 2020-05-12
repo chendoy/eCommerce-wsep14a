@@ -77,7 +77,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        GetAllActiveUsersResponse response = await service.GetAllActiveUsers();
+        GetAllRegisteredUsersResponse response = await service.GetAllActiveUsers();
         registeredUsers = response.Users;
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
     }
