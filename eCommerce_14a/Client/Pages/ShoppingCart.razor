@@ -1,6 +1,6 @@
 ﻿@page "/ShoppingCart"
 <h3>ShoppingCart</h3>
-<MyMessage Msg="@Msg" IsError="@IsError"/>
+<MyMessage Msg="@Msg" IsError="@IsError" />
 @if (Cart != null)
 {
     @if (Cart.baskets.Count == 0)
@@ -9,96 +9,98 @@
     }
     else
     {
-        @foreach (PurchaseBasketData basketData in Cart.baskets)
-        {
-            <PurchaseBasket purchaseBasket="@basketData" Modifiable="true"></PurchaseBasket>
-            <br />
-        }
+        <table class="table">
+            @foreach (PurchaseBasketData basketData in Cart.baskets)
+            {
+                <tr>
+                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true"></PurchaseBasket>
+                </tr>
+            }
+        </table>
+
         <div class="col-12 row">
             <div class="col-12 row" style="text-align:right; font:bold 16px">Total Price: @Price&#8362 </div>
-            <span class="col-2"></span>
-            <button class="form-control col-1 btn btn-primary">Perform Purchase</button>
         </div>
 
-        <EditForm Model="@PurchaseRequestModel" OnValidSubmit="@Submit">
-            <div>
-                <br /><br /><br /><br /><br />
-            </div>
-            <div>
-                <h3 style="font-weight:bold; color:purple">Perform Purchase</h3>
-            </div>
-            <div>
-                <br />
-            </div>
-            <div class="col-12 row">
-                <input class="form-control col-12" @bind="PurchaseRequestModel.Address" placeholder="Address" />
-            </div>
-            <br />
-            <div class="col-12 row">
-                <input class="form-control col-12" @bind="PurchaseRequestModel.PaymentDetails" placeholder="Payment Details" />
-            </div>
-            <br />
-            <div class="col-12 row">
-                <span class="col-12"></span>
-                <input type="submit" class="form-control col-6 btn btn-primary" value="Purchase" />
-            </div>
-            <br />  
-        </EditForm>
-    }
-}
-
-
-@code {
-    public CartData Cart { get; set; }
-    public string Msg { get; set; }
-    public string PurchaseMesssage { get; set; }
-    public double Price
-    {
-        get
-        {
-            double price = 0;
-            if (Cart != null && Cart.baskets.Count != 0)
-            {
-                foreach (PurchaseBasketData purchaseBasket in Cart.baskets)
-                {
-                    price += purchaseBasket.Price;
-                }
+            @*<EditForm Model="@PurchaseRequestModel" OnValidSubmit="@Submit">
+                    <div>
+                        <br /><br /><br /><br /><br />
+                    </div>
+                    <div>
+                        <h3 style="font-weight:bold; color:purple">Perform Purchase</h3>
+                    </div>
+                    <div>
+                        <br />
+                    </div>
+                    <div class="col-12 row">
+                        <input class="form-control col-12" @bind="PurchaseRequestModel.Address" placeholder="Address" />
+                    </div>
+                    <br />
+                    <div class="col-12 row">
+                        <input class="form-control col-12" @bind="PurchaseRequestModel.PaymentDetails" placeholder="Payment Details" />
+                    </div>
+                    <br />
+                    <div class="col-12 row">
+                        <span class="col-12"></span>
+                        <input type="submit" class="form-control col-6 btn btn-primary" value="Purchase" />
+                    </div>
+                    <br />
+                </EditForm>*@
+            }
             }
 
-            return price;
-        }
-    }
-    public bool IsError { get; set; }
 
-    public PurchaseRequest PurchaseRequestModel { get; set; }
-    protected async override Task OnInitializedAsync()
-    {
-        string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
-        GetUsersCartResponse response = await service.GetCart(username);
-        Cart = response.Cart;
-        if (Cart is null)
+            @code {
+    public CartData Cart { get; set; }
+        public string Msg { get; set; }
+        public string PurchaseMesssage { get; set; }
+        public double Price
         {
-            Msg = response.Error;
-            IsError = true;
+            get
+            {
+                double price = 0;
+                if (Cart != null && Cart.baskets.Count != 0)
+                {
+                    foreach (PurchaseBasketData purchaseBasket in Cart.baskets)
+                    {
+                        price += purchaseBasket.Price;
+                    }
+                }
+
+                return price;
+            }
         }
-    }
+        public bool IsError { get; set; }
 
-    private async void Submit()
-    {
-        PurchaseResponse response = await service.GetResponse<PurchaseRequest, PurchaseResponse>(PurchaseRequestModel);
-
-        if (response.Success)
+        public PurchaseRequest PurchaseRequestModel { get; set; }
+        protected async override Task OnInitializedAsync()
         {
-            Msg = "The purchase was perfomed successfully";
-            IsError = false;
-            PurchaseRequestModel.Clear();
-        }
-        else
-        {
-            Msg = response.Error;
-            IsError = true;
+            string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+            GetUsersCartResponse response = await service.GetCart(username);
+            Cart = response.Cart;
+            if (Cart is null)
+            {
+                Msg = response.Error;
+                IsError = true;
+            }
         }
 
-        StateHasChanged();
-    }
-}
+        private async void Submit()
+        {
+            PurchaseResponse response = await service.GetResponse<PurchaseRequest, PurchaseResponse>(PurchaseRequestModel);
+
+            if (response.Success)
+            {
+                Msg = "The purchase was perfomed successfully";
+                IsError = false;
+                PurchaseRequestModel.Clear();
+            }
+            else
+            {
+                Msg = response.Error;
+                IsError = true;
+            }
+
+            StateHasChanged();
+        }
+            }

@@ -1,12 +1,10 @@
 ﻿<div class="row">
     <a class="col-sm-2 font-weight-bold" href=Stores/@purchaseBasket.Store.StoreId>@purchaseBasket.Store.StoreName</a>
     <div class="col-sm-2">
-        <label>Price: @purchaseBasket.Price</label>
+        <label>Price: @purchaseBasket.Price&#8362</label>
     </div>
     <div class="col-sm-4">
-        <button @onclick="@(e => Collapse = !Collapse)">
-            @( Collapse ? "+" : "-")
-        </button>
+        <button class="form-control col-1 btn btn-primary" style="display: flex; align-items: center;justify-content: center; height:24px; padding: 1px 1px;" @onclick="@(e => Collapse = !Collapse)">@( Collapse ? "+" : "-")</button>
     </div>
 </div>
 <div class="panel panel-default border @Collapsed">
@@ -33,10 +31,9 @@
                 <td>@purchaseBasket.Product[productId]</td>
                 @if (Modifiable)
                 {
-            <th>
-               
-                <a style="text-underline-position:below; cursor:pointer; color:blue" @onclick="(() => Remove(productId))">Remove</a>
-            </th>
+                <th>
+                    <a style="text-underline-position:below; cursor:pointer; color:blue" @onclick="(() => Remove(productId))">Remove</a>
+                </th>
                 }
             </tr>
             }
@@ -51,6 +48,11 @@
     public bool Modifiable { get; set; }
     [Parameter]
     public bool Collapse { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Collapse = false;
+    }
 
     public string Collapsed {
         get
