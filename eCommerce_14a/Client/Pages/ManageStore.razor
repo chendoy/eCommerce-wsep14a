@@ -1,16 +1,67 @@
 ﻿@page "/ManageStore/{storeid:int}"
 
-<h3>Mange Store</h3>
+<h1>Mange Store</h1>
+
+<div>
+    <h2>Current store setup</h2>
+
+    <h3>Managers</h3>
+
+    <h3>Owners</h3>
+
+    <h3>Products</h3>
+</div>
+
+<div>
+    <br />
+    <h3>Promote or demote users</h3>
+    <br />
+    <Dropdown TItem="string">
+        <InitialTip>Action</InitialTip>
+        <ChildContent>
+            @foreach (var option in options)
+            {
+                <DropdownListItem Item="@option">@option</DropdownListItem>
+            }
+        </ChildContent>
+    </Dropdown>
+
+    <Dropdown TItem="string">
+        <InitialTip>User</InitialTip>
+        <ChildContent>
+            @foreach (var user in RegisteredUsers)
+            {
+                <DropdownListItem Item="@user">@user</DropdownListItem>
+            }
+        </ChildContent>
+    </Dropdown>
+
+    <h5 style="display: inline">to be &nbsp &nbsp </h5>
+
+    <Dropdown TItem="string">
+        <InitialTip>New Role</InitialTip>
+        <ChildContent>
+            @foreach (var role in roles)
+            {
+                <DropdownListItem Item="@role">@role</DropdownListItem>
+            }
+        </ChildContent>
+    </Dropdown>
+
+</div>
 
 @code {
 
     [Parameter]
     public int StoreId { get; set; }
     public StoreData Store { get; set; }
+    private string[] options = new string[] { "Promote", "Demote" };
+    private string[] RegisteredUsers;
+    private string[] roles = new string[] { "Manager", "Owner" };
 
     protected override void OnInitialized()
     {
-
+        RegisteredUsers = service.GetAllActiveUsers();
     }
 
 }

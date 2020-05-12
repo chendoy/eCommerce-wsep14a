@@ -112,5 +112,13 @@ namespace Client.Service
             GetStoresOwnedByResponse response = await comm.Get<GetStoresOwnedByResponse>();
             return response;
         }
+
+        async public Task<GetAllActiveUsersResponse> GetAllActiveUsers()
+        {
+            GetAllActiveUsersRequest request = new GetAllActiveUsersRequest();
+            comm.SendRequest(request);
+            GetAllActiveUsersResponse response = await comm.Get<GetAllActiveUsersResponse>();
+            return reponse;
+        }
     }
 }
