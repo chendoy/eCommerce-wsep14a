@@ -112,11 +112,12 @@ namespace Client.Service
             GetStoresOwnedByResponse response = await comm.Get<GetStoresOwnedByResponse>();
             return response;
         }
-        async public Task<GetAllActiveUsersResponse> GetAllActiveUsers()
+
+        async public Task<GetAllRegisteredUsersResponse> GetAllActiveUsers()
         {
-            GetAllActiveUsersRequest request = new GetAllActiveUsersRequest();
+            GetAllRegisteredUsersRequest request = new GetAllRegisteredUsersRequest();
             comm.SendRequest(request);
-            GetAllActiveUsersResponse response = await comm.Get<GetAllActiveUsersResponse>();
+            GetAllRegisteredUsersResponse response = await comm.Get<GetAllRegisteredUsersResponse>();
             return response;
         }
 

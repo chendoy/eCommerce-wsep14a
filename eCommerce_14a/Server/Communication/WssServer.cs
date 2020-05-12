@@ -197,8 +197,18 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
-                case Opcode.GET_ALL_ACTIVE_USERS:
+                case Opcode.GET_ALL_REGISTERED_USERS:
                     response = handler.HandleGetAllActiveUsers(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.ADD_PRODUCT_TO_CART:
+                    response = handler.HandleAddProductToCart(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.CHANGE_PRODUCT_AMOUNT_CART:
+                    response = handler.HandleChangeProductAmountInCart(json);
                     session.Send(response, 0, response.Length);
                     break;
 

@@ -49,9 +49,9 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         
         }
 
-        public List<User> GetAllActiveUsers()
+        public List<User> GetAllRegisteredUsers()
         {
-            return UM.GetAllActiveUsers();
+            return UM.GetAllRegisteredUsers();
         }
 
         //For Admin Usage

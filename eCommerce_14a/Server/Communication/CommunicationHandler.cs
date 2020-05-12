@@ -181,11 +181,27 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleAddProductToCart(string json)
+        {
+            AddProductToCartRequest res = JsonConvert.DeserializeObject<AddProductToCartRequest>(json);
+            Tuple<bool,string> ans = purchService.AddProductToShoppingCart(res.User, res.Store, res.Product, res.Amount);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         internal byte[] HandleGetAllActiveUsers(string json)
         {
-            GetAllActiveUsersRequest res = JsonConvert.DeserializeObject<GetAllActiveUsersRequest>(json);
-            List<User> ans = userService.GetAllActiveUsers();
-            string jsonAns = Seralize(new GetAllActiveUsersResponse(converter.ToUserNameList(ans),""));
+            GetAllRegisteredUsersRequest res = JsonConvert.DeserializeObject<GetAllRegisteredUsersRequest>(json);
+            List<User> ans = userService.GetAllRegisteredUsers();
+            string jsonAns = Seralize(new GetAllRegisteredUsersResponse(converter.ToUserNameList(ans),""));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleChangeProductAmountInCart(string json)
+        {
+            ChangeProductAmountInCartRequest res = JsonConvert.DeserializeObject<ChangeProductAmountInCartRequest>(json);
+            Tuple<bool, string> ans = purchService.ChangeProductAmoountInShoppingCart(res.User, res.Store, res.Product, res.Amount);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 

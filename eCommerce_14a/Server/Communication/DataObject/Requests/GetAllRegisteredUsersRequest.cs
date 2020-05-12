@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    public class GetAllActiveUsersRequest : Message
+    public class GetAllRegisteredUsersRequest : Message
     {
 
-        public GetAllActiveUsersRequest() : base(Opcode.GET_ALL_ACTIVE_USERS)
+        public GetAllRegisteredUsersRequest() : base(Opcode.GET_ALL_REGISTERED_USERS)
         {
             
         }
