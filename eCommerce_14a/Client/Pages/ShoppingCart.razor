@@ -78,7 +78,7 @@
         Cart = response.Cart;
         if (Cart is null)
         {
-            Msg = ""; //TODO
+            Msg = response.Error;
             IsError = true;
         }
     }
