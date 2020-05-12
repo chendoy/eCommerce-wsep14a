@@ -8,8 +8,8 @@ namespace Server.Communication.DataObject.Responses
 {
     public class GetAllActiveUsersResponse : Message
     {
-        List<string> Users { get; set; }
-        string Error { get; set; }
+        public List<string> Users { get; set; }
+        public string Error { get; set; }
 
         public GetAllActiveUsersResponse(List<string> users, string error) : base(Opcode.RESPONSE)
         {
