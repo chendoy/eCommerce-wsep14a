@@ -183,9 +183,17 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleGetCart(string json)
         {
+            string jsonAns;
             CartRequest res = JsonConvert.DeserializeObject<CartRequest>(json);
             Tuple<Cart, string> ans = purchService.GetCartDetails(res.Username);
-            string jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1), ans.Item2));
+            if (ans.Item1 == null)
+            {
+                jsonAns = Seralize(new GetUsersCartResponse(null, ans.Item2));
+            }
+            else
+            {
+                jsonAns = Seralize(new GetUsersCartResponse(converter.ToCartData(ans.Item1), ans.Item2));
+            }
             return security.Encrypt(jsonAns);
         }
 
