@@ -118,7 +118,7 @@ namespace Client.Service
             GetAllActiveUsersRequest request = new GetAllActiveUsersRequest();
             comm.SendRequest(request);
             GetAllActiveUsersResponse response = await comm.Get<GetAllActiveUsersResponse>();
-            return reponse;
+            return response;
         }
     }
 }
