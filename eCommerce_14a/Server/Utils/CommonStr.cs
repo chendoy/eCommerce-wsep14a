@@ -119,6 +119,7 @@
             public static string notMainOwnerErrMessage = "This Action can't be performed because this user isn't a Main Owner";
             public static string notStoreOwnerErrMessage = "This Action can't  be performed because the user is not a store Owner";
             public static string userNotFoundErrMsg = "Null User Supplied";
+            public static string illegalStoreName = "Store name iilegal";
         }
         public static class MangerPermission
         {
