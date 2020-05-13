@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class SuccessFailResponse : Message
+    public class SuccessFailResponse : Message
     {
-        bool Success { get; set; }
-        string Error { get; set; }
+        public bool Success { get; set; }
+        public string Error { get; set; }
         public SuccessFailResponse(bool success, string error) : base(Opcode.RESPONSE)
         {
             Success = success;

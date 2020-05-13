@@ -10,14 +10,14 @@
     }
     else
     {
-        <table class="table">
+        
             @foreach (PurchaseBasketData basketData in Cart.baskets)
             {
-                <tr>
-                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true" OnRemoveProduct="@UpdateCart"></PurchaseBasket>
-                </tr>
+                
+                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true" OnProductChanged="@UpdateCart"></PurchaseBasket>
+ 
             }
-        </table>
+
 
         <div class="col-12 row">
             <div class="col-12 row" style="text-align:right; font:bold 16px">Total Price: @Price&#8362 </div>
