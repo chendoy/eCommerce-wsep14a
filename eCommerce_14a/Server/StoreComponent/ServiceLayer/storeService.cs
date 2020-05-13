@@ -132,6 +132,11 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.GetAvilableRawPurchasePolicy();
         }
 
+        public Store GetStoreById(int storeID) 
+        {
+            return storeManagment.getStore(storeID);
+        }
+
 
 
 

@@ -253,6 +253,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.STORE_BY_ID:
+                    response = handler.HandleGetStoreById(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
 
                 default:
                     break;

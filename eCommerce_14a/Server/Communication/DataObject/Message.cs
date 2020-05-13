@@ -42,6 +42,7 @@ namespace Server.Communication.DataObject
         STORE_HISTORY,
         ALL_STORE_HISTORY,
         ALL_BUYERS_HISTORY,
+        STORE_BY_ID,
         NOTIFICATION,
         RESPONSE,
         ERROR
