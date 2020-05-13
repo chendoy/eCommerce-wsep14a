@@ -232,6 +232,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleGetStoreById(string json)
+        {
+            GetStoreByIdRequest res = JsonConvert.DeserializeObject<GetStoreByIdRequest>(json);
+            Store ans = storeService.GetStoreById(res.StoreId);
+            string jsonAns = Seralize(new GetStoreByIdResponse(converter.ToStoreData(ans)));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleGetAllStoresHistory(string json)
         {
             GetAllStoresHistoryRequest res = JsonConvert.DeserializeObject<GetAllStoresHistoryRequest>(json);
