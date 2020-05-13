@@ -9,10 +9,10 @@ namespace Server.Communication.DataObject.Responses
 {
     public class GetAllUsersHistoryResponse : Message
     {
-        public Dictionary<string, List<PurchaseData>> Purchases { get; set; }
+        public List<string> Purchases { get; set; }
         public string Error { get; set; }
 
-        public GetAllUsersHistoryResponse(Dictionary<string, List<PurchaseData>> purchases, string error) : base(Opcode.RESPONSE)
+        public GetAllUsersHistoryResponse(List<string> purchases, string error) : base(Opcode.RESPONSE)
         {
             Purchases = purchases;
             Error = error;

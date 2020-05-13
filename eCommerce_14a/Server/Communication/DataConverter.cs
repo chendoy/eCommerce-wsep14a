@@ -187,27 +187,22 @@ namespace Server.Communication
 
         }
 
-        public Tuple<Dictionary<StoreData, List<PurchaseBasketData>>, string> ToStoresHistoryResponse(Tuple<Dictionary<Store, List<PurchaseBasket>>, string> storesHistory) 
+        public Tuple<List<StoreData>, string> ToStoresHistoryResponse(Tuple<Dictionary<Store, List<PurchaseBasket>>, string> storesHistory) 
         {
-            Dictionary<StoreData, List<PurchaseBasketData>> retDict = new Dictionary<StoreData, List<PurchaseBasketData>>();
+            List<StoreData> retList = new List<StoreData>();
             foreach (KeyValuePair<Store, List<PurchaseBasket>> entry in storesHistory.Item1)
             {
                 StoreData retStoreData = ToStoreData(entry.Key);
-                List<PurchaseBasketData> retList = ToPurchaseBasketDataList(entry.Value);
-                retDict.Add(retStoreData, retList);
+                retList.Add(retStoreData);
             }
-            return new Tuple<Dictionary<StoreData, List<PurchaseBasketData>>, string>(retDict, storesHistory.Item2);
+            return new Tuple<List<StoreData>, string>(retList, storesHistory.Item2);
         }
 
-        public Tuple<Dictionary<string, List<PurchaseData>>, string> ToUsersHistoryResponse(Tuple<Dictionary<string, List<Purchase>>, string> usersHistory) 
+        public Tuple<List<string>, string> ToUsersHistoryResponse(Tuple<Dictionary<string, List<Purchase>>, string> usersHistory) 
         {
-            Dictionary<string, List<PurchaseData>> retDict = new Dictionary<string, List<PurchaseData>>();
-            foreach (KeyValuePair<string, List<Purchase>> entry in usersHistory.Item1)
-            {
-                List<PurchaseData> retList = ToPurchaseDataList(entry.Value);
-                retDict.Add(entry.Key, retList);
-            }
-            return new Tuple<Dictionary<string, List<PurchaseData>>, string>(retDict, usersHistory.Item2);
+           List<string> retList = usersHistory.Item1.Keys.ToList();
+
+           return new Tuple<List<string>, string>(retList, usersHistory.Item2);
         }
     }
 }

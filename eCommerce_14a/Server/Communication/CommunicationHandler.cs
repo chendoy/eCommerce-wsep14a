@@ -95,14 +95,17 @@ namespace eCommerce_14a.Communication
             bool isAdmin = false;
             Dictionary<int, int[]> permissions = new Dictionary<int, int[]>();
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            usersSessions.Add(res.Username, session);
             if (res.Username.Equals("Admin"))
                 isAdmin = true;
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
+            if (!ans.Item1)
+            {
+                usersSessions.Remove(res.Username);
+            }
             if (ans.Item1)
             {
-                usersSessions.Add(res.Username, session);
                 permissions = userService.GetUserPermissions(res.Username);
-
             }
             string jsonAns = Seralize(new LoginResponse(ans.Item1, ans.Item2, permissions, isAdmin));
             return security.Encrypt(jsonAns);
@@ -230,7 +233,7 @@ namespace eCommerce_14a.Communication
         {
             GetAllUsersHistoryRequest res = JsonConvert.DeserializeObject<GetAllUsersHistoryRequest>(json);
             Tuple<Dictionary<string, List<Purchase>>, string> ans = purchService.GetAllUsersHistory(res.Admin);
-            Tuple<Dictionary<string, List<PurchaseData>>, string> convRes = converter.ToUsersHistoryResponse(ans);
+            Tuple<List<string>, string> convRes = converter.ToUsersHistoryResponse(ans);
             string jsonAns = Seralize(new GetAllUsersHistoryResponse(convRes.Item1, convRes.Item2));
             return security.Encrypt(jsonAns);
         }
@@ -247,7 +250,7 @@ namespace eCommerce_14a.Communication
         {
             GetAllStoresHistoryRequest res = JsonConvert.DeserializeObject<GetAllStoresHistoryRequest>(json);
             Tuple<Dictionary<Store, List<PurchaseBasket>>, string> ans = purchService.GetAllStoresHistory(res.Admin);
-            Tuple<Dictionary<StoreData, List<PurchaseBasketData>>, string> convRes = converter.ToStoresHistoryResponse(ans);
+            Tuple<List<StoreData>, string> convRes = converter.ToStoresHistoryResponse(ans);
             string jsonAns = Seralize(new GetAllStoresHistoryResponse(convRes.Item1, convRes.Item2));
             return security.Encrypt(jsonAns);
         }
