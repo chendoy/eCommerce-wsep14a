@@ -417,7 +417,7 @@ namespace TestingSystem.UnitTests.StoreTest
             return s.AddStoreManager(user);
         }
 
-        public static Store openStore(int storeId, User user, Inventory inv, int rank = 3)
+        public static Store openStore(int storeId, User user, Inventory inv, int rank = 3, string storename="test_store")
         {
 
             Dictionary<string, object> storeParams = new Dictionary<string, object>();
@@ -428,6 +428,7 @@ namespace TestingSystem.UnitTests.StoreTest
             storeParams.Add(CommonStr.StoreParams.StorePuarchsePolicy, null);
             storeParams.Add(CommonStr.StoreParams.Validator, null);
             storeParams.Add(CommonStr.StoreParams.StoreInventory, inv);
+            storeParams.Add(CommonStr.StoreParams.StoreName, storename);
             Store s = new Store(storeParams);
             return s;
         }

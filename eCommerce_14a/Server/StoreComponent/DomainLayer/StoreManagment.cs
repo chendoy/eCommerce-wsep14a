@@ -371,6 +371,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
                 return new Tuple<int, string>(-1, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
             }
+            if(storename == null || storename.Equals(""))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.illegalStoreName);
+                return new Tuple<int, string>(-1, CommonStr.StoreMangmentErrorMessage.illegalStoreName);
+            }
 
             nextStoreId += 1;
 

@@ -381,7 +381,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
             lstProds.Add(new Tuple<Product, int>(new Product(3, name: "MegaMix", price: 1000, rank: 5, category: CommonStr.ProductCategoty.Kitchen), 300));
             lstProds.Add(new Tuple<Product, int>(new Product(4, name: "makeup loreal paris", price: 200, rank: 3, category: CommonStr.ProductCategoty.Beauty), 0));
             Inventory inv_store_1 = InventoryTest.getInventory(lstProds);
-            Store store1 = StoreTest.StoreTest.openStore(storeId: 1, user: userManger.GetUser("liav"), inv: inv_store_1, rank: 4);
+            Store store1 = StoreTest.StoreTest.openStore(storeId: 1, user: userManger.GetUser("liav"), inv: inv_store_1, rank: 4, CommonStr.StoreParams.StoreName);
 
             List<Tuple<Product, int>> lstProds2 = new List<Tuple<Product, int>>();
             lstProds2.Add(new Tuple<Product, int>(new Product(1, price: 650, name: "Keyboard Mx95 Lgoitech", rank: 4, category: CommonStr.ProductCategoty.Computers), 100));
