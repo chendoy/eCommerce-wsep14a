@@ -44,7 +44,7 @@
 
         @if (Modifiable)
         {
-            <div class="col @EditCollapsed" style="width:20%">
+            <div class="col-md-4 @EditCollapsed" style="width:10%">
                 <OrderProduct StoreID="@StoreId" ProductID="@EditProductId" ProductInCart="true" SubmitEvent="@OnEditSubmit" MaxBound="@MaxAmount"
                               CancelEvent="(() => EditProductVisible=false)" />
             </div>
