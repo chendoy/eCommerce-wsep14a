@@ -21,7 +21,7 @@
                     @foreach (PurchaseBasketData basketData in @purchase.Cart.baskets)
                     {
                         <tr><td>
-                            <PurchaseBasket purchaseBasket="@basketData" Modifiable="false"></PurchaseBasket>
+                            <PurchaseBasket purchaseBasket="@basketData" Modifiable="false" ShowUser="false"></PurchaseBasket>
                         </td></tr>
                     }
                 </table>
