@@ -146,5 +146,12 @@
             public static string EmptyCartPurchaseErrMsg = "Cannot add zero amount of product to cart";
             public static string NotAdminErrMsg = "This Action is for admins only";
         }
+        public static class StorePermissions
+        {
+            public static int[] RegularManager = {1,1,0,0,0 };
+            public static int[] FullPermissions = { 1, 1, 1, 1, 1};
+            public static int[] BlankPermisions = { 0, 0, 0, 0, 0 };
+            public static int[] RegularAndProduct = { 1, 1, 1, 0, 0 };
+        }
     }
 }

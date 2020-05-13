@@ -77,7 +77,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!users.TryGetValue(username, out user))
                 return null;
             return user.GetUserPermissions();
-
         }
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)

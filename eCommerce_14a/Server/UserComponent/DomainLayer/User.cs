@@ -136,7 +136,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (Store_Ownership.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
             Store_Ownership.Add(store.getStoreId(), store);
-            return new Tuple<bool, string>(true, "");
+            return setPermmisions(store.getStoreId(), CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
