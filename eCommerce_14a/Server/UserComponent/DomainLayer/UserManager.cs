@@ -184,8 +184,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     foreach (NotifyData msg in messages) 
                     {
                         Publisher.Instance.Notify(tUser.getUserName(), msg);
-                        tUser.RemovePendingMessage(msg);
-                    }  
+                        //tUser.RemovePendingMessage(msg);
+                    }
+                    tUser.RemoveAllPendingMessages();
                 }
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }

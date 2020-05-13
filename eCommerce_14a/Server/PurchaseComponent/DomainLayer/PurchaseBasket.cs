@@ -26,6 +26,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             Price = 0;
         }
 
+        public string ToString()
+        {
+            string products_name = "";
+            foreach (var product in products.Keys)
+            {
+                products_name += "Product ID - " + product + " Product Amount - " + products[product];
+            }
+            return products_name;
+        }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// This method Add/Change/Remove product from this basket
