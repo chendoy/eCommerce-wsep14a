@@ -1,83 +1,98 @@
 ﻿@page "/ManageStore/{storeid:int}"
-@using Server 
-
+@using Server
 
 <h1>Store Dashboard</h1>
 
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Staff">
+            <h2>Staff</h2>
 
+            <div class="grid-container">
 
-    <h3>Staff</h3>
+                @if (staffList != null)
+                {
+                    @foreach (KeyValuePair<string, string> employee in staffList)
+                    {
+                        <RadzenCard Style="width:400px; margin-bottom: 20px; height:300px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div style="margin-top:20px">Employee:</div>
+                                    <b>@employee.Key</b>
+                                    <br />
+                                    <RadzenImage Path="" Style="width:100px;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="margin-top:20px">Role:</div>
+                                    <b>@employee.Value</b>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    }
+                }
+            </div>
+        </RadzenTabsItem>
 
-    @if (staffList != null)
-    {
-        @foreach (KeyValuePair<string, string> employee in staffList)
-        {
-            <RadzenCard Style="width:400px; margin-bottom: 20px; height:300px;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div style="margin-top:20px">Employee:</div>
-                        <b>employee.key</b>
-                        <br />
-                        <RadzenImage Path="" Style="width:100px;" />
-                    </div>
-                    <div class="col-md-6">
-                        <div style="margin-top:20px">Role:</div>
-                        <b>>employee.value</b>
-                    </div>
+        <RadzenTabsItem Text="Promote or Demote">
+
+            <div>
+                <br />
+                <h2>Promote or demote users</h2>
+                <br />
+                <Dropdown TItem="string" OnSelected="@OnSelected1">
+                    <InitialTip>Action</InitialTip>
+                    <ChildContent>
+                        @foreach (var option in options)
+                        {
+                            <DropdownListItem Item="@option">@option</DropdownListItem>
+                        }
+                    </ChildContent>
+                </Dropdown>
+
+                <Dropdown TItem="string" OnSelected="@OnSelected2">
+                    <InitialTip>User</InitialTip>
+                    <ChildContent>
+                        @foreach (var user in registeredUsers)
+            {
+                        <DropdownListItem Item="@user">@user</DropdownListItem>
+            }
+                    </ChildContent>
+                </Dropdown>
+
+                <h5 style="display: inline">to be &nbsp &nbsp </h5>
+
+                <Dropdown TItem="string" OnSelected="@OnSelected3">
+                    <InitialTip>New Role</InitialTip>
+                    <ChildContent>
+                        @foreach (var role in roles)
+            {
+                        <DropdownListItem Item="@role">@role</DropdownListItem>
+            }
+                    </ChildContent>
+                </Dropdown>
+
+                <br /><br />
+                <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
+
+                <br /><br />
+                <div class="login-msg" style="text-align:left; font-weight:bold">
+                    <span>@AppointmentMessage</span>
                 </div>
-            </RadzenCard>
-        }
-    }
 
+            </div>
 
-        <h3>Products</h3>
-  
+        </RadzenTabsItem>
 
-<div>
-    <br />
-    <h3>Promote or demote users</h3>
-    <br />
-    <Dropdown TItem="string" OnSelected="@OnSelected1">
-        <InitialTip>Action</InitialTip>
-        <ChildContent>
-            @foreach (var option in options)
-            {
-                <DropdownListItem Item="@option">@option</DropdownListItem>
-            }
-        </ChildContent>
-    </Dropdown>
+        <RadzenTabsItem Text="Discounts">
 
-    <Dropdown TItem="string" OnSelected="@OnSelected2">
-        <InitialTip>User</InitialTip>
-        <ChildContent>
-            @foreach (var user in registeredUsers)
-            {
-                <DropdownListItem Item="@user">@user</DropdownListItem>
-            }
-        </ChildContent>
-    </Dropdown>
+            <h2>Add New Discount</h2>
 
-    <h5 style="display: inline">to be &nbsp &nbsp </h5>
+            <h2>Edit </h2>
 
-    <Dropdown TItem="string" OnSelected="@OnSelected3">
-        <InitialTip>New Role</InitialTip>
-        <ChildContent>
-            @foreach (var role in roles)
-            {
-                <DropdownListItem Item="@role">@role</DropdownListItem>
-            }
-        </ChildContent>
-    </Dropdown>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
 
-    <br /><br />
-    <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
-
-    <br /><br />
-    <div class="login-msg" style="text-align:left; font-weight:bold">
-        <span>@AppointmentMessage</span>
-    </div>
-
-</div>
 
 @code {
 
