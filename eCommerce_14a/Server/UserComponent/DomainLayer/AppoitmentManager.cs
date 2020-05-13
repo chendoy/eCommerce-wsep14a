@@ -133,13 +133,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreManager(appointed);
             appointed.addAppointment(appointer, store.getStoreId());
+            Tuple<bool, string> res = appointed.addStoreManagment(store);
             int[] p = {1, 1, 0, 0, 0};
             appointed.setPermmisions(store.getStoreId(), p);
             //Version 2 Addition
             Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
             if (!ans.Item1)
                 return ans;
-            return appointed.addStoreManagment(store);
+            return res;
         }
         //Remove appoitment only if owner gave the permissions to the Appointed user
         public Tuple<bool, string> RemoveAppStoreManager(string o, string m, int storeId)

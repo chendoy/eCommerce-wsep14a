@@ -136,7 +136,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (Store_Ownership.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
             Store_Ownership.Add(store.getStoreId(), store);
-            return new Tuple<bool, string>(true, "");
+            return setPermmisions(store.getStoreId(), CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
@@ -210,8 +210,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "No such Store id\n");
             if (permission_set == null)
                 return new Tuple<bool, string>(false, "Null Argument\n");
-            if (!isStorManager(store_id))
-                return new Tuple<bool, string>(false, "The user is not Store Manager\n");
+            if (!isStorManager(store_id) && !isStoreOwner(store_id))
+                return new Tuple<bool, string>(false, "The user is not Store Manager or owner\n");
             if (Store_options.ContainsKey(store_id))
                 Store_options.Remove(store_id);
             Store_options.Add(store_id, permission_set);
