@@ -1,63 +1,98 @@
 ﻿@page "/ManageStore/{storeid:int}"
-@inject ECommerce14AService service
+@using Server
 
-<h1>Mange Store</h1>
+<h1>Store Dashboard</h1>
 
-<div>
-    <h2>Current store setup</h2>
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Staff">
+            <h2>Staff</h2>
 
-    <h3>Managers</h3>
+            <div class="grid-container">
 
-    <h3>Owners</h3>
+                @if (staffList != null)
+                {
+                    @foreach (KeyValuePair<string, string> employee in staffList)
+                    {
+                        <RadzenCard Style="width:400px; margin-bottom: 20px; height:300px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div style="margin-top:20px">Employee:</div>
+                                    <b>@employee.Key</b>
+                                    <br />
+                                    <RadzenImage Path="" Style="width:100px;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="margin-top:20px">Role:</div>
+                                    <b>@employee.Value</b>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    }
+                }
+            </div>
+        </RadzenTabsItem>
 
-    <h3>Products</h3>
-</div>
+        <RadzenTabsItem Text="Promote or Demote">
 
-<div>
-    <br />
-    <h3>Promote or demote users</h3>
-    <br />
-    <Dropdown TItem="string" OnSelected="@OnSelected1">
-        <InitialTip>Action</InitialTip>
-        <ChildContent>
-            @foreach (var option in options)
+            <div>
+                <br />
+                <h2>Promote or demote users</h2>
+                <br />
+                <Dropdown TItem="string" OnSelected="@OnSelected1">
+                    <InitialTip>Action</InitialTip>
+                    <ChildContent>
+                        @foreach (var option in options)
+                        {
+                            <DropdownListItem Item="@option">@option</DropdownListItem>
+                        }
+                    </ChildContent>
+                </Dropdown>
+
+                <Dropdown TItem="string" OnSelected="@OnSelected2">
+                    <InitialTip>User</InitialTip>
+                    <ChildContent>
+                        @foreach (var user in registeredUsers)
             {
-                <DropdownListItem Item="@option">@option</DropdownListItem>
+                        <DropdownListItem Item="@user">@user</DropdownListItem>
             }
-        </ChildContent>
-    </Dropdown>
+                    </ChildContent>
+                </Dropdown>
 
-    <Dropdown TItem="string" OnSelected="@OnSelected2">
-        <InitialTip>User</InitialTip>
-        <ChildContent>
-            @foreach (var user in registeredUsers)
+                <h5 style="display: inline">to be &nbsp &nbsp </h5>
+
+                <Dropdown TItem="string" OnSelected="@OnSelected3">
+                    <InitialTip>New Role</InitialTip>
+                    <ChildContent>
+                        @foreach (var role in roles)
             {
-                <DropdownListItem Item="@user">@user</DropdownListItem>
+                        <DropdownListItem Item="@role">@role</DropdownListItem>
             }
-        </ChildContent>
-    </Dropdown>
+                    </ChildContent>
+                </Dropdown>
 
-    <h5 style="display: inline">to be &nbsp &nbsp </h5>
+                <br /><br />
+                <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
 
-    <Dropdown TItem="string" OnSelected="@OnSelected3">
-        <InitialTip>New Role</InitialTip>
-        <ChildContent>
-            @foreach (var role in roles)
-            {
-                <DropdownListItem Item="@role">@role</DropdownListItem>
-            }
-        </ChildContent>
-    </Dropdown>
+                <br /><br />
+                <div class="login-msg" style="text-align:left; font-weight:bold">
+                    <span>@AppointmentMessage</span>
+                </div>
 
-    <br />
-    <button class="form-control col-6 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
+            </div>
 
-    <br />
-    <div class="login-msg" style="text-align:left; font-weight:bold">
-        <span>@AppointmentMessage</span>
-    </div>
+        </RadzenTabsItem>
 
-</div>
+        <RadzenTabsItem Text="Discounts">
+
+            <h2>Add New Discount</h2>
+
+            <h2>Edit </h2>
+
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
 
 @code {
 
@@ -66,6 +101,8 @@
 
     public StoreData store { get; set; }
     private List<string> registeredUsers;
+    private Dictionary<string, string> staff;
+    private List<KeyValuePair<string, string>> staffList;
     private string[] roles = new string[] { "Manager", "Owner" };
     private string[] options = new string[] { "Promote", "Demote" };
     private string loggedInUser;
@@ -75,11 +112,14 @@
     private string selectedRole;
     private string selectedOption;
 
+
     protected async override Task OnInitializedAsync()
     {
         GetAllRegisteredUsersResponse response = await service.GetAllActiveUsers();
         registeredUsers = response.Users;
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        staff = await service.GetStaff(StoreId);
+        staffList = staff.ToList();
     }
 
     private async void ApplyAction()

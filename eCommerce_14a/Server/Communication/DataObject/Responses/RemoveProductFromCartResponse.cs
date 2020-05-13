@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class RemoveProductFromCartResponse : Message
+    public class RemoveProductFromCartResponse : Message
     {
         public bool Success { get; set; }
         public string Error { get; set; }

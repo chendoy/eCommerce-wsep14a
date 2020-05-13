@@ -1,18 +1,32 @@
 ﻿@page "/index"
 
-    <AuthorizeView>
-        <Authorized>
-            <h1>Welcome back, @context.User.Identity.Name!</h1>
-        </Authorized>
-        <NotAuthorized>
-            <h1>Hello, Guest!</h1>
-        </NotAuthorized>
-        
-    </AuthorizeView>
+<AuthorizeView>
+    <Authorized>
+        <h1>Welcome back, @context.User.Identity.Name!</h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Hello, Guest!</h1>
+    </NotAuthorized>
+
+</AuthorizeView>
 
 
 Welcome to 14A's eCommerce app.
 
-    <SurveyPrompt Title="How is our store working for you?" />
+<br /><br /><br /><br /><br />
+<h3>&nbsp &nbsp &nbsp Open a New Store</h3>
+<RadzenButton Click="@(() => Click())" ButtonStyle="ButtonStyle.Info" Style="margin-bottom: 200px; width: 200px; background-color: Transparent">
+    <RadzenImage Path="https://www.flaticon.com/premium-icon/icons/svg/697/697476.svg" Style="width:100%" />
+</RadzenButton>
+<br />
 
+<SurveyPrompt Title="How is our store working for you?" />
+
+
+@code {
+    private void Click()
+    {
+        NavigationManager.NavigateTo("/NewStore");
+    }
+}
 

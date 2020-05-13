@@ -1,0 +1,62 @@
+﻿@page "/PurchaseHistory"
+<AuthorizeView>
+    <Authorized>
+        <h3>Your Purchase History</h3>
+        <MyMessage Msg="@Msg" IsError="true" />
+        @if (PurchaseHistory == null || PurchaseHistory.Count == 0)
+        {
+            <p>Your history is empty</p>
+        }
+        else
+        {
+        <table class="table">
+
+            @foreach (PurchaseData purchase in PurchaseHistory)
+            {
+                <tr><td>
+                <div class="col-12 row">
+                    <div class="col-12 row" style="text-align:right; font:bold 16px">Time @purchase.Cart.baskets[0].PurchaseTime Total Price: @GetPrice(purchase.Cart)&#8362 </div>
+                </div>
+                <table class="table">
+                    @foreach (PurchaseBasketData basketData in @purchase.Cart.baskets)
+                    {
+                        <tr><td>
+                            <PurchaseBasket purchaseBasket="@basketData" Modifiable="false"></PurchaseBasket>
+                        </td></tr>
+                    }
+                </table>
+                </td></tr>
+            }
+        </table>
+        
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    public List<PurchaseData> PurchaseHistory { get; set; }
+    public string Msg { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        BuyerHistoryRequest request = new BuyerHistoryRequest(username);
+        HistoryResponse response = await service.GetResponse<BuyerHistoryRequest, HistoryResponse>(request);
+        PurchaseHistory = response.HistoryItems;
+        Msg = response.Error;
+    }
+
+    private double GetPrice(CartData cart)
+    {
+        double price = 0;
+        if (cart != null && cart.baskets.Count != 0)
+        {
+            foreach (PurchaseBasketData purchaseBasket in cart.baskets)
+            {
+                price += purchaseBasket.Price;
+            }
+        }
+
+        return price;
+    }
+}

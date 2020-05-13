@@ -1,0 +1,44 @@
+﻿@page "/NewStore"
+
+<h3>Let's open your new store...</h3>
+
+<RadzenFieldset Text="Store Info">
+    <div class="row">
+        <div class="align-items-center d-flex col-md-2">
+            <RadzenLabel Text="Store #" />
+        </div>
+        <div class="col-md-10">
+            <RadzenTextBox Placeholder="123" style="width: 45.3125px;" Name="StoreId" />
+            <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="add_location" style="margin-left: 11px; width: 166.046875px;" Text="Locate store">
+            </RadzenButton>
+        </div>
+    </div>
+    <div class="row">
+        <div class="align-items-center d-flex col-md-2">
+            <RadzenLabel Text="username" />
+        </div>
+        <div class="col-md-10">
+            <RadzenTextBox Disabled="true" Placeholder="The warehouse" style="width: 100%;" Name="Warehouse" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="align-items-center d-flex col-md-2">
+            <RadzenLabel Text="Region" />
+        </div>
+        <div class="col-md-3">
+            <RadzenTextBox Disabled="true" Placeholder="West" style="width: 100%;" Name="Region" />
+        </div>
+        <div class="align-items-center d-flex col-md-2">
+            <RadzenLabel Text="System" />
+        </div>
+        <div class="col-md-5">
+            <RadzenTextBox Disabled="true" Placeholder="US" style="width: 100%;" Name="System" />
+        </div>
+    </div>
+</RadzenFieldset>
+
+@code {
+
+
+
+}
