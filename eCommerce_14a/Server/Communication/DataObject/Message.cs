@@ -34,6 +34,11 @@ namespace Server.Communication.DataObject
         STORES_OWNED_BY,
         ADD_PRODUCT_TO_CART,
         CHANGE_PRODUCT_AMOUNT_CART,
+        GET_STAFF_OF_STORE,
+        GET_AVAILABLE_DISCOUNTS,
+        ADD_PRODUCT_TO_STORE,
+        REMOVE_PRODUCT_FROM_STORE,
+        UPDATE_PRODUCT_OF_STORE,
         NOTIFICATION,
         RESPONSE,
         ERROR
