@@ -92,7 +92,7 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
-            Dictionary<int, int[]> permissions = null;
+            Dictionary<int, int[]> permissions = new Dictionary<int, int[]>();
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (ans.Item1)
