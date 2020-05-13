@@ -1,5 +1,6 @@
 ﻿@page "/index"
 
+
 <AuthorizeView>
     <Authorized>
         <h1>Welcome back, @context.User.Identity.Name!</h1>
@@ -12,6 +13,12 @@
 
 
 Welcome to 14A's eCommerce app.
+
+<AuthorizeView Roles="Admin" Context="Admin">
+    <Authorized>
+        <AdminDashboard />
+    </Authorized>
+</AuthorizeView>
 
 
 <SurveyPrompt Title="How is our store working for you?" />
