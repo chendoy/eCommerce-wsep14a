@@ -111,6 +111,41 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             DiscountPolicyData discountPolicyfinal = new CompoundDiscountPolicyData(CommonStr.DiscountMergeTypes.AND, discountAllChildren);
             UpdateDiscountPolicy(2, "user5", discountPolicyfinal);
         }
+
+        public Dictionary<int, string> GetAvilableRawDiscount()
+        {
+            Dictionary<int, string> avilableDiscount = new Dictionary<int, string>();
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NoDiscount, "no discount at all");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above1Unit, "buy more Than 1 unit and get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above2Units, "buy more than 2 units and get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAbove100, "if product price above 100, get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAbove200, "if product price above 200, get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, "if basket price above 1000, get discount");
+            return avilableDiscount;
+        }
+
+        public Dictionary<int, string> GetAvilableRawPurchasePolicy()
+        {
+            Dictionary<int, string> avilablePurchasePolicy = new Dictionary<int, string>();
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.allwaysTrue, "No Condition");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.GuestCantBuy, "Guest can't Buy");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, "Max 10 product per basket!");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.singleOfProductType, "you can buy only single unit of product type");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, "in order to buy store must be active");
+            return avilablePurchasePolicy;
+        }
+
+        public  Dictionary<string, string> GetStaffStroe(int storeID)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (!stores.ContainsKey(storeID))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Dictionary<string, string>();
+            }
+            return stores[storeID].getStaff();
+        }
+
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

@@ -186,5 +186,28 @@ namespace Server.Communication
             return new PurchasePolicyData(); // not reached
 
         }
+
+        public Tuple<Dictionary<StoreData, List<PurchaseBasketData>>, string> ToStoresHistoryResponse(Tuple<Dictionary<Store, List<PurchaseBasket>>, string> storesHistory) 
+        {
+            Dictionary<StoreData, List<PurchaseBasketData>> retDict = new Dictionary<StoreData, List<PurchaseBasketData>>();
+            foreach (KeyValuePair<Store, List<PurchaseBasket>> entry in storesHistory.Item1)
+            {
+                StoreData retStoreData = ToStoreData(entry.Key);
+                List<PurchaseBasketData> retList = ToPurchaseBasketDataList(entry.Value);
+                retDict.Add(retStoreData, retList);
+            }
+            return new Tuple<Dictionary<StoreData, List<PurchaseBasketData>>, string>(retDict, storesHistory.Item2);
+        }
+
+        public Tuple<Dictionary<string, List<PurchaseData>>, string> ToUsersHistoryResponse(Tuple<Dictionary<string, List<Purchase>>, string> usersHistory) 
+        {
+            Dictionary<string, List<PurchaseData>> retDict = new Dictionary<string, List<PurchaseData>>();
+            foreach (KeyValuePair<string, List<Purchase>> entry in usersHistory.Item1)
+            {
+                List<PurchaseData> retList = ToPurchaseDataList(entry.Value);
+                retDict.Add(entry.Key, retList);
+            }
+            return new Tuple<Dictionary<string, List<PurchaseData>>, string>(retDict, usersHistory.Item2);
+        }
     }
 }

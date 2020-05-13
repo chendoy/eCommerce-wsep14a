@@ -15,6 +15,7 @@ using Server.Communication;
 using Server.Communication.DataObject;
 using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
+using Server.Communication.DataObject.ThinObjects;
 using Server.UserComponent.Communication;
 using SuperWebSocket;
 
@@ -222,7 +223,33 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleRemoveProductFromStore(string json)
+        public byte[] HandleGetAllUsersHistory(string json)
+        {
+            GetAllUsersHistoryRequest res = JsonConvert.DeserializeObject<GetAllUsersHistoryRequest>(json);
+            Tuple<Dictionary<string, List<Purchase>>, string> ans = purchService.GetAllUsersHistory(res.Admin);
+            Tuple<Dictionary<string, List<PurchaseData>>, string> convRes = converter.ToUsersHistoryResponse(ans);
+            string jsonAns = Seralize(new GetAllUsersHistoryResponse(convRes.Item1, convRes.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleGetAllStoresHistory(string json)
+        {
+            GetAllStoresHistoryRequest res = JsonConvert.DeserializeObject<GetAllStoresHistoryRequest>(json);
+            Tuple<Dictionary<Store, List<PurchaseBasket>>, string> ans = purchService.GetAllStoresHistory(res.Admin);
+            Tuple<Dictionary<StoreData, List<PurchaseBasketData>>, string> convRes = converter.ToStoresHistoryResponse(ans);
+            string jsonAns = Seralize(new GetAllStoresHistoryResponse(convRes.Item1, convRes.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleGetStoreHistory(string json)
+        {
+            GetStoreHistoryRequest res = JsonConvert.DeserializeObject<GetStoreHistoryRequest>(json);
+            Tuple<List<PurchaseBasket>, string> ans = purchService.GetStoreHistory(res.Username, res.StoreId);
+            string jsonAns = Seralize(new GetStoreHistoryResponse(converter.ToPurchaseBasketDataList(ans.Item1), ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleRemoveProductFromStore(string json)
         {
             RemoveProductFromStoreRequest res = JsonConvert.DeserializeObject<RemoveProductFromStoreRequest>(json);
             Tuple<bool, string> ans = storeService.removeProduct(res.storeId, res.userName, res.productId);
@@ -230,7 +257,7 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleChangeProductAmountInCart(string json)
+        public byte[] HandleChangeProductAmountInCart(string json)
         {
             ChangeProductAmountInCartRequest res = JsonConvert.DeserializeObject<ChangeProductAmountInCartRequest>(json);
             Tuple<bool, string> ans = purchService.ChangeProductAmoountInShoppingCart(res.User, res.Store, res.Product, res.Amount);
@@ -238,7 +265,7 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
-        internal byte[] HandleUpdateProductOfStore(string json)
+        public byte[] HandleUpdateProductOfStore(string json)
         {
             UpdateProductOfStoreRequest res = JsonConvert.DeserializeObject<UpdateProductOfStoreRequest>(json);
             Tuple<bool, string> ans = storeService.UpdateProduct(res.UserName, res.StoreId, res.ProductId, res.PDetails,

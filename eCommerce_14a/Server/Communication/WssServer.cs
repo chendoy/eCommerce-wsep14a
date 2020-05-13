@@ -237,6 +237,22 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.STORE_HISTORY:
+                    response = handler.HandleGetStoreHistory(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.ALL_STORE_HISTORY:
+                    response = handler.HandleGetAllStoresHistory(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+
+                case Opcode.ALL_BUYERS_HISTORY:
+                    response = handler.HandleGetAllUsersHistory(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
 
                 default:
                     break;
