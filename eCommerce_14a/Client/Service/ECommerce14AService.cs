@@ -160,5 +160,14 @@ namespace Client.Service
             GetStaffOfStoreResponse response = await comm.Get<GetStaffOfStoreResponse>();
             return response.Staff;
         }
+
+        async public Task<OpenStoreResponse> OpenNewStore(string username, string storename)
+        {
+            //OpenStoreRequest request = new OpenStoreRequest(username, storename);
+            //comm.SendRequest(request);
+            //OpenStoreResponse response = await comm.Get<OpenStoreResponse>();
+            //return response;
+            return new OpenStoreResponse(true, "", 999);
+        }
     }
 }

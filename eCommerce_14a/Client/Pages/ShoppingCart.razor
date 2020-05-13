@@ -14,7 +14,7 @@
             @foreach (PurchaseBasketData basketData in Cart.baskets)
             {
                 
-                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true" OnProductChanged="@UpdateCart"></PurchaseBasket>
+                <PurchaseBasket purchaseBasket="@basketData" Modifiable="true" OnProductChanged="@UpdateCart" ShowUser="false"></PurchaseBasket>
  
             }
 

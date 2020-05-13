@@ -4,6 +4,12 @@
     <div class="col-sm-2">
         <label>Price: @purchaseBasket.Price&#8362</label>
     </div>
+    @if (ShowUser)
+    {
+        <div class="col-sm-2">
+            <label>Username: @purchaseBasket.Username</label>
+        </div>
+    }
     <div class="col-sm-4">
         <button class="form-control col-1 btn btn-primary" style="display: flex; align-items: center;justify-content: center; height:24px; padding: 1px 1px;" @onclick="@(e => Collapse = !Collapse)">@( Collapse ? "+" : "-")</button>
     </div>
@@ -59,11 +65,12 @@
     [Parameter]
     public bool Modifiable { get; set; }
     [Parameter]
-    public bool Collapse { get; set; }
-    [Parameter]
     public EventCallback OnProductChanged { get; set; }
+    [Parameter]
+    public bool ShowUser { get; set; }
 
     public bool EditProductVisible { get; set; }
+    public bool Collapse { get; set; }
 
     public int StoreId
     {

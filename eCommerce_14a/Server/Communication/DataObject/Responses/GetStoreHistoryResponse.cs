@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetStoreHistoryResponse : Message
+    public class GetStoreHistoryResponse : Message
     {
         public List<PurchaseBasketData> Baskets { get; set; }
 
