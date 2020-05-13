@@ -163,11 +163,10 @@ namespace Client.Service
 
         async public Task<OpenStoreResponse> OpenNewStore(string username, string storename)
         {
-            //OpenStoreRequest request = new OpenStoreRequest(username, storename);
-            //comm.SendRequest(request);
-            //OpenStoreResponse response = await comm.Get<OpenStoreResponse>();
-            //return response;
-            return new OpenStoreResponse(true, "", 999);
+            OpenStoreRequest request = new OpenStoreRequest(username, storename);
+            comm.SendRequest(request);
+            OpenStoreResponse response = await comm.Get<OpenStoreResponse>();
+            return response;
         }
     }
 }

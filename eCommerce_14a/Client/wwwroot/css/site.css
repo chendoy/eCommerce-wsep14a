@@ -231,6 +231,18 @@ app {
     color: red;
 }
 
+.error-msg {
+    color: red;
+}
+
+.success-msg {
+    color: green;
+}
+
+.login-msg {
+    color: red;
+}
+
 .sidebar .nav-mode {
     color: white;
     position: absolute;
