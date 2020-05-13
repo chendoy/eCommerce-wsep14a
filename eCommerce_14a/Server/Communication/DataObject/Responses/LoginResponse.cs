@@ -12,11 +12,14 @@ namespace Server.Communication.DataObject
         public string Error { get; set; }
         public Dictionary<int, int[]> Permissions { get; set; }
 
-        public LoginResponse(bool success, string error, Dictionary<int, int[]> permissions) : base(Opcode.RESPONSE)
+        public bool IsAdmin { get; set; }
+
+        public LoginResponse(bool success, string error, Dictionary<int, int[]> permissions, bool isAdmin = false) : base(Opcode.RESPONSE)
         {
             this.Success = success;
             this.Error = error;
             this.Permissions = permissions;
+            this.IsAdmin = isAdmin;
         }
 
         public LoginResponse() : base(){  }

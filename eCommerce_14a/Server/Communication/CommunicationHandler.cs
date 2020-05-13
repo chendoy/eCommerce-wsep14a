@@ -92,8 +92,11 @@ namespace eCommerce_14a.Communication
 
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
+            bool isAdmin = false;
             Dictionary<int, int[]> permissions = new Dictionary<int, int[]>();
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            if (res.Username.Equals("Admin"))
+                isAdmin = true;
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (ans.Item1)
             {
@@ -101,7 +104,7 @@ namespace eCommerce_14a.Communication
                 permissions = userService.GetUserPermissions(res.Username);
 
             }
-            string jsonAns = Seralize(new LoginResponse(ans.Item1, ans.Item2, permissions));
+            string jsonAns = Seralize(new LoginResponse(ans.Item1, ans.Item2, permissions, isAdmin));
             return security.Encrypt(jsonAns);
         }
 
@@ -342,7 +345,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleOpenStore(string json)
         {
             OpenStoreRequest res = JsonConvert.DeserializeObject<OpenStoreRequest>(json);
-            Tuple<int, string> ans = storeService.createStore(res.Username);
+            Tuple<int, string> ans = storeService.createStore(res.Username, res.StoreName);
             bool success = ans.Item1 == -1 ? false : true;
             string jsonAns = Seralize(new OpenStoreResponse(success,ans.Item2, ans.Item1));
             return security.Encrypt(jsonAns);
