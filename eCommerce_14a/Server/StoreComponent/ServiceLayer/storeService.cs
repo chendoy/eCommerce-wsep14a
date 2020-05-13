@@ -113,17 +113,25 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             storeManagment.cleanup();
         }
 
-        //TODO: BY LIAV AND SUNDY
+
         public Dictionary<string, string> GetStaffOfStore(int storeID) 
         {
-            return new Dictionary<string, string>();
+            return storeManagment.GetStaffStroe(storeID);
+            
         }
 
-        //TODO: BY LIAV AND SUNDY
+
         public Dictionary<int, string> GetAvailableRawDiscount() 
         {
-            return new Dictionary<int, string>();
+            return storeManagment.GetAvilableRawDiscount();
         }
+
+
+        public Dictionary<int, string> GetAvailableRawPurchasePolicy()
+        {
+            return storeManagment.GetAvilableRawPurchasePolicy();
+        }
+
 
 
 

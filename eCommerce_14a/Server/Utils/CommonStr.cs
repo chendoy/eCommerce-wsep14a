@@ -7,6 +7,12 @@
         {
             public static string UnKnownErr = "UnKnown Error Occured";
         }
+
+        public static class StoreRoles
+        {
+            public static string Owner = "owner";
+            public static string Manager = "manager";
+        }
         public static class SearcherKeys
         {
             public static string ProductKeyWord = "SearchByProductKeyWord";

@@ -149,6 +149,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return inventory.IncreaseProductAmount(productId, amount);
         }
 
+        public Dictionary<string, string> getStaff()
+        {
+            Dictionary<string, string> staff = new Dictionary<string, string>();
+            foreach(User owner in owners)
+            {
+                staff.Add(owner.getUserName(), CommonStr.StoreRoles.Owner);
+            }
+            foreach(User manager in managers)
+            {
+                staff.Add(manager.getUserName(), CommonStr.StoreRoles.Manager);
+            }
+
+            return staff;
+        }
+
         public Tuple<bool, string> decrasePrdouctAmount(User user, int productId, int amount)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
