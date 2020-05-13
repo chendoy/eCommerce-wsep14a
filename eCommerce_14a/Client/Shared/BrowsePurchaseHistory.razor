@@ -34,13 +34,19 @@
 </AuthorizeView>
 
 @code {
+    [Parameter]
+    public string Username { get; set; }
     public List<PurchaseData> PurchaseHistory { get; set; }
     public string Msg { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
-        BuyerHistoryRequest request = new BuyerHistoryRequest(username);
+        if (String.IsNullOrWhiteSpace(Username))
+        {
+            Username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        }
+
+        BuyerHistoryRequest request = new BuyerHistoryRequest(Username);
         HistoryResponse response = await service.GetResponse<BuyerHistoryRequest, HistoryResponse>(request);
         PurchaseHistory = response.HistoryItems;
         Msg = response.Error;
