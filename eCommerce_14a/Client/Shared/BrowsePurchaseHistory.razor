@@ -8,28 +8,27 @@
         }
         else
         {
-        <table class="table">
+
 
             @foreach (PurchaseData purchase in PurchaseHistory)
             {
-                <tr><td>
-                <div class="col-12 row">
-                    <div class="col-12 row" style="text-align:right; font:bold 16px">Time @purchase.Cart.baskets[0].PurchaseTime Total Price: @GetPrice(purchase.Cart)&#8362 </div>
-                </div>
+            <RadzenFieldset Text="@GetTimeString(purchase.Cart)">
                 <table class="table">
                     @foreach (PurchaseBasketData basketData in @purchase.Cart.baskets)
                     {
-                        <tr><td>
-                            <PurchaseBasket purchaseBasket="@basketData" Modifiable="false" ShowUser="false"></PurchaseBasket>
-                        </td></tr>
+                        <tr>
+                            <td>
+                                <PurchaseBasket purchaseBasket="@basketData" Modifiable="false" ShowUser="false"></PurchaseBasket>
+                            </td>
+                        </tr>
                     }
                 </table>
-                </td></tr>
+            </RadzenFieldset>
             }
-        </table>
-        
+
+
         }
-    </Authorized>
+            </Authorized>
 </AuthorizeView>
 
 @code {
@@ -63,5 +62,10 @@
         }
 
         return price;
+    }
+
+    private string GetTimeString(CartData cart)
+    {
+        return "Purchase Time: " + cart.baskets[0].PurchaseTime.ToString() + "Total Price: " + GetPrice(cart) + "₪";
     }
 }
