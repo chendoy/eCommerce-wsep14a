@@ -9,10 +9,12 @@ namespace Server.Communication.DataObject
     public class OpenStoreRequest : Message
     {
         public string Username { get; set; }
+        public string StoreName { get; set; }
 
-        public OpenStoreRequest(string username) : base(Opcode.OPEN_STORE)
+        public OpenStoreRequest(string username, string storename = "Store") : base(Opcode.OPEN_STORE)
         {
             Username = username;
+            StoreName = storename;
         }
     }
 }

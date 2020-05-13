@@ -26,12 +26,18 @@
                         <span class="oi oi-basket" aria-hidden="true"></span> Shopping Cart
                     </NavLink>
                 </li>
+               
                 <AuthorizeView Roles="User" Context="User">
                     <Authorized>
 
                         <li class="nav-item px-3">
                             <NavLink class="nav-link" href="PurchaseHistory">
                                 <span class="oi oi-calculator" aria-hidden="true"></span> Your Purchase History
+                            </NavLink>
+                        </li>
+                        <li class="nav-item px-3">
+                            <NavLink class="nav-link" href="NewStore">
+                                <span class="oi oi-basket" aria-hidden="true"></span> Open Store
                             </NavLink>
                         </li>
                     </Authorized>
@@ -52,10 +58,10 @@
                     <Authorized>
                         <p>You are an admin</p>
                         @*<li class="nav-item px-3">
-                            <NavLink class="nav-link" href="ManageStores">
-                                <span class="oi oi-list-rich" aria-hidden="true"></span> Manage Stores
-                            </NavLink>
-                        </li>*@
+                    <NavLink class="nav-link" href="ManageStores">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Manage Stores
+                    </NavLink>
+                </li>*@
                     </Authorized>
                 </AuthorizeView>
             </Authorized>

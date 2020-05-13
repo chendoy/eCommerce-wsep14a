@@ -48,7 +48,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             AppointStoreOwner("user5", "user1", 2);
             int[] perms = { 1, 1, 1, 1, 1 };
             ChangePermissions("user5", "user3", 2, perms);
-
         }
         //Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
         //Owner appoints addto to be Store Owner.
