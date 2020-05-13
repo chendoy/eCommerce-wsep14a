@@ -1,14 +1,10 @@
-﻿<MyMessage Msg="@Msg" IsError="true"/>
-@if (Baskets == null || Baskets.Count == 0)
+﻿<MyMessage Msg="@Msg" IsError="true" />
+@if(!(Baskets == null || Baskets.Count == 0))
 {
-    <p>No one bought from this store</p>
+@foreach (var basket in Baskets)
+{
+    <PurchaseBasket purchaseBasket="@basket" Modifiable="false" ShowUser="true" />
 }
-else
-{
-    @foreach (var basket in Baskets)
-    {
-        <PurchaseBasket purchaseBasket="@basket" Modifiable="false" ShowUser="true" />
-    }
 }
 
 

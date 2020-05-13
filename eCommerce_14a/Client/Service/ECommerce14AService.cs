@@ -37,22 +37,13 @@ namespace Client.Service
             return getStoresResponse.Stores;
         }
 
-        //public Get GetStoreById(int storeId)
-        //{
-        //    comm.SendRequest("GetStoreById");
-        //    //List<Store> stores = (List<Store>)comm.Get();
-        //    string json = System.IO.File.ReadAllText("wwwroot/resources/stores.json");
-        //    stores = JsonSerializer.Deserialize<List<Store>>(json);
-        //    foreach (Store store in stores)
-        //    {
-        //        if (store.StoreId == storeId)
-        //        {
-        //            return store;
-        //        }
-        //    }
-
-        //    return null;
-        //}
+        async public Task<InventoryData> GetStoresInventory(int storeId)
+        {
+            GetStoreByIdRequest request = new GetStoreByIdRequest(storeId);
+            comm.SendRequest(request);
+            GetStoreByIdResponse response = await comm.Get<GetStoreByIdResponse>();
+            return response.Store.Products;
+        }
 
         async public Task<GetUsersCartResponse> GetCart(string username)
         {

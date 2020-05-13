@@ -1,5 +1,6 @@
 ﻿@page "/ManageStore/{storeid:int}"
 @using Server
+@using Microsoft.EntityFrameworkCore
 
 <h1>Store Dashboard</h1>
 
@@ -53,9 +54,9 @@
                     <InitialTip>User</InitialTip>
                     <ChildContent>
                         @foreach (var user in registeredUsers)
-            {
-                        <DropdownListItem Item="@user">@user</DropdownListItem>
-            }
+                        {
+                            <DropdownListItem Item="@user">@user</DropdownListItem>
+                        }
                     </ChildContent>
                 </Dropdown>
 
@@ -65,9 +66,9 @@
                     <InitialTip>New Role</InitialTip>
                     <ChildContent>
                         @foreach (var role in roles)
-            {
-                        <DropdownListItem Item="@role">@role</DropdownListItem>
-            }
+                        {
+                            <DropdownListItem Item="@role">@role</DropdownListItem>
+                        }
                     </ChildContent>
                 </Dropdown>
 
@@ -84,12 +85,48 @@
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Discounts">
-
             <h2>Add New Discount</h2>
-
             <h2>Edit </h2>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Purchases">
+            <StoreHistory Username="@loggedInUser" StoreId="StoreId" />
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Products">
+
+            <RadzenGrid @ref="productsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                        Data="@inventory" TItem="Tuple<ProductData, int>">
+                <Columns>
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.ProductId" Title="Product ID" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Name" Title="Product Name" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price" />
+                </Columns>
+
+            </RadzenGrid>
+
+            <br /><br />
+
+            <h2>Choose Product</h2>
+            <RadzenDropDown AllowClear="true" TValue="string"
+                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                            Data="@inventory" TextProperty="Item1.Name" ValueProperty="Item1.Name" Style="margin-bottom: 20px" Change="@(args => SelectProduct(args))" />
+            <br />
+
+            <RadzenNumeric TValue="int" Style="margin-bottom: 20px" Change="@(args => ChangeAmount(args))" />
+
+            <br />
+
+            <RadzenButton Click="@(() => DeleteProduct())" Text="Delete All" Style="margin-bottom: 20px; width: 150px" />
+
+            <RadzenButton Click="@(() => UpdateAmount())" Text="Update Amount" Style="margin-bottom: 20px; width: 150px" />
+
 
         </RadzenTabsItem>
+
+
     </Tabs>
 </RadzenTabs>
 
@@ -107,6 +144,9 @@
     private string[] options = new string[] { "Promote", "Demote" };
     private string loggedInUser;
     public string AppointmentMessage { get; set; }
+    private List<Tuple<ProductData, int>> inventory { get; set; }
+    private string selectedProduct;
+    private int newAmount;
 
     private string selectedUser;
     private string selectedRole;
@@ -115,11 +155,35 @@
 
     protected async override Task OnInitializedAsync()
     {
+        base.OnInitialized();
         GetAllRegisteredUsersResponse response = await service.GetAllActiveUsers();
         registeredUsers = response.Users;
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
+        InventoryData invData = await service.GetStoresInventory(StoreId);
+        inventory = invData.invProducts;
+        //allProducts = (List<string>)inventory.Select(x => x.Item1.Name);
+    }
+
+    private void SelectProduct(object name)
+    {
+        selectedProduct = (string)name;
+    }
+
+    private void DeleteProduct()
+    {
+
+    }
+
+    private void ChangeAmount(object newAnoumt)
+    {
+        newAmount = (int)newAnoumt;
+    }
+
+    private void UpdateAmount()
+    {
+
     }
 
     private async void ApplyAction()
@@ -164,4 +228,10 @@
         selectedRole = selection;
     }
 
+    RadzenGrid<Tuple<ProductData, int>> productsGrid;
+
+    void EditRow()
+    {
+
+    }
 }
