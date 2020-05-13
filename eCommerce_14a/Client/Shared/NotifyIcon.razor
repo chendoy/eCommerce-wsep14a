@@ -1,7 +1,10 @@
 ﻿@inject Client.Service.ECommerce14AService service
 @implements IDisposable
 
-<a href="/notifications">You have @NotificationCount notifications</a>
+@if (NotificationCount > 0)
+{
+    <a href="/notifications">You have @NotificationCount notifications</a>
+}
 
 
 @code {

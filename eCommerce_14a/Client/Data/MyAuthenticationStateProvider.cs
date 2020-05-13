@@ -47,17 +47,30 @@ namespace Client.Data
 
             await _sessionStorageService.SetItemAsync("user", user);
             ////await _sessionStorageService.SetItemAsync("permissions", permissions);
-            var identity = new ClaimsIdentity(new[]
+            ClaimsIdentity identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, "User")
-                }, "apiauth_type");
+                }, "apiauth_type"); ;
 
-                var userClaim = new ClaimsPrincipal(identity);
 
-                NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
-                return true;
-            
+            //if (permissions.Count > 0)
+            //{
+                identity.AddClaim(new Claim(ClaimTypes.Role, "Seller"));
+            //}
+
+            //if (isAdmin)
+            //{
+                identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+            //}
+
+
+
+            var userClaim = new ClaimsPrincipal(identity);
+
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
+            return true;
+
         }
 
         public bool MarkUserAsAGuest(UserData user)
