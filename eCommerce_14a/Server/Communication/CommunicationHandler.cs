@@ -95,11 +95,19 @@ namespace eCommerce_14a.Communication
             bool isAdmin = false;
             Dictionary<int, int[]> permissions = new Dictionary<int, int[]>();
             LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
-            usersSessions.Add(res.Username, session);
-            if (res.Username.Equals("Admin"))
+            if (res.Username == null || res.Password == null)
+            {
+                string jsonAns2 = Seralize(new LoginResponse(false, "Blank details, please try again", new Dictionary<int, int[]>()));
+                return security.Encrypt(jsonAns2);
+            }
+            if (!usersSessions.ContainsKey(res.Username))
+            {
+                usersSessions.Add(res.Username, session);
+            }
+            if (res.Username == "Admin")
                 isAdmin = true;
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
-            if (!ans.Item1)
+            if (!ans.Item1 && usersSessions.ContainsKey(res.Username))
             {
                 usersSessions.Remove(res.Username);
             }

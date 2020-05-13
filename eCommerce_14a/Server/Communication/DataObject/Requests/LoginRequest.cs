@@ -12,8 +12,13 @@ namespace Server.Communication.DataObject
         public string Password { get; set; }
         
 
-        public LoginRequest(string username, string password) : base(Opcode.LOGIN)
+        public LoginRequest(string username = "", string password = "") : base(Opcode.LOGIN)
         {
+            if (username == null || password == null)
+            {
+                Username = "";
+                Password = "";
+            }
             Username = username;
             Password = password;
         }
