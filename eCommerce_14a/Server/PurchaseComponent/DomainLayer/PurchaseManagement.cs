@@ -233,12 +233,17 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<List<Purchase>, string>(res, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
             }
-
+            
             User userObject = userManager.GetAtiveUser(user);
             if (userObject is null)
             {
-                return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                if (userManager.GetAtiveUser("Admin") is null)
+                {
+                    return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                }
             }
+            
+           
             if (!purchasesHistoryByUser.ContainsKey(user))
             {
                 return new Tuple<List<Purchase>, string>(res, "");

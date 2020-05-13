@@ -14,8 +14,8 @@
                     {
                         @foreach (var purchase in PurchasesByStore)
                         {
-                            <RadzenPanel AllowCollapse="true" Text="@purchase.Key.StoreName" >
-                                <StoreHistory StoreId="@purchase.Key.StoreId" Username="@Username"/>
+                            <RadzenPanel AllowCollapse="true" Text="@purchase.StoreName" >
+                                <StoreHistory StoreId="@purchase.StoreId" Username="@Username"/>
                             </RadzenPanel>
                         }
                     }
@@ -29,8 +29,8 @@
                     {
                         @foreach (var purchase in PurchasesByUser)
                         {
-                            <RadzenPanel AllowCollapse="true" Text="@purchase.Key">
-                                <BrowsePurchaseHistory Username="@purchase.Key"/>
+                            <RadzenPanel AllowCollapse="true" Text="@purchase">
+                                <BrowsePurchaseHistory Username="@purchase"/>
                             </RadzenPanel>
                         }
                     }
@@ -42,8 +42,8 @@
 
 
 @code {
-    public Dictionary<StoreData, List<PurchaseBasketData>> PurchasesByStore { get; set; }
-    public Dictionary<string, List<PurchaseData>> PurchasesByUser { get; set; }
+    public List<StoreData> PurchasesByStore { get; set; }
+    public List<string> PurchasesByUser { get; set; }
     public string Username { get; set; }
     public string Error { get; set; }
 

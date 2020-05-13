@@ -1,7 +1,6 @@
 ﻿@page "/PurchaseHistory"
 <AuthorizeView>
     <Authorized>
-        <h3>Your Purchase History</h3>
         <MyMessage Msg="@Msg" IsError="true" />
         @if (PurchaseHistory == null || PurchaseHistory.Count == 0)
         {
