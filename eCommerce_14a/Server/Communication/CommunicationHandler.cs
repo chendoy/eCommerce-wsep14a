@@ -342,7 +342,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleOpenStore(string json)
         {
             OpenStoreRequest res = JsonConvert.DeserializeObject<OpenStoreRequest>(json);
-            Tuple<int, string> ans = storeService.createStore(res.Username);
+            Tuple<int, string> ans = storeService.createStore(res.Username, res.StoreName);
             bool success = ans.Item1 == -1 ? false : true;
             string jsonAns = Seralize(new OpenStoreResponse(success,ans.Item2, ans.Item1));
             return security.Encrypt(jsonAns);
