@@ -53,9 +53,12 @@
     <Compile Include="Communication\DataObject\Requests\GetAllRegisteredUsersRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteOwnerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllStoresHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllUsersHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAvailableRawDiscountsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginAsGuestRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
@@ -72,8 +75,11 @@
     <Compile Include="Communication\DataObject\Requests\UpdateDiscountPolicyRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdateProductOfStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdatePurchasePolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAllStoresHistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAllUsersHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAvailableRawDiscountsResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStaffOfStoreResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />

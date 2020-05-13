@@ -39,6 +39,9 @@ namespace Server.Communication.DataObject
         ADD_PRODUCT_TO_STORE,
         REMOVE_PRODUCT_FROM_STORE,
         UPDATE_PRODUCT_OF_STORE,
+        STORE_HISTORY,
+        ALL_STORE_HISTORY,
+        ALL_BUYERS_HISTORY,
         NOTIFICATION,
         RESPONSE,
         ERROR
