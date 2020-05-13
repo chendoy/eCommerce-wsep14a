@@ -7,10 +7,11 @@
 }
 else
 {
-    <div>
-        <p>Store Id: @StoreId</p>
-        <p>Store Owner: @Store.Owners[0]</p>
-    </div>
+<div>
+    <p>Store Id: @StoreId</p>
+    <p>Store Owner(s): @ListToString(Store.Owners)</p>
+    <p>Store Manager(s): @ListToString(Store.Mangers)</p>
+</div>
     @if (Store.Products == null || Store.Products.invProducts.Count == 0)
     {
         <p><em>Sorry, there are no available products in this store right now :(</em></p>
@@ -48,8 +49,15 @@ else
     public int StoreId { get; set; }
     public StoreData Store { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        //Store = service.GetStoreById(StoreId);
+        GetStoreByIdRequest request = new GetStoreByIdRequest(StoreId);
+        GetStoreByIdResponse response = await service.GetResponse<GetStoreByIdRequest, GetStoreByIdResponse>(request);
+        Store = response.Store;
+    }
+
+    private string ListToString(List<string> list)
+    {
+        return String.Join(", ", list.ToArray());
     }
 }

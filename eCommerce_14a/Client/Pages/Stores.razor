@@ -26,7 +26,7 @@ else
             {
                 <tr>
                     <td><a href=Stores/@store.StoreId>@store.StoreName</a></td>
-                    <td>@store.Owners[0]</td>
+                    <td>@ListToString(store.Owners)</td>
                 </tr>
             }
         </tbody>
@@ -40,5 +40,10 @@ else
     async protected override void OnInitialized()
     {
         stores = await service.GetAllActiveStores();
+    }
+
+    private string ListToString(List<string> list)
+    {
+        return String.Join(", ", list.ToArray());
     }
 }
