@@ -54,10 +54,10 @@ namespace Client.Data
                 }, "apiauth_type"); ;
 
 
-            //if (permissions.Count > 0)
-            //{
+            if (permissions.Count > 0)
+            {
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Seller"));
-            //}
+            }
 
             //if (isAdmin)
             //{
