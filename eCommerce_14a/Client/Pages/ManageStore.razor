@@ -1,16 +1,37 @@
 ﻿@page "/ManageStore/{storeid:int}"
+@using Server 
+
 
 <h1>Store Dashboard</h1>
 
-<div>
-    <h2>Current store setup</h2>
 
-    <h3>Managers</h3>
 
-    <h3>Owners</h3>
+    <h3>Staff</h3>
 
-    <h3>Products</h3>
-</div>
+    @if (staffList != null)
+    {
+        @foreach (KeyValuePair<string, string> employee in staffList)
+        {
+            <RadzenCard Style="width:400px; margin-bottom: 20px; height:300px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div style="margin-top:20px">Employee:</div>
+                        <b>employee.key</b>
+                        <br />
+                        <RadzenImage Path="" Style="width:100px;" />
+                    </div>
+                    <div class="col-md-6">
+                        <div style="margin-top:20px">Role:</div>
+                        <b>>employee.value</b>
+                    </div>
+                </div>
+            </RadzenCard>
+        }
+    }
+
+
+        <h3>Products</h3>
+  
 
 <div>
     <br />
@@ -65,6 +86,8 @@
 
     public StoreData store { get; set; }
     private List<string> registeredUsers;
+    private Dictionary<string, string> staff;
+    private List<KeyValuePair<string, string>> staffList;
     private string[] roles = new string[] { "Manager", "Owner" };
     private string[] options = new string[] { "Promote", "Demote" };
     private string loggedInUser;
@@ -74,11 +97,14 @@
     private string selectedRole;
     private string selectedOption;
 
+
     protected async override Task OnInitializedAsync()
     {
         GetAllRegisteredUsersResponse response = await service.GetAllActiveUsers();
         registeredUsers = response.Users;
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        staff = await service.GetStaff(StoreId);
+        staffList = staff.ToList();
     }
 
     private async void ApplyAction()

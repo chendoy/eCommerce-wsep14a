@@ -152,5 +152,13 @@ namespace Client.Service
             DemoteManagerResponse response = await comm.Get<DemoteManagerResponse>();
             return new Tuple<bool, string> (response.Success, response.Error);
         }
+
+        async public Task<Dictionary<string, string>> GetStaff(int storeId)
+        {
+            GetStaffOfStoreRequest request = new GetStaffOfStoreRequest(storeId);
+            comm.SendRequest(request);
+            GetStaffOfStoreResponse response = await comm.Get<GetStaffOfStoreResponse>();
+            return response.Staff;
+        }
     }
 }

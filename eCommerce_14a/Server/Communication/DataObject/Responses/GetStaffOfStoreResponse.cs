@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetStaffOfStoreResponse : Message
+    public class GetStaffOfStoreResponse : Message
     {
-        Dictionary<string, string> Staff { get; set; }
+        public Dictionary<string, string> Staff { get; set; }
 
         public GetStaffOfStoreResponse(Dictionary<string, string> staff) : base(Opcode.RESPONSE)
         {
