@@ -42,7 +42,7 @@ namespace Client.Data
             return await Task.FromResult(new AuthenticationState(userAuth));
         }
 
-        public async Task<bool> MarkUserAsAuthenticateUser(UserData user, Dictionary<int, int[]> permissions)
+        public async Task<bool> MarkUserAsAuthenticateUser(UserData user, Dictionary<int, int[]> permissions, bool isAdmin)
         {
 
             await _sessionStorageService.SetItemAsync("user", user);
@@ -59,10 +59,10 @@ namespace Client.Data
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Seller"));
             }
 
-            //if (isAdmin)
-            //{
+            if (isAdmin)
+            {
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
-            //}
+            }
 
 
 

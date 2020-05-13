@@ -379,3 +379,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/eCommerce_14a/Client/Pages/BrowseSystemHistory.razor

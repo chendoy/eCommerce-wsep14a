@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetAllUsersHistoryResponse : Message
+    public class GetAllUsersHistoryResponse : Message
     {
         public Dictionary<string, List<PurchaseData>> Purchases { get; set; }
         public string Error { get; set; }

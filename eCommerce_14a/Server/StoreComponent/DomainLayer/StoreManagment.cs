@@ -440,7 +440,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return ownerShipedRemoved;
             }
             //Version 2 Addition
-            Tuple<bool,string> ans =  Publisher.Instance.Notify(storeId, new NotifyData("Store Closed by Main Owner"));
+            Tuple<bool,string> ans =  Publisher.Instance.Notify(storeId, new NotifyData("Store Closed by Main Owner - "+userName));
             if (!ans.Item1)
                 return ans;
             if (!Publisher.Instance.RemoveSubscriptionStore(storeId))

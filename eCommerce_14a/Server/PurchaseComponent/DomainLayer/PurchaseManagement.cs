@@ -206,7 +206,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 currHistory.Add(userCart.GetBaskets()[store]);
                 purchasesHistoryByStore[store] = currHistory;
                 //Version 2 Addition
-                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new NotifyData("Purchase was made from"+user));
+                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.getStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new NotifyData(message_data));
                 if (!ans.Item1)
                     return ans;
             }
@@ -222,7 +223,6 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             carts[user] = new Cart(user);
             return new Tuple<bool, string>(true, "");
         }
-
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
         public Tuple<List<Purchase>, string> GetBuyerHistory(string user)
         {

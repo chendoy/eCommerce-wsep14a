@@ -68,6 +68,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             this.unreadMessages.Remove(msg);
         }
+        public void RemoveAllPendingMessages()
+        {
+            this.unreadMessages = new LinkedList<NotifyData>();
+        }
 
         public void Logout()
         {
