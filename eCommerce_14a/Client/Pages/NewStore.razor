@@ -2,43 +2,80 @@
 
 <h3>Let's open your new store...</h3>
 
-<RadzenFieldset Text="Store Info">
+<br/>
+
+<RadzenTemplateForm Data="@store" Submit="@((Store args) => { Submit(args); })">
+
     <div class="row">
-        <div class="align-items-center d-flex col-md-2">
-            <RadzenLabel Text="Store #" />
-        </div>
-        <div class="col-md-10">
-            <RadzenTextBox Placeholder="123" style="width: 45.3125px;" Name="StoreId" />
-            <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="add_location" style="margin-left: 11px; width: 166.046875px;" Text="Locate store">
-            </RadzenButton>
+        <div class="col-md-6">
+
+            <RadzenFieldset Text="Store details">
+                <div class="row">
+
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Store name" />
+                    </div>
+
+                    <div class="col-md-8">
+                        <RadzenTextBox @bind-Value="store.storeName" style="width: 100%;" Name="Store name" />
+                    </div>
+
+                </div>
+            </RadzenFieldset>
         </div>
     </div>
-    <div class="row">
-        <div class="align-items-center d-flex col-md-2">
-            <RadzenLabel Text="username" />
-        </div>
-        <div class="col-md-10">
-            <RadzenTextBox Disabled="true" Placeholder="The warehouse" style="width: 100%;" Name="Warehouse" />
+
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 d-flex align-items-end" style="margin-top: 16px;">
+            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Save" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
         </div>
     </div>
-    <div class="row">
-        <div class="align-items-center d-flex col-md-2">
-            <RadzenLabel Text="Region" />
-        </div>
-        <div class="col-md-3">
-            <RadzenTextBox Disabled="true" Placeholder="West" style="width: 100%;" Name="Region" />
-        </div>
-        <div class="align-items-center d-flex col-md-2">
-            <RadzenLabel Text="System" />
-        </div>
-        <div class="col-md-5">
-            <RadzenTextBox Disabled="true" Placeholder="US" style="width: 100%;" Name="System" />
-        </div>
+
+    <div class="login-msg" style="text-align:left; font-weight:bold">
+        <span>@FeedbackText</span>
     </div>
-</RadzenFieldset>
-
-@code {
 
 
+</RadzenTemplateForm>
 
-}
+    @code {
+
+        private string FeedbackText { get; set; }
+        private string loggedInUser { get; set; }
+
+        public class Store
+        {
+            public string storeName { get; set; }
+        }
+
+        Store store = new Store()
+        {
+        };
+
+        async private void Submit(Store store)
+        {
+            string storename = store.storeName;
+            loggedInUser = await((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+            OpenStoreResponse response = await service.OpenNewStore(loggedInUser, storename);
+
+            if (response.Success)
+            {
+                FeedbackText = "Store opened successfully";
+            }
+
+            else
+                FeedbackText = response.Error;
+
+
+        }
+
+        void Cancel()
+        {
+           //
+        }
+
+
+    }
