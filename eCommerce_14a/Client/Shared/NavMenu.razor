@@ -56,12 +56,11 @@
 
                 <AuthorizeView Roles="Admin" Context="Admin">
                     <Authorized>
-                        <p>You are an admin</p>
-                        @*<li class="nav-item px-3">
-                    <NavLink class="nav-link" href="ManageStores">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Manage Stores
-                    </NavLink>
-                </li>*@
+                        <li class="nav-item px-3">
+                            <NavLink class="nav-link" href="BrowseSystemHistory">
+                                <span class="oi oi-badge" aria-hidden="true"></span> Browse System History
+                            </NavLink>
+                        </li>
                     </Authorized>
                 </AuthorizeView>
             </Authorized>

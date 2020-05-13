@@ -1,0 +1,31 @@
+﻿@page "/BrowseSystemHistory"
+<AuthorizeView Roles="Admin" Context="Admin">
+    <Authorized>
+        <h3>Browse System History</h3>
+        <MyMessage Msg="@Error" IsError="true"/>
+        <RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="Stores">
+
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Users">
+
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    public Dictionary<StoreData, List<PurchaseBasketData>> PurchasesByStore { get; set; }
+    public Dictionary<string, List<PurchaseData>> PurchasesByUser { get; set; }
+    public string Error { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        GetAllStoresHistoryRequest storesRequest = new GetAllStoresHistoryRequest(username);
+        GetAllStoresHistoryResponse storesResponse = await service.GetResponse<GetAllStoresHistoryRequest, GetAllStoresHistoryResponse>(storesRequest);
+    }
+}

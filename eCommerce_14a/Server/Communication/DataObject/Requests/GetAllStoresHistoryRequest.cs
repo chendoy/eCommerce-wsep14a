@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class GetAllStoresHistoryRequest : Message
+    public class GetAllStoresHistoryRequest : Message
     {
         public string Admin { get; set; }
 
