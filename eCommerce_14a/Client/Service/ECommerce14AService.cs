@@ -159,5 +159,29 @@ namespace Client.Service
             OpenStoreResponse response = await comm.Get<OpenStoreResponse>();
             return response;
         }
+
+        async public Task<SuccessFailResponse> RemoveProductFromStore(int storeId, string username, int productId)
+        {
+            RemoveProductFromStoreRequest request = new RemoveProductFromStoreRequest(storeId, username, productId);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<SuccessFailResponse> IncreaseProductAmount(int storeId, string username, int productId, int delta)
+        {
+            IncreaseProductAmountRequest request = new IncreaseProductAmountRequest(storeId, username, productId, delta);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<SuccessFailResponse> DecreaseProductAmount(int storeId, string username, int productId, int delta)
+        {
+            DecreaseProductAmountRequest request = new DecreaseProductAmountRequest(storeId, username, productId, delta);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
     }
 }

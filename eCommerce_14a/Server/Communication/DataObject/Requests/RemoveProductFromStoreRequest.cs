@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class RemoveProductFromStoreRequest : Message
+    public class RemoveProductFromStoreRequest : Message
     {
         public int storeId { get; set; }
         public string userName { get; set; }
