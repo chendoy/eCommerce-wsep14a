@@ -140,6 +140,114 @@
 
         </RadzenTabsItem>
 
+        <RadzenTabsItem Text="Add product">
+            
+            <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenFieldset Text="Product Info">
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="ID" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenNumeric @bind-Value="product.ProductId" style="width: 100%;" Name="Name" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Details" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox style="width: 100%;" Name="ProductDetails" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Price" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenNumeric @bind-Value="product.ProductPrice" style="width: 100%;" Name="Name" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Name" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox style="width: 100%;" Name="ProductName" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Category" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox style="width: 100%;" Name="ProductCategory" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Amount" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenNumeric @bind-Value="product.Pamount" style="width: 100%;" Name="Name" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Image URL" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox style="width: 100%;" Name="ImgUrl" />
+                                </div>
+                            </div>
+
+                        </RadzenFieldset>
+
+                    </div>
+                </div>
+
+
+
+                <div class="row justify-content-center">
+                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Add Product" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                    </div>
+                </div>
+            </RadzenTemplateForm>
+
+            <div class="error-msg" style="text-align:left; font-weight:bold">
+                <span>@errorMsg</span>
+            </div>
+
+            <div class="success-msg" style="text-align:left; font-weight:bold">
+                <span>@successMsg</span>
+            </div>
+
+
+        </RadzenTabsItem>
+
 
     </Tabs>
 </RadzenTabs>
@@ -179,6 +287,33 @@
         InventoryData invData = await service.GetStoresInventory(StoreId);
         inventory = invData.invProducts;
     }
+
+    public class Product
+    {
+        public int ProductId { get; set; }
+        public string ProductDetails { get; set; }
+        public double ProductPrice { get; set; }
+        public string ProductName { get; set; }
+        public string ProductCategory { get; set; }
+        public int Pamount { get; set; }
+        public string ImgUrl { get; set; }
+    }
+
+    Product product = new Product()
+    {
+
+    };
+
+    private void AddProduct(Product product)
+    {
+
+    }
+
+    void Cancel()
+    {
+        //
+    }
+
 
     private void SelectProduct(object productId)
     {
