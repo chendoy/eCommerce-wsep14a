@@ -26,7 +26,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             Price = 0;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             string products_name = "";
             foreach (var product in products.Keys)

@@ -94,7 +94,7 @@ else
     {
         ProductPriceRangeStart = 0;
         ProductPriceRangeEnd = 10000;
-        //await Change();
+        await Change();
     }
 
     public async Task Change()
@@ -105,7 +105,7 @@ else
             searchFields[SearcherKeys.ProductKeyWord] = ProductKeyword;
         }
 
-        Tuple<double, double> priceRange = new Tuple<double, double>(ProductPriceRangeStart, ProductPriceRangeEnd);
+        List<double> priceRange = new List<double> { ProductPriceRangeStart, ProductPriceRangeEnd };
         searchFields[SearcherKeys.ProductPriceRange] = priceRange;
 
         if (!String.IsNullOrWhiteSpace(Category))
