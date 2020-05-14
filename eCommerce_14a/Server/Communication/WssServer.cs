@@ -259,6 +259,16 @@ namespace eCommerce_14a.Communication
                     break;
 
 
+                case Opcode.INCREASE_PRODUCT_AMOUNT:
+                    response = handler.HandleIncreaseProductAmount(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.DECREASE_PRODUCT_AMOUNT:
+                    response = handler.HandleDecreaseProductAmount(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }

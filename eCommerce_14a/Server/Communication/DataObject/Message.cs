@@ -43,6 +43,8 @@ namespace Server.Communication.DataObject
         ALL_STORE_HISTORY,
         ALL_BUYERS_HISTORY,
         STORE_BY_ID,
+        INCREASE_PRODUCT_AMOUNT,
+        DECREASE_PRODUCT_AMOUNT,
         NOTIFICATION,
         RESPONSE,
         ERROR

@@ -50,6 +50,7 @@
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ChangeProductAmountInCartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DecreaseProductAmountRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllRegisteredUsersRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteOwnerRequest.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\IncreaseProductAmountRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginAsGuestRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LogoutRequest.cs" />

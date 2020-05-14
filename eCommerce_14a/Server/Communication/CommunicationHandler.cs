@@ -237,6 +237,22 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public byte[] HandleDecreaseProductAmount(string json)
+        {
+            DecreaseProductAmountRequest res = JsonConvert.DeserializeObject<DecreaseProductAmountRequest>(json);
+            Tuple<bool, string> ans = storeService.decraseProduct(res.StoreId, res.Username, res.ProductId, res.Amount);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleIncreaseProductAmount(string json)
+        {
+            IncreaseProductAmountRequest res = JsonConvert.DeserializeObject<IncreaseProductAmountRequest>(json);
+            Tuple<bool, string> ans = storeService.IncreaseProductAmount(res.StoreId, res.Username, res.ProductId, res.Amount);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleGetAllUsersHistory(string json)
         {
             GetAllUsersHistoryRequest res = JsonConvert.DeserializeObject<GetAllUsersHistoryRequest>(json);
