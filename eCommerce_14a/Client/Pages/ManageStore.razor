@@ -202,7 +202,7 @@
                                     <RadzenLabel Text="Details" />
                                 </div>
                                 <div class="col-md-8">
-                                    <RadzenTextBox style="width: 100%;" Name="ProductDetails" />
+                                    <RadzenTextBox @bind-Value="product.ProductDetails" style="width: 100%;" Name="ProductDetails" />
                                 </div>
                             </div>
 
@@ -224,7 +224,7 @@
                                     <RadzenLabel Text="Name" />
                                 </div>
                                 <div class="col-md-8">
-                                    <RadzenTextBox style="width: 100%;" Name="ProductName" />
+                                    <RadzenTextBox @bind-Value="product.ProductName" style="width: 100%;" Name="ProductName" />
                                 </div>
                             </div>
 
@@ -235,7 +235,7 @@
                                     <RadzenLabel Text="Category" />
                                 </div>
                                 <div class="col-md-8">
-                                    <RadzenTextBox style="width: 100%;" Name="ProductCategory" />
+                                    <RadzenTextBox @bind-Value="product.ProductCategory" style="width: 100%;" Name="ProductCategory" />
                                 </div>
                             </div>
 
@@ -257,7 +257,7 @@
                                     <RadzenLabel Text="Image URL" />
                                 </div>
                                 <div class="col-md-8">
-                                    <RadzenTextBox style="width: 100%;" Name="ImgUrl" />
+                                    <RadzenTextBox @bind-Value="product.ImgUrl" style="width: 100%;" Name="ImgUrl" />
                                 </div>
                             </div>
 
@@ -343,9 +343,20 @@
 
     };
 
-    private void AddProduct(Product product)
+    private async void AddProduct(Product p)
     {
-
+        SuccessFailResponse response = await service.AddProductToStore(StoreId, loggedInUser, p.ProductId, p.ProductDetails, p.ProductPrice, p.ProductName, p.ProductCategory, p.Pamount, p.ImgUrl);
+        
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
     }
 
     void Cancel()

@@ -183,5 +183,13 @@ namespace Client.Service
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
             return response;
         }
+
+        async public Task<SuccessFailResponse> AddProductToStore(int StoreId, string UserName, int ProductId, string ProductDetails, double ProductPrice, string ProductName, string ProductCategory, int Pamount, string ImgUrl)
+        {
+            AddProductToStoreRequest request = new AddProductToStoreRequest(StoreId, UserName, ProductId, ProductDetails, ProductPrice, ProductName, ProductCategory, Pamount, ImgUrl);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
     }
 }
