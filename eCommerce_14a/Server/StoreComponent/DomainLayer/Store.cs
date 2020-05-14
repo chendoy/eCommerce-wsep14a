@@ -78,7 +78,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                      (PurchaseBasket basket, int productId, User user, Store store) => true);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
-                    (PurchaseBasket basket, int productId, User user, Store store) => basket.Products.ContainsKey(productId) ? basket.Products[productId] <= 1 : false);
+                    (PurchaseBasket basket, int productId, User user, Store store) => !basket.Products.ContainsKey(productId)? true : basket.Products[productId] <= 1);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
                     (PurchaseBasket basket, int productId, User user, Store store) => basket.GetNumProductsAtBasket() <= 10);

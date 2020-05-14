@@ -47,9 +47,6 @@ namespace Server.StoreComponent.DomainLayer
         override
         public bool IsFulfilled(PurchaseBasket basket, int productId, Validator validator)
         {
-            if (productId > 0)
-                if (!basket.Products.ContainsKey(productId))
-                    return false;
             return validator.DiscountValidatorFuncs[PreConditionNumber].Invoke(basket, productId);
         }
 
@@ -65,9 +62,7 @@ namespace Server.StoreComponent.DomainLayer
         override
         public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, Validator validator)
         {
-            if (productId > 0)
-                if (!basket.Products.ContainsKey(productId))
-                    return false;
+
             return validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, user, store);
         }
     }
