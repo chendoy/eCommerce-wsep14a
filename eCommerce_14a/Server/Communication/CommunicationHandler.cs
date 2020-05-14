@@ -157,7 +157,7 @@ namespace eCommerce_14a.Communication
             filters.Add(CommonStr.SearcherKeys.StoreId, res.StoreId);
             Dictionary<int, List<Product>> ans = storeService.SearchProducts(filters);
             List<Product> prodList = ans[res.StoreId];
-            string jsonAns = Seralize(new SearchProductResponse(converter.ToProductDataList(prodList)));
+            string jsonAns = Seralize(new GetProductsResponse(converter.ToProductDataList(prodList)));
             return security.Encrypt(jsonAns);
         }
 
@@ -364,8 +364,7 @@ namespace eCommerce_14a.Communication
         {
             SearchProductRequest res = JsonConvert.DeserializeObject<SearchProductRequest>(json);
             Dictionary<int, List<Product>> ans = storeService.SearchProducts(res.Filters);
-            List<Product> prodList = ans.Values.ToList().SelectMany(x => x).ToList();
-            string jsonAns = Seralize(new SearchProductResponse(converter.ToProductDataList(prodList)));
+            string jsonAns = Seralize(new SearchProductResponse(converter.ToSearchProductResponse(ans)));
             return security.Encrypt(jsonAns);
         }
 

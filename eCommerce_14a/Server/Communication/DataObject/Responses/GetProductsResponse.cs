@@ -9,11 +9,11 @@ namespace Server.Communication.DataObject
 {
     public class GetProductsResponse : Message
     {
-        List<ProductData> Products { get; set; }
+        List<ProductData> SearchResult { get; set; }
 
         public GetProductsResponse(List<ProductData> products) : base(Opcode.RESPONSE)
         {
-            Products = products;
+            SearchResult = products;
         }
 
         public GetProductsResponse() : base()

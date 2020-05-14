@@ -9,6 +9,10 @@ using Newtonsoft.Json;
 using Server.Communication.DataObject.Requests;
 using System.Reflection.Emit;
 using Server.Communication.DataObject;
+using Server.Communication.DataObject.Responses;
+using System.Collections.Generic;
+using Server.Communication.DataObject.ThinObjects;
+using System.Linq;
 
 namespace eCommerce_14a.Communication
 {
@@ -287,9 +291,16 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
+            //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
+            //res.SearchResults.Add(1, new List<ProductData>());
+            //string json = JsonConvert.SerializeObject(res);
+            //Console.WriteLine(json);
+            //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
+            //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
             CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
+
         }
     }
 }

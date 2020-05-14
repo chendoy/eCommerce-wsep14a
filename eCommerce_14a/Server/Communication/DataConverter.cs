@@ -187,6 +187,19 @@ namespace Server.Communication
 
         }
 
+
+        public Dictionary<int, List<ProductData>> ToSearchProductResponse(Dictionary<int, List<Product>> searchAns) 
+        {
+
+            Dictionary<int, List<ProductData>> retDict = new Dictionary<int, List<ProductData>>();
+            foreach (KeyValuePair<int, List<Product>> entry in searchAns) 
+            {
+                List<ProductData> retList = ToProductDataList(entry.Value);
+                retDict.Add(entry.Key, retList);
+            }
+            return retDict;
+        }
+
         public Tuple<List<StoreData>, string> ToStoresHistoryResponse(Tuple<Dictionary<Store, List<PurchaseBasket>>, string> storesHistory) 
         {
             List<StoreData> retList = new List<StoreData>();
