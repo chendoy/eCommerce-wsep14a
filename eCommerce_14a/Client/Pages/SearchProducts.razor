@@ -20,11 +20,11 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <RadzenLabel Text="Start" style="width: 100%;" />
-                        <RadzenNumeric TValue="int" Min="1" Max="@ProductPriceRangeEnd" @bind-Value="ProductPriceRangeStart" Step="10" Change="@Change" style="width: 100%;" />
+                        <RadzenNumeric TValue="int" Min="1" Max="@ProductPriceRangeEnd" @bind-Value="ProductPriceRangeStart" Change="@Change" style="width: 100%;" />
                     </div>
                     <div class="col-sm-4">
                         <RadzenLabel Text="End" style="width: 100%;" />
-                        <RadzenNumeric TValue="int" Min="@ProductPriceRangeStart" @bind-Value="ProductPriceRangeEnd" Step="10" Change="@Change" style="width: 100%;" />
+                        <RadzenNumeric TValue="int" Min="@ProductPriceRangeStart" @bind-Value="ProductPriceRangeEnd" Change="@Change" style="width: 100%;" />
                     </div>
                 </div>
             </div>
