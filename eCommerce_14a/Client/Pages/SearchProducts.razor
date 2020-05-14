@@ -44,35 +44,40 @@
                 <RadzenLabel Text="StoreId:" />
             </div>
             <div class="col-md-8">
-                <RadzenNumeric TValue="int?" Min="1" @bind-Value="StoreId" Change="@Change" style="width: 100%;" />
+                <RadzenNumeric TValue="int?" Min="1" @bind-Value="StoreId" Placeholder="Enter or clear value" Change="@Change" style="width: 100%;" />
             </div>
         </div>
     </div>
 </div>
 
+<div class="row" style="height:20px"/>
+
 @if (SearchResults == null || SearchResults.Count == 0)
 {
     <RadzenLabel Text="No products match your search" />
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Details</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var products in SearchResults)
-        {
-            @foreach (var product in products.Value)
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Details</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var products in SearchResults)
             {
-                <ProductRow StoreId="products.Key" Product="product"/>
+                @foreach (var product in products.Value)
+                {
+                    <ProductRow StoreId="products.Key" Product="product"/>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
 
 
 @code {
@@ -89,7 +94,7 @@
     {
         ProductPriceRangeStart = 0;
         ProductPriceRangeEnd = 10000;
-        await Change();
+        //await Change();
     }
 
     public async Task Change()
