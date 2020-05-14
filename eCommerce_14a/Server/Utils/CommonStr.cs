@@ -17,7 +17,8 @@
         {
             public static string ProductKeyWord = "SearchByProductKeyWord";
             public static string ProductRank = "searchByProductRank";
-            public static string ProductPriceRange = "searchByProductPriceRange";
+            public static string MinPrice = "minPrice";
+            public static string MaxPrice = "maxPrice";
             public static string ProductName = "SearchByProductName";
             public static string ProductCategory = "searchByCategory";
             public static string StoreRank = "SearchByStoreRank";

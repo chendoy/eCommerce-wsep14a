@@ -107,7 +107,8 @@ namespace TestingSystem.UnitTests.SearcherTest
             expectedRes.Add(3, new List<Product> { inv_store_3.getProductDetails(4).Item1 });
 
             Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.SearcherKeys.ProductPriceRange, new List<double> { 200, 500 });
+            filters.Add(CommonStr.SearcherKeys.MinPrice,200);
+            filters.Add(CommonStr.SearcherKeys.MaxPrice, 500);
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }

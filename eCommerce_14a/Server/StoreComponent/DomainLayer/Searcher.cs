@@ -111,13 +111,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         private bool ValidPriceRange(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductPriceRange))
-            {
-                List<double> priceRange = (List<double>)searchBy[CommonStr.SearcherKeys.ProductPriceRange];
-                double minPrice = priceRange[0];
-                double maxPrice = priceRange[1];
-
-
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.MinPrice) && searchBy.ContainsKey(CommonStr.SearcherKeys.MaxPrice))
+            {   
+                object minPriceObj = searchBy[CommonStr.SearcherKeys.MinPrice];
+                object maxPriceObj = searchBy[CommonStr.SearcherKeys.MaxPrice];
+                double minPrice = Convert.ToDouble(minPriceObj);
+                double maxPrice = Convert.ToDouble(maxPriceObj);
                 if (product.Price > maxPrice || product.Price < minPrice)
                     return false;
             }
