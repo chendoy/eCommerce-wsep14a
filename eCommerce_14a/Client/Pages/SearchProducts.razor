@@ -119,7 +119,7 @@ else
 
         if (StoreId.HasValue)
         {
-            searchFields[SearcherKeys.StoreId] = StoreId;
+            searchFields[SearcherKeys.StoreId] = StoreId.Value;
         }
 
         SearchProductRequest request = new SearchProductRequest(searchFields);
