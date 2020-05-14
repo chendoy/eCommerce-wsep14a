@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<AuthorizeView Roles="User">
+<AuthorizeView>
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
         <button class="nav-link btn btn-link" @onclick="(()=>Logout(context.User.Identity.Name))">Log out</button>
