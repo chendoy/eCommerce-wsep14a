@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,12 @@ namespace TestingSystem.AcceptanceTests
         public void SetUp()
         {
             Init();
+            Publisher.Instance.cleanup();
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
             userID = enterSystem().Item2;
+            
         }
 
         [TestCleanup]
@@ -43,6 +46,7 @@ namespace TestingSystem.AcceptanceTests
             ClearAllPurchase();
             ClearAllUsers();
             ClearAllShops();
+            Publisher.Instance.cleanup();
         }
 
         [TestMethod]

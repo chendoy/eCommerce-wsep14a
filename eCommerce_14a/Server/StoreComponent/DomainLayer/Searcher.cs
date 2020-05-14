@@ -75,7 +75,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private bool ValidStoreId(Store store, Dictionary<string, object> searchBy)
         {
             if (searchBy.ContainsKey(CommonStr.SearcherKeys.StoreId))
-                if ((int)searchBy[CommonStr.SearcherKeys.StoreId] == store.Id)
+                if ((long)searchBy[CommonStr.SearcherKeys.StoreId] == store.Id)
                     return true;
                 else
                     return false;
@@ -111,13 +111,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         private bool ValidPriceRange(Product product, Dictionary<string, object> searchBy)
         {
-            if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductPriceRange))
-            {
-                Tuple<double, double> priceRange = (Tuple<double, double>)searchBy[CommonStr.SearcherKeys.ProductPriceRange];
-                double minPrice = priceRange.Item1;
-                double maxPrice = priceRange.Item2;
-
-
+            if (searchBy.ContainsKey(CommonStr.SearcherKeys.MinPrice) && searchBy.ContainsKey(CommonStr.SearcherKeys.MaxPrice))
+            {   
+                object minPriceObj = searchBy[CommonStr.SearcherKeys.MinPrice];
+                object maxPriceObj = searchBy[CommonStr.SearcherKeys.MaxPrice];
+                double minPrice = Convert.ToDouble(minPriceObj);
+                double maxPrice = Convert.ToDouble(maxPriceObj);
                 if (product.Price > maxPrice || product.Price < minPrice)
                     return false;
             }

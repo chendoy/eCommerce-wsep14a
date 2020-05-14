@@ -1,0 +1,436 @@
+﻿@page "/ManageStore/{storeid:int}"
+@using Server
+@using Microsoft.EntityFrameworkCore
+
+<h1>Store Dashboard</h1>
+
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Staff">
+            <h2>Staff</h2>
+
+            <div class="grid-container">
+
+                @if (staffList != null)
+                {
+                    @foreach (KeyValuePair<string, string> employee in staffList)
+                    {
+                        <RadzenCard Style="width:400px; margin-bottom: 20px; height:300px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div style="margin-top:20px">Employee:</div>
+                                    <b>@employee.Key</b>
+                                    <br />
+                                    <RadzenImage Path="" Style="width:100px;" />
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="margin-top:20px">Role:</div>
+                                    <b>@employee.Value</b>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    }
+                }
+            </div>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Promote or Demote">
+
+            <div>
+                <br />
+                <h2>Promote or demote users</h2>
+                <br />
+                <Dropdown TItem="string" OnSelected="@OnSelected1">
+                    <InitialTip>Action</InitialTip>
+                    <ChildContent>
+                        @foreach (var option in options)
+                        {
+                            <DropdownListItem Item="@option">@option</DropdownListItem>
+                        }
+                    </ChildContent>
+                </Dropdown>
+
+                <Dropdown TItem="string" OnSelected="@OnSelected2">
+                    <InitialTip>User</InitialTip>
+                    <ChildContent>
+                        @foreach (var user in registeredUsers)
+                        {
+                            <DropdownListItem Item="@user">@user</DropdownListItem>
+                        }
+                    </ChildContent>
+                </Dropdown>
+
+                <h5 style="display: inline">to be &nbsp &nbsp </h5>
+
+                <Dropdown TItem="string" OnSelected="@OnSelected3">
+                    <InitialTip>New Role</InitialTip>
+                    <ChildContent>
+                        @foreach (var role in roles)
+                        {
+                            <DropdownListItem Item="@role">@role</DropdownListItem>
+                        }
+                    </ChildContent>
+                </Dropdown>
+
+                <br /><br />
+                <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
+
+                <br /><br />
+                <div class="login-msg" style="text-align:left; font-weight:bold">
+                    <span>@AppointmentMessage</span>
+                </div>
+
+            </div>
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Discounts">
+            <h2>Add New Discount</h2>
+            <h2>Edit </h2>
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Purchases">
+            <StoreHistory Username="@loggedInUser" StoreId="StoreId" />
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Products">
+
+            <RadzenGrid @ref="productsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                        Data="@inventory" TItem="Tuple<ProductData, int>">
+                <Columns>
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.ProductId" Title="Product ID" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Name" Title="Product Name" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item2" Title="Amount" />
+                </Columns>
+
+            </RadzenGrid>
+
+            <br /><br />
+
+            <h2>Choose Product</h2>
+            <RadzenDropDown AllowClear="true" TValue="int"
+                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                            Data="@inventory" TextProperty="Item1.Name" ValueProperty="Item1.ProductId" Style="margin-bottom: 20px" Change="@(args => SelectProduct(args))" />
+            <br />
+
+            <RadzenButton Click="@(() => DeleteProduct())" Text="Delete All" Style="margin-bottom: 20px; width: 150px" />
+
+            <br />
+
+            <h2>Choose amount to increase/increase</h2>
+            <RadzenNumeric TValue="int" Style="margin-bottom: 20px" Change="@(args => ChangeDelta(args))" />
+
+            <br />
+
+            <RadzenButton Click="@(() => Increase())" Icon="add" Style="margin-bottom: 20px; width: 80px" />
+
+            <RadzenButton Click="@(() => Decrease())" Icon="remove" Style="margin-bottom: 20px; width: 80px" />
+
+
+            <div class="error-msg" style="text-align:left; font-weight:bold">
+                <span>@errorMsg</span>
+            </div>
+
+            <div class="success-msg" style="text-align:left; font-weight:bold">
+                <span>@successMsg</span>
+            </div>
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Add product">
+            
+            <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenFieldset Text="Product Info">
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="ID" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenNumeric @bind-Value="product.ProductId" style="width: 100%;" Name="Name" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Details" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="product.ProductDetails" style="width: 100%;" Name="ProductDetails" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Price" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenNumeric @bind-Value="product.ProductPrice" style="width: 100%;" Name="Name" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Name" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="product.ProductName" style="width: 100%;" Name="ProductName" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Category" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="product.ProductCategory" style="width: 100%;" Name="ProductCategory" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Amount" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenNumeric @bind-Value="product.Pamount" style="width: 100%;" Name="Name" />
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-4 align-items-center d-flex">
+                                    <RadzenLabel Text="Image URL" />
+                                </div>
+                                <div class="col-md-8">
+                                    <RadzenTextBox @bind-Value="product.ImgUrl" style="width: 100%;" Name="ImgUrl" />
+                                </div>
+                            </div>
+
+                        </RadzenFieldset>
+
+                    </div>
+                </div>
+
+
+
+                <div class="row justify-content-center">
+                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Add Product" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                    </div>
+                </div>
+            </RadzenTemplateForm>
+
+            <div class="error-msg" style="text-align:left; font-weight:bold">
+                <span>@errorMsg</span>
+            </div>
+
+            <div class="success-msg" style="text-align:left; font-weight:bold">
+                <span>@successMsg</span>
+            </div>
+
+
+        </RadzenTabsItem>
+
+
+    </Tabs>
+</RadzenTabs>
+
+
+@code {
+
+    [Parameter]
+    public int StoreId { get; set; }
+
+    public StoreData store { get; set; }
+    private List<string> registeredUsers;
+    private Dictionary<string, string> staff;
+    private List<KeyValuePair<string, string>> staffList;
+    private string[] roles = new string[] { "Manager", "Owner" };
+    private string[] options = new string[] { "Promote", "Demote" };
+    private string loggedInUser;
+    public string AppointmentMessage { get; set; }
+    private List<Tuple<ProductData, int>> inventory { get; set; }
+    private int selectedProductId;
+    private int delta;
+    private string errorMsg { get; set; }
+    private string successMsg { get; set; }
+    private string selectedUser;
+    private string selectedRole;
+    private string selectedOption;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        GetAllRegisteredUsersResponse response = await service.GetAllActiveUsers();
+        registeredUsers = response.Users;
+        loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
+        staff = await service.GetStaff(StoreId);
+        staffList = staff.ToList();
+        InventoryData invData = await service.GetStoresInventory(StoreId);
+        inventory = invData.invProducts;
+    }
+
+    public class Product
+    {
+        public int ProductId { get; set; }
+        public string ProductDetails { get; set; }
+        public double ProductPrice { get; set; }
+        public string ProductName { get; set; }
+        public string ProductCategory { get; set; }
+        public int Pamount { get; set; }
+        public string ImgUrl { get; set; }
+    }
+
+    Product product = new Product()
+    {
+
+    };
+
+    private async void AddProduct(Product p)
+    {
+        SuccessFailResponse response = await service.AddProductToStore(StoreId, loggedInUser, p.ProductId, p.ProductDetails, p.ProductPrice, p.ProductName, p.ProductCategory, p.Pamount, p.ImgUrl);
+        
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+    }
+
+    void Cancel()
+    {
+        //
+    }
+
+
+    private void SelectProduct(object productId)
+    {
+        selectedProductId = (int)productId;
+    }
+
+    private void ChangeDelta(object Delta)
+    {
+        delta = (int)Delta;
+    }
+
+    private async void DeleteProduct()
+    {
+        SuccessFailResponse response =  await service.RemoveProductFromStore(StoreId, loggedInUser, selectedProductId);
+
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+    }
+
+    private async void Increase()
+    {
+        SuccessFailResponse response = await service.IncreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
+
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+    }
+
+    private async void Decrease()
+    {
+        SuccessFailResponse response = await service.DecreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
+
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+    }
+
+
+    private async void ApplyAction()
+    {
+
+        Tuple<bool, string> successErrorTuple = new Tuple<bool, string>(false, "default error");
+
+        if (selectedOption == "Promote" && selectedRole == "Owner")
+            successErrorTuple = await service.AppointOwner(loggedInUser, selectedUser, StoreId);
+
+
+        if (selectedOption == "Promote" && selectedRole == "Manager")
+            successErrorTuple = await service.AppointManager(loggedInUser, selectedUser, StoreId);
+
+        if (selectedOption == "Demote" && selectedRole == "Owner")
+            successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
+
+        if (selectedOption == "Demote" && selectedRole == "Manager")
+            successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
+
+
+        if (successErrorTuple.Item1)
+            AppointmentMessage = "Operation applied successfully";
+
+        else
+            AppointmentMessage = successErrorTuple.Item2; // the error
+
+    }
+
+    private void OnSelected1(string selection)
+    {
+        selectedOption = selection;
+    }
+
+    private void OnSelected2(string selection)
+    {
+        selectedUser = selection;
+    }
+
+    private void OnSelected3(string selection)
+    {
+        selectedRole = selection;
+    }
+
+    RadzenGrid<Tuple<ProductData, int>> productsGrid;
+
+    void EditRow()
+    {
+
+    }
+}

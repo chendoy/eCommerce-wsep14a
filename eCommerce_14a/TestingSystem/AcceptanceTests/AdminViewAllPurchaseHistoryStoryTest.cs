@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace TestingSystem.AcceptanceTests
             ClearAllPurchase();
             ClearAllUsers();
             ClearAllShops();
+            //Publisher.Instance.cleanup();
         }
 
         [TestMethod]

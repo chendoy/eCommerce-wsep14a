@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -43,12 +44,39 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         /// </summary>
         public UserManager()
         {
-            Console.WriteLine("UserManager Created\n");
+            //Console.WriteLine("UserManager Created\n");
             Users_And_Hashes = new Dictionary<string, string>();
             users = new Dictionary<string, User>();
             Active_users = new Dictionary<string, User>();
             SB = new Security();
             Available_ID = 1;
+        }
+        public void LoadUsers()
+        {
+            //system Admin is id - 0
+            Register("user1", "Test1"); //id 1
+            Register("user2", "Test2"); //id 2
+            Register("user3", "Test3"); //id 3
+            Register("user4", "Test4"); //id 4
+            Register("user5", "Test5"); //id 5
+            Register("user6", "Test6"); //id 6
+            //Login("Guest6", "bla", true);//Guest 6
+            //Login("Guest7", "bla", true);//Guest 7
+            Login("user4", "Test4");
+            Login("user5", "Test5");
+        }
+
+        public List<User> GetAllRegisteredUsers() 
+        {
+            return users.Values.ToList();
+        }
+        public Dictionary<int, int[]> GetUserPermissions(string username) 
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            User user;
+            if (!users.TryGetValue(username, out user))
+                return null;
+            return user.GetUserPermissions();
         }
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)
@@ -150,6 +178,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 Active_users.Add(tUser.getUserName(), tUser);
+                if (tUser.HasPendingMessages()) 
+                {
+                    LinkedList<NotifyData> messages = tUser.GetPendingMessages();
+                    foreach (NotifyData msg in messages) 
+                    {
+                        Publisher.Instance.Notify(tUser.getUserName(), msg);
+                        //tUser.RemovePendingMessage(msg);
+                    }
+                    tUser.RemoveAllPendingMessages();
+                }
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
             return new Tuple<bool, string>(false, "Wrong Credentials\n");

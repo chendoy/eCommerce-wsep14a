@@ -49,8 +49,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             string pDetails = (string)productParams[CommonStr.ProductParams.ProductDetails];
             string pName = (string)productParams[CommonStr.ProductParams.ProductName];
             string pCategory = (string)productParams[CommonStr.ProductParams.ProductCategory];
+            string imgUrl = (string)productParams[CommonStr.ProductParams.ProductImgUrl];
 
-            Product product = new Product(product_id: pId, details: pDetails, name: pName, category: pCategory);
+            Product product = new Product(product_id: pId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
             invProducts.Add(pId, new Tuple<Product, int>(product, amount));
 
             return new Tuple<bool, string>(true, "");
@@ -102,6 +103,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             product.Price = price;
             product.Name = (string)productParams[CommonStr.ProductParams.ProductName];
             product.Category = (string)productParams[CommonStr.ProductParams.ProductCategory];
+            product.ImgUrl = (string)productParams[CommonStr.ProductParams.ProductImgUrl];
             int amount = invProducts[productId].Item2;
 
             invProducts[productId] = new Tuple<Product, int>(product, amount);

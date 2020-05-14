@@ -15,6 +15,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         {
             UM = UserManager.Instance;
         }
+
+        public Dictionary<int, int[]> GetUserPermissions(string username) 
+        {
+            return UM.GetUserPermissions(username);
+        }
+
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-registration-22 </req>
         public Tuple<bool,string> Registration(string username, string password)
         {
@@ -42,6 +48,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             return UM.Logout(user);
         
         }
+
+        public List<User> GetAllRegisteredUsers()
+        {
+            return UM.GetAllRegisteredUsers();
+        }
+
         //For Admin Usage
         public void cleanup()
         {

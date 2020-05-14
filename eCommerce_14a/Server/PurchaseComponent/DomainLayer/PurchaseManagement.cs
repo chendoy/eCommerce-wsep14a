@@ -1,6 +1,7 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
 
@@ -44,7 +45,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             this.deliveryHandler = deliveryHandler;
             this.userManager = UserManager.Instance;
         }
-
+        public PaymentHandler GetPaymentHandler()
+        {
+            return this.paymentHandler;
+        }
+        public DeliveryHandler GetDeliveryHandler()
+        {
+            return this.deliveryHandler;
+        }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// Get the user ,store and product to add to the shopping cart
@@ -197,6 +205,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 currHistory.Add(userCart.GetBaskets()[store]);
                 purchasesHistoryByStore[store] = currHistory;
+                //Version 2 Addition
+                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.getStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new NotifyData(message_data));
+                if (!ans.Item1)
+                    return ans;
             }
             Purchase newPurchase = new Purchase(user, userCart);
             if (!purchasesHistoryByUser.TryGetValue(user, out List<Purchase> userHistory))
@@ -207,9 +220,9 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             userHistory.Add(newPurchase);
             purchasesHistoryByUser[user] = userHistory;
 
+            carts[user] = new Cart(user);
             return new Tuple<bool, string>(true, "");
         }
-
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
         public Tuple<List<Purchase>, string> GetBuyerHistory(string user)
         {
@@ -220,12 +233,17 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 Logger.logError(CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<List<Purchase>, string>(res, CommonStr.PurchaseMangmentErrorMessage.BlankOrNullInputErrMsg);
             }
-
+            
             User userObject = userManager.GetAtiveUser(user);
             if (userObject is null)
             {
-                return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                if (userManager.GetAtiveUser("Admin") is null)
+                {
+                    return new Tuple<List<Purchase>, string>(res, CommonStr.StoreMangmentErrorMessage.nonExistOrActiveUserErrMessage);
+                }
             }
+            
+           
             if (!purchasesHistoryByUser.ContainsKey(user))
             {
                 return new Tuple<List<Purchase>, string>(res, "");

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -12,6 +13,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     {
         //All store appointer
         StoreManagment storeManagment;
+        //Publisher publisher;
         UserManager UM;
         AppoitmentManager()
         {
@@ -36,6 +38,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 }  
                 return instance;  
             }  
+        }
+        public void LoadAppointments()
+        {
+            AppointStoreManager("user4", "user1", 1);
+            AppointStoreManager("user5", "user4", 2);
+            AppointStoreManager("user5", "user3", 2);
+            AppointStoreOwner("user4", "user2", 1);
+            AppointStoreOwner("user5", "user1", 2);
+            int[] perms = { 1, 1, 1, 1, 1 };
+            ChangePermissions("user5", "user3", 2, perms);
         }
         //Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
         //Owner appoints addto to be Store Owner.
@@ -69,9 +81,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!store.IsStoreOwner(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreOwner(appointed);
-            int[] p = { 1, 1, 1 };
+            int[] p = { 1, 1, 1 , 1, 1};
             appointed.setPermmisions(store.getStoreId(), p);
             appointed.addAppointment(appointer, id: store.getStoreId());
+            //Version 2 Addition
+            Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
+            if (!ans.Item1)
+                return ans;
             return appointed.addStoreOwnership(store);
         }
 
@@ -80,6 +96,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             storeManagment = StoreManagment.Instance;
             UM = UserManager.Instance;
+            //publisher = Publisher.Instance;
         }
 
         //Owner appoints addto to be Store Manager.
@@ -115,9 +132,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreManager(appointed);
             appointed.addAppointment(appointer, store.getStoreId());
-            int[] p = { 1, 1, 0 };
+            Tuple<bool, string> res = appointed.addStoreManagment(store);
+            int[] p = {1, 1, 0, 0, 0};
             appointed.setPermmisions(store.getStoreId(), p);
-            return appointed.addStoreManagment(store);
+            //Version 2 Addition
+            Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
+            if (!ans.Item1)
+                return ans;
+            return res;
         }
         //Remove appoitment only if owner gave the permissions to the Appointed user
         public Tuple<bool, string> RemoveAppStoreManager(string o, string m, int storeId)
@@ -154,6 +176,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             store.RemoveManager(manager);
             manager.RemoveStoreManagment(store.getStoreId());
             manager.RemovePermission(store.getStoreId());
+            //Version 2 Addition
+            Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a StoreID: "+storeId +" StoreName: "+store.GetName() +" Manager any More"));
+            if (!message.Item1)
+                return message;
+            Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(m, storeId);
+            if (!ans.Item1)
+                return ans;
             return new Tuple<bool, string>(manager.RemoveAppoitment(owner, store.getStoreId()), "");
         }
         public Tuple<bool, string> ChangePermissions(string ownerS, string worker, int storeId, int[] permissions)

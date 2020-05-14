@@ -10,6 +10,7 @@ using TestingSystem.UnitTests.Stubs;
 using TestingSystem.UnitTests.StoreTest;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using System.Security.AccessControl;
+using Server.UserComponent.Communication;
 
 namespace TestingSystem.UnitTests
 {
@@ -24,6 +25,7 @@ namespace TestingSystem.UnitTests
         [TestInitialize]
         public void TestInitialize()
         {
+
             store = StoreTest.StoreTest.initValidStore();
             purchaseManagement = PurchaseManagement.Instance;
             UserManager.Instance.Register(buyer, "123");
@@ -42,10 +44,22 @@ namespace TestingSystem.UnitTests
         {
             purchaseManagement.ClearAll();
             UserManager.Instance.cleanup();
+            Publisher.Instance.cleanup();
             StoreManagment.Instance.cleanup();
         }
 
-
+        [TestMethod]
+        public void PurchaseEmptyCart()
+        {
+            Tuple<bool, string> res = purchaseManagement.PerformPurchase(buyer,"aaa","aaa");
+            Assert.IsFalse(res.Item1, res.Item2);
+        }
+        [TestMethod]
+        public void TestAddProductToCarProductNumberIsLow()
+        {
+            Tuple<bool, string> res = purchaseManagement.AddProductToShoppingCart(buyer, 1, 1, 10000, false);
+            Assert.IsFalse(res.Item1, res.Item2);
+        }
         /// <tests cref="PurchaseManagement.AddProductToShoppingCart(string, int, int, int, bool)"/>
         [TestMethod]
         public void TestAddProductToCartSuccess()
@@ -77,6 +91,7 @@ namespace TestingSystem.UnitTests
             Tuple<bool, string> res = purchaseManagement.AddProductToShoppingCart(buyer, 1, 99, 10, false);
             Assert.IsFalse(res.Item1, res.Item2);
         }
+
 
         /// <tests cref="PurchaseManagement.AddProductToShoppingCart(string, int, int, int, bool)"/>
         [TestMethod]
@@ -219,7 +234,63 @@ namespace TestingSystem.UnitTests
             Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", "WoloCard", "Wololo");
             Assert.IsFalse(res4.Item1, res4.Item2);
         }
-
+        [TestMethod]
+        public void TestInventoryUnchanged()
+        {
+            //Store have only 100 products if it fails but inventory changed second user cannot buy the products
+            Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 1, 1, 100, false);
+            Assert.IsTrue(res1.Item1, res1.Item2);
+            Tuple<bool, string> res3 = purchaseManagement.AddProductToShoppingCart("yosi", 1, 1, 10, false);
+            Assert.IsTrue(res3.Item1, res3.Item2);
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "");
+            Assert.IsFalse(res2.Item1, res2.Item2);
+            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", "WoloCard", "Wololo");
+            Assert.IsTrue(res4.Item1, res4.Item2);
+        }
+        [TestMethod]
+        public void TestInventoryUnchangedNoDelivery()
+        {
+            //Store have only 100 products if it fails but inventory changed second user cannot buy the products
+            Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 1, 1, 100, false);
+            Assert.IsTrue(res1.Item1, res1.Item2);
+            Tuple<bool, string> res3 = purchaseManagement.AddProductToShoppingCart("yosi", 1, 1, 10, false);
+            Assert.IsTrue(res3.Item1, res3.Item2);
+            purchaseManagement.GetDeliveryHandler().setConnection(false);
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "AAAA");
+            Assert.IsFalse(res2.Item1, res2.Item2);
+            purchaseManagement.GetDeliveryHandler().setConnection(true);
+            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", "WoloCard", "Wololo");
+            Assert.IsTrue(res4.Item1, res4.Item2);
+        }
+        [TestMethod]
+        public void TestUnchangedCart()
+        {
+            //Store have only 100 products if it fails but inventory changed second user cannot buy the products
+            Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 1, 1, 100, false);
+            Assert.IsTrue(res1.Item1, res1.Item2);
+            Assert.IsFalse(purchaseManagement.GetCartDetails(buyer).Item1.IsEmpty());
+            Cart c1 = purchaseManagement.GetCartDetails(buyer).Item1;
+            purchaseManagement.GetDeliveryHandler().setConnection(false);
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "AAAA");
+            Assert.IsFalse(res2.Item1, res2.Item2);
+            Cart c2 = purchaseManagement.GetCartDetails(buyer).Item1;
+            Assert.IsTrue(c1.Equals(c2));
+            Assert.IsFalse(purchaseManagement.GetCartDetails(buyer).Item1.IsEmpty());
+        }
+        [TestMethod]
+        public void TestRefundWasPerfomed()
+        {
+            //Store have only 100 products if it fails but inventory changed second user cannot buy the products
+            Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 1, 1, 100, false);
+            Assert.IsTrue(res1.Item1, res1.Item2);
+            purchaseManagement.GetDeliveryHandler().setConnection(false);
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "AAA");
+            if(!res2.Item1)
+            {
+                Assert.IsTrue(purchaseManagement.GetPaymentHandler().refund("WoloCard",100).Item1);
+            }
+            purchaseManagement.GetDeliveryHandler().setConnection(true);
+        }
         /// <tests cref="PurchaseManagement.PerformPurchase(string, string, string)"/>
         [TestMethod]
         public void TestPerformPurchase_DoublePurchase()

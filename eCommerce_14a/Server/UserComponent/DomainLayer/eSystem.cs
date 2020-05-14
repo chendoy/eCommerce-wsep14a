@@ -15,9 +15,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         private Security bodyguard;
         private DeliveryHandler DH;
         private PaymentHandler PH;
-        private AppoitmentManager AM;
-        private Dictionary<int, Store> stores;
-        
+        public eSystem(string name, string pass)
+        {
+            DH = DeliveryHandler.Instance;
+            PH = PaymentHandler.Instance;
+            bodyguard = new Security();
+            UManagment = UserManager.Instance;
+            system_init(name, pass);
+            
+        }
          
         public Tuple<bool, string> system_init(string admin, string password,bool paymmentconnection = true)
         {
@@ -32,22 +38,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Blank args");
             }
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            UManagment = UserManager.Instance;
-            AM = AppoitmentManager.Instance;
-            bodyguard = new Security();
-            DH = DeliveryHandler.Instance;
-            PH = PaymentHandler.Instance;
             PH.setConnections(paymmentconnection);
-            stores = new Dictionary<int, Store>();
             if (!DH.checkconnection() || !PH.checkconnection())
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    if (DH.checkconnection() && !PH.checkconnection())
-                    {
-                        break;
-                    }
-                }
                 return new Tuple<bool, string>(false, "cann't connect to 3rd party system");
             }
             
@@ -59,6 +52,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             }
             return new Tuple<bool, string>(true, "");
+        }
+        public void loaddata()
+        {
+            UManagment.LoadUsers();
+            StoreManagment.Instance.LoadStores();
+            AppoitmentManager.Instance.LoadAppointments();
+            
         }
         public bool SetDeliveryConnection(bool conn)
         {

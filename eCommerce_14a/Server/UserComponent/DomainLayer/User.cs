@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using eCommerce_14a.UserComponent;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -17,6 +19,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         private bool isGuest;
         private bool isAdmin, isLoggedIn;
         private Dictionary<int, Store> Store_Ownership;
+        private LinkedList<NotifyData> unreadMessages;
         private Dictionary<int, Store> Store_Managment;
         private Dictionary<int, int[]> Store_options;
         //Contains the list of who appointed you to which store! not who you appointed to which store!
@@ -36,14 +39,40 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
+            unreadMessages = new LinkedList<NotifyData>();
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
+        }
+
+        public Dictionary<int, int[]> GetUserPermissions() 
+        {
+            return Store_options;
         }
         public void LogIn()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             this.isLoggedIn = true;
         }
+
+        public LinkedList<NotifyData> GetPendingMessages() 
+        {
+            return this.unreadMessages;
+        }
+
+        public bool HasPendingMessages() 
+        {
+            return this.unreadMessages.Count != 0;
+        }
+
+        public void RemovePendingMessage(NotifyData msg) 
+        {
+            this.unreadMessages.Remove(msg);
+        }
+        public void RemoveAllPendingMessages()
+        {
+            this.unreadMessages = new LinkedList<NotifyData>();
+        }
+
         public void Logout()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -91,6 +120,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 return perms[2] == 1;
             }
+            if (permission.Equals(CommonStr.MangerPermission.DiscountPolicy))
+            {
+                return perms[3] == 1;
+            }
+            if (permission.Equals(CommonStr.MangerPermission.PurachsePolicy))
+            {
+                return perms[4] == 1;
+            }
             return false;
         }
 
@@ -103,8 +140,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (Store_Ownership.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
             Store_Ownership.Add(store.getStoreId(), store);
-            return new Tuple<bool, string>(true, "");
+            return setPermmisions(store.getStoreId(), CommonStr.StorePermissions.FullPermissions);
         }
+        //Version 2 changes
+        public void AddMessage(NotifyData notification)
+        {
+            this.unreadMessages.AddLast(notification);
+        }
+
         //Add a user to be store Manager
         public Tuple<bool, string> addStoreManagment(Store store)
         {
@@ -171,8 +214,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "No such Store id\n");
             if (permission_set == null)
                 return new Tuple<bool, string>(false, "Null Argument\n");
-            if (!isStorManager(store_id))
-                return new Tuple<bool, string>(false, "The user is not Store Manager\n");
+            if (!isStorManager(store_id) && !isStoreOwner(store_id))
+                return new Tuple<bool, string>(false, "The user is not Store Manager or owner\n");
             if (Store_options.ContainsKey(store_id))
                 Store_options.Remove(store_id);
             Store_options.Add(store_id, permission_set);

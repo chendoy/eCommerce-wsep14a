@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
-
+using Server.Communication.DataObject.ThinObjects;
+using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.ServiceLayer
 {
@@ -27,17 +28,17 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---add-product-411- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager--add-product-512- </req
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount)
+        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl = @"Image/bana.png")
         {
-            return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount);
+            return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount, imgUrl);
         }
 
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---edit-product-412- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager---edit-product-513- </req>
-        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory)
+        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)
         {
-            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory);
+            return storeManagment.UpdateProduct(userName, storeId, productId, pDetails, pPrice, pName, pCategory, imgUrl);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---remove-product-413- </req>
@@ -62,9 +63,19 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--open-store-32 </req>
-        public Tuple<int, string> createStore(string userName, int discountPolicyType, int puarchsePolicyType)
+        public Tuple<int, string> createStore(string userName, string storename = "Store")
         {
-            return storeManagment.createStore(userName, discountPolicyType, puarchsePolicyType);
+            return storeManagment.createStore(userName,storename);
+        }
+
+        public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , PurchasePolicyData purchasePolicy)
+        {
+            return storeManagment.UpdatePurchasePolicy(storeId, userName, purchasePolicy);
+        }
+
+        public Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicy)
+        {
+            return storeManagment.UpdateDiscountPolicy(storeId, userName, discountPolicy);
         }
 
 
@@ -86,11 +97,46 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return searcher.SearchProducts(searchBy);
         }
 
+        public List<Store> GetAllStores()
+        {
+            return storeManagment.GetAllStores();
+        }
+
+        public List<Store> GetStoresOwnedBy(string username) 
+        {
+            return storeManagment.GetStoresOwnedBy(username);
+        }
+
         //For Admin Uses
         public void cleanup()
         {
             storeManagment.cleanup();
         }
+
+
+        public Dictionary<string, string> GetStaffOfStore(int storeID) 
+        {
+            return storeManagment.GetStaffStroe(storeID);
+            
+        }
+
+
+        public Dictionary<int, string> GetAvailableRawDiscount() 
+        {
+            return storeManagment.GetAvilableRawDiscount();
+        }
+
+
+        public Dictionary<int, string> GetAvailableRawPurchasePolicy()
+        {
+            return storeManagment.GetAvilableRawPurchasePolicy();
+        }
+
+        public Store GetStoreById(int storeID) 
+        {
+            return storeManagment.getStore(storeID);
+        }
+
 
 
 

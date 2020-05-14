@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 
@@ -11,10 +12,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseBasket
     {
-        private string user;
-        private readonly Store store;
-        private Dictionary<int, int> products;
-        private double Price { get; set; }
+        public string user { get; set; }
+        public  Store store { get; set; }
+        public Dictionary<int, int> products { get; set; }
+        public double Price { get; set; }
         public DateTime PurchaseTime { get; private set; }
 
         public PurchaseBasket(string user, Store store)
@@ -25,10 +26,20 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             Price = 0;
         }
 
+        public override string ToString()
+        {
+            string products_name = "";
+            foreach (var product in products.Keys)
+            {
+                products_name += "Product ID - " + product + " Product Amount - " + products[product];
+            }
+            return products_name;
+        }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// This method Add/Change/Remove product from this basket
         /// <param name="exist">state if it should be already in the basket</param>
+        virtual
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -64,14 +75,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 products.Add(productId, wantedAmount);
             }
 
-            Tuple<bool, string> isValidBasket = store.checkIsValidBasket(products);
+            Tuple<bool, string> isValidBasket = store.checkIsValidBasket(this);
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
                 return isValidBasket;
             }
 
-            Price = store.getBasketPrice(products);
+            Price = store.getBasketPriceWithDiscount(this);
 
             return new Tuple<bool, string>(true, null);
         }
@@ -84,7 +95,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
-            Price = store.getBasketPrice(products);
+            Price = store.getBasketPriceWithDiscount(this);
             return Price;
         }
 
@@ -110,7 +121,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return store.checkIsValidBasket(products);
+            return store.checkIsValidBasket(this);
         }
 
         // For tests
@@ -119,6 +130,37 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return products.Keys.Count;
         }
 
+        public Store Store
+        {
+            get { return store; }
+        }
+        public double GetBasketPriceWithDiscount()
+        {
+            return store.getBasketPriceWithDiscount(this);
+        }
+        public double GetBasketOrigPrice()
+        {
+            return store.getBasketOrigPrice(this);
+        }
+
+        public double getBasketDiscount()
+        {
+            return GetBasketOrigPrice() - GetBasketPriceWithDiscount();
+        }
+
+        public int GetNumProductsAtBasket()
+        {
+            int numProducts = 0;
+            foreach(KeyValuePair<int, int> entry in products)
+            {
+                numProducts += entry.Value;
+            }
+            return numProducts;
+        }
+        public Dictionary<int, int> Products
+        {
+            get { return products; }
+        }
         internal void RestoreItemsToStore()
         {
             foreach (var product in products.Keys)

@@ -13,9 +13,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         eSystem Commercial_System;
         public System_Service(string name, string pass)
         {
-            Commercial_System = new eSystem();
+            Commercial_System = new eSystem(name,pass);
         }
-
+        public void loaddata()
+        {
+            Commercial_System.loaddata();
+        }
         public Tuple<bool, string> initSystem(string userName, string pass,bool paymentconnection = true)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -51,6 +54,8 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Commercial_System.ProvideDeliveryForUser(username, paymentFlag);
         }
+
+
         public void clean(string n, string p)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

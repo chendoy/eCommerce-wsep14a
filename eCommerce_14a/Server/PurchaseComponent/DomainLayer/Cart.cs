@@ -7,8 +7,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class Cart
     {
-        private string user;
-        private Dictionary<Store, PurchaseBasket> baskets;
+        public string user { get; set; }
+        public Dictionary<Store, PurchaseBasket> baskets { get; set; }
         public double Price { get; private set; }
 
         public Cart(string user)
@@ -122,6 +122,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             return res;
+        }
+
+        public PurchaseBasket GetBasket(Store store)
+        {
+            if (baskets.ContainsKey(store))
+                return baskets[store];
+            else
+                return null;
         }
     }
 }

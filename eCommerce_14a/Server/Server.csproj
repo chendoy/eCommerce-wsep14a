@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Radzen.Blazor.2.7.2\build\Radzen.Blazor.props" Condition="Exists('..\packages\Radzen.Blazor.2.7.2\build\Radzen.Blazor.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,8 +38,89 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\launchSettings.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\CommunicationHandler.cs" />
+    <Compile Include="Communication\DataConverter.cs" />
+    <Compile Include="Communication\DataObject\Requests\AddProductToCartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\AddProductToStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\AppointManagerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\ChangeProductAmountInCartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DecreaseProductAmountRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllRegisteredUsersRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DemoteManagerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\DemoteOwnerRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllStoresHistoryRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAllUsersHistoryRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAvailableRawDiscountsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\IncreaseProductAmountRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\LoginAsGuestRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\LogoutRequest.cs" />
+    <Compile Include="Communication\DataObject\Message.cs" />
+    <Compile Include="Communication\DataObject\Requests\OpenStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\ProductInfoRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\RegisterRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\RemoveProductFromCartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\RemoveProductFromStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\SearchProductRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\StoresProductsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\UpdateDiscountPolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\UpdateProductOfStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\UpdatePurchasePolicyRequest.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAllStoresHistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAllUsersHistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAvailableRawDiscountsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStaffOfStoreResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\DemoteManagerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\DemoteOwnerResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\ErrorResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAllRegisteredUsersResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetProductsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStoresOwnedByResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetStoresResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetUsersCartResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\HistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\LoginAsGuestResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\LoginResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\LogoutResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\OpenStoreResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\ProductInfoResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\PurchaseResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\RegisterResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\RemoveProductFromCartResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\SearchProductResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\UpdateDiscountPolicyResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\UpdatePurchasePolicyResponse.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\DiscountPolicyData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\PurchasePolicyData.cs" />
+    <Compile Include="Communication\NetworkSecurity.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\CartData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\InventoryData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\ProductData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\PurchaseData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\PurchaseBasketData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\StoreData.cs" />
+    <Compile Include="Communication\DataObject\ThinObjects\UserData.cs" />
+    <Compile Include="Communication\WssServer.cs" />
+    <Compile Include="ServerStart.cs" />
+    <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
+    <Compile Include="StoreComponent\DomainLayer\Validator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
@@ -47,6 +131,8 @@
     <Compile Include="UserComponent\DomainLayer\PaymentHandler.cs" />
     <Compile Include="StoreComponent\DomainLayer\Product.cs" />
     <Compile Include="UserComponent\DomainLayer\Program.cs" />
+    <Compile Include="Communication\DataObject\Responses\NotifyData.cs" />
+    <Compile Include="UserComponent\Communication\Publisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\Cart.cs" />
     <Compile Include="PurchaseComponent\DomainLayer\Purchase.cs" />
@@ -61,13 +147,31 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.Common, Version=1.5.3.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperWebSocketNETServer.0.8\lib\net45\SuperSocket.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.Facility, Version=1.5.3.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperWebSocketNETServer.0.8\lib\net45\SuperSocket.Facility.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.SocketBase, Version=1.5.3.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperWebSocketNETServer.0.8\lib\net45\SuperSocket.SocketBase.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.SocketEngine, Version=1.5.3.0, Culture=neutral, PublicKeyToken=6c80000676988ebb, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperWebSocketNETServer.0.8\lib\net45\SuperSocket.SocketEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperWebSocket, Version=0.8.0.0, Culture=neutral, PublicKeyToken=7ba53b9a7cef5d1c, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperWebSocketNETServer.0.8\lib\net45\SuperWebSocket.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="StoreComponent\DomainLayer\PuarchsePolicy.cs" />
+    <Compile Include="StoreComponent\DomainLayer\PurchasePolicy.cs" />
     <Compile Include="StoreComponent\DomainLayer\Searcher.cs" />
     <Compile Include="UserComponent\DomainLayer\Security.cs" />
     <Compile Include="StoreComponent\DomainLayer\Store.cs" />
@@ -78,5 +182,14 @@
     <Compile Include="UserComponent\DomainLayer\UserManager.cs" />
     <Compile Include="UserComponent\ServiceLayer\UserService.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Image\bana.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Radzen.Blazor.2.7.2\build\Radzen.Blazor.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Radzen.Blazor.2.7.2\build\Radzen.Blazor.props'))" />
+  </Target>
 </Project>
