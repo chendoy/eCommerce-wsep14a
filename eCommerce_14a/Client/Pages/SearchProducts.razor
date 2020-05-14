@@ -61,6 +61,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Store Id</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Details</th>
@@ -71,8 +72,11 @@ else
             @foreach (var products in SearchResults)
             {
                 @foreach (var product in products.Value)
-                {
-                    <ProductRow StoreId="products.Key" Product="product"/>
+                {   
+                <tr>
+                    <td>@products.Key</td>
+                        <ProductRow StoreId="products.Key" Product="product" />
+                </tr>
                 }
             }
         </tbody>
@@ -105,8 +109,8 @@ else
             searchFields[SearcherKeys.ProductKeyWord] = ProductKeyword;
         }
 
-        List<double> priceRange = new List<double> { ProductPriceRangeStart, ProductPriceRangeEnd };
-        searchFields[SearcherKeys.ProductPriceRange] = priceRange;
+        searchFields[SearcherKeys.MinPrice] = ProductPriceRangeStart;
+        searchFields[SearcherKeys.MaxPrice] = ProductPriceRangeEnd;
 
         if (!String.IsNullOrWhiteSpace(Category))
         {
@@ -128,7 +132,8 @@ else
     {
         public static string ProductKeyWord = "SearchByProductKeyWord";
         public static string ProductRank = "searchByProductRank";
-        public static string ProductPriceRange = "searchByProductPriceRange";
+        public static string MinPrice = "minPrice";
+        public static string MaxPrice = "maxPrice";
         public static string ProductName = "SearchByProductName";
         public static string ProductCategory = "searchByCategory";
         public static string StoreRank = "SearchByStoreRank";
