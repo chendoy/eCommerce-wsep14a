@@ -113,9 +113,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             if (searchBy.ContainsKey(CommonStr.SearcherKeys.ProductPriceRange))
             {
-                Tuple<double, double> priceRange = (Tuple<double, double>)searchBy[CommonStr.SearcherKeys.ProductPriceRange];
-                double minPrice = priceRange.Item1;
-                double maxPrice = priceRange.Item2;
+                List<double> priceRange = (List<double>)searchBy[CommonStr.SearcherKeys.ProductPriceRange];
+                double minPrice = priceRange[0];
+                double maxPrice = priceRange[1];
 
 
                 if (product.Price > maxPrice || product.Price < minPrice)
