@@ -45,11 +45,65 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             AppointStoreManager("user5", "user4", 2);
             AppointStoreManager("user5", "user3", 2);
             AppointStoreOwner("user4", "user2", 1);
+
+            AppointStoreOwner("user4", "user6", 1);
             AppointStoreOwner("user5", "user1", 2);
             int[] perms = { 1, 1, 1, 1, 1 };
             ChangePermissions("user5", "user3", 2, perms);
         }
-        //Logger.logError(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, this, System.Reflection.MethodBase.GetCurrentMethod());
+        public Tuple<bool, string> ApproveAppoitment(string owner, string Appointed, int storeID, bool approval)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (owner == null || Appointed == null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Null Arguments");
+            }
+
+            if (owner == "" || Appointed == "")
+            {
+                Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Blank Arguemtns\n");
+            }
+            User appointer = UM.GetAtiveUser(owner);
+            User appointed = UM.GetUser(Appointed);
+            if (appointer is null || appointed is null)
+                return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
+            if (appointer.isguest() || appointed.isguest())
+                return new Tuple<bool, string>(false, "One of the users is a Guest\n");
+            //Remove this approvalRequest
+            appointer.INeedToApproveRemove(storeID, Appointed);
+            //Remove The Pending for the user
+            appointed.RemoveOtherApprovalRequest(storeID, owner);
+            //Set to false if False and the operation will fail.
+            if(!approval)
+            {
+                appointed.SetApprovalStatus(storeID, approval);
+                appointed.RemoveMasterAppointer(storeID);
+                return new Tuple<bool, string>(true, "User failed to become an owner");
+            }
+            if(appointed.CheckSApprovalStatus(storeID))
+            {
+                //User can be assigned to Store owner
+                Store store = storeManagment.getStore(storeID);
+                if (store is null)
+                {
+                    return new Tuple<bool, string>(false, "Store Does not Exist");
+                }
+                appointed.RemoveApprovalStatus(storeID);
+                store.AddStoreOwner(appointed);
+                appointed.AppointerMasterAppointer(storeID);
+                int[] p = { 1, 1, 1, 1, 1 };
+                appointed.setPermmisions(store.getStoreId(), p);
+                Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " is Approved"));
+                Tuple<bool, string> ans = Publisher.Instance.subscribe(Appointed, storeID);
+                if (!ans.Item1)
+                    return ans;
+                return appointed.addStoreOwnership(store);
+            }
+            return new Tuple<bool, string>(true, "User Still has some Work to do before he can become an Owner of this Store.");
+
+        }
         //Owner appoints addto to be Store Owner.
         public Tuple<bool, string> AppointStoreOwner(string owner, string addto, int storeId)
         {
@@ -80,15 +134,33 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, addto + " Is already Store Owner\n");
             if (!store.IsStoreOwner(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
-            store.AddStoreOwner(appointed);
-            int[] p = { 1, 1, 1 , 1, 1};
-            appointed.setPermmisions(store.getStoreId(), p);
-            appointed.addAppointment(appointer, id: store.getStoreId());
-            //Version 2 Addition
-            Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
-            if (!ans.Item1)
-                return ans;
-            return appointed.addStoreOwnership(store);
+
+            appointed.SetMasterAppointer(storeId, appointer);
+            List<string> owners = store.getOwners();
+            owners.Remove(owner);
+            if(owners.Count == 0)
+            {
+                //Is ready to become Owner.
+                store.AddStoreOwner(appointed);
+                appointed.AppointerMasterAppointer(storeId);
+                int[] p = { 1, 1, 1, 1, 1 };
+                appointed.setPermmisions(store.getStoreId(), p);
+                Publisher.Instance.Notify(addto, new NotifyData("Your request to be an Owner to Store - " + storeId + " is Approved"));
+                Tuple<bool, string> ansSuccess = Publisher.Instance.subscribe(addto, storeId);
+                if (!ansSuccess.Item1)
+                    return ansSuccess;
+                return appointed.addStoreOwnership(store);
+            }
+            appointed.SetApprovalStatus(storeId, true);
+            appointed.InsertOtherApprovalRequest(storeId, owners);
+            foreach(string storeOwner in owners)
+            {
+                User tmpOwner = UM.GetUser(storeOwner);
+                tmpOwner.INeedToApproveInsert(storeId, addto);
+                Publisher.Instance.Notify(storeOwner, new NotifyData("User: " + addto + " Is want to Be store:" + storeId + " Owner Let him know what you think"));
+
+            }
+            return new Tuple<bool, string>(true, "Waiting For Approal By store Owners");
         }
 
         public void cleanup()
