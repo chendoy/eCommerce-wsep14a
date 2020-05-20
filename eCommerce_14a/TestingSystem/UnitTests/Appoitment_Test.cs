@@ -35,8 +35,9 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             UM.Login("Appointed", "Test1");
             UM.Login("", "G", true);
             SM.createStore("owner","Store");
-            UM.Register("NotLogged", "Test1");
-            
+            UM.Register("user1", "Test1");
+            UM.Register("user2", "Test1");
+            UM.Register("user3", "Test1");
             Assert.IsNotNull(UM.GetAtiveUser("owner"));
             Assert.IsNotNull(UM.GetAtiveUser("Appointed"));
             Assert.IsNotNull(UM.GetAtiveUser("Guest3"));
@@ -83,6 +84,15 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsFalse(AP.AppointStoreOwner("Appointed", "NotLogged", 1).Item1);
             Assert.IsFalse(AP.AppointStoreOwner("Appointed", "Appointed", 1).Item1);
             Assert.IsFalse(AP.AppointStoreOwner("Appointed", "owner", 1).Item1);
+        }
+        [TestMethod]
+        public void AddNewStoreOwnerWaitingList()
+        {
+            Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 1).Item1);
+            AP.AppointStoreOwner("owner", "user1", 1);
+            Assert.IsFalse(SM.getStore(1).IsStoreOwner(UM.GetUser("user1")));
+            Assert.IsFalse(UM.GetUser("user1").isAppointedBy(UM.GetUser("owner"), 1));
+            Assert.IsFalse(UM.GetUser("user1").isStoreOwner(1));
         }
         [TestMethod]
         public void AddNewStoreOwner()

@@ -45,7 +45,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             AppointStoreManager("user5", "user4", 2);
             AppointStoreManager("user5", "user3", 2);
             AppointStoreOwner("user4", "user2", 1);
-
             AppointStoreOwner("user4", "user6", 1);
             AppointStoreOwner("user5", "user1", 2);
             int[] perms = { 1, 1, 1, 1, 1 };

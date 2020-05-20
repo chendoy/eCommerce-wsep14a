@@ -70,7 +70,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return false;
             }
             MasterAppointer.Remove(storeID);
-            AppointedBy.Add(storeID, masterA);
+            if (!AppointedBy.ContainsKey(storeID))
+            {
+                AppointedBy.Add(storeID, masterA);
+            }
             return true;
         }
         public bool RemoveMasterAppointer(int storeID)
