@@ -160,7 +160,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             return Inventory.IncreaseProductAmount(productId, amount);
         }
-
+        public List<string> getOwners()
+        {
+            List<string> ownerList = new List<string>();
+            foreach (User owner in owners)
+            {
+                ownerList.Add(owner.getUserName());
+            }
+            return ownerList;
+        }
         public Dictionary<string, string> getStaff()
         {
             Dictionary<string, string> staff = new Dictionary<string, string>();

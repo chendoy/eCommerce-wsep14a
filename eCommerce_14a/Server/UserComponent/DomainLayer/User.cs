@@ -7,53 +7,201 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using eCommerce_14a.UserComponent;
 using Server.UserComponent.Communication;
-using System.ComponentModel.DataAnnotations;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
 {
 
     public class User
-    {   
-        [Key]
-        public string Name { set; get; }
-
-        public int Id { set; get; }
-
-        public bool IsGuest { set; get; }
-
-        public bool IsAdmin { set; get; }
-
-        public bool IsLoggedIn { set; get; }
-
-        public Dictionary<int, Store> Store_Ownership { set; get; }
-
-        public LinkedList<NotifyData> UnreadMessages { set; get; }
-
-        public Dictionary<int, Store> Store_Managment { set; get; }
-        public Dictionary<int, int[]> Store_options { set; get; }
+    {
+        private string name;
+        private int id;
+        private bool isGuest;
+        private bool isAdmin, isLoggedIn;
+        private Dictionary<int, Store> Store_Ownership;
+        private LinkedList<NotifyData> unreadMessages;
+        private Dictionary<int, Store> Store_Managment;
+        private Dictionary<int, int[]> Store_options;
         //Contains the list of who appointed you to which store! not who you appointed to which store!
-        public Dictionary<int, User> AppointedBy { set; get; }
-        //private List<PurchaseBasket> Cart;
-        //private List<Purchase> Purchases;
+        private Dictionary<int, User> AppointedBy;
+        //Version 3 Use case - 4.3 Addings.
+        private Dictionary<int, User> MasterAppointer;
+        //Contains the list of who need to Approve his Ownership
+        private Dictionary<int, List<string>> NeedToApprove;
+        //Contains the list of who need to Approve his Ownership
+        private Dictionary<int, List<string>> WaitingForApproval;
+        //Contains the status of the Appoitment
+        private Dictionary<int, bool> IsApproved;
 
 
         public User(int id, string name, bool isGuest = true, bool isAdmin = false)
         {
-            Id = id;
-            Name = name;
-            IsGuest = isGuest;
-            IsAdmin = isAdmin;
-            IsLoggedIn = false;
+            this.id = id;
+            this.name = name;
+            this.isGuest = isGuest;
+            this.isAdmin = isAdmin;
+            this.isLoggedIn = false;
             Store_Ownership = new Dictionary<int, Store>();
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
-            UnreadMessages = new LinkedList<NotifyData>();
-            //Cart = new List<PurchaseBasket>();
-            //Purchases = new List<Purchase>();
+            //Version 3 Addings use casr 4.3
+            this.MasterAppointer = new Dictionary<int, User>();
+            this.NeedToApprove = new Dictionary<int, List<string>>();
+            this.WaitingForApproval = new Dictionary<int, List<string>>();
+            unreadMessages = new LinkedList<NotifyData>();
+            this.IsApproved = new Dictionary<int, bool>();
         }
-
+        //Get Function that Added
+        public List<string> getAllThatNeedToApprove(int storeID)
+        {
+            List<string> users;
+            if(!NeedToApprove.TryGetValue(storeID,out users))
+            {
+                users = new List<string>();
+            }
+            return users;
+        }
+        public bool AppointerMasterAppointer(int storeID)
+        {
+            User masterA;
+            if (!MasterAppointer.TryGetValue(storeID, out masterA))
+            {
+                return false;
+            }
+            MasterAppointer.Remove(storeID);
+            if (!AppointedBy.ContainsKey(storeID))
+            {
+                AppointedBy.Add(storeID, masterA);
+            }
+            return true;
+        }
+        public bool RemoveMasterAppointer(int storeID)
+        {
+            return MasterAppointer.Remove(storeID);
+        }
+        public Tuple<bool,string> SetMasterAppointer(int storeID,User masterA)
+        {
+            User master;
+            if (MasterAppointer.TryGetValue(storeID, out master))
+            {
+                return new Tuple<bool, string>(false,"Already has a master Appointer to this storeID");
+            }
+            MasterAppointer.Add(storeID,masterA);
+            return new Tuple<bool, string>(true,"Appointer Master Added");
+        }
+        public bool GetApprovalStatus(int storeID)
+        {
+            bool ans;
+            if (!IsApproved.TryGetValue(storeID, out ans))
+            {
+                ans =  false;
+            }
+            return ans;
+        }
+        public Dictionary<int,List<string>> GetAllWaitingForApproval()
+        {
+            return this.WaitingForApproval;
+        }
+        public List<string> GetAllWaitingForApproval(int storeID)
+        {
+            List<string> users;
+            if (!WaitingForApproval.TryGetValue(storeID, out users))
+            {
+                users = new List<string>();
+            }
+            return users;
+        }
+        //IsApprovedStatuse - Approved to become Store Owner.
+        public void SetApprovalStatus(int storeID,bool status)
+        {
+            bool ans;
+            if (!IsApproved.TryGetValue(storeID, out ans))
+            {
+                IsApproved.Add(storeID, status);
+            }
+            IsApproved[storeID] = status;
+        }
+        public bool RemoveApprovalStatus(int storeID)
+        {
+            bool ans;
+            if (!IsApproved.TryGetValue(storeID, out ans))
+            {
+                return false;
+            }
+            return IsApproved.Remove(storeID);
+        }
+        //Waiting for Approval List functions to become Store Owner
+        public void InsertOtherApprovalRequest(int storeID,List<string> user)
+        {
+            List<string> users;
+            if (NeedToApprove.TryGetValue(storeID, out users))
+            {
+                return;
+            }
+            NeedToApprove.Add(storeID, user);
+        }
+        public bool RemoveOtherApprovalRequest(int storeID, string user)
+        {
+            List<string> users;
+            if (NeedToApprove.TryGetValue(storeID, out users))
+            {
+                return NeedToApprove[storeID].Remove(user);
+            }
+            return false;
+        }
+        public bool RemoveOtherApprovalList(int storeID)
+        {
+            List<string> users;
+            if (NeedToApprove.TryGetValue(storeID, out users))
+            {
+                return NeedToApprove.Remove(storeID);
+            }
+            return false;
+        }
+        //Need to Approve other users as Current Store owner.
+        public void INeedToApproveInsert(int storeID, string user)
+        {
+            List<string> users;
+            if (WaitingForApproval.TryGetValue(storeID, out users))
+            {
+                WaitingForApproval[storeID].Add(user);
+                return;
+            }
+            users = new List<string>();
+            users.Add(user);
+            WaitingForApproval.Add(storeID, users);
+        }
+        public bool INeedToApproveRemove(int storeID, string user)
+        {
+            List<string> users;
+            if (WaitingForApproval.TryGetValue(storeID, out users))
+            {
+                return WaitingForApproval[storeID].Remove(user);
+            }
+            return false;
+        }
+        public bool INeedToApproveRemoveAllList(int storeID)
+        {
+            List<string> users;
+            if (WaitingForApproval.TryGetValue(storeID, out users))
+            {
+                return WaitingForApproval.Remove(storeID);
+            }
+            return false;
+        }
+        public bool CheckSApprovalStatus(int storeId)
+        {
+            bool ans = GetApprovalStatus(storeId);
+            List<string> needtoApprove = getAllThatNeedToApprove(storeId);
+            if(needtoApprove.Count == 0)
+            {
+                NeedToApprove[storeId] = new List<string>();
+                return ans;
+            }
+            return false;
+        }
+        //End of Adding to Use-case 4.3 version 3 addings.
         public Dictionary<int, int[]> GetUserPermissions() 
         {
             return Store_options;
@@ -61,50 +209,50 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public void LogIn()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            IsLoggedIn = true;
+            this.isLoggedIn = true;
         }
 
         public LinkedList<NotifyData> GetPendingMessages() 
         {
-            return this.UnreadMessages;
+            return this.unreadMessages;
         }
 
         public bool HasPendingMessages() 
         {
-            return this.UnreadMessages.Count != 0;
+            return this.unreadMessages.Count != 0;
         }
 
         public void RemovePendingMessage(NotifyData msg) 
         {
-            this.UnreadMessages.Remove(msg);
+            this.unreadMessages.Remove(msg);
         }
         public void RemoveAllPendingMessages()
         {
-            this.UnreadMessages = new LinkedList<NotifyData>();
+            this.unreadMessages = new LinkedList<NotifyData>();
         }
 
         public void Logout()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            this.IsLoggedIn = false;
+            this.isLoggedIn = false;
         }
         public string getUserName()
         {
-            return this.Name;
+            return this.name;
         }
         public int getUserID()
         {
-            return this.Id;
+            return this.id;
         }
         public bool LoggedStatus()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.IsLoggedIn;
+            return this.isLoggedIn;
         }
         public bool isguest()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.IsGuest;
+            return this.isGuest;
         }
 
         public bool getUserPermission(int storeid,string permission)
@@ -149,13 +297,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
             if (Store_Ownership.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Ownership.Add(store.GetStoreId(), store);
-            return setPermmisions(store.GetStoreId(), CommonStr.StorePermissions.FullPermissions);
+            Store_Ownership.Add(store.getStoreId(), store);
+            return setPermmisions(store.getStoreId(), CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
         {
-            this.UnreadMessages.AddLast(notification);
+            this.unreadMessages.AddLast(notification);
         }
 
         //Add a user to be store Manager
@@ -166,7 +314,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest user cannot be store Manager\n");
             if (Store_Managment.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Managment.Add(store.GetStoreId(), store);
+            Store_Managment.Add(store.getStoreId(), store);
             return new Tuple<bool, string>(true, "");
         }
         //Checks if User user appointed this current user to be owner or manager to this store
@@ -214,7 +362,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public bool isSystemAdmin()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.IsAdmin;
+            return this.isAdmin;
         }
         //Set User permission over spesific store
         public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set)
