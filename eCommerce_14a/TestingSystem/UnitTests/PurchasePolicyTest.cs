@@ -16,7 +16,7 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class PurchasePolicyTest
     {
-        Validator validator;
+        PolicyValidator validator;
         Cart cart;
         Store store;
         Dictionary<int, PreCondition> preConditionsDict;
@@ -25,7 +25,7 @@ namespace TestingSystem.UnitTests
         public void TestInitialize()
         {
 
-            validator = new Validator(null, null);
+            validator = new PolicyValidator(null, null);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
                 (PurchaseBasket basket, int productId, User user, Store store) => basket.Products.ContainsKey(productId) ? basket.Products[productId] <= 1 : false);

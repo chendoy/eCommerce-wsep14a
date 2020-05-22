@@ -460,7 +460,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return stores[storeId].isMainOwner(user);
+            return stores[storeId].IsMainOwner(user);
         }
 
 

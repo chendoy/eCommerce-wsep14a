@@ -13,7 +13,7 @@ namespace Server.Communication
         public DataConverter() { }
         public ProductData ToProductData(Product prod) 
         {
-            return new ProductData(prod.ProductID, prod.Name,prod.Category,prod.Details,prod.Price,prod.ImgUrl);
+            return new ProductData(prod.Id, prod.Name,prod.Category,prod.Details,prod.Price,prod.ImgUrl);
         }
 
         public CartData ToCartData(Cart cart) 

@@ -7,6 +7,7 @@ using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.UserComponent.Communication;
+using Server.DAL;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -150,6 +151,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Users_And_Hashes.Add(username, sha1);
             User nUser = new User(Available_ID, username, false);
             users.Add(username, nUser);
+            //insert to user to db:
             Available_ID++;
             return new Tuple<bool, string>(true, "");
         }

@@ -2,11 +2,14 @@
 using eCommerce_14a.Utils;
 using System;
 using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
+using Server.DAL;
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
+
     public class Cart
     {
+        [Key]
         public string user { get; set; }
         public Dictionary<Store, PurchaseBasket> baskets { get; set; }
         public double Price { get; private set; }
@@ -32,7 +35,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            if (!store.productExist(productId))
+            if (!store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }

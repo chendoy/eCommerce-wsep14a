@@ -12,7 +12,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public interface DiscountPolicy
     {
-        double CalcDiscount(PurchaseBasket basket, Validator validator);
+        double CalcDiscount(PurchaseBasket basket, PolicyValidator validator);
     }
 
     public class CompundDiscount : DiscountPolicy
@@ -28,7 +28,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             if (mergeType == CommonStr.DiscountMergeTypes.OR)
             {
@@ -103,7 +103,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
        
         virtual
-        public double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             return 0;
         }
@@ -119,13 +119,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discountProdutId = discountProdutId;
         }
 
-        public override double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public override double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             double reduction = 0;
             if (PreCondition.IsFulfilled(basket, discountProdutId, validator))
             {
                 int numProducts = basket.Products[discountProdutId];
-                double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
+                double price = basket.Store.GetProductDetails(discountProdutId).Item1.Price;
                 reduction = numProducts * ((Discount / 100) * price);
             }
             return reduction;
@@ -138,7 +138,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
         }
 
-        public override double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public override double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             if (PreCondition.IsFulfilled(basket, -1, validator))
                 return (Discount / 100) * basket.GetBasketOrigPrice();
@@ -159,13 +159,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discount = discount;
         }
 
-        public double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             double reduction = 0;
             if (basket.Products.ContainsKey(discountProdutId))
             {
                 int numProducts = basket.Products[discountProdutId];
-                double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
+                double price = basket.Store.GetProductDetails(discountProdutId).Item1.Price;
                 reduction = numProducts * ((discount/100) * price);
             }
             return reduction; ;

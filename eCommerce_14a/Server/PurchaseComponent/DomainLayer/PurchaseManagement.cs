@@ -81,7 +81,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            if (!store.productExist(productId))
+            if (!store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
@@ -96,7 +96,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ZeroProductAmountErrMsg);
             }
 
-            int amount = store.getProductDetails(productId).Item2;
+            int amount = store.GetProductDetails(productId).Item2;
 
             if (amount < wantedAmount)
             {
@@ -206,8 +206,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 currHistory.Add(userCart.GetBaskets()[store]);
                 purchasesHistoryByStore[store] = currHistory;
                 //Version 2 Addition
-                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.getStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
-                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new NotifyData(message_data));
+                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.GetStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.GetStoreId(), new NotifyData(message_data));
                 if (!ans.Item1)
                     return ans;
             }

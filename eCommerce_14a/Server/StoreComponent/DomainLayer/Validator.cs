@@ -9,13 +9,13 @@ using System.Collections.Generic;
 namespace Server.StoreComponent.DomainLayer
 
 {
-    public class Validator
+    public class PolicyValidator
     {
 
         private Dictionary<int, Func<PurchaseBasket,int, bool>> discountValidatorFunctions;
         private Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>> purchaseValidatorFunctions;
 
-        public Validator(Dictionary<int, Func<PurchaseBasket, int, bool>> discountFunctions, Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>> purchaseValidatorFunctions)
+        public PolicyValidator(Dictionary<int, Func<PurchaseBasket, int, bool>> discountFunctions, Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>> purchaseValidatorFunctions)
         {
             if (discountFunctions != null)
                 this.discountValidatorFunctions = discountFunctions;

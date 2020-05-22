@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
@@ -12,7 +13,9 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseBasket
     {
+        [Key]
         public string user { get; set; }
+        [Key]
         public  Store store { get; set; }
         public Dictionary<int, int> products { get; set; }
         public double Price { get; set; }
@@ -43,7 +46,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            if (!this.store.productExist(productId))
+            if (!this.store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
@@ -75,14 +78,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 products.Add(productId, wantedAmount);
             }
 
-            Tuple<bool, string> isValidBasket = store.checkIsValidBasket(this);
+            Tuple<bool, string> isValidBasket = store.CheckIsValidBasket(this);
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
                 return isValidBasket;
             }
 
-            Price = store.getBasketPriceWithDiscount(this);
+            Price = store.GetBasketPriceWithDiscount(this);
 
             return new Tuple<bool, string>(true, null);
         }
@@ -95,7 +98,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
-            Price = store.getBasketPriceWithDiscount(this);
+            Price = store.GetBasketPriceWithDiscount(this);
             return Price;
         }
 
@@ -121,7 +124,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return store.checkIsValidBasket(this);
+            return store.CheckIsValidBasket(this);
         }
 
         // For tests
@@ -136,11 +139,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
         public double GetBasketPriceWithDiscount()
         {
-            return store.getBasketPriceWithDiscount(this);
+            return store.GetBasketPriceWithDiscount(this);
         }
         public double GetBasketOrigPrice()
         {
-            return store.getBasketOrigPrice(this);
+            return store.GetBasketOrigPrice(this);
         }
 
         public double getBasketDiscount()

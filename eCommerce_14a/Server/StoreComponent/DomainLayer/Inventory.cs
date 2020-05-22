@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using eCommerce_14a.Utils;
+using System.ComponentModel.DataAnnotations;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -10,10 +11,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     
     public class Inventory
     {
+        [Key]
+        public int StoreId { set; get; }
         private Dictionary<int, Tuple<Product, int>> invProducts;
 
-        public Inventory()
+        public Inventory(int storeId)
         {
+            StoreId = storeId;
             this.invProducts = new Dictionary<int, Tuple<Product, int>>();
         }
 
@@ -51,7 +55,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             string pCategory = (string)productParams[CommonStr.ProductParams.ProductCategory];
             string imgUrl = (string)productParams[CommonStr.ProductParams.ProductImgUrl];
 
-            Product product = new Product(product_id: pId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
+            Product product = new Product(product_id: pId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl, storeId:StoreId);
             invProducts.Add(pId, new Tuple<Product, int>(product, amount));
 
             return new Tuple<bool, string>(true, "");
@@ -187,27 +191,23 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public static Tuple<bool, string> isValidInventory(Dictionary<int, Tuple<Product, int>> inv)
         {
-            Logger.logEvent(new Inventory(), System.Reflection.MethodBase.GetCurrentMethod());
 
             if (inv == null)
             {
-                Logger.logError(CommonStr.InventoryErrorMessage.NullInventroyErrMsg, new Inventory(), System.Reflection.MethodBase.GetCurrentMethod()); ;
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NullInventroyErrMsg);
             }
             //checking the amount of each product is not negative and each key matches the product id
             foreach (KeyValuePair<int, Tuple<Product, int>> entry in inv)
             {
-                int productId = entry.Value.Item1.ProductID;
+                int productId = entry.Value.Item1.Id;
                 int productAmount = entry.Value.Item2;
                 if (productAmount < 0)
                 {
-                    Logger.logEvent(new Inventory(), System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
 
                 }
                 if (productId != entry.Key)
                 {
-                    Logger.logError(CommonStr.InventoryErrorMessage.UnmatchedProductAnKeyErrMsg, new Inventory(), System.Reflection.MethodBase.GetCurrentMethod());
                     return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.UnmatchedProductAnKeyErrMsg);
                 }
             }

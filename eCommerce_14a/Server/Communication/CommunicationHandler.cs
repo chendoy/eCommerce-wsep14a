@@ -171,7 +171,7 @@ namespace eCommerce_14a.Communication
             List<Product> prodList = ans[res.StoreId];
             foreach (Product product in prodList) 
             {
-                if (product.ProductID == res.ProductId)
+                if (product.Id == res.ProductId)
                 {
                     prod = product;
                     break;

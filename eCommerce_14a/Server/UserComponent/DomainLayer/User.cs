@@ -7,39 +7,49 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using eCommerce_14a.UserComponent;
 using Server.UserComponent.Communication;
+using System.ComponentModel.DataAnnotations;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
 {
 
     public class User
-    {
-        private string name;
-        private int id;
-        private bool isGuest;
-        private bool isAdmin, isLoggedIn;
-        private Dictionary<int, Store> Store_Ownership;
-        private LinkedList<NotifyData> unreadMessages;
-        private Dictionary<int, Store> Store_Managment;
-        private Dictionary<int, int[]> Store_options;
+    {   
+        [Key]
+        public string Name { set; get; }
+
+        public int Id { set; get; }
+
+        public bool IsGuest { set; get; }
+
+        public bool IsAdmin { set; get; }
+
+        public bool IsLoggedIn { set; get; }
+
+        public Dictionary<int, Store> Store_Ownership { set; get; }
+
+        public LinkedList<NotifyData> UnreadMessages { set; get; }
+
+        public Dictionary<int, Store> Store_Managment { set; get; }
+        public Dictionary<int, int[]> Store_options { set; get; }
         //Contains the list of who appointed you to which store! not who you appointed to which store!
-        private Dictionary<int, User> AppointedBy;
+        public Dictionary<int, User> AppointedBy { set; get; }
         //private List<PurchaseBasket> Cart;
         //private List<Purchase> Purchases;
 
 
         public User(int id, string name, bool isGuest = true, bool isAdmin = false)
         {
-            this.id = id;
-            this.name = name;
-            this.isGuest = isGuest;
-            this.isAdmin = isAdmin;
-            this.isLoggedIn = false;
+            Id = id;
+            Name = name;
+            IsGuest = isGuest;
+            IsAdmin = isAdmin;
+            IsLoggedIn = false;
             Store_Ownership = new Dictionary<int, Store>();
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
-            unreadMessages = new LinkedList<NotifyData>();
+            UnreadMessages = new LinkedList<NotifyData>();
             //Cart = new List<PurchaseBasket>();
             //Purchases = new List<Purchase>();
         }
@@ -51,50 +61,50 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public void LogIn()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            this.isLoggedIn = true;
+            IsLoggedIn = true;
         }
 
         public LinkedList<NotifyData> GetPendingMessages() 
         {
-            return this.unreadMessages;
+            return this.UnreadMessages;
         }
 
         public bool HasPendingMessages() 
         {
-            return this.unreadMessages.Count != 0;
+            return this.UnreadMessages.Count != 0;
         }
 
         public void RemovePendingMessage(NotifyData msg) 
         {
-            this.unreadMessages.Remove(msg);
+            this.UnreadMessages.Remove(msg);
         }
         public void RemoveAllPendingMessages()
         {
-            this.unreadMessages = new LinkedList<NotifyData>();
+            this.UnreadMessages = new LinkedList<NotifyData>();
         }
 
         public void Logout()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            this.isLoggedIn = false;
+            this.IsLoggedIn = false;
         }
         public string getUserName()
         {
-            return this.name;
+            return this.Name;
         }
         public int getUserID()
         {
-            return this.id;
+            return this.Id;
         }
         public bool LoggedStatus()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.isLoggedIn;
+            return this.IsLoggedIn;
         }
         public bool isguest()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.isGuest;
+            return this.IsGuest;
         }
 
         public bool getUserPermission(int storeid,string permission)
@@ -139,13 +149,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
             if (Store_Ownership.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Ownership.Add(store.getStoreId(), store);
-            return setPermmisions(store.getStoreId(), CommonStr.StorePermissions.FullPermissions);
+            Store_Ownership.Add(store.GetStoreId(), store);
+            return setPermmisions(store.GetStoreId(), CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
         {
-            this.unreadMessages.AddLast(notification);
+            this.UnreadMessages.AddLast(notification);
         }
 
         //Add a user to be store Manager
@@ -156,7 +166,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest user cannot be store Manager\n");
             if (Store_Managment.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Managment.Add(store.getStoreId(), store);
+            Store_Managment.Add(store.GetStoreId(), store);
             return new Tuple<bool, string>(true, "");
         }
         //Checks if User user appointed this current user to be owner or manager to this store
@@ -204,7 +214,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public bool isSystemAdmin()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.isAdmin;
+            return this.IsAdmin;
         }
         //Set User permission over spesific store
         public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set)

@@ -3,16 +3,19 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.StoreComponent.DomainLayer;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {  
     public interface PurchasePolicy
     {
-        bool IsEligiblePurchase(PurchaseBasket basket, Validator validator);
+        bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
     }
     public class CompundPurchasePolicy : PurchasePolicy
     {
+
         private List<PurchasePolicy> children;
+
         public int mergeType { get; set; }
 
         public CompundPurchasePolicy(int mergeType, List<PurchasePolicy> children)
@@ -24,7 +27,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
             if (mergeType == CommonStr.PurchaseMergeTypes.AND)
             {
@@ -87,7 +90,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
         abstract
-        public bool IsEligiblePurchase(PurchaseBasket basket, Validator validator);
+        public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
 
         public PreCondition PreCondition
         {
@@ -103,7 +106,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.policyProductId = policyProductId;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
             return PreCondition.IsFulfilled(basket, policyProductId, null, null, validator);
         }
@@ -117,7 +120,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
             return PreCondition.IsFulfilled(basket, -1, null, null, validator);
         }
@@ -131,7 +134,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.store = store;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
             return PreCondition.IsFulfilled(basket, -1, null, store, validator);
         }
@@ -145,7 +148,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.user = user;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
             return PreCondition.IsFulfilled(basket, -1, user, null, validator);
         }

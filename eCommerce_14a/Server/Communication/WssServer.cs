@@ -13,6 +13,7 @@ using Server.Communication.DataObject.Responses;
 using System.Collections.Generic;
 using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
+using Server.DAL;
 
 namespace eCommerce_14a.Communication
 {

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
@@ -14,13 +12,27 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     /// <testclass cref ="TestingSystem.UnitTests.StoreTest/>
     public class Store
     {
-        private DiscountPolicy discountPolicy;
-        private PurchasePolicy purchasePolicy;
-        private Validator policyValidator;
-        private Inventory inventory;
-        private int rank;
-        private string storeName;
-        private bool activeStore;
+        [Key]
+        public int Id { set; get; }
+
+        public DiscountPolicy DiscountPolicy { set; get; }
+        public PurchasePolicy PurchasePolicy { set; get; }
+
+        public PolicyValidator PolicyValidator { set; get; }
+
+        public Inventory Inventory { set; get; }
+
+        public int Rank { set; get; }
+
+        public string StoreName { set; get; }
+
+
+        public bool ActiveStore { set; get; }
+
+        public List<User> owners{ set; get; }
+
+        public List<User> managers{ set; get; }
+
 
         /// <summary>
         /// ONLY For generating Stubs
@@ -31,26 +43,26 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Store(Dictionary<string, object> store_params)
         {
-            this.Id = (int)store_params[CommonStr.StoreParams.StoreId];
-            this.storeName = (string)store_params[CommonStr.StoreParams.StoreName];
-            this.owners = new List<User>();
+            Id = (int)store_params[CommonStr.StoreParams.StoreId];
+            StoreName = (string)store_params[CommonStr.StoreParams.StoreName];
+            owners = new List<User>();
             User storeOwner = (User)store_params[CommonStr.StoreParams.mainOwner];
-            this.owners.Add(storeOwner);
-            this.managers = new List<User>(); 
+            owners.Add(storeOwner);
+            managers = new List<User>(); 
 
             if (!store_params.ContainsKey(CommonStr.StoreParams.StoreInventory) || store_params[CommonStr.StoreParams.StoreInventory] == null)
             {
-                this.inventory = new Inventory();
+                Inventory = new Inventory(Id);
             }
             else
             {
-                this.inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
+                Inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
             }
 
 
             if (!store_params.ContainsKey(CommonStr.StoreParams.Validator) || store_params[CommonStr.StoreParams.Validator] == null)
             {
-                policyValidator = new Validator(null, null);
+                PolicyValidator = new PolicyValidator(null, null);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000,
                   (PurchaseBasket basket, int productId) => basket.GetBasketOrigPrice() > 1000);
@@ -62,23 +74,23 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 2 : false);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove100,
-                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 100 : false);
+                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 100 : false);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove200,
-                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 200 : false);
+                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 200 : false);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
                     (PurchaseBasket basket, int productId, User user, Store store) => true);
 
-                policyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.NoDiscount,
+                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.NoDiscount,
                     (PurchaseBasket basket, int productId) => true);
 
 
-                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
                      (PurchaseBasket basket, int productId, User user, Store store) => true);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
-                    (PurchaseBasket basket, int productId, User user, Store store) => !basket.Products.ContainsKey(productId)? true : basket.Products[productId] <= 1);
+                    (PurchaseBasket basket, int productId, User user, Store store) => !basket.Products.ContainsKey(productId) ? true : basket.Products[productId] <= 1);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
                     (PurchaseBasket basket, int productId, User user, Store store) => basket.GetNumProductsAtBasket() <= 10);
@@ -93,37 +105,37 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else
             {
-                this.policyValidator = (Validator)store_params[CommonStr.StoreParams.Validator];
+                PolicyValidator = (PolicyValidator)store_params[CommonStr.StoreParams.Validator];
             }
             
             if(!store_params.ContainsKey(CommonStr.StoreParams.StoreDiscountPolicy) || store_params[CommonStr.StoreParams.StoreDiscountPolicy] == null)
             {
-                this.discountPolicy = new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
+                DiscountPolicy = new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
             }
             else
             {
-                this.discountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
+                DiscountPolicy = (DiscountPolicy)store_params[CommonStr.StoreParams.StoreDiscountPolicy];
             }
             
             if(!store_params.ContainsKey(CommonStr.StoreParams.StorePuarchsePolicy) || store_params[CommonStr.StoreParams.StorePuarchsePolicy] == null)
             {
-                this.purchasePolicy = new BasketPurchasePolicy(new PurchasePreCondition(CommonStr.PurchasePreCondition.allwaysTrue));
+                PurchasePolicy = new BasketPurchasePolicy(new PurchasePreCondition(CommonStr.PurchasePreCondition.allwaysTrue));
             }
             else
             {
-                this.purchasePolicy = (PurchasePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
+                PurchasePolicy = (PurchasePolicy)store_params[CommonStr.StoreParams.StorePuarchsePolicy];
             }
 
             if (!store_params.ContainsKey(CommonStr.StoreParams.StoreRank) || store_params[CommonStr.StoreParams.StoreRank] == null)
             {
-                this.rank = 1;
+                Rank = 1;
             }
             else
             {
-                this.rank = (int)store_params[CommonStr.StoreParams.StoreRank];
+                Rank = (int)store_params[CommonStr.StoreParams.StoreRank];
             }
 
-            this.activeStore = true;
+            ActiveStore = true;
         }
 
   
@@ -146,7 +158,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.IncreaseProductAmount(productId, amount);
+            return Inventory.IncreaseProductAmount(productId, amount);
         }
 
         public Dictionary<string, string> getStaff()
@@ -183,7 +195,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.DecraseProductAmount(productId, amount);
+            return Inventory.DecraseProductAmount(productId, amount);
         }
 
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
@@ -234,7 +246,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else
             {
-                this.discountPolicy = newPolicy;
+                this.DiscountPolicy = newPolicy;
                 return new Tuple<bool, string>(true, "");
             }
         }
@@ -263,7 +275,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             }
             else {
-                this.purchasePolicy = newPolicy;
+                this.PurchasePolicy = newPolicy;
                 return new Tuple<bool, string>(true, "");
             }
           
@@ -325,21 +337,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new ConditionalProductDiscount(discountProdutId, new DiscountPreCondition(preCondition), discountPrecentage);
             }
 
-            else if (discountPolicy.GetType() == typeof(DiscountConditionalBasketData))
+            else if (DiscountPolicy.GetType() == typeof(DiscountConditionalBasketData))
             {
                 int preCondition = ((DiscountConditionalBasketData)thinDiscountPolicy).PreCondition;
                 double discountPrecentage = ((DiscountConditionalBasketData)thinDiscountPolicy).DiscountPercent;
                 return new ConditionalBasketDiscount(new DiscountPreCondition(preCondition), discountPrecentage);
             }
 
-            else if (discountPolicy.GetType() == typeof(DiscountRevealdData))
+            else if (DiscountPolicy.GetType() == typeof(DiscountRevealdData))
             {
                 int discountProdutId = ((DiscountRevealdData)thinDiscountPolicy).ProductId;
                 double discountPrecentage = ((DiscountRevealdData)thinDiscountPolicy).DiscountPrecent;
                 return new RevealdDiscount(discountProdutId, discountPrecentage);
             }
 
-            else if (discountPolicy.GetType() == typeof(CompoundDiscountPolicyData))
+            else if (DiscountPolicy.GetType() == typeof(CompoundDiscountPolicyData))
             {
                 int mergetype = ((CompoundDiscountPolicyData)thinDiscountPolicy).MergeType;
                 List<DiscountPolicyData> policies = ((CompoundDiscountPolicyData)thinDiscountPolicy).DiscountChildren;
@@ -375,7 +387,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.removeProduct(productId);
+            return Inventory.removeProduct(productId);
         }
 
         public Tuple<bool, string> appendProduct(User user, Dictionary<string, object> productParams, int amount)
@@ -398,7 +410,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.appendProduct(productParams, amount);
+            return Inventory.appendProduct(productParams, amount);
         }
 
 
@@ -423,16 +435,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return inventory.UpdateProduct(productParams);
+            return Inventory.UpdateProduct(productParams);
         }
 
         public Tuple<bool, string> DecraseProductAmountAfterPuarchse(int productId, int amount)
         {
-            return inventory.DecraseProductAmount(productId, amount);
+            return Inventory.DecraseProductAmount(productId, amount);
         }
         public Tuple<bool, string> IncreaseProductAmountAfterFailedPuarchse(int productId, int amount)
         {
-            return inventory.IncreaseProductAmount(productId, amount);
+            return Inventory.IncreaseProductAmount(productId, amount);
         }
 
         public Dictionary<string, object> getSotoreInfo()
@@ -443,9 +455,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             store_info.Add(CommonStr.StoreParams.StoreId, Id);
             if (owners.Count > 0)
                 store_info.Add(CommonStr.StoreParams.mainOwner,owners[0]);
-            store_info.Add(CommonStr.StoreParams.StoreInventory, inventory);
-            store_info.Add(CommonStr.StoreParams.StoreDiscountPolicy, discountPolicy);
-            store_info.Add(CommonStr.StoreParams.StorePuarchsePolicy, purchasePolicy);
+            store_info.Add(CommonStr.StoreParams.StoreInventory, Inventory);
+            store_info.Add(CommonStr.StoreParams.StoreDiscountPolicy, DiscountPolicy);
+            store_info.Add(CommonStr.StoreParams.StorePuarchsePolicy, PurchasePolicy);
             store_info.Add(CommonStr.StoreParams.IsActiveStore, ActiveStore);
             store_info.Add(CommonStr.StoreParams.StoreRank, Rank);
             return store_info;
@@ -499,105 +511,63 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return owners.Remove(user);
         }
 
-        public int Rank
-        {
-            get { return rank; }
-            set { rank = value; }
-        }
 
-
-        internal int getStoreId()
+        internal int GetStoreId()
         {
             return Id;
         }
 
 
-        public List<User> owners {
-            // we dont check for correctn's because it's appoitnment responsibility
-            set; get; }
-
-        public List<User> managers {
-            // we dont check for correctn's because it's appoitnment responsibility
-            set; get; }
-
-        public int Id { get; }
-
-        public Inventory Inventory
-        {
-            get { return inventory; }
-            set { inventory = value; }
-        }
-
-        public Validator PolicyValidator
-        {
-            set { this.policyValidator = value; }
-            get { return policyValidator; }
-        }
-
   
 
-        public DiscountPolicy DiscountPolices
-        {
-            get { return discountPolicy; }
-        }
-
-        public PurchasePolicy PurchasePolicy
-        {
-            get { return purchasePolicy; }
-        }
-     
-        public bool ActiveStore {
-            get { return this.activeStore; }
-            set { activeStore = value; } 
-        }
 
         //return product and its amount in the inventory
-        public Tuple<Product, int> getProductDetails(int productId)
+        public Tuple<Product, int> GetProductDetails(int productId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return inventory.getProductDetails(productId);
+            return Inventory.getProductDetails(productId);
         }
 
-        public bool productExist(int productId)
+        public bool ProductExist(int productId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return inventory.productExist(productId);
+            return Inventory.productExist(productId);
         }
 
 
-        public double getBasketOrigPrice(PurchaseBasket basket)
+        public double GetBasketOrigPrice(PurchaseBasket basket)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return inventory.getBasketPrice(basket.products);
+            return Inventory.getBasketPrice(basket.products);
         }
 
-        public double getBasketPriceWithDiscount(PurchaseBasket basket)
+        public double GetBasketPriceWithDiscount(PurchaseBasket basket)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            double basketPrice = getBasketOrigPrice(basket);
-            double overallDiscount = discountPolicy.CalcDiscount(basket, policyValidator);
+            double basketPrice = GetBasketOrigPrice(basket);
+            double overallDiscount = DiscountPolicy.CalcDiscount(basket, PolicyValidator);
             double priceAfterDiscount = basketPrice - overallDiscount;
 
             return priceAfterDiscount;
         }
 
-        public Tuple<bool, string> checkIsValidBasket(PurchaseBasket basket)
+        public Tuple<bool, string> CheckIsValidBasket(PurchaseBasket basket)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
             //checks if the basket accomodate the store's purchase policy
-            if (!purchasePolicy.IsEligiblePurchase(basket, policyValidator))
+            if (!PurchasePolicy.IsEligiblePurchase(basket, PolicyValidator))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.BasketNotAcceptPurchasePolicy);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.BasketNotAcceptPurchasePolicy);
             }
-            return inventory.isValidBasket(basket.Products);
+            return Inventory.isValidBasket(basket.Products);
         }
 
-        public bool isMainOwner(User user)
+        public bool IsMainOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -609,7 +579,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public string GetName()
         {
-            return this.storeName;
+            return this.StoreName;
         }
     }
 }

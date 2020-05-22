@@ -364,7 +364,7 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreId], validStore.Id);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PurchasePolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
@@ -433,7 +433,7 @@ namespace TestingSystem.UnitTests.StoreTest
             return s;
         }
 
-        public static Store initValidStore(Validator validator=null)
+        public static Store initValidStore(PolicyValidator validator=null)
         {
             StoreManagment sm = StoreManagment.Instance;
             UserManager userManager = UserManager.Instance;
@@ -455,7 +455,7 @@ namespace TestingSystem.UnitTests.StoreTest
             {
                 validStore.PolicyValidator = validator;
             }
-            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList(validStore.Id));
             return validStore;
         }
         
