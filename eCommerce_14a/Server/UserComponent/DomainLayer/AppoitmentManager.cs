@@ -93,7 +93,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 store.AddStoreOwner(appointed);
                 appointed.AppointerMasterAppointer(storeID);
                 int[] p = { 1, 1, 1, 1, 1 };
-                appointed.setPermmisions(store.getStoreId(), p);
+                appointed.setPermmisions(store.GetStoreId(), p);
                 Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " is Approved"));
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(Appointed, storeID);
                 if (!ans.Item1)
@@ -143,7 +143,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 store.AddStoreOwner(appointed);
                 appointed.AppointerMasterAppointer(storeId);
                 int[] p = { 1, 1, 1, 1, 1 };
-                appointed.setPermmisions(store.getStoreId(), p);
+                appointed.setPermmisions(store.GetStoreId(), p);
                 Publisher.Instance.Notify(addto, new NotifyData("Your request to be an Owner to Store - " + storeId + " is Approved"));
                 Tuple<bool, string> ansSuccess = Publisher.Instance.subscribe(addto, storeId);
                 if (!ansSuccess.Item1)
@@ -202,10 +202,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!store.IsStoreOwner(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             store.AddStoreManager(appointed);
-            appointed.addAppointment(appointer, store.getStoreId());
+            appointed.addAppointment(appointer, store.GetStoreId());
             Tuple<bool, string> res = appointed.addStoreManagment(store);
             int[] p = {1, 1, 0, 0, 0};
-            appointed.setPermmisions(store.getStoreId(), p);
+            appointed.setPermmisions(store.GetStoreId(), p);
             //Version 2 Addition
             Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
             if (!ans.Item1)
@@ -242,11 +242,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, m + " Is already Store Owner\n");
             if (!store.IsStoreOwner(owner))
                 return new Tuple<bool, string>(false, o + "Is not a store Owner\n");
-            if (!manager.isAppointedBy(owner, store.getStoreId()))
+            if (!manager.isAppointedBy(owner, store.GetStoreId()))
                 return new Tuple<bool, string>(false, m + "Is not appointed by " + o + "to be store manager\n");
             store.RemoveManager(manager);
-            manager.RemoveStoreManagment(store.getStoreId());
-            manager.RemovePermission(store.getStoreId());
+            manager.RemoveStoreManagment(store.GetStoreId());
+            manager.RemovePermission(store.GetStoreId());
             //Version 2 Addition
             Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a StoreID: "+storeId +" StoreName: "+store.GetName() +" Manager any More"));
             if (!message.Item1)
@@ -254,7 +254,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(m, storeId);
             if (!ans.Item1)
                 return ans;
-            return new Tuple<bool, string>(manager.RemoveAppoitment(owner, store.getStoreId()), "");
+            return new Tuple<bool, string>(manager.RemoveAppoitment(owner, store.GetStoreId()), "");
         }
         public Tuple<bool, string> ChangePermissions(string ownerS, string worker, int storeId, int[] permissions)
         {
@@ -286,9 +286,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, worker + " Is already Store Owner\n");
             if (!store.IsStoreOwner(owner))
                 return new Tuple<bool, string>(false, ownerS + "Is not a store Owner\n");
-            if (!manager.isAppointedBy(owner, store.getStoreId()))
+            if (!manager.isAppointedBy(owner, store.GetStoreId()))
                 return new Tuple<bool, string>(false, worker + "Is not appointed by " + ownerS + "to be store manager\n");
-            return manager.setPermmisions(store.getStoreId(), permissions);
+            return manager.setPermmisions(store.GetStoreId(), permissions);
         }
         //Temp function for tests
         //Add user to logged in list and Remove user from logged in lists.

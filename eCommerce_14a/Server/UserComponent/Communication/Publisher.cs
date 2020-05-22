@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.Communication;
 using eCommerce_14a.UserComponent.DomainLayer;
+using Server.DAL;
 
 namespace Server.UserComponent.Communication
 {
@@ -111,10 +112,18 @@ namespace Server.UserComponent.Communication
             foreach(string username in users)
             {
                 User user = UM.GetUser(username);
+                //add notification's user
+                notification.UserName = username;
                 if (!user.LoggedStatus())
+                {
                     user.AddMessage(notification);
+                    //add message to db, thus user can get it later
+                    DbManager.Instance.InsertUserNotification(notification);
+                }
                 else
+                {
                     ws.notify(username, notification);
+                }
             }
             return new Tuple<bool, string>(true, "");
         }
@@ -126,12 +135,20 @@ namespace Server.UserComponent.Communication
                 return new Tuple<bool, string>(true, "ws undefiened");
             }
             User user = UM.GetUser(username);
-           if (!user.LoggedStatus())
+            //add notification's user
+            notification.UserName = username;
+            if (!user.LoggedStatus())
+            {
                 user.AddMessage(notification);
-           else
+                //add message to db, thus user can get it later
+                DbManager.Instance.InsertUserNotification(notification);
+            }
+            else
+            {
                 ws.notify(username, notification);
-            
-           return new Tuple<bool, string>(true, "");
+            }
+
+            return new Tuple<bool, string>(true, "");
         }
         public void cleanup()
         {

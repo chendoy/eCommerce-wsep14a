@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
-using eCommerce_14a.UserComponent;
 using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
@@ -14,10 +11,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
     public class User
     {
-        private string name;
-        private int id;
-        private bool isGuest;
-        private bool isAdmin, isLoggedIn;
+        public string Name { set; get; }
+        public int Id { set; get; }
+        public bool IsGuest { set; get; }
+        public bool IsAdmin { set; get; }
+        public bool IsLoggedIn{ set; get; }
+
+
+
         private Dictionary<int, Store> Store_Ownership;
         private LinkedList<NotifyData> unreadMessages;
         private Dictionary<int, Store> Store_Managment;
@@ -36,21 +37,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
         public User(int id, string name, bool isGuest = true, bool isAdmin = false)
         {
-            this.id = id;
-            this.name = name;
-            this.isGuest = isGuest;
-            this.isAdmin = isAdmin;
-            this.isLoggedIn = false;
+            Id = id;
+            Name = name;
+            IsGuest = isGuest;
+            IsAdmin = isAdmin;
+            IsLoggedIn = false;
             Store_Ownership = new Dictionary<int, Store>();
             Store_Managment = new Dictionary<int, Store>();
             AppointedBy = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
             //Version 3 Addings use casr 4.3
-            this.MasterAppointer = new Dictionary<int, User>();
-            this.NeedToApprove = new Dictionary<int, List<string>>();
-            this.WaitingForApproval = new Dictionary<int, List<string>>();
+            MasterAppointer = new Dictionary<int, User>();
+            NeedToApprove = new Dictionary<int, List<string>>();
+            WaitingForApproval = new Dictionary<int, List<string>>();
             unreadMessages = new LinkedList<NotifyData>();
-            this.IsApproved = new Dictionary<int, bool>();
+            IsApproved = new Dictionary<int, bool>();
         }
         //Get Function that Added
         public List<string> getAllThatNeedToApprove(int storeID)
@@ -209,7 +210,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public void LogIn()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            this.isLoggedIn = true;
+            this.IsLoggedIn = true;
         }
 
         public LinkedList<NotifyData> GetPendingMessages() 
@@ -234,25 +235,25 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public void Logout()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            this.isLoggedIn = false;
+            this.IsLoggedIn = false;
         }
         public string getUserName()
         {
-            return this.name;
+            return this.Name;
         }
         public int getUserID()
         {
-            return this.id;
+            return this.Id;
         }
         public bool LoggedStatus()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.isLoggedIn;
+            return this.IsLoggedIn;
         }
         public bool isguest()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.isGuest;
+            return this.IsGuest;
         }
 
         public bool getUserPermission(int storeid,string permission)
@@ -297,8 +298,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
             if (Store_Ownership.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Ownership.Add(store.getStoreId(), store);
-            return setPermmisions(store.getStoreId(), CommonStr.StorePermissions.FullPermissions);
+            Store_Ownership.Add(store.GetStoreId(), store);
+            return setPermmisions(store.GetStoreId(), CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
@@ -314,7 +315,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest user cannot be store Manager\n");
             if (Store_Managment.ContainsValue(store))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Managment.Add(store.getStoreId(), store);
+            Store_Managment.Add(store.GetStoreId(), store);
             return new Tuple<bool, string>(true, "");
         }
         //Checks if User user appointed this current user to be owner or manager to this store
@@ -362,7 +363,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public bool isSystemAdmin()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.isAdmin;
+            return this.IsAdmin;
         }
         //Set User permission over spesific store
         public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set)

@@ -136,10 +136,18 @@
     <Compile Include="Communication\DataObject\ThinObjects\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
     <Compile Include="DAL\EcommerceContext.cs" />
-    <Compile Include="DAL\Operations.cs" />
-    <Compile Include="Migrations\202005211306076_InitialCreate.cs" />
-    <Compile Include="Migrations\202005211306076_InitialCreate.designer.cs">
-      <DependentUpon>202005211306076_InitialCreate.cs</DependentUpon>
+    <Compile Include="DAL\DbManager.cs" />
+    <Compile Include="DAL\UserDb\CandidateToOwnership.cs" />
+    <Compile Include="DAL\UserDb\DbUser.cs" />
+    <Compile Include="DAL\UserDb\INeedToApprove.cs" />
+    <Compile Include="DAL\UserDb\StoreManagers.cs" />
+    <Compile Include="DAL\UserDb\StoreOwnership.cs" />
+    <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
+    <Compile Include="DAL\UserDb\TheyNeedToAprove.cs" />
+    <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
+    <Compile Include="Migrations\202005221426502_InitialCreate.cs" />
+    <Compile Include="Migrations\202005221426502_InitialCreate.designer.cs">
+      <DependentUpon>202005221426502_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -257,8 +265,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005211306076_InitialCreate.resx">
-      <DependentUpon>202005211306076_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005221426502_InitialCreate.resx">
+      <DependentUpon>202005221426502_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
