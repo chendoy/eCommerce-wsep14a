@@ -7,7 +7,6 @@ namespace Server.StoreComponent.DomainLayer
 {
     public class PreCondition
     {
-        [Key]
         public int preCondNumber {set; get;}
         public PreCondition(int num)
         {

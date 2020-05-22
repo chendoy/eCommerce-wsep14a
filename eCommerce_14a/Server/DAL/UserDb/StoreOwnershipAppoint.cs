@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.DAL.UserDb
 {
-    public class StoreOwnership
+    public class StoreOwnershipAppoint
     {
 
         [Key, ForeignKey("Appointer")]
@@ -29,7 +29,7 @@ namespace Server.DAL.UserDb
 
 
 
-        public StoreOwnership(string appointer, string appointed, Store store)
+        public StoreOwnershipAppoint(string appointer, string appointed, Store store)
         {
             AppointedName = appointed;
             AppointerName = appointer;

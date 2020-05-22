@@ -12,7 +12,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     /// <testclass cref ="TestingSystem.UnitTests.StoreTest/>
     public class Store
     {
-        [Key]
+
         public int Id { set; get; }
 
         public DiscountPolicy DiscountPolicy { set; get; }

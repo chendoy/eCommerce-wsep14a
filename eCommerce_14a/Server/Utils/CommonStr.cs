@@ -1,4 +1,6 @@
-﻿namespace eCommerce_14a.Utils
+﻿using eCommerce_14a.StoreComponent.DomainLayer;
+
+namespace eCommerce_14a.Utils
 {
     public static class CommonStr
     {
@@ -24,6 +26,25 @@
             public static string StoreRank = "SearchByStoreRank";
             public static string StoreId = "SearchByStioreId";
         }
+
+        public static class DiscountPolicyTypes
+        {
+            public static int CompundDiscount = 1;
+            public static int ConditionalProductDiscount = 1;
+            public static int ConditionalBasketDiscount = 2;
+            public static int RevealdDiscount = 3;
+        }
+
+        public static class PurchasePolicyTypes
+        {
+            public static int CompundPurchasePolicy = 1;
+            public static int ProductPurchasePolicy = 2;
+            public static int BasketPurchasePolicy = 3;
+            public static int SystemPurchasePolicy = 4;
+            public static int UserPurchasePolicy = 5;
+
+        }
+
 
         public static class DiscountMergeTypes
         {
@@ -154,6 +175,14 @@
             public static int[] FullPermissions = { 1, 1, 1, 1, 1};
             public static int[] BlankPermisions = { 0, 0, 0, 0, 0 };
             public static int[] RegularAndProduct = { 1, 1, 1, 0, 0 };
+        }
+
+        public static class PreConditionType
+        {
+            public static int DiscountPreCondition = 0;
+            public static int PurchasePreCondition = 1;
+
+
         }
     }
 }

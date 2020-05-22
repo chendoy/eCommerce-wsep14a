@@ -11,13 +11,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     
     public class Inventory
     {
-        [Key]
-        public int StoreId { set; get; }
         private Dictionary<int, Tuple<Product, int>> invProducts;
 
-        public Inventory(int storeId)
+        public Inventory()
         {
-            StoreId = storeId;
             this.invProducts = new Dictionary<int, Tuple<Product, int>>();
         }
 

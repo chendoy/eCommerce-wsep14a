@@ -9,7 +9,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
     public class Cart
     {
-        [Key]
+
         public string user { get; set; }
         public Dictionary<Store, PurchaseBasket> baskets { get; set; }
         public double Price { get; private set; }

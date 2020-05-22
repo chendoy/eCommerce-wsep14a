@@ -10,7 +10,7 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 
 namespace Server.DAL.UserDb
 {
-    public class StoreManager
+    public class StoreManagersAppoint
     {
 
 
@@ -34,7 +34,7 @@ namespace Server.DAL.UserDb
 
 
 
-        public StoreManager(string appointer, string appointed, Store store)
+        public StoreManagersAppoint(string appointer, string appointed, Store store)
         {
             AppointedName = appointed;
             AppointerName = appointer;

@@ -6,6 +6,8 @@ namespace Server.DAL
     using eCommerce_14a.PurchaseComponent.DomainLayer;
     using Server.UserComponent.Communication;
     using Server.DAL.UserDb;
+    using Server.DAL.StoreDb;
+    using Server.DAL.PurchaseDb;
 
     public  class EcommerceContext : DbContext
     {
@@ -14,29 +16,51 @@ namespace Server.DAL
         {
         }
 
+        // User Component Tables
         public virtual DbSet<DbUser> Users { get; set; }
 
-        public virtual DbSet<Store> Stores { get; set; }
+        public virtual DbSet<StoreOwnershipAppoint> StoreOwnerships { get; set; }
 
-        public virtual DbSet<StoreOwnership> StoreOwnerships { get; set; }
+        public virtual DbSet<StoreManagersAppoint> StoreManagersAppoint { get; set; }
 
-        //public virtual DbSet<StoreManager> StoreManagers { get; set; }
-
-        //public virtual DbSet<UserStorePermissions> UserStorePermissions { get; set; }
-
-
-        //public virtual DbSet<Inventory> Inventories { get; set; }
-
-        //public virtual DbSet<Product> Products { get; set; }
-
-
-        //public virtual DbSet<Purchase> Purchases { get; set; }
+        public virtual DbSet<UserStorePermissions> UserStorePermissions { get; set; }
 
         public virtual DbSet<NotifyData> Notifies { get; set; }
 
-        //public virtual DbSet<PurchaseBasket> PurchaseBaskets { get; set; }
 
-        //public virtual DbSet<Cart> Carts { get; set; }
+        // Store Component Tables
+        public virtual DbSet<DbStore> Stores { get; set; }
+
+        public virtual DbSet<DbInventory> Inventories { get; set; }
+
+        public virtual DbSet<Product> Products { get; set; }
+
+
+        public virtual DbSet<DbDiscountPolicy> DiscountPolicies { get; set; }
+
+        public virtual DbSet<DbPurchasePolicy> PurchasePolicies { get; set; }
+
+        public virtual DbSet<DbPreCondition> PreConditions { get; set; }
+
+
+        public virtual DbSet<StoreOwner> StoreOwners { get; set; }
+
+        public virtual DbSet<StoreManager> StoreManagers { get; set; }
+
+        //  Purchase Tables
+        public virtual DbSet<DbCart> Carts { get; set; }
+
+        public virtual DbSet<DbPurchaseBasket> Baskets { get; set; }
+
+        public virtual DbSet<BasketAtCart> BasketsAtCarts { get; set; }
+
+        public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
+
+        public virtual DbSet<DbPurchase> Purchases { get; set; }
+
+
+
+
 
 
 

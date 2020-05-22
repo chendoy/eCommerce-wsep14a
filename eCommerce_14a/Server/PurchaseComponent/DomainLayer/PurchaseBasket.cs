@@ -13,9 +13,9 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseBasket
     {
-        [Key]
+
         public string user { get; set; }
-        [Key]
+
         public  Store store { get; set; }
         public Dictionary<int, int> products { get; set; }
         public double Price { get; set; }
