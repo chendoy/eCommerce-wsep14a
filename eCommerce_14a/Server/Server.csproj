@@ -137,6 +137,7 @@
     <Compile Include="Communication\WssServer.cs" />
     <Compile Include="DAL\EcommerceContext.cs" />
     <Compile Include="DAL\DbManager.cs" />
+    <Compile Include="DAL\UserDb\AdapterUser.cs" />
     <Compile Include="DAL\UserDb\CandidateToOwnership.cs" />
     <Compile Include="DAL\UserDb\DbUser.cs" />
     <Compile Include="DAL\UserDb\INeedToApprove.cs" />

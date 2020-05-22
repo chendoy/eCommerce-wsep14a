@@ -29,11 +29,11 @@ namespace Server.DAL.UserDb
 
 
 
-        public StoreOwnership(string appointer, string appointed, Store store)
+        public StoreOwnership(string appointer, string appointed, int storeid)
         {
             AppointedName = appointed;
             AppointerName = appointer;
-            Store = store;
+            StoreId = storeid;
         }
     }
 }

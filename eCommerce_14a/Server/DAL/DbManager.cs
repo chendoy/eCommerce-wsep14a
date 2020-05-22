@@ -38,12 +38,13 @@ namespace Server.DAL
 
         public NotifyData GetNotifyWithMaxId()
         {
-            if (!dbConn.Notifies.Any())
+            /*if (!dbConn.Notifies.Any())
             {
                 // The table is empty
                 return null;
             }
-            return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();
+            return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();*/
+            return null;
         }
 
         public void InsertUserNotification(NotifyData notification)

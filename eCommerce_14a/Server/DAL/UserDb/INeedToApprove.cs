@@ -33,11 +33,11 @@ namespace Server.DAL.UserDb
 
 
 
-        public INeedToApprove(string approver, string candiate, Store store)
+        public INeedToApprove(string approver, string candiate, int storeid)
         {
             CandiateName = candiate;
             ApproverName = approver;
-            Store = store;
+            StoreId = storeid;
         }
 
     }

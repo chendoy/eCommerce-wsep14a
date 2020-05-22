@@ -29,10 +29,10 @@ namespace Server.DAL.UserDb
         [Column(Order = 3)]
         public string Permission { set; get; }
 
-        public UserStorePermissions(string user, Store store, string permission)
+        public UserStorePermissions(string user, int storeid, string permission)
         {
             UserName = user;
-            Store = store;
+            StoreId = storeid;
             Permission = permission;
         }
     }

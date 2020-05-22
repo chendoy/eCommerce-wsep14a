@@ -32,11 +32,11 @@ namespace Server.DAL.UserDb
 
 
 
-        public TheyNeedToAprove(string approver, string candidate, Store store)
+        public TheyNeedToAprove(string approver, string candidate, int storeid)
         {
             CandidateName = candidate;
             ApproverName = approver;
-            Store = store;
+            StoreId = storeid;
         }
 
     }

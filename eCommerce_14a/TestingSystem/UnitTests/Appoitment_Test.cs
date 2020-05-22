@@ -91,7 +91,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 1).Item1);
             AP.AppointStoreOwner("owner", "user1", 1);
             Assert.IsFalse(SM.getStore(1).IsStoreOwner(UM.GetUser("user1")));
-            Assert.IsFalse(UM.GetUser("user1").isAppointedBy(UM.GetUser("owner"), 1));
+            Assert.IsFalse(UM.GetUser("user1").isAppointedByOwner(UM.GetUser("owner"), 1));
             Assert.IsFalse(UM.GetUser("user1").isStoreOwner(1));
         }
         [TestMethod]
@@ -102,11 +102,11 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(UM.GetUser("Appointed").isStoreOwner(1));
             Assert.IsTrue(SM.getStore(1).IsStoreOwner(UM.GetUser("Appointed")));
             //Check if appoitment is created from owner to new owner - hence appointed
-            Assert.IsTrue(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 1));
+            Assert.IsTrue(UM.GetUser("Appointed").isAppointedByOwner(UM.GetUser("owner"), 1));
             //Same but false because changing the order
-            Assert.IsFalse(UM.GetUser("owner").isAppointedBy(UM.GetUser("Appointed"), 1));
+            Assert.IsFalse(UM.GetUser("owner").isAppointedByOwner(UM.GetUser("Appointed"), 1));
             //CHanging the store Number
-            Assert.IsFalse(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 27));
+            Assert.IsFalse(UM.GetUser("Appointed").isAppointedByOwner(UM.GetUser("owner"), 27));
         }
         [TestMethod]
         
@@ -160,11 +160,11 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(UM.GetUser("Appointed").isStorManager(1));
             Assert.IsTrue(SM.getStore(1).IsStoreManager(UM.GetUser("Appointed")));
             //Check if appoitment is created from owner to new owner - hence appointed
-            Assert.IsTrue(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 1));
+            Assert.IsTrue(UM.GetUser("Appointed").isAppointedByManager(UM.GetUser("owner"), 1));
             //Same but false because changing the order
-            Assert.IsFalse(UM.GetUser("owner").isAppointedBy(UM.GetUser("Appointed"), 1));
+            Assert.IsFalse(UM.GetUser("owner").isAppointedByManager(UM.GetUser("Appointed"), 1));
             //CHanging the store Number
-            Assert.IsFalse(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 27));
+            Assert.IsFalse(UM.GetUser("Appointed").isAppointedByManager(UM.GetUser("owner"), 27));
         }
         [TestMethod]
 
