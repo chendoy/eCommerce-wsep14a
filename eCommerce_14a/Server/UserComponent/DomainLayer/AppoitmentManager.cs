@@ -256,6 +256,77 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return ans;
             return new Tuple<bool, string>(manager.RemoveAppoitmentManager(owner, store.GetStoreId()), "");
         }
+
+        //Remove Store Owner New Function Vers.3
+        public Tuple<bool,string> RemoveStoreOwner(string owner, string PrevOwner, int storeId)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            Store store = storeManagment.getStore(storeId);
+            if (store is null)
+            {
+                return new Tuple<bool, string>(false, "Store Does not Exist");
+            }
+            if (owner == null || PrevOwner == null)
+            {
+                Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Null Arguments");
+            }
+
+            if (owner == "" || PrevOwner == "")
+            {
+                Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Blank Arguemtns\n");
+            }
+            User appointer = UM.GetAtiveUser(owner);
+            User DemotedOwner = UM.GetUser(PrevOwner);
+            if (appointer is null || DemotedOwner is null)
+                return new Tuple<bool, string>(false, "One of the users is not Exist\n");
+            if (appointer.isguest() || DemotedOwner.isguest())
+                return new Tuple<bool, string>(false, "One of the users is a Guest\n");
+            if (!store.IsStoreOwner(appointer))
+                return new Tuple<bool, string>(false, owner + " Is Not a Store Owner\n");
+            if (!store.IsStoreOwner(DemotedOwner))
+                return new Tuple<bool, string>(false, PrevOwner + " Is Not a Store Owner\n");
+            if (!DemotedOwner.isAppointedByOwner(appointer,storeId))
+                return new Tuple<bool, string>(false, PrevOwner + " Did Not Appointed by:" +owner+"\n");
+            RemoveOwnerLoop(appointer, DemotedOwner, store);
+            return new Tuple<bool, string>(true, PrevOwner + " Removed from store: - " + store.StoreName + "\n");
+
+        }
+        private void RemoveOwnerLoop(User appointer,User DemoteOwner,Store store)
+        {
+            string OwnerRemovalMessage = "You have been Removed From Owner position in the Store " + store.StoreName +"By you appointer - "+appointer.getUserName()+"\n";
+            //Remove him from storeOwnership! Here
+            store.RemoveOwner(DemoteOwner);
+            DemoteOwner.RemoveStoreOwner(store.GetStoreId());
+            DemoteOwner.RemovePermission(store.GetStoreId());
+            Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(OwnerRemovalMessage));
+            Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
+            DemoteOwner.RemoveAppoitmentOwner(appointer, store.GetStoreId());
+            string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
+            List<User> ManagersToRemove = store.managers;
+            List<User> OwnersToRemove = store.owners;
+            foreach (User manager in ManagersToRemove)
+            {
+                if (manager.isAppointedByManager(DemoteOwner, store.GetStoreId()))
+                {
+                    store.RemoveManager(manager);
+                    manager.RemoveStoreManagment(store.GetStoreId());
+                    manager.RemovePermission(store.GetStoreId());
+                    Publisher.Instance.Notify(manager.getUserName(), new NotifyData(Message));
+                    Publisher.Instance.Unsubscribe(manager.getUserName(), store.GetStoreId());
+                    manager.RemoveAppoitmentManager(DemoteOwner, store.GetStoreId());
+                }
+            }
+            foreach (User owner in OwnersToRemove)
+            {
+                if(owner.isAppointedByOwner(DemoteOwner,store.GetStoreId()))
+                {
+                    RemoveOwnerLoop(DemoteOwner,owner, store);
+                }
+            }
+            return;
+        }
         public Tuple<bool, string> ChangePermissions(string ownerS, string worker, int storeId, int[] permissions)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

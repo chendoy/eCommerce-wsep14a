@@ -43,6 +43,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
                 return new Tuple<bool, string>(false, "Empty Permission");
             return AppoitmentManager.Instance.ChangePermissions(owner, appoint, storeId, permissions);
         }
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-change-store-managers-permissions-46- </req>
+        public Tuple<bool, string> RemoveStoreOwner(string owner, string PrevOwner, int storeId)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return AppoitmentManager.Instance.RemoveStoreOwner(owner, PrevOwner, storeId);
+        }
         //For Adim Uses
     }
 }

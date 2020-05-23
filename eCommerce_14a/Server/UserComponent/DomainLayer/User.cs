@@ -397,6 +397,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Store_Managment.Remove(store_id);
         }
+        public bool RemoveStoreOwner(int store_id)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return Store_Ownership.Remove(store_id);
+        }
         //Remove Appoitment
         public bool RemoveAppoitmentOwner(User owner, int id)
         {
