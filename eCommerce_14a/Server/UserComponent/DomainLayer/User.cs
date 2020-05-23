@@ -15,12 +15,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public int Id { set; get; }
         public bool IsGuest { set; get; }
         public bool IsAdmin { set; get; }
-        public bool IsLoggedIn{ set; get; }
+        public bool IsLoggedIn { set; get; }
 
 
 
         public Dictionary<int, Store> Store_Ownership { get; }
-        public LinkedList<NotifyData> unreadMessages { get; }
+        public LinkedList<NotifyData> unreadMessages { set; get; }
         public Dictionary<int, Store> Store_Managment { get; }
         public Dictionary<int, int[]> Store_options { get; }
         //Contains the list of who appointed you to which store! not who you appointed to which store!
@@ -59,7 +59,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public List<string> getAllThatNeedToApprove(int storeID)
         {
             List<string> users;
-            if(!NeedToApprove.TryGetValue(storeID,out users))
+            if (!NeedToApprove.TryGetValue(storeID, out users))
             {
                 users = new List<string>();
             }
@@ -92,7 +92,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             List<string> output = new List<string>();
             int[] store_options = Store_options[storeId];
-            if(store_options[0] == 1)
+            if (store_options[0] == 1)
                 output.Add(CommonStr.MangerPermission.Comments);
             if (store_options[1] == 1)
                 output.Add(CommonStr.MangerPermission.Puarchse);
@@ -122,26 +122,26 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             return MasterAppointer.Remove(storeID);
         }
-        public Tuple<bool,string> SetMasterAppointer(int storeID,User masterA)
+        public Tuple<bool, string> SetMasterAppointer(int storeID, User masterA)
         {
             User master;
             if (MasterAppointer.TryGetValue(storeID, out master))
             {
-                return new Tuple<bool, string>(false,"Already has a master Appointer to this storeID");
+                return new Tuple<bool, string>(false, "Already has a master Appointer to this storeID");
             }
-            MasterAppointer.Add(storeID,masterA);
-            return new Tuple<bool, string>(true,"Appointer Master Added");
+            MasterAppointer.Add(storeID, masterA);
+            return new Tuple<bool, string>(true, "Appointer Master Added");
         }
         public bool GetApprovalStatus(int storeID)
         {
             bool ans;
             if (!IsApproved.TryGetValue(storeID, out ans))
             {
-                ans =  false;
+                ans = false;
             }
             return ans;
         }
-        public Dictionary<int,List<string>> GetAllWaitingForApproval()
+        public Dictionary<int, List<string>> GetAllWaitingForApproval()
         {
             return this.WaitingForApproval;
         }
@@ -155,7 +155,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return users;
         }
         //IsApprovedStatuse - Approved to become Store Owner.
-        public void SetApprovalStatus(int storeID,bool status)
+        public void SetApprovalStatus(int storeID, bool status)
         {
             bool ans;
             if (!IsApproved.TryGetValue(storeID, out ans))
@@ -174,7 +174,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return IsApproved.Remove(storeID);
         }
         //Waiting for Approval List functions to become Store Owner
-        public void InsertOtherApprovalRequest(int storeID,List<string> user)
+        public void InsertOtherApprovalRequest(int storeID, List<string> user)
         {
             List<string> users;
             if (NeedToApprove.TryGetValue(storeID, out users))
@@ -236,7 +236,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             bool ans = GetApprovalStatus(storeId);
             List<string> needtoApprove = getAllThatNeedToApprove(storeId);
-            if(needtoApprove.Count == 0)
+            if (needtoApprove.Count == 0)
             {
                 NeedToApprove[storeId] = new List<string>();
                 return ans;
@@ -244,7 +244,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return false;
         }
         //End of Adding to Use-case 4.3 version 3 addings.
-        public Dictionary<int, int[]> GetUserPermissions() 
+        public Dictionary<int, int[]> GetUserPermissions()
         {
             return Store_options;
         }
@@ -254,17 +254,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             this.IsLoggedIn = true;
         }
 
-        public LinkedList<NotifyData> GetPendingMessages() 
+        public LinkedList<NotifyData> GetPendingMessages()
         {
             return this.unreadMessages;
         }
 
-        public bool HasPendingMessages() 
+        public bool HasPendingMessages()
         {
             return this.unreadMessages.Count != 0;
         }
 
-        public void RemovePendingMessage(NotifyData msg) 
+        public void RemovePendingMessage(NotifyData msg)
         {
             this.unreadMessages.Remove(msg);
         }
@@ -297,10 +297,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return this.IsGuest;
         }
 
-        public bool getUserPermission(int storeid,string permission)
+        public bool getUserPermission(int storeid, string permission)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            if(permission is null)
+            if (permission is null)
             {
                 Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return false;
@@ -308,7 +308,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             int[] perms;
             if (!Store_options.TryGetValue(storeid, out perms))
                 return false;
-            if(permission.Equals(CommonStr.MangerPermission.Comments))
+            if (permission.Equals(CommonStr.MangerPermission.Comments))
             {
                 return perms[0] == 1;
             }
@@ -445,8 +445,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return Store_options.Remove(store_id);
         }
-
-
-        }
     }
+
+
 }
