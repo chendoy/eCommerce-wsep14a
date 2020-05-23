@@ -135,6 +135,7 @@
     <Compile Include="Communication\DataObject\ThinObjects\StoreData.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
+    <Compile Include="DAL\CommunicationDb\DbNotifyData.cs" />
     <Compile Include="DAL\EcommerceContext.cs" />
     <Compile Include="DAL\DbManager.cs" />
     <Compile Include="DAL\PurchaseDb\DbCart.cs" />
@@ -152,15 +153,15 @@
     <Compile Include="DAL\UserDb\AdapterUser.cs" />
     <Compile Include="DAL\UserDb\CandidateToOwnership.cs" />
     <Compile Include="DAL\UserDb\DbUser.cs" />
-    <Compile Include="DAL\UserDb\INeedToApprove.cs" />
+    <Compile Include="DAL\UserDb\NeedToApprove.cs" />
+    <Compile Include="DAL\UserDb\Passwords.cs" />
     <Compile Include="DAL\UserDb\StoreManagersAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
-    <Compile Include="DAL\UserDb\TheyNeedToAprove.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202005231444533_InitialCreate.cs" />
-    <Compile Include="Migrations\202005231444533_InitialCreate.designer.cs">
-      <DependentUpon>202005231444533_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202005231726408_InitialCreate.cs" />
+    <Compile Include="Migrations\202005231726408_InitialCreate.designer.cs">
+      <DependentUpon>202005231726408_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -275,8 +276,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005231444533_InitialCreate.resx">
-      <DependentUpon>202005231444533_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005231726408_InitialCreate.resx">
+      <DependentUpon>202005231726408_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

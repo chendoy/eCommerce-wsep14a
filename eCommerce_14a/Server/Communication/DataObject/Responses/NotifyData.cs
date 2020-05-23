@@ -14,29 +14,12 @@ namespace Server.UserComponent.Communication
 {
     public class NotifyData : Message
     {
-
-
-        [Key]
-        [Column(Order = 0)]
-        public int Id { get; set; }
-
-        [Key ,ForeignKey("User")]
-        [Column(Order = 1)]
         public string UserName { get; set; }
-
-        public DbUser User { get; set; }
-
         public string Context {get; set;}
-        public NotifyData(string context, String username="") : base(Opcode.NOTIFICATION) 
+        public NotifyData(string context, string username="") : base(Opcode.NOTIFICATION) 
         { 
-            //NotifyData max_notify = DbManager.Instance.GetNotifyWithMaxId();
-            //if (max_notify is null)
-            //    Id = 1;
-            //else
-            //    Id = max_notify.Id + 1;
-
             Context = context;
-
+            UserName = username;
         }
 
         public NotifyData() : base()

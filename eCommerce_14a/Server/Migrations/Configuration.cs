@@ -12,6 +12,7 @@
     using Server.DAL.UserDb;
     using eCommerce_14a.Utils;
     using Server.DAL.PurchaseDb;
+    using eCommerce_14a.UserComponent.DomainLayer;
 
     internal sealed class Configuration : DbMigrationsConfiguration<EcommerceContext>
     {
@@ -28,17 +29,99 @@
             //  to avoid creating duplicate seed data.
 
 
+
+            var users = new List<DbUser>();
+            users.Add(new DbUser("Liav", false, true, false));
+            users.Add(new DbUser("Sundy", false, true, true));
+            users.Add(new DbUser("Shmulik", false, true, true));
+            users.Add(new DbUser("Yosi", true, false, true));
+            users.Add(new DbUser("Eitan", false, false, false));
+            users.Add(new DbUser("Naor", false, false, true));
+            users.Add(new DbUser("Chen", false, false, true));
+            users.Add(new DbUser("Guy", false, false, true));
+            users.Add(new DbUser("Shlomo", false, false, true));
+            users.ForEach(u => context.Users.Add(u));
+            context.SaveChanges();
+
+            var pwds = new List<DbPassword>();
+            Security s = new Security();
+            pwds.Add(new DbPassword(username: "Liav", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Sundy", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Shmulik", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Yosi", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Eitan", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Naor", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Chen", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Guy", pwdhash: s.CalcSha1("123")));
+            pwds.Add(new DbPassword(username: "Shlomo", pwdhash: s.CalcSha1("123")));
+            pwds.ForEach(password => context.Passwords.Add(password));
+            context.SaveChanges();
+      
+
             var stores = new List<DbStore>();
             stores.Add(new DbStore(1, 5, "liav shop", true));
             stores.Add(new DbStore(2, 2, "sundy shop", true));
-            stores.Add(new DbStore(3, 3, "chen shop", true));
-            stores.Add(new DbStore(4, 4, "guy shop", true));
-            stores.Add(new DbStore(5, 1, "naor shop", true));
-            stores.Add(new DbStore(6, 2, "yosi shop", true));
-            stores.Add(new DbStore(7, 4, "michael shop", true));
-            stores.Add(new DbStore(8, 3, "dani shop", true));
-            stores.ForEach(s => context.Stores.Add(s));
+            stores.Add(new DbStore(3, 3, "Shmulik shop", true));
+            stores.Add(new DbStore(4, 4, "Yosi shop", true));
+            stores.Add(new DbStore(5, 1, "Eitan shop", true));
+            stores.Add(new DbStore(6, 2, "Naor shop", true));
+            stores.Add(new DbStore(7, 4, "Chen shop", true));
+            stores.Add(new DbStore(8, 3, "Guy shop", true));
+            stores.ForEach(store => context.Stores.Add(store));
             context.SaveChanges();
+
+            var ownerappointmetns = new List<StoreOwnershipAppoint>();
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Liav", "Liav", 1));
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Liav", "Sundy", 1));
+
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Sundy", "Sundy", 2));
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Shmulik", "Shmulik", 3));
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Yosi", "Yosi", 4));
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Eitan", "Eitan", 5));
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Naor", "Naor", 6));
+
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Chen", "Chen", 7));
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Chen", "Guy", 7));
+
+            ownerappointmetns.Add(new StoreOwnershipAppoint("Guy", "Guy", 8));
+            ownerappointmetns.ForEach(owner_appoint => context.StoreOwnershipAppoints.Add(owner_appoint));
+            context.SaveChanges();
+
+            var managersappointmetns = new List<StoreManagersAppoint>();
+            managersappointmetns.Add(new StoreManagersAppoint("Liav", "Naor", 1));
+            managersappointmetns.Add(new StoreManagersAppoint("Sundy", "Guy", 2));
+            managersappointmetns.Add(new StoreManagersAppoint("Sundy", "Chen", 2));
+            managersappointmetns.ForEach(manager_appoint => context.StoreManagersAppoints.Add(manager_appoint));
+            context.SaveChanges();
+
+            var userpermissions = GetPermissions(ownerappointmetns, managersappointmetns);
+            userpermissions.ForEach(permission => context.UserStorePermissions.Add(permission));
+            context.SaveChanges();
+
+
+
+            // Chen will add Shmulik as owner , Guy need to approve and shmulik waiting for guy approval
+            // Shmulik is candidate and Shmulik status is true
+
+            var candidatestoownership = new List<CandidateToOwnership>();
+            candidatestoownership.Add(new CandidateToOwnership("Chen", "Shmulik", 7));
+            candidatestoownership.ForEach(candidate => context.CandidateToOwnerships.Add(candidate));
+            context.SaveChanges();
+
+            var ineedtoapprove = new List<NeedToApprove>();
+            ineedtoapprove.Add(new NeedToApprove("Guy", "Shmulik", 7));
+            ineedtoapprove.ForEach(needtoapprove => context.NeedToApproves.Add(needtoapprove));
+            context.SaveChanges();
+
+
+            var approvalstatus = new List<StoreOwnertshipApprovalStatus>();
+            approvalstatus.Add(new StoreOwnertshipApprovalStatus(7, true, "Shmulik"));
+            approvalstatus.ForEach(approve_status => context.StoreOwnertshipApprovalStatuses.Add(approve_status));
+            context.SaveChanges();
+
+
+
+
 
             var products = new List<DbProduct>();
             products.Add(new DbProduct(1, "CoffeMachine", 1000, "Coffe Maker 3", 4, CommonStr.ProductCategoty.CoffeMachine));
@@ -78,18 +161,7 @@
             context.SaveChanges();
 
 
-            var users = new List<DbUser>();
-            users.Add(new DbUser("Liav", false, true, false));
-            users.Add(new DbUser("Sundy", false, true, true));
-            users.Add(new DbUser("Shmulik", false, true, true));
-            users.Add(new DbUser("Yosi", true, false, true));
-            users.Add(new DbUser("Eitan", false, false, false));
-            users.Add(new DbUser("Naor", false, false, true));
-            users.Add(new DbUser("Chen", false, false, true));
-            users.Add(new DbUser("Guy", false, false, true));
-            users.ForEach(u => context.Users.Add(u));
-            context.SaveChanges();
-
+        
 
             var storeOwners = new List<StoreOwner>();
             storeOwners.Add(new StoreOwner(1, "Liav"));
@@ -249,6 +321,27 @@
 
 
 
+        }
+
+        private List<UserStorePermissions> GetPermissions(List<StoreOwnershipAppoint> ownersappoint, List<StoreManagersAppoint> managersappoints)
+        {
+            List<UserStorePermissions> userpermission = new List<UserStorePermissions>();
+            foreach(StoreOwnershipAppoint appoint in ownersappoint)
+            {
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Comments));
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.DiscountPolicy));
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Product));
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Purchase));
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.PurachsePolicy));
+            }
+
+            foreach(StoreManagersAppoint appoint in managersappoints)
+            {
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Comments));
+                userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Purchase));
+            }
+
+            return userpermission;
         }
     }
 }

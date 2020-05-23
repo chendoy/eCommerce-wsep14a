@@ -95,7 +95,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (store_options[0] == 1)
                 output.Add(CommonStr.MangerPermission.Comments);
             if (store_options[1] == 1)
-                output.Add(CommonStr.MangerPermission.Puarchse);
+                output.Add(CommonStr.MangerPermission.Purchase);
             if (store_options[2] == 1)
                 output.Add(CommonStr.MangerPermission.Product);
             if (store_options[3] == 1)
@@ -312,7 +312,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 return perms[0] == 1;
             }
-            if (permission.Equals(CommonStr.MangerPermission.Puarchse))
+            if (permission.Equals(CommonStr.MangerPermission.Purchase))
             {
                 return perms[1] == 1;
             }

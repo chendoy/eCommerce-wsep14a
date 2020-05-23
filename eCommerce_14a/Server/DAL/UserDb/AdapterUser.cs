@@ -26,7 +26,7 @@ namespace Server.DAL.UserDb
 
                 }
             }
-            List<INeedToApprove> UsersNeedToBeApprovedByuser = new List<INeedToApprove>();
+            List<NeedToApprove> UsersNeedToBeApprovedByuser = new List<NeedToApprove>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.IsNeedToApprove))
             {
                 Dictionary<int, List<string>> AllUsersWaitingForApproval = user.GetAllWaitingForApproval();
@@ -35,24 +35,24 @@ namespace Server.DAL.UserDb
                     List<string> users = AllUsersWaitingForApproval[storeNum];
                     foreach(string uname in users)
                     {
-                        INeedToApprove appoitment = new INeedToApprove(user.getUserName(),uname, storeNum);
+                        NeedToApprove appoitment = new NeedToApprove(user.getUserName(),uname, storeNum);
                         UsersNeedToBeApprovedByuser.Add(appoitment);
 
                     }
                 }
             }
-            List<StoreManager> StoresUserIsManaging = new List<StoreManager>();
+            List<StoreManagersAppoint> StoresUserIsManaging = new List<StoreManagersAppoint>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.ManageStores))
             {
                 Dictionary<int, Store> AllManagingStores = user.Store_Managment;
                 Dictionary<int, User> AllManagerAppointers = user.AppointedByManager;
                 foreach (int storeNum in AllManagingStores.Keys)
                 {
-                    StoreManager managingData = new StoreManager(AllManagerAppointers[storeNum].getUserName(), user.getUserName(), storeNum);
+                    StoreManagersAppoint managingData = new StoreManagersAppoint(AllManagerAppointers[storeNum].getUserName(), user.getUserName(), storeNum);
                     StoresUserIsManaging.Add(managingData);
                 }
             }
-            List<StoreOwnership> StoresUserIsOwner = new List<StoreOwnership>();
+            List<StoreOwnershipAppoint> StoresUserIsOwner = new List<StoreOwnershipAppoint>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.OwnStores))
             {
                 Dictionary<int, Store> AllOwnerStores = user.Store_Managment;
@@ -61,12 +61,12 @@ namespace Server.DAL.UserDb
                 {
                     if(AllOwnerAppointers.ContainsKey(storeNum))
                     {
-                        StoreOwnership Ownersdata = new StoreOwnership(AllOwnerAppointers[storeNum].getUserName(), user.getUserName(), storeNum);
+                        StoreOwnershipAppoint Ownersdata = new StoreOwnershipAppoint(AllOwnerAppointers[storeNum].getUserName(), user.getUserName(), storeNum);
                         StoresUserIsOwner.Add(Ownersdata);
                     }
                     else
                     {
-                        StoreOwnership Ownersdata = new StoreOwnership(user.getUserName(), user.getUserName(), storeNum);
+                        StoreOwnershipAppoint Ownersdata = new StoreOwnershipAppoint(user.getUserName(), user.getUserName(), storeNum);
                         StoresUserIsOwner.Add(Ownersdata);
                     }                
                 }
@@ -76,26 +76,26 @@ namespace Server.DAL.UserDb
             {
                 Dictionary<int, bool> AllStoreOwnershipApplications = user.IsApproved;
                 foreach (int storeNum in AllStoreOwnershipApplications.Keys)
-                {
-                    StoreOwnertshipApprovalStatus ApprovalStatus = new StoreOwnertshipApprovalStatus(storeNum, AllStoreOwnershipApplications[storeNum]);
+                { 
+                    StoreOwnertshipApprovalStatus ApprovalStatus = new StoreOwnertshipApprovalStatus(storeNum, AllStoreOwnershipApplications[storeNum], user.getUserName());
                     StoreOwnershipWatingForApproval.Add(ApprovalStatus);
                 }
             }
-            List<TheyNeedToAprove> UsersNeedToApprovedThsUser = new List<TheyNeedToAprove>();
-            if (user.IsListNotEmpty(CommonStr.UserListsOptions.TheyNeedApprove))
-            {
-                Dictionary<int, List<string>> AllUsersNeedToApprove = user.NeedToApprove;
-                foreach (int storeNum in AllUsersNeedToApprove.Keys)
-                {
-                    List<string> users = AllUsersNeedToApprove[storeNum];
-                    foreach (string uname in users)
-                    {
-                        TheyNeedToAprove appoitment = new TheyNeedToAprove(uname,user.getUserName(), storeNum);
-                        UsersNeedToApprovedThsUser.Add(appoitment);
+            //List<TheyNeedToAprove> UsersNeedToApprovedThsUser = new List<TheyNeedToAprove>();
+            //if (user.IsListNotEmpty(CommonStr.UserListsOptions.TheyNeedApprove))
+            //{
+            //    Dictionary<int, List<string>> AllUsersNeedToApprove = user.NeedToApprove;
+            //    foreach (int storeNum in AllUsersNeedToApprove.Keys)
+            //    {
+            //        List<string> users = AllUsersNeedToApprove[storeNum];
+            //        foreach (string uname in users)
+            //        {
+            //            TheyNeedToAprove appoitment = new TheyNeedToAprove(uname,user.getUserName(), storeNum);
+            //            UsersNeedToApprovedThsUser.Add(appoitment);
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
             List<UserStorePermissions> StorePermissionsSet = new List<UserStorePermissions>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.Permmisions))
             {

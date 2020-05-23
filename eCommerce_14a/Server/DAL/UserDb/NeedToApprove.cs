@@ -1,5 +1,6 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
+using Server.DAL.StoreDb;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Server.DAL.UserDb
 {
-    public class INeedToApprove
+    public class NeedToApprove
     {
 
         [Key, ForeignKey("Approver")]
@@ -22,7 +23,7 @@ namespace Server.DAL.UserDb
         [Key, ForeignKey("Store")]
         [Column(Order = 2)]
         public int StoreId { set; get; }
-        public Store Store { set; get; }
+        public DbStore Store { set; get; }
 
 
         [Key, ForeignKey("Candidate")]
@@ -33,7 +34,7 @@ namespace Server.DAL.UserDb
 
 
 
-        public INeedToApprove(string approver, string candiate, int storeid)
+        public NeedToApprove(string approver, string candiate, int storeid)
         {
             CandiateName = candiate;
             ApproverName = approver;

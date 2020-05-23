@@ -1,6 +1,8 @@
-﻿using Server.UserComponent.Communication;
+﻿using eCommerce_14a.UserComponent.DomainLayer;
+using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +40,7 @@ namespace Server.DAL
 
         public NotifyData GetNotifyWithMaxId()
         {
+           
             /*if (!dbConn.Notifies.Any())
             {
                 // The table is empty

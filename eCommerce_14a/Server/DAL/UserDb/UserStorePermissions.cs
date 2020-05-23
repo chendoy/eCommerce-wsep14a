@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using Server.DAL.StoreDb;
 
 namespace Server.DAL.UserDb
 {
@@ -22,7 +23,7 @@ namespace Server.DAL.UserDb
         [Key, ForeignKey("Store")]
         [Column(Order = 2)]
         public int StoreId { set; get; }
-        public Store Store { set; get; }
+        public DbStore Store { set; get; }
 
 
         [Key]

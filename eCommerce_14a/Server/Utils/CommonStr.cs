@@ -148,7 +148,7 @@ namespace eCommerce_14a.Utils
         public static class MangerPermission
         {
             public static string Comments = "CommentsPermission";
-            public static string Puarchse = "ViewPuarchseHistory";
+            public static string Purchase = "ViewPuarchseHistory";
             public static string Product = "ProductPermission";
             public static string PurachsePolicy = "PurachsePolicy";
             public static string DiscountPolicy = "DiscountPolicy";

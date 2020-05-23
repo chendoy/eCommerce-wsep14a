@@ -9,6 +9,7 @@ namespace Server.DAL
     using Server.DAL.StoreDb;
     using Server.DAL.PurchaseDb;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using Server.DAL.CommunicationDb;
 
     public class EcommerceContext : DbContext
     {
@@ -20,13 +21,21 @@ namespace Server.DAL
         // User Component Tables
         public virtual DbSet<DbUser> Users { get; set; }
 
-        // public virtual DbSet<StoreOwnershipAppoint> StoreOwnerships { get; set; }
+        public virtual DbSet<DbPassword> Passwords { get; set; }
 
-        // public virtual DbSet<StoreManagersAppoint> StoreManagersAppoint { get; set; }
+        public virtual DbSet<StoreOwnershipAppoint> StoreOwnershipAppoints { get; set; }
 
-        // public virtual DbSet<UserStorePermissions> UserStorePermissions { get; set; }
+        public virtual DbSet<StoreManagersAppoint> StoreManagersAppoints { get; set; }
 
-        // public virtual DbSet<NotifyData> Notifies { get; set; }
+        public virtual DbSet<CandidateToOwnership> CandidateToOwnerships { get; set; }
+
+        public virtual DbSet<StoreOwnertshipApprovalStatus> StoreOwnertshipApprovalStatuses { get; set; }
+        public virtual DbSet<NeedToApprove> NeedToApproves { get; set; }
+        
+
+        public virtual DbSet<UserStorePermissions> UserStorePermissions { get; set; }
+
+        public virtual DbSet<DbNotifyData> Notifies { get; set; }
 
 
         // Store Component Tables

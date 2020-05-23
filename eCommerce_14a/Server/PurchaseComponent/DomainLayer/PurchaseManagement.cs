@@ -298,7 +298,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return true;
             }
 
-            return manager.getUserPermission(storeID, CommonStr.MangerPermission.Puarchse);
+            return manager.getUserPermission(storeID, CommonStr.MangerPermission.Purchase);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
