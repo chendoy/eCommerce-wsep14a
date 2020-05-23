@@ -33,11 +33,11 @@ namespace Server.DAL.UserDb
 
 
 
-        public CandidateToOwnership(string appointer, string candidate, Store store)
+        public CandidateToOwnership(string appointer, string candidate, int storeid)
         {
             CandidateName = candidate;
             AppointerName = appointer;
-            Store = store;
+            StoreId = storeid;
         }
     }
 }

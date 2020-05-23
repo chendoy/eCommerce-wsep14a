@@ -323,8 +323,8 @@
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
-        InventoryData invData = await service.GetStoresInventory(StoreId);
-        inventory = invData.invProducts;
+        await UpdateInventory();
+        ProductsInEdit = new List<Tuple<ProductData, int>>();
     }
 
     public class Product
@@ -346,7 +346,7 @@
     private async void AddProduct(Product p)
     {
         SuccessFailResponse response = await service.AddProductToStore(StoreId, loggedInUser, p.ProductId, p.ProductDetails, p.ProductPrice, p.ProductName, p.ProductCategory, p.Pamount, p.ImgUrl);
-        
+
         if (response.Success)
         {
             successMsg = "Operation completed successfully";
@@ -391,7 +391,7 @@
         }
     }
 
-    private async void Increase()
+    private async Task Increase()
     {
         SuccessFailResponse response = await service.IncreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
 
@@ -405,9 +405,11 @@
             successMsg = "";
             errorMsg = response.Error;
         }
+
+        await UpdateInventory();
     }
 
-    private async void Decrease()
+    private async Task Decrease()
     {
         SuccessFailResponse response = await service.DecreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
 
@@ -421,6 +423,8 @@
             successMsg = "";
             errorMsg = response.Error;
         }
+
+        await UpdateInventory();
     }
 
 
@@ -466,18 +470,23 @@
         selectedRole = selection;
     }
 
+
+    ///////////////////////////////////////////////////////////// Products GridView
+
     public RadzenGrid<Tuple<ProductData, int>> productsGrid { get; set; }
+    public List<Tuple<ProductData, int>> ProductsInEdit { get; set; }
 
 
     void EditRow(Tuple<ProductData, int> product)
     {
         productsGrid.EditRow(product);
+        ProductsInEdit.Add(product);
     }
 
     async void SaveRow(Tuple<ProductData, int> product)
     {
         UpdateProductOfStoreRequest request = new UpdateProductOfStoreRequest(loggedInUser, StoreId, product.Item1.ProductId, product.Item1.Details,
-            product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
+        product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
         SuccessFailResponse response = await service.GetResponse<UpdateProductOfStoreRequest, SuccessFailResponse>(request);
         if (response.Success)
         {
@@ -493,10 +502,16 @@
 
     }
 
-    void CancelEdit(Tuple<ProductData, int> product)
+    async void CancelEdit(Tuple<ProductData, int> product)
     {
         productsGrid.CancelEditRow(product);
+        await UpdateInventory();
+    }
 
+    async Task UpdateInventory()
+    {
+        InventoryData invData = await service.GetStoresInventory(StoreId);
+        inventory = invData.invProducts;
     }
 
     async void DeleteRow(Tuple<ProductData, int> product)

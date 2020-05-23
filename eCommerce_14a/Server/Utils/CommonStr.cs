@@ -153,6 +153,16 @@ namespace eCommerce_14a.Utils
             public static string PurachsePolicy = "PurachsePolicy";
             public static string DiscountPolicy = "DiscountPolicy";
         }
+        public static class UserListsOptions
+        {
+            public static string MasterAppointers = "MasterAppointer";
+            public static string IsNeedToApprove = "IsNeedToApproveSomeone";
+            public static string OwnStores = "IsOwnsStores";
+            public static string ManageStores = "IsManagesStores";
+            public static string StoreApprovalStatus = "StoreApprovalStatus";
+            public static string TheyNeedApprove = "TheyNeedToApproveUser";
+            public static string Permmisions = "PermissionSets";
+        }
         public static class ArgsTypes
         {
             public static string Empty = "Blank Arguments";

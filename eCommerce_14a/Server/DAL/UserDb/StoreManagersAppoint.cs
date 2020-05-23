@@ -34,11 +34,11 @@ namespace Server.DAL.UserDb
 
 
 
-        public StoreManagersAppoint(string appointer, string appointed, Store store)
+        public StoreManager(string appointer, string appointed, int storeid)
         {
             AppointedName = appointed;
             AppointerName = appointer;
-            Store = store;
+            StoreId = storeid;
         }
 
     }
