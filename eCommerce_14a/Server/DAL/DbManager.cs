@@ -49,8 +49,8 @@ namespace Server.DAL
 
         public void InsertUserNotification(NotifyData notification)
         {
-            dbConn.Notifies.Add(notification);
-            dbConn.SaveChanges();
+            //dbConn.Notifies.Add(notification);
+            //dbConn.SaveChanges();
         }
     }
 }

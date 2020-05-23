@@ -45,7 +45,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             AppointStoreManager("user5", "user4", 2);
             AppointStoreManager("user5", "user3", 2);
             AppointStoreOwner("user4", "user2", 1);
+            UM.Login("user2", "Test2");
             AppointStoreOwner("user4", "user6", 1);
+            ApproveAppoitment("user2", "user6", 1, true);
             AppointStoreOwner("user5", "user1", 2);
             int[] perms = { 1, 1, 1, 1, 1 };
             ChangePermissions("user5", "user3", 2, perms);
