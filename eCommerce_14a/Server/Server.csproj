@@ -137,13 +137,13 @@
     <Compile Include="Communication\WssServer.cs" />
     <Compile Include="DAL\EcommerceContext.cs" />
     <Compile Include="DAL\DbManager.cs" />
-    <Compile Include="DAL\PurchaseDb\BasketAtCart.cs" />
     <Compile Include="DAL\PurchaseDb\DbCart.cs" />
     <Compile Include="DAL\PurchaseDb\DbPurchase.cs" />
     <Compile Include="DAL\PurchaseDb\DbPurchaseBasket.cs" />
     <Compile Include="DAL\PurchaseDb\ProductAtBasket.cs" />
     <Compile Include="DAL\StoreDb\DbDiscountPolicy.cs" />
     <Compile Include="DAL\StoreDb\DbInventory.cs" />
+    <Compile Include="DAL\StoreDb\DbProduct.cs" />
     <Compile Include="DAL\StoreDb\DbPurchasePolicy.cs" />
     <Compile Include="DAL\StoreDb\DbStore.cs" />
     <Compile Include="DAL\StoreDb\DbPreCondition.cs" />
@@ -157,9 +157,9 @@
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\TheyNeedToAprove.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202005221426502_InitialCreate.cs" />
-    <Compile Include="Migrations\202005221426502_InitialCreate.designer.cs">
-      <DependentUpon>202005221426502_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202005231444533_InitialCreate.cs" />
+    <Compile Include="Migrations\202005231444533_InitialCreate.designer.cs">
+      <DependentUpon>202005231444533_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -238,9 +238,6 @@
     <Compile Include="UserComponent\ServiceLayer\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Image\bana.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="EntityFramework">
       <Version>6.4.4</Version>
     </PackageReference>
@@ -277,8 +274,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005221426502_InitialCreate.resx">
-      <DependentUpon>202005221426502_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005231444533_InitialCreate.resx">
+      <DependentUpon>202005231444533_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

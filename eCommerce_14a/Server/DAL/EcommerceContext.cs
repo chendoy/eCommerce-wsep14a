@@ -8,8 +8,9 @@ namespace Server.DAL
     using Server.DAL.UserDb;
     using Server.DAL.StoreDb;
     using Server.DAL.PurchaseDb;
+    using System.Data.Entity.ModelConfiguration.Conventions;
 
-    public  class EcommerceContext : DbContext
+    public class EcommerceContext : DbContext
     {
         public EcommerceContext()
             : base("name=EF_Azure_Ecommerce_ConnStr")
@@ -19,13 +20,13 @@ namespace Server.DAL
         // User Component Tables
         public virtual DbSet<DbUser> Users { get; set; }
 
-        public virtual DbSet<StoreOwnershipAppoint> StoreOwnerships { get; set; }
+        // public virtual DbSet<StoreOwnershipAppoint> StoreOwnerships { get; set; }
 
-        public virtual DbSet<StoreManagersAppoint> StoreManagersAppoint { get; set; }
+        // public virtual DbSet<StoreManagersAppoint> StoreManagersAppoint { get; set; }
 
-        public virtual DbSet<UserStorePermissions> UserStorePermissions { get; set; }
+        // public virtual DbSet<UserStorePermissions> UserStorePermissions { get; set; }
 
-        public virtual DbSet<NotifyData> Notifies { get; set; }
+        // public virtual DbSet<NotifyData> Notifies { get; set; }
 
 
         // Store Component Tables
@@ -33,7 +34,7 @@ namespace Server.DAL
 
         public virtual DbSet<DbInventory> Inventories { get; set; }
 
-        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<DbProduct> Products { get; set; }
 
 
         public virtual DbSet<DbDiscountPolicy> DiscountPolicies { get; set; }
@@ -52,22 +53,29 @@ namespace Server.DAL
 
         public virtual DbSet<DbPurchaseBasket> Baskets { get; set; }
 
-        public virtual DbSet<BasketAtCart> BasketsAtCarts { get; set; }
+        // public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
 
-        public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
-
-        public virtual DbSet<DbPurchase> Purchases { get; set; }
-
-
-
-
-
+        // public virtual DbSet<DbPurchase> Purchases { get; set; }
 
 
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.MergeType).IsOptional();
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.ParentId).IsOptional();
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PreConditionId).IsOptional();
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PolicyProductId).IsOptional();
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.BuyerUserName).IsOptional();
+            
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.MergeType).IsOptional();
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.ParentId).IsOptional();
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.PreConditionId).IsOptional();
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.DiscountProductId).IsOptional();
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.Discount).IsOptional();
+
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

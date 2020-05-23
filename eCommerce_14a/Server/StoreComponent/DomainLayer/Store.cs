@@ -52,7 +52,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!store_params.ContainsKey(CommonStr.StoreParams.StoreInventory) || store_params[CommonStr.StoreParams.StoreInventory] == null)
             {
-                Inventory = new Inventory(Id);
+                Inventory = new Inventory();
             }
             else
             {

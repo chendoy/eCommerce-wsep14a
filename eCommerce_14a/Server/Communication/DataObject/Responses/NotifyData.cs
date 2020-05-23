@@ -29,11 +29,11 @@ namespace Server.UserComponent.Communication
         public string Context {get; set;}
         public NotifyData(string context, String username="") : base(Opcode.NOTIFICATION) 
         { 
-            NotifyData max_notify = DbManager.Instance.GetNotifyWithMaxId();
-            if (max_notify is null)
-                Id = 1;
-            else
-                Id = max_notify.Id + 1;
+            //NotifyData max_notify = DbManager.Instance.GetNotifyWithMaxId();
+            //if (max_notify is null)
+            //    Id = 1;
+            //else
+            //    Id = max_notify.Id + 1;
 
             Context = context;
 

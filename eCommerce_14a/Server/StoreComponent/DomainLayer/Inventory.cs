@@ -52,7 +52,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             string pCategory = (string)productParams[CommonStr.ProductParams.ProductCategory];
             string imgUrl = (string)productParams[CommonStr.ProductParams.ProductImgUrl];
 
-            Product product = new Product(product_id: pId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl, storeId:StoreId);
+            Product product = new Product(product_id: pId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
             invProducts.Add(pId, new Tuple<Product, int>(product, amount));
 
             return new Tuple<bool, string>(true, "");

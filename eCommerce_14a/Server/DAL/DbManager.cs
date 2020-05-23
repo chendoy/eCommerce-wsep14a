@@ -38,18 +38,19 @@ namespace Server.DAL
 
         public NotifyData GetNotifyWithMaxId()
         {
-            if (!dbConn.Notifies.Any())
-            {
-                // The table is empty
-                return null;
-            }
-            return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();
+            return new NotifyData();
+            //if (!dbConn.Notifies.Any())
+            //{
+            //    // The table is empty
+            //    return null;
+            //}
+            //return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();
         }
 
         public void InsertUserNotification(NotifyData notification)
         {
-            dbConn.Notifies.Add(notification);
-            dbConn.SaveChanges();
+           // dbConn.Notifies.Add(notification);
+            //dbConn.SaveChanges();
         }
     }
 }

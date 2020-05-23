@@ -109,6 +109,8 @@ namespace eCommerce_14a.Utils
             public static string Health = "Health";
             public static string CoffeMachine = "Coffe Machines";
             public static string Beauty = "Beauty";
+            public static string Cleaning = "Cleaning";
+
 
         }
 

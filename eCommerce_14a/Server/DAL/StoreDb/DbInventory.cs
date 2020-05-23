@@ -20,7 +20,7 @@ namespace Server.DAL.StoreDb
         [Key, ForeignKey("Product")]
         [Column(Order = 2)]
         public int ProductId { set; get; }
-        public Product Product { set; get; }
+        public DbProduct Product { set; get; }
         
         public int Amount { set; get; }
 

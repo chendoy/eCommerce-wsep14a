@@ -17,20 +17,23 @@ namespace Server.DAL.StoreDb
         public int StoreId { set; get; }
         public DbStore Store { set; get; }
 
-        public int MergeType { set; get; }
+        public int? MergeType { set; get; }
         
-        public int ParentId { set; get; }
+        public int? ParentId { set; get; }
+
 
         [ForeignKey("PreCondition")]
-        public int PreConditionId { set; get; }
+        public int? PreConditionId { set; get; }
         public DbPreCondition PreCondition { set; get; }
 
-        public int DiscountProductId { set; get; }
+        [ForeignKey("Product")]
+        public int? DiscountProductId { set; get; }
+        public DbProduct Product { set; get; }
 
-        public double Discount { set; get; }
+        public double? Discount { set; get; }
 
 
-        public DbDiscountPolicy (int storeid, int mergetype, int parentId, int preconditionid, int discountproductid, int discount)
+        public DbDiscountPolicy (int storeid, int? mergetype, int? parentId, int? preconditionid, int? discountproductid, double? discount)
         {
             StoreId = storeid;
             MergeType = mergetype;

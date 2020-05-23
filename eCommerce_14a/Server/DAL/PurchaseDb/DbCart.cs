@@ -12,7 +12,7 @@ namespace Server.DAL.PurchaseDb
     public class DbCart
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("User"), Column(Order = 1)]
         public string UserName { get; set; }
