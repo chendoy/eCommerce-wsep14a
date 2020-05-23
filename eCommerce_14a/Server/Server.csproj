@@ -139,7 +139,6 @@
     <Compile Include="DAL\EcommerceContext.cs" />
     <Compile Include="DAL\DbManager.cs" />
     <Compile Include="DAL\PurchaseDb\DbCart.cs" />
-    <Compile Include="DAL\PurchaseDb\DbPurchase.cs" />
     <Compile Include="DAL\PurchaseDb\DbPurchaseBasket.cs" />
     <Compile Include="DAL\PurchaseDb\ProductAtBasket.cs" />
     <Compile Include="DAL\StoreDb\DbDiscountPolicy.cs" />
@@ -159,9 +158,9 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202005231726408_InitialCreate.cs" />
-    <Compile Include="Migrations\202005231726408_InitialCreate.designer.cs">
-      <DependentUpon>202005231726408_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202005231956531_InitialCreate.cs" />
+    <Compile Include="Migrations\202005231956531_InitialCreate.designer.cs">
+      <DependentUpon>202005231956531_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -276,8 +275,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202005231726408_InitialCreate.resx">
-      <DependentUpon>202005231726408_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005231956531_InitialCreate.resx">
+      <DependentUpon>202005231956531_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
