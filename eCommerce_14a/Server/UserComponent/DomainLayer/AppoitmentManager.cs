@@ -289,28 +289,35 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, PrevOwner + " Is Not a Store Owner\n");
             if (!DemotedOwner.isAppointedByOwner(appointer,storeId))
                 return new Tuple<bool, string>(false, PrevOwner + " Did Not Appointed by:" +owner+"\n");
-            RemoveOwnerLoop(appointer, DemotedOwner, store);
+            List<User> OwnersToRemove = RemoveOwnerLoop(appointer, DemotedOwner, store);
+            foreach(User Prevowner in OwnersToRemove)
+            {
+                store.RemoveOwner(Prevowner);
+            }
             return new Tuple<bool, string>(true, PrevOwner + " Removed from store: - " + store.StoreName + "\n");
 
         }
-        private void RemoveOwnerLoop(User appointer,User DemoteOwner,Store store)
+        private List<User> RemoveOwnerLoop(User appointer,User DemoteOwner,Store store)
         {
+            List<User> OwnersToRemove = new List<User>();
+            OwnersToRemove.Add(DemoteOwner);
             string OwnerRemovalMessage = "You have been Removed From Owner position in the Store " + store.StoreName +"By you appointer - "+appointer.getUserName()+"\n";
             //Remove him from storeOwnership! Here
-            store.RemoveOwner(DemoteOwner);
+            //store.RemoveOwner(DemoteOwner);
             DemoteOwner.RemoveStoreOwner(store.GetStoreId());
             DemoteOwner.RemovePermission(store.GetStoreId());
             Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(OwnerRemovalMessage));
             Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
             DemoteOwner.RemoveAppoitmentOwner(appointer, store.GetStoreId());
             string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
-            List<User> ManagersToRemove = store.managers;
-            List<User> OwnersToRemove = store.owners;
-            foreach (User manager in ManagersToRemove)
+            List<User> Managers = store.managers;
+            List<User> ManagersToRemove = new List<User>();
+            List<User> Owners = store.owners;
+            foreach (User manager in Managers)
             {
                 if (manager.isAppointedByManager(DemoteOwner, store.GetStoreId()))
                 {
-                    store.RemoveManager(manager);
+                    ManagersToRemove.Add(manager);
                     manager.RemoveStoreManagment(store.GetStoreId());
                     manager.RemovePermission(store.GetStoreId());
                     Publisher.Instance.Notify(manager.getUserName(), new NotifyData(Message));
@@ -318,14 +325,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     manager.RemoveAppoitmentManager(DemoteOwner, store.GetStoreId());
                 }
             }
-            foreach (User owner in OwnersToRemove)
+            foreach(User manager in ManagersToRemove)
+            {
+                store.RemoveManager(manager);
+            }
+            foreach (User owner in Owners)
             {
                 if(owner.isAppointedByOwner(DemoteOwner,store.GetStoreId()))
                 {
-                    RemoveOwnerLoop(DemoteOwner,owner, store);
+                    OwnersToRemove.AddRange(RemoveOwnerLoop(DemoteOwner,owner, store));
                 }
             }
-            return;
+            return OwnersToRemove;
         }
         public Tuple<bool, string> ChangePermissions(string ownerS, string worker, int storeId, int[] permissions)
         {

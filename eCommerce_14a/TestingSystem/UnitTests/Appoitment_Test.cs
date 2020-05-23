@@ -288,5 +288,44 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsFalse(appointed.getUserPermission(1, "ViewPuarchseHistory"));
             Assert.IsFalse(appointed.getUserPermission(1, "ProductPermission"));
         }
+        [TestMethod]
+        public void RemoveOwnerLoop()
+        {
+            UM.Register("user1", "Test1");
+            UM.Register("user2", "Test1");
+            UM.Register("user3", "Test1");
+            UM.Register("user4", "Test1");
+            UM.Register("user5", "Test1");
+            UM.Register("user6", "Test1");
+            UM.Register("user7", "Test1");
+            UM.Register("user8", "Test1");
+            UM.Login("user1", "Test1");
+            SM.createStore("user1", "Store7");
+            //User1 Store Owner
+            //User1 Appoint User2 -> User2 Appoint user3 -> user3 appoint user4
+            //user2 appoint user5 manager -> user4 appoint user6 manager
+            //user1 appoint user7 owner
+            //user1 appoint user8 managers
+            //Should stay user1 user7 user8
+            Assert.IsTrue(AP.AppointStoreOwner("user1", "user2", 2).Item1);
+            UM.Login("user2", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("user1", "user7", 2).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user2", "user7", 2, true).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("user1", "user8", 2).Item1);
+            UM.Login("user7", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("user2", "user3", 2).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user7", "user3", 2,true).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user1", "user3", 2, true).Item1);
+            UM.Login("user3", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("user3", "user4", 2).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user1", "user4", 2, true).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user7", "user4", 2, true).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user2", "user4", 2, true).Item1);
+            UM.Login("user4", "Test1");
+            Assert.IsTrue(AP.AppointStoreManager("user4", "user6", 2).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("user2", "user5", 2).Item1);
+            AP.RemoveStoreOwner("user2", "user7", 2);
+            AP.RemoveStoreOwner("user1", "user2", 2);
+        }
     }
 }
