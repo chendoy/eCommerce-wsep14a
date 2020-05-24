@@ -135,6 +135,7 @@
     <Compile Include="Communication\DataObject\ThinObjects\StoreData.cs" />
     <Compile Include="Communication\DataObject\ThinObjects\UserData.cs" />
     <Compile Include="Communication\WssServer.cs" />
+    <Compile Include="DAL\CommunicationDb\AdapterCommunication.cs" />
     <Compile Include="DAL\CommunicationDb\DbNotifyData.cs" />
     <Compile Include="DAL\EcommerceContext.cs" />
     <Compile Include="DAL\DbManager.cs" />
