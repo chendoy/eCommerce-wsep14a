@@ -62,9 +62,8 @@ namespace Server.DAL
 
         public virtual DbSet<DbPurchaseBasket> Baskets { get; set; }
 
-        // public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
+        public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
 
-        // public virtual DbSet<DbPurchase> Purchases { get; set; }
 
 
 
@@ -83,6 +82,25 @@ namespace Server.DAL
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.DiscountProductId).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.Discount).IsOptional();
 
+            modelBuilder.Entity<CandidateToOwnership>()
+            .HasRequired(c => c.Appointer)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+           modelBuilder.Entity<NeedToApprove>()
+           .HasRequired(c => c.Candidate)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
+           modelBuilder.Entity<StoreManagersAppoint>()
+           .HasRequired(c => c.Appointer)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StoreOwnershipAppoint>()
+            .HasRequired(c => c.Appointer)
+            .WithMany()
+            .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
         }

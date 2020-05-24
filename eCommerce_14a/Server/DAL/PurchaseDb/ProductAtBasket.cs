@@ -18,15 +18,6 @@ namespace Server.DAL.PurchaseDb
         public int BasketId { set; get; }
         public virtual DbPurchaseBasket Basket { set; get; }
 
-        [Key, ForeignKey("User")]
-        [Column(Order = 2)]
-        public string UserName { set; get; }
-        public virtual DbUser User { set; get; }
-
-        [Key, ForeignKey("Store")]
-        [Column(Order = 3)]
-        public int StoreId { set; get; }
-        public DbStore Store { set; get; }
 
         [Key, ForeignKey("Product")]
         [Column(Order = 4)]
@@ -35,11 +26,9 @@ namespace Server.DAL.PurchaseDb
 
         public int ProductAmount { set; get; }
 
-        public ProductAtBasket (int basketid, string username, int storeid, int productid, int productamount)
+        public ProductAtBasket (int basketid, int productid, int productamount)
         {
             BasketId = basketid;
-            UserName = username;
-            StoreId = storeid;
             ProductId = productid;
             ProductAmount = productamount;
         }

@@ -69,8 +69,8 @@
                         CandidateName = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.AppointerName, t.StoreId, t.CandidateName })
-                .ForeignKey("dbo.DbUsers", t => t.AppointerName, cascadeDelete: true)
-                .ForeignKey("dbo.DbUsers", t => t.CandidateName, cascadeDelete: false)
+                .ForeignKey("dbo.DbUsers", t => t.AppointerName)
+                .ForeignKey("dbo.DbUsers", t => t.CandidateName, cascadeDelete: true)
                 .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
                 .Index(t => t.AppointerName)
                 .Index(t => t.StoreId)
@@ -144,7 +144,7 @@
                     })
                 .PrimaryKey(t => new { t.ApproverName, t.StoreId, t.CandiateName })
                 .ForeignKey("dbo.DbUsers", t => t.ApproverName, cascadeDelete: true)
-                .ForeignKey("dbo.DbUsers", t => t.CandiateName, cascadeDelete: false)
+                .ForeignKey("dbo.DbUsers", t => t.CandiateName)
                 .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
                 .Index(t => t.ApproverName)
                 .Index(t => t.StoreId)
@@ -172,6 +172,20 @@
                 .PrimaryKey(t => t.UserName)
                 .ForeignKey("dbo.DbUsers", t => t.UserName)
                 .Index(t => t.UserName);
+            
+            CreateTable(
+                "dbo.ProductAtBaskets",
+                c => new
+                    {
+                        BasketId = c.Int(nullable: false),
+                        ProductId = c.Int(nullable: false),
+                        ProductAmount = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.BasketId, t.ProductId })
+                .ForeignKey("dbo.DbPurchaseBaskets", t => t.BasketId, cascadeDelete: true)
+                .ForeignKey("dbo.DbProducts", t => t.ProductId, cascadeDelete: true)
+                .Index(t => t.BasketId)
+                .Index(t => t.ProductId);
             
             CreateTable(
                 "dbo.DbPurchasePolicies",
@@ -218,7 +232,7 @@
                     })
                 .PrimaryKey(t => new { t.AppointerName, t.StoreId, t.AppointedName })
                 .ForeignKey("dbo.DbUsers", t => t.AppointedName, cascadeDelete: true)
-                .ForeignKey("dbo.DbUsers", t => t.AppointerName, cascadeDelete: false)
+                .ForeignKey("dbo.DbUsers", t => t.AppointerName)
                 .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
                 .Index(t => t.AppointerName)
                 .Index(t => t.StoreId)
@@ -247,7 +261,7 @@
                     })
                 .PrimaryKey(t => new { t.AppointerName, t.StoreId, t.AppointedName })
                 .ForeignKey("dbo.DbUsers", t => t.AppointedName, cascadeDelete: true)
-                .ForeignKey("dbo.DbUsers", t => t.AppointerName, cascadeDelete: false)
+                .ForeignKey("dbo.DbUsers", t => t.AppointerName)
                 .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
                 .Index(t => t.AppointerName)
                 .Index(t => t.StoreId)
@@ -303,6 +317,8 @@
             DropForeignKey("dbo.DbPurchasePolicies", "PolicyProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbPurchasePolicies", "PreConditionId", "dbo.DbPreConditions");
             DropForeignKey("dbo.DbPurchasePolicies", "BuyerUserName", "dbo.DbUsers");
+            DropForeignKey("dbo.ProductAtBaskets", "ProductId", "dbo.DbProducts");
+            DropForeignKey("dbo.ProductAtBaskets", "BasketId", "dbo.DbPurchaseBaskets");
             DropForeignKey("dbo.DbPasswords", "UserName", "dbo.DbUsers");
             DropForeignKey("dbo.DbNotifyDatas", "UserName", "dbo.DbUsers");
             DropForeignKey("dbo.NeedToApproves", "StoreId", "dbo.DbStores");
@@ -338,6 +354,8 @@
             DropIndex("dbo.DbPurchasePolicies", new[] { "PolicyProductId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "PreConditionId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "StoreId" });
+            DropIndex("dbo.ProductAtBaskets", new[] { "ProductId" });
+            DropIndex("dbo.ProductAtBaskets", new[] { "BasketId" });
             DropIndex("dbo.DbPasswords", new[] { "UserName" });
             DropIndex("dbo.DbNotifyDatas", new[] { "UserName" });
             DropIndex("dbo.NeedToApproves", new[] { "CandiateName" });
@@ -362,6 +380,7 @@
             DropTable("dbo.StoreManagersAppoints");
             DropTable("dbo.StoreManagers");
             DropTable("dbo.DbPurchasePolicies");
+            DropTable("dbo.ProductAtBaskets");
             DropTable("dbo.DbPasswords");
             DropTable("dbo.DbNotifyDatas");
             DropTable("dbo.NeedToApproves");
