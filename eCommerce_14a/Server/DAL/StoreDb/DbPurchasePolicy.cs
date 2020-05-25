@@ -35,7 +35,9 @@ namespace Server.DAL.StoreDb
         public string BuyerUserName { set; get; }
         public virtual DbUser Buyer { set; get; }
 
-        public DbPurchasePolicy(int storeId, int? mergetype, int? parentid, int? preconditionid, int? policyproductid, string buyerusername)
+        public int PurchasePolicyType { set; get; }
+
+        public DbPurchasePolicy(int storeId, int? mergetype, int? parentid, int? preconditionid, int? policyproductid, string buyerusername, int purchasepolictype)
         {
             StoreId = storeId;
             MergeType = mergetype;
@@ -43,7 +45,7 @@ namespace Server.DAL.StoreDb
             PreConditionId = preconditionid;
             PolicyProductId = policyproductid;
             BuyerUserName = buyerusername;
-
+            PurchasePolicyType = purchasepolictype;
         }
 
     }

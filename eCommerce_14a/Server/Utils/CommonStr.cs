@@ -9,7 +9,7 @@ namespace eCommerce_14a.Utils
         {
             public static string UnKnownErr = "UnKnown Error Occured";
         }
-
+        
         public static class StoreRoles
         {
             public static string Owner = "owner";
@@ -89,6 +89,9 @@ namespace eCommerce_14a.Utils
             public static string StoreRank = "StoreRank";
             public static string IsActiveStore = "isActive";
             public static string Validator = "Validator";
+
+            public static string Owners { get; internal set; }
+            public static string Managers { get; internal set; }
         }
 
         public static class ProductParams

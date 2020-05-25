@@ -28,7 +28,7 @@ namespace Server.Communication
 
         public StoreData ToStoreData(Store store) 
         {
-            return new StoreData(store.Id, ToUserNameList(store.owners), ToUserNameList(store.managers), ToInventoryData(store.Inventory), store.GetName());
+            return new StoreData(store.Id, store.owners, store.managers, ToInventoryData(store.Inventory), store.GetName());
         }
 
         public UserData ToUserData(User user)
@@ -158,15 +158,15 @@ namespace Server.Communication
             }
 
             else if (policyData.GetType() == typeof(SystemPurchasePolicy))
-            { 
-                int storeId = ((SystemPurchasePolicy)policyData).store.Id;
+            {
+                int storeId = ((SystemPurchasePolicy)policyData).StoreId;
                 int preCondition = ((SystemPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 return new PurchasePolicySystemData(preCondition, storeId);
             }
 
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
-                string username = ((UserPurchasePolicy)policyData).user.getUserName();
+                string username = ((UserPurchasePolicy)policyData).UserName;
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 return new PurchasePolicyUserData(preCondition, username);
             }

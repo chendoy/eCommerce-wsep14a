@@ -32,8 +32,10 @@ namespace Server.DAL.StoreDb
 
         public double? Discount { set; get; }
 
+        public int DiscountType { set; get; }
 
-        public DbDiscountPolicy (int storeid, int? mergetype, int? parentId, int? preconditionid, int? discountproductid, double? discount)
+
+        public DbDiscountPolicy (int storeid, int? mergetype, int? parentId, int? preconditionid, int? discountproductid, double? discount, int discounttype)
         {
             StoreId = storeid;
             MergeType = mergetype;
@@ -41,6 +43,7 @@ namespace Server.DAL.StoreDb
             PreConditionId = preconditionid;
             DiscountProductId = discountproductid;
             Discount = discount;
+            DiscountType = discounttype;
         }
 
     }

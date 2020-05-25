@@ -108,7 +108,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, policyProductId, null, null, validator);
+            return PreCondition.IsFulfilled(basket, policyProductId, null, -1, validator);
         }
     }
 
@@ -122,35 +122,35 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, null, null, validator);
+            return PreCondition.IsFulfilled(basket, -1, null, -1, validator);
         }
     }
 
     public class SystemPurchasePolicy : SimplePurchasePolicy
     {
-        public  Store store { get; set; }
-        public SystemPurchasePolicy(PreCondition pre,Store store) : base(pre)
+        public  int  StoreId { get; set; }
+        public SystemPurchasePolicy(PreCondition pre,int storeId) : base(pre)
         {
-            this.store = store;
+            StoreId = storeId;
         }
 
         public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, null, store, validator);
+            return PreCondition.IsFulfilled(basket, -1, null, StoreId, validator);
         }
     }
 
     public class UserPurchasePolicy : SimplePurchasePolicy
     {
-        public User user { get; set; }
-        public UserPurchasePolicy(PreCondition pre, User user) : base(pre)
+        public string UserName { get; set; }
+        public UserPurchasePolicy(PreCondition pre, string userName) : base(pre)
         {
-            this.user = user;
+            UserName = userName;
         }
 
         public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, user, null, validator);
+            return PreCondition.IsFulfilled(basket, -1, UserName, -1, validator);
         }
     }
 }

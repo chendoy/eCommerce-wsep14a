@@ -312,11 +312,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
             DemoteOwner.RemoveAppoitmentOwner(appointer, store.GetStoreId());
             string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
-            List<User> Managers = store.managers;
+            List<string> Managers = store.managers;
             List<User> ManagersToRemove = new List<User>();
-            List<User> Owners = store.owners;
-            foreach (User manager in Managers)
+            List<string> Owners = store.owners;
+            foreach (string managerName in Managers)
             {
+                User manager = UserManager.Instance.GetUser(managerName);
                 if (manager.isAppointedByManager(DemoteOwner, store.GetStoreId()))
                 {
                     ManagersToRemove.Add(manager);
@@ -331,8 +332,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 store.RemoveManager(manager);
             }
-            foreach (User owner in Owners)
+            foreach (string ownername in Owners)
             {
+                User owner = UserManager.Instance.GetUser(ownername);
                 if(owner.isAppointedByOwner(DemoteOwner,store.GetStoreId()))
                 {
                     OwnersToRemove.AddRange(RemoveOwnerLoop(DemoteOwner,owner, store));

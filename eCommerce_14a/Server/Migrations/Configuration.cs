@@ -116,21 +116,24 @@
                                                       parentid: null, // if parent id is null then it's a root purchasepolicy
                                                       preconditionid: null, //compund policy, not have pre condition
                                                       policyproductid: null, //compund policy not have product based condition
-                                                      buyerusername: null //compund policy not based on username
+                                                      buyerusername: null, //compund policy not based on username
+                                                      purchasepolictype:CommonStr.PurchasePolicyTypes.CompundPurchasePolicy
                                                       )); // ID=1
             purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
                                                       mergetype: null, //not compund policy, there is no mergetype
                                                       parentid: 1,
                                                       preconditionid: 9, // max 10 product per basket
                                                       policyproductid: null,
-                                                      buyerusername: null
+                                                      buyerusername: null,
+                                                      purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
                                                       )); // ID=2
             purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
                                                      mergetype: null, //not compund policy, there is no mergetype
                                                      parentid: 1, // if parent id is null then it's a root purchasepolicy
                                                      preconditionid: 10, // Single Of Product type (will be single of product id 1)
                                                      policyproductid: 1,
-                                                     buyerusername: null
+                                                     buyerusername: null,
+                                                     purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy
                                                      )); // ID=3
 
             purchasepolicies.ForEach(pp => context.PurchasePolicies.Add(pp));
@@ -146,7 +149,8 @@
                                                       parentId: null, // root node, not have parent
                                                       preconditionid: null, //if pre condition is null, then it's compund discountpolicy
                                                       discountproductid: null, // discount not based on product
-                                                      discount: null // the discount should dervied from childrens, not from constructor for compunddiscount!
+                                                      discount: null, // the discount should dervied from childrens, not from constructor for compunddiscount!
+                                                      discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount
                                                       )); // ID=1
 
             discountPolicies.Add(new DbDiscountPolicy(storeid: 1,
@@ -154,7 +158,8 @@
                                                       parentId: 1,
                                                       preconditionid: null, //if pre condition is null, then it's compund discountpolicy
                                                       discountproductid: null, // discount not based on product
-                                                      discount: null // the discount should dervied from childrens, not from constructor for compunddiscount!
+                                                      discount: null, // the discount should dervied from childrens, not from constructor for compunddiscount!
+                                                      discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount
                                                       )); // ID=2
 
             discountPolicies.Add(new DbDiscountPolicy(storeid: 1,
@@ -162,7 +167,8 @@
                                                       parentId: 2,
                                                       preconditionid: 1,
                                                       discountproductid: 1,
-                                                      discount: 15
+                                                      discount: 15,
+                                                      discounttype: CommonStr.DiscountPolicyTypes.ConditionalProductDiscount
                                                       )); // ID=3
 
             discountPolicies.Add(new DbDiscountPolicy(storeid: 1,
@@ -170,7 +176,8 @@
                                                       parentId: 2,
                                                       preconditionid: 2,
                                                       discountproductid: 1,
-                                                      discount: 25
+                                                      discount: 25,
+                                                      discounttype: CommonStr.DiscountPolicyTypes.ConditionalProductDiscount
                                                       )); // ID=4
 
 
@@ -179,7 +186,8 @@
                                                       parentId: 1,
                                                       preconditionid: 3,
                                                       discountproductid: null,
-                                                      discount: 10
+                                                      discount: 10,
+                                                      discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
                                                       )); // ID=5
             discountPolicies.ForEach(dp => context.DiscountPolicies.Add(dp));
             context.SaveChanges();
@@ -242,24 +250,24 @@
 
         private void AddInventories(EcommerceContext context)
         {
-            var inventories = new List<DbInventory>();
-            inventories.Add(new DbInventory(1, 1, 100));
-            inventories.Add(new DbInventory(1, 3, 1000));
-            inventories.Add(new DbInventory(2, 2, 100));
-            inventories.Add(new DbInventory(2, 5, 1000));
-            inventories.Add(new DbInventory(3, 8, 100));
-            inventories.Add(new DbInventory(3, 6, 1000));
-            inventories.Add(new DbInventory(4, 9, 100));
-            inventories.Add(new DbInventory(4, 4, 1000));
-            inventories.Add(new DbInventory(5, 7, 100));
-            inventories.Add(new DbInventory(5, 11, 1000));
-            inventories.Add(new DbInventory(6, 12, 100));
-            inventories.Add(new DbInventory(6, 13, 1000));
-            inventories.Add(new DbInventory(6, 16, 1000));
-            inventories.Add(new DbInventory(6, 17, 1000));
-            inventories.Add(new DbInventory(8, 14, 100));
-            inventories.Add(new DbInventory(8, 15, 1000));
-            inventories.ForEach(i => context.Inventories.Add(i));
+            var inventories = new List<DbInventoryItem>();
+            inventories.Add(new DbInventoryItem(1, 1, 100));
+            inventories.Add(new DbInventoryItem(1, 3, 1000));
+            inventories.Add(new DbInventoryItem(2, 2, 100));
+            inventories.Add(new DbInventoryItem(2, 5, 1000));
+            inventories.Add(new DbInventoryItem(3, 8, 100));
+            inventories.Add(new DbInventoryItem(3, 6, 1000));
+            inventories.Add(new DbInventoryItem(4, 9, 100));
+            inventories.Add(new DbInventoryItem(4, 4, 1000));
+            inventories.Add(new DbInventoryItem(5, 7, 100));
+            inventories.Add(new DbInventoryItem(5, 11, 1000));
+            inventories.Add(new DbInventoryItem(6, 12, 100));
+            inventories.Add(new DbInventoryItem(6, 13, 1000));
+            inventories.Add(new DbInventoryItem(6, 16, 1000));
+            inventories.Add(new DbInventoryItem(6, 17, 1000));
+            inventories.Add(new DbInventoryItem(8, 14, 100));
+            inventories.Add(new DbInventoryItem(8, 15, 1000));
+            inventories.ForEach(i => context.InventoriesItmes.Add(i));
             context.SaveChanges();
 
 

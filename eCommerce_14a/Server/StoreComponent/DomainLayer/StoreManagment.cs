@@ -7,6 +7,7 @@ using Server.UserComponent.Communication;
 using Server.StoreComponent.DomainLayer;
 using Server.Communication.DataObject.ThinObjects;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
+using Server.DAL;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -216,10 +217,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             List<Store> allStores = stores.Values.ToList();
             foreach (Store store in allStores) 
             {
-                List<User> owners = store.owners;
-                foreach (User user in owners) 
+                List<string> owners = store.owners;
+                foreach (string ownername in owners) 
                 {
-                    if (user.getUserName().Equals(username))
+                    User owner = UserManager.Instance.GetUser(ownername);
+                    if (owner.getUserName().Equals(username))
                         retList.Add(store);
                 }
             }

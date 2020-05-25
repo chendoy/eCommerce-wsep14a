@@ -17,6 +17,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
     [TestClass]
     public class DiscountPolicyTest
     {
+
         PolicyValidator validator;
         Cart cart;
         Store store;
@@ -44,7 +45,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 200 : false);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                (PurchaseBasket basket, int productId, User user, Store store) => true);
+                (PurchaseBasket basket, int productId,  string userName, int storeId) => true);
 
             preConditionsDict = new Dictionary<int, PreCondition>();
             preConditionsDict.Add(CommonStr.DiscountPreConditions.Above1Unit, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above1Unit));

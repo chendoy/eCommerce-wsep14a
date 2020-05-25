@@ -5,6 +5,7 @@ using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.Communication.DataObject.ThinObjects;
+using Server.DAL.StoreDb;
 using Server.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
@@ -29,9 +30,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public bool ActiveStore { set; get; }
 
-        public List<User> owners{ set; get; }
+        public List<string> owners{ set; get; }
 
-        public List<User> managers{ set; get; }
+        public List<string> managers{ set; get; }
 
 
         /// <summary>
@@ -45,10 +46,23 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Id = (int)store_params[CommonStr.StoreParams.StoreId];
             StoreName = (string)store_params[CommonStr.StoreParams.StoreName];
-            owners = new List<User>();
-            User storeOwner = (User)store_params[CommonStr.StoreParams.mainOwner];
-            owners.Add(storeOwner);
-            managers = new List<User>(); 
+            owners = new List<string>();
+            if (store_params.ContainsKey(CommonStr.StoreParams.mainOwner))
+            {
+                string storeOwner = (string)store_params[CommonStr.StoreParams.mainOwner];
+                owners.Add(storeOwner);
+            }
+            
+            if(store_params.ContainsKey(CommonStr.StoreParams.Owners))
+            {
+                owners = (List<string>)store_params[CommonStr.StoreParams.Owners];
+            }
+
+            managers = new List<string>();
+            if (store_params.ContainsKey(CommonStr.StoreParams.Managers))
+            {
+                managers = (List<string>)store_params[CommonStr.StoreParams.Managers];
+            }
 
             if (!store_params.ContainsKey(CommonStr.StoreParams.StoreInventory) || store_params[CommonStr.StoreParams.StoreInventory] == null)
             {
@@ -80,26 +94,26 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 200 : false);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                    (PurchaseBasket basket, int productId, User user, Store store) => true);
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => true);
 
                 PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.NoDiscount,
                     (PurchaseBasket basket, int productId) => true);
 
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                     (PurchaseBasket basket, int productId, User user, Store store) => true);
+                     (PurchaseBasket basket, int productId, string userName, int storeId) => true);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
-                    (PurchaseBasket basket, int productId, User user, Store store) => !basket.Products.ContainsKey(productId) ? true : basket.Products[productId] <= 1);
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => !basket.Products.ContainsKey(productId) ? true : basket.Products[productId] <= 1);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
-                    (PurchaseBasket basket, int productId, User user, Store store) => basket.GetNumProductsAtBasket() <= 10);
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() <= 10);
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.GuestCantBuy,
-                    (PurchaseBasket basket, int productId, User user, Store store) => !user.isguest());
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => UserManager.Instance.GetUser(userName) is null? false: UserManager.Instance.GetUser(userName).isguest());
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.StoreMustBeActive,
-                    (PurchaseBasket basket, int productId, User user, Store store) => store.ActiveStore);
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => StoreManagment.Instance.getStore(storeId) is null? false : StoreManagment.Instance.getStore(storeId).ActiveStore);
 
 
             }
@@ -143,13 +157,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg + " user: " + user.getUserName().ToString() + "store: " + this.Id);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
@@ -162,23 +176,18 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public List<string> getOwners()
         {
-            List<string> ownerList = new List<string>();
-            foreach (User owner in owners)
-            {
-                ownerList.Add(owner.getUserName());
-            }
-            return ownerList;
+            return owners;
         }
         public Dictionary<string, string> getStaff()
         {
             Dictionary<string, string> staff = new Dictionary<string, string>();
-            foreach(User owner in owners)
+            foreach(string owner in owners)
             {
-                staff.Add(owner.getUserName(), CommonStr.StoreRoles.Owner);
+                staff.Add(owner, CommonStr.StoreRoles.Owner);
             }
-            foreach(User manager in managers)
+            foreach(string manager in managers)
             {
-                staff.Add(manager.getUserName(), CommonStr.StoreRoles.Manager);
+                staff.Add(manager, CommonStr.StoreRoles.Manager);
             }
 
             return staff;
@@ -188,13 +197,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
@@ -210,7 +219,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user))
+            if (!owners.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
@@ -232,13 +241,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.DiscountPolicy))
                 {
@@ -263,13 +272,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.PurachsePolicy))
                 {
@@ -309,15 +318,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicySystemData))
             {
                 int preCondition = ((PurchasePolicySystemData)thinPurchasePolicy).PreCondition;
-                return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), this);
+                return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), Id);
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyUserData))
             {
                 int preCondition = ((PurchasePolicyUserData)thinPurchasePolicy).PreCondition;
                 string userName = ((PurchasePolicyUserData)thinPurchasePolicy).UserName;
-                User user = UserManager.Instance.GetUser(userName);
-                return new UserPurchasePolicy(new PurchasePreCondition(preCondition), user);
+                return new UserPurchasePolicy(new PurchasePreCondition(preCondition), userName);
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(CompoundPurchasePolicyData))
@@ -380,13 +388,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
@@ -402,13 +410,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
@@ -427,13 +435,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (!owners.Contains(user) && !managers.Contains(user))
+            if (!owners.Contains(user.Name) && !managers.Contains(user.Name))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.notAOwnerOrManagerErrMsg);
             }
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
             {
                 if (!user.getUserPermission(Id, CommonStr.MangerPermission.Product))
                 {
@@ -475,9 +483,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (owners.Contains(user))
+            if (owners.Contains(user.Name))
                 return false;
-            owners.Add(user);
+            owners.Add(user.Name);
             return true;
         }
 
@@ -485,9 +493,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (managers.Contains(user))
+            if (managers.Contains(user.Name))
                 return false;
-            managers.Add(user);
+            managers.Add(user.Name);
             return true;
         }
 
@@ -495,28 +503,28 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return owners.Contains(user);
+            return owners.Contains(user.Name);
         }
         
         public bool IsStoreManager(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return managers.Contains(user);
+            return managers.Contains(user.Name);
         }
 
         public bool RemoveManager(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return managers.Remove(user);
+            return managers.Remove(user.Name);
         }
 
         public bool RemoveOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return owners.Remove(user);
+            return owners.Remove(user.Name);
         }
 
 
@@ -579,7 +587,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            if (owners[0] == user)
+            if (owners[0] == user.Name)
                 return true;
             else
                 return false;

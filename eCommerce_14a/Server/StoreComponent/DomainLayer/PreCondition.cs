@@ -26,7 +26,7 @@ namespace Server.StoreComponent.DomainLayer
         }
 
         virtual
-        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, PolicyValidator validator)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, string userName, int storeId, PolicyValidator validator)
         {
             return false;
         }
@@ -56,10 +56,10 @@ namespace Server.StoreComponent.DomainLayer
         }
 
         override
-        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, PolicyValidator validator)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, string userName, int storeId, PolicyValidator validator)
         {
 
-            return validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, user, store);
+            return validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, userName, storeId);
         }
     }
 

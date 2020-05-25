@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server.DAL.StoreDb
 {
-    public class DbInventory
+    public class DbInventoryItem
     {
 
         [Key, ForeignKey("Store")]
@@ -24,7 +24,7 @@ namespace Server.DAL.StoreDb
         
         public int Amount { set; get; }
 
-        public DbInventory(int storeId, int productId, int amount)
+        public DbInventoryItem(int storeId, int productId, int amount)
         {
             StoreId = storeId;
             ProductId = productId;

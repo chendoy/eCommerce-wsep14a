@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.DAL.UserDb;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,8 @@ namespace Server.DAL.StoreDb
         public int Rank { set; get; }
         public string StoreName { set; get; }
         public bool ActiveStore { set; get; }
+
+
         
         public DbStore(int id, int rank, string storename, bool activestore)
         {

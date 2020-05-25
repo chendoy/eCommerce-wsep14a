@@ -143,11 +143,12 @@
     <Compile Include="DAL\PurchaseDb\DbPurchaseBasket.cs" />
     <Compile Include="DAL\PurchaseDb\ProductAtBasket.cs" />
     <Compile Include="DAL\StoreDb\DbDiscountPolicy.cs" />
-    <Compile Include="DAL\StoreDb\DbInventory.cs" />
+    <Compile Include="DAL\StoreDb\DbInventoryItem.cs" />
     <Compile Include="DAL\StoreDb\DbProduct.cs" />
     <Compile Include="DAL\StoreDb\DbPurchasePolicy.cs" />
     <Compile Include="DAL\StoreDb\DbStore.cs" />
     <Compile Include="DAL\StoreDb\DbPreCondition.cs" />
+    <Compile Include="DAL\StoreDb\StoreAdapter.cs" />
     <Compile Include="DAL\StoreDb\StoreManager.cs" />
     <Compile Include="DAL\StoreDb\StoreOwner.cs" />
     <Compile Include="DAL\UserDb\AdapterUser.cs" />

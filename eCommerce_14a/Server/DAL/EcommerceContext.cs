@@ -41,7 +41,7 @@ namespace Server.DAL
         // Store Component Tables
         public virtual DbSet<DbStore> Stores { get; set; }
 
-        public virtual DbSet<DbInventory> Inventories { get; set; }
+        public virtual DbSet<DbInventoryItem> InventoriesItmes { get; set; }
 
         public virtual DbSet<DbProduct> Products { get; set; }
 
