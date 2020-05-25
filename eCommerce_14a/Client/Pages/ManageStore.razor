@@ -89,7 +89,7 @@
             <RadzenGrid @ref="permissionsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
                         Data="@ManagersPermissions" TItem="Tuple<string, Permission>">
                 <Columns>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="User Name" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Property="Item1" Title="User Name" />
                     <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can View" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="permission">
                             <RadzenCheckBox @bind-Value="@permission.Item2.CanView" Disabled="true" TValue="bool" />
