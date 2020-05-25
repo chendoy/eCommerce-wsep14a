@@ -84,6 +84,58 @@
 
         </RadzenTabsItem>
 
+        <RadzenTabsItem Text="Edit Permissions">
+
+            <RadzenGrid @ref="permissionsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                        Data="@ManagersPermissions" TItem="Tuple<string, Permission>">
+                <Columns>
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="User Name" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can View" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.CanView" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.CanView" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can Change Inventory" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.CanChangeInventory" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.CanChangeInventory" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can Doodle" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.CanDoodle" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.CanDoodle" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn TItem="Tuple<string, Permission>" Context="permission" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="permission">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow_Permission(permission))">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow_Permission(permission))">
+                            </RadzenButton>
+                            <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit_Permission(permission))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenGridColumn>
+                </Columns>
+
+            </RadzenGrid>
+
+
+        </RadzenTabsItem>
+
         <RadzenTabsItem Text="Discounts">
             <h2>Add New Discount</h2>
             <h2>Edit </h2>
@@ -104,17 +156,17 @@
                             <RadzenTextBox @bind-Value="product.Item1.Name" Style="width:100%; display: block" Name="ProductName" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category" >
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category">
                         <EditTemplate Context="product">
                             <RadzenTextBox @bind-Value="product.Item1.Category" Style="width:100%; display: block" Name="Category" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details" >
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details">
                         <EditTemplate Context="product">
                             <RadzenTextBox @bind-Value="product.Item1.Details" Style="width:100%; display: block" Name="Details" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price" >
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price">
                         <EditTemplate Context="product">
                             <RadzenNumeric TValue="double" @bind-Value="product.Item1.Price" Style="width:100%; display: block" Name="Price" />
                         </EditTemplate>
@@ -180,7 +232,7 @@
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Add product">
-            
+
             <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
                 <div class="row">
                     <div class="col-md-6">
@@ -324,7 +376,9 @@
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
         await UpdateInventory();
+        await UpdateManagersPermissions();
         ProductsInEdit = new List<Tuple<ProductData, int>>();
+        PermissionsInEdit = new List<Tuple<string, Permission>>();
     }
 
     public class Product
@@ -531,4 +585,65 @@
             errorMsg = response.Error;
         }
     }
+
+    ///////////////////////////////////////////////////////////// Permissions GridView
+
+    public RadzenGrid<Tuple<string, Permission>> permissionsGrid { get; set; }
+    public List<Tuple<string, Permission>> PermissionsInEdit { get; set; }
+    public List<Tuple<string, Permission>> ManagersPermissions { get; set; }
+
+    public class Permission
+    {
+        public bool CanView { get; set; }
+        public bool CanChangeInventory { get; set; }
+        public bool CanDoodle { get; set; }
+
+        public Permission(int[] permissions)
+        {
+            CanView = permissions[0] == 1;
+            CanChangeInventory = permissions[1] == 1;
+            CanDoodle = permissions[2] == 1;
+        }
+    }
+
+
+    void EditRow_Permission(Tuple<string, Permission> permission)
+    {
+        permissionsGrid.EditRow(permission);
+        PermissionsInEdit.Add(permission);
+    }
+
+    async void SaveRow_Permission(Tuple<string, Permission> permission)
+    {
+        //UpdateProductOfStoreRequest request = new UpdateProductOfStoreRequest(loggedInUser, StoreId, product.Item1.ProductId, product.Item1.Details,
+        //product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
+        //SuccessFailResponse response = await service.GetResponse<UpdateProductOfStoreRequest, SuccessFailResponse>(request);
+        //if (response.Success)
+        //{
+        //    successMsg = "Operation completed successfully";
+        //    errorMsg = "";
+        await permissionsGrid.UpdateRow(permission);
+        //}
+        //else
+        //{
+        //    successMsg = "";
+        //    errorMsg = response.Error;
+        //}
+
+    }
+
+    async void CancelEdit_Permission(Tuple<string, Permission> permission)
+    {
+        permissionsGrid.CancelEditRow(permission);
+        await UpdateManagersPermissions();
+    }
+
+    async Task UpdateManagersPermissions()
+    {
+        ManagersPermissions = new List<Tuple<string, Permission>>();
+        ManagersPermissions.Add(new Tuple<string, Permission>("Mosh", new Permission(new int[] { 0, 1, 0 })));
+        ManagersPermissions.Add(new Tuple<string, Permission>("Josh", new Permission(new int[] { 1, 1, 0 })));
+        ManagersPermissions.Add(new Tuple<string, Permission>("Wosh", new Permission(new int[] { 0, 1, 1 })));
+    }
+
 }
