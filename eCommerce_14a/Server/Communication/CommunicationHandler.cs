@@ -90,6 +90,13 @@ namespace eCommerce_14a.Communication
             return session;
         }
 
+        public byte[] HandleLogin(string json)
+        {
+            LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            userService.Login(res.Username, res.Password);
+            return new byte[5];
+        }
+
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
             bool isAdmin = false;

@@ -13,6 +13,7 @@ using Server.Communication.DataObject.Responses;
 using System.Collections.Generic;
 using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
+using Server.Utils;
 
 namespace eCommerce_14a.Communication
 {
@@ -41,6 +42,7 @@ namespace eCommerce_14a.Communication
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
+            config1.MaxConnectionNumber = 1000;
             config1.Security = "Tls";
             config1.Certificate = new CertificateConfig
             {
@@ -66,18 +68,19 @@ namespace eCommerce_14a.Communication
 
         private void StartSession(WebSocketSession session)
         {
-            checkFunc(); // for tests
+            //checkFunc(); // for tests
             Console.WriteLine("NewSessionConnected");
         }
 
         private void ReceiveData(WebSocketSession session, byte[] value)
         {
+            //Console.WriteLine("Receive Msg:" + value.ToString()) ;
             HandleMessage(session, value);
         }
 
         private void ReceiveMessage(WebSocketSession session, string value)
         {
-            //Console.WriteLine("Receive Msg:" + value);
+            Console.WriteLine("Receive Msg:" + value);
         }
 
         public void notify(string username, NotifyData msg)
@@ -297,10 +300,11 @@ namespace eCommerce_14a.Communication
             //Console.WriteLine(json);
             //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
             //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
+            //RequestMaker req = new RequestMaker();
+            //req.GenerateBinReq();
             CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
-
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
@@ -14,6 +14,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
     public class UserManager
     {
+        private static int usingResource = 0;
         private Dictionary<string, string> Users_And_Hashes;
         private Dictionary<string, User> users;
         private Dictionary<string, User> Active_users;
@@ -150,7 +151,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Users_And_Hashes.Add(username, sha1);
             User nUser = new User(Available_ID, username, false);
             users.Add(username, nUser);
-            Available_ID++;
+            //Available_ID++;
             return new Tuple<bool, string>(true, "");
         }
         //Login to Unlogged Register User with valid user name and pass.
@@ -215,6 +216,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+            if(0 == Interlocked.Exchange(ref usingResource, 1))
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             string tName = "Guest" + Available_ID;
             User nUser = new User(Available_ID, tName);
@@ -222,6 +224,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             nUser.LogIn();
             Active_users.Add(tName, nUser);
             Available_ID++;
+            Interlocked.Exchange(ref usingResource, 0);
             return tName;
         }
         //Tries to get User from users list
