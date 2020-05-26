@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -55,6 +56,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public void loaddata()
         {
+            //List<User> users = DbManager.Instance
             UManagment.LoadUsers();
             StoreManagment.Instance.LoadStores();
             AppoitmentManager.Instance.LoadAppointments();

@@ -87,6 +87,7 @@
                         PreConditionId = c.Int(),
                         DiscountProductId = c.Int(),
                         Discount = c.Double(),
+                        DiscountType = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DbPreConditions", t => t.PreConditionId)
@@ -121,7 +122,7 @@
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.DbInventories",
+                "dbo.DbInventoryItems",
                 c => new
                     {
                         StoreId = c.Int(nullable: false),
@@ -198,6 +199,7 @@
                         PreConditionId = c.Int(),
                         PolicyProductId = c.Int(),
                         BuyerUserName = c.String(maxLength: 128),
+                        PurchasePolicyType = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DbUsers", t => t.BuyerUserName)
@@ -324,8 +326,8 @@
             DropForeignKey("dbo.NeedToApproves", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.NeedToApproves", "CandiateName", "dbo.DbUsers");
             DropForeignKey("dbo.NeedToApproves", "ApproverName", "dbo.DbUsers");
-            DropForeignKey("dbo.DbInventories", "StoreId", "dbo.DbStores");
-            DropForeignKey("dbo.DbInventories", "ProductId", "dbo.DbProducts");
+            DropForeignKey("dbo.DbInventoryItems", "StoreId", "dbo.DbStores");
+            DropForeignKey("dbo.DbInventoryItems", "ProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbDiscountPolicies", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.DbDiscountPolicies", "DiscountProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbDiscountPolicies", "PreConditionId", "dbo.DbPreConditions");
@@ -361,8 +363,8 @@
             DropIndex("dbo.NeedToApproves", new[] { "CandiateName" });
             DropIndex("dbo.NeedToApproves", new[] { "StoreId" });
             DropIndex("dbo.NeedToApproves", new[] { "ApproverName" });
-            DropIndex("dbo.DbInventories", new[] { "ProductId" });
-            DropIndex("dbo.DbInventories", new[] { "StoreId" });
+            DropIndex("dbo.DbInventoryItems", new[] { "ProductId" });
+            DropIndex("dbo.DbInventoryItems", new[] { "StoreId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "DiscountProductId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "PreConditionId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "StoreId" });
@@ -384,7 +386,7 @@
             DropTable("dbo.DbPasswords");
             DropTable("dbo.DbNotifyDatas");
             DropTable("dbo.NeedToApproves");
-            DropTable("dbo.DbInventories");
+            DropTable("dbo.DbInventoryItems");
             DropTable("dbo.DbProducts");
             DropTable("dbo.DbPreConditions");
             DropTable("dbo.DbDiscountPolicies");

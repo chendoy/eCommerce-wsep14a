@@ -62,7 +62,65 @@ namespace Server.DAL
             return null;
         }
 
-        public Store GetStore(int StoreId)
+        public List<User> GetAllUsers()
+        {
+            List<string> usernames = dbConn.Users.Select(user => user.Name).Distinct().ToList();
+            List<User> users = new List<User>();
+            foreach (string user in usernames)
+            {
+                users.Add(BuildUser(user));
+            }
+            return users;
+        }
+
+        public User BuildUser(string userName)
+        {
+            DbUser dbUser = dbConn.Users.Where(dbuser => dbuser.Name == userName).FirstOrDefault();
+            User user = new User(1, dbUser.Name, dbUser.IsGuest, dbUser.IsAdmin);
+            user.IsLoggedIn = dbUser.IsLoggedIn;
+
+           /* Dictionary<int, Store> Store_Ownership = GetStoreOwnershipUser(userName);*/ //TODO
+        //public LinkedList<NotifyData> unreadMessages { set; get; }
+        //public Dictionary<int, Store> Store_Managment { get; }
+        //public Dictionary<int, int[]> Store_options { get; }
+        ////Contains the list of who appointed you to which store! not who you appointed to which store!
+        //public Dictionary<int, User> AppointedByOwner { get; }
+        //public Dictionary<int, User> AppointedByManager { get; }
+        ////Version 3 Use case - 4.3 Addings.
+        //public Dictionary<int, User> MasterAppointer { get; }
+        ////Contains the list of who need to Approve his Ownership
+        //public Dictionary<int, List<string>> NeedToApprove { get; }
+        ////Contains the list of who need to Approve his Ownership
+        //public Dictionary<int, List<string>> WaitingForApproval { get; }
+        ////Contains the status of the Appoitment
+        //public Dictionary<int, bool> IsApproved { get; }
+
+            return user;
+        }
+
+        //private Dictionary<int, int> GetStoreOwnershipUser(string userName)
+        //{
+
+        //    List<StoreOwnershipAppoint> storeOwnershipAppoints = dbConn.StoreOwnershipAppoints.Where(soa => soa.AppointerName == userName).ToList();
+        //    Dictionary<int, int> ownershipsDict = new Dictionary<int, int>();  
+        //    foreach(StoreOwnershipAppoint soa in storeOwnershipAppoints)
+        //    {
+        //        ownershipsDict.Add()
+        //    }
+        //}
+
+
+        public List<Store> GetAllStores()
+        {
+            List<int> storesIds = dbConn.Stores.Select(store => store.Id).Distinct().ToList();
+            List<Store> stores = new List<Store>();
+            foreach(int storeId in storesIds)
+            {
+                stores.Add(GetStore(storeId));
+            }
+            return stores;
+        }
+        private Store GetStore(int StoreId)
         {
             DbStore dbstore = dbConn.Stores.Where(store => store.Id == StoreId).FirstOrDefault();
             DiscountPolicy discountPolicy = GetDiscountPolicy(StoreId);
