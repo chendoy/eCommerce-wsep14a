@@ -57,10 +57,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public void loaddata()
         {
             //List<User> users = DbManager.Instance
-            UManagment.LoadUsers();
-            StoreManagment.Instance.LoadStores();
-            AppoitmentManager.Instance.LoadAppointments();
-            
+            //UManagment.LoadUsers();
+            List<Store> stores = DbManager.Instance.GetAllStores();
+            StoreManagment.Instance.LoadStores(stores);
+            // AppoitmentManager.Instance.LoadAppointments();
+
         }
         public bool SetDeliveryConnection(bool conn)
         {

@@ -23,5 +23,10 @@ namespace Server.DAL.StoreDb
             PreConditionNum = preconditionnum;
             PreConditionType = preconditiontype;
         }
+
+        public DbPreCondition()
+        {
+
+        }
     }
 }

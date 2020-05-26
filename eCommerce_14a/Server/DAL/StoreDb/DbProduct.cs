@@ -36,6 +36,11 @@ namespace Server.DAL.StoreDb
             ImgUrl = imgUrl;
         }
 
+        public DbProduct()
+        {
+
+        }
+
 
     }
 }

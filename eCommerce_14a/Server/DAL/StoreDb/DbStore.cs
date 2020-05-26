@@ -27,6 +27,11 @@ namespace Server.DAL.StoreDb
             StoreName = storename;
             ActiveStore = activestore;
         }
+        
+        public DbStore()
+        {
+
+        }
 
     }
 }

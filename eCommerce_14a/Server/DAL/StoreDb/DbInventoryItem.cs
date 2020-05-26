@@ -31,5 +31,10 @@ namespace Server.DAL.StoreDb
             Amount = amount;
         }
 
+        public DbInventoryItem()
+        {
+
+        }
+
     }
 }

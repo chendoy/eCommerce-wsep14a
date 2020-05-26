@@ -18,12 +18,18 @@ using System.Threading.Tasks;
 
 namespace Server.DAL
 {
-    class DbManager
+    public class DbManager
     {
 
         private EcommerceContext dbConn;
         private static readonly object padlock = new object();
         private static DbManager instance = null;
+
+        public int GetNextProductId()
+        {
+            return dbConn.Products.Max(product => product.Id) + 1;
+        }
+
         StoreAdapter storeAdpter;
 
         public static DbManager Instance
@@ -109,6 +115,249 @@ namespace Server.DAL
         //    }
         //}
 
+       public void InsertStore(Store store)
+        {
+            DbStore dbStore = new DbStore(store.Id, store.Rank, store.StoreName, store.ActiveStore);
+            dbConn.Stores.Add(dbStore);
+            //InsertInventory(store.Inventory, store.Id);  TODO: impl!
+            InsertDiscountPolicy(store.DiscountPolicy, store.Id, parentId: null);
+            InsertPurchasePolicy(store.PurchasePolicy, store.Id, parentId: null);
+            InsertOwners(store.owners, store.Id);
+            InsertManagers(store.managers, store.Id);
+        }
+
+        private void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId)
+        {
+            if (policyData.GetType() == typeof(ProductPurchasePolicy))
+            {
+                int policyProdutId = ((ProductPurchasePolicy)policyData).policyProductId;
+                int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition);
+                dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
+                                                                 mergetype: null,
+                                                                 parentid: parentId,
+                                                                 preconditionid: dbPreCondition.Id,
+                                                                 policyproductid: policyProdutId,
+                                                                 buyerusername: null,
+                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy));
+                dbConn.SaveChanges();
+            }
+
+            else if (policyData.GetType() == typeof(BasketPurchasePolicy))
+            {
+                int preCondition = ((BasketPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition);
+                dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
+                                                                 mergetype: null,
+                                                                 parentid: parentId,
+                                                                 preconditionid: dbPreCondition.Id,
+                                                                 policyproductid: null,
+                                                                 buyerusername: null,
+                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy));
+                dbConn.SaveChanges();
+            }
+
+            else if (policyData.GetType() == typeof(SystemPurchasePolicy))
+            {
+
+                int preCondition = ((SystemPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition);
+                dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
+                                                                 mergetype: null,
+                                                                 parentid: parentId,
+                                                                 preconditionid: dbPreCondition.Id,
+                                                                 policyproductid: null,
+                                                                 buyerusername: null,
+                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.SystemPurchasePolicy));
+                dbConn.SaveChanges();
+            }
+
+            else if (policyData.GetType() == typeof(UserPurchasePolicy))
+            {
+                string username = ((UserPurchasePolicy)policyData).UserName;
+                int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
+                                                                mergetype: null,
+                                                                parentid: parentId,
+                                                                preconditionid: null,
+                                                                policyproductid: null,
+                                                                buyerusername: username,
+                                                                purchasepolictype: CommonStr.PurchasePolicyTypes.UserPurchasePolicy));
+                dbConn.SaveChanges();
+            }
+
+            else if (policyData.GetType() == typeof(CompundPurchasePolicy))
+            {
+                int mergetype = ((CompundPurchasePolicy)policyData).mergeType;
+                DbPurchasePolicy dbPurchase = new DbPurchasePolicy(storeId: storeId,
+                                                                   mergetype: mergetype,
+                                                                   parentid: parentId,
+                                                                   preconditionid: null,
+                                                                   policyproductid: null,
+                                                                   buyerusername: null,
+                                                                   purchasepolictype: CommonStr.PurchasePolicyTypes.CompundPurchasePolicy);
+                dbConn.PurchasePolicies.Add(dbPurchase);
+                dbConn.SaveChanges();
+
+                int dbPolicyId = GetDbPurchsePolicyId(dbPurchase, storeId, null);
+                List<PurchasePolicy> policies = ((CompundPurchasePolicy)policyData).getChildren();
+
+                foreach (PurchasePolicy policy in policies)
+                {
+                    InsertPurchasePolicy(policy, storeId, dbPolicyId);
+                }
+
+            }
+
+        }
+        private void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId)
+        {
+
+            if (discountPolicy.GetType() == typeof(ConditionalProductDiscount))
+            {
+                int discountProdutId = ((ConditionalProductDiscount)discountPolicy).discountProdutId;
+                int preCondition_num = ((ConditionalProductDiscount)discountPolicy).PreCondition.PreConditionNumber;
+                double discountPrecentage = ((ConditionalProductDiscount)discountPolicy).Discount;
+                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition_num);
+                dbConn.DiscountPolicies.Add(new DbDiscountPolicy(storeid: storeId,
+                                                                 mergetype: null,
+                                                                 parentId: parentId,
+                                                                 preconditionid: dbPreCondition.Id,
+                                                                 discountproductid: discountProdutId,
+                                                                 discount: discountPrecentage,
+                                                                 discounttype: CommonStr.DiscountPolicyTypes.ConditionalProductDiscount));
+                dbConn.SaveChanges();
+            }
+
+            else if (discountPolicy.GetType() == typeof(ConditionalBasketDiscount))
+            {
+                int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.PreConditionNumber;
+                double discountPrecentage = ((ConditionalBasketDiscount)discountPolicy).Discount;
+                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition);
+                dbConn.DiscountPolicies.Add(new DbDiscountPolicy(storeid: storeId,
+                                                                 mergetype: null,
+                                                                 parentId: parentId,
+                                                                 preconditionid: dbPreCondition.Id,
+                                                                 discountproductid: null,
+                                                                 discount: discountPrecentage,
+                                                                 discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount));
+                dbConn.SaveChanges();
+            }
+
+            else if (discountPolicy.GetType() == typeof(RevealdDiscount))
+            {
+                int discountProdutId = ((RevealdDiscount)discountPolicy).discountProdutId;
+                double discountPrecentage = ((RevealdDiscount)discountPolicy).discount;
+                dbConn.DiscountPolicies.Add(new DbDiscountPolicy(storeid: storeId,
+                                                                 mergetype: null,
+                                                                 parentId: parentId,
+                                                                 preconditionid: null,
+                                                                 discountproductid: discountProdutId,
+                                                                 discount: discountPrecentage,
+                                                                 discounttype: CommonStr.DiscountPolicyTypes.RevealdDiscount));
+                dbConn.SaveChanges();
+            }
+
+            else if (discountPolicy.GetType() == typeof(CompundDiscount))
+            {
+                int mergetype = ((CompundDiscount)discountPolicy).GetMergeType();
+                DbDiscountPolicy dbDiscount = new DbDiscountPolicy(storeid: storeId,
+                                                              mergetype: mergetype,
+                                                              parentId: parentId,
+                                                              preconditionid: null,
+                                                              discountproductid: null,
+                                                              discount: null,
+                                                              discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount));
+                dbConn.DiscountPolicies.Add(dbDiscount);
+                dbConn.SaveChanges();
+                int dbPolicyId = GetDbDiscountPolicyId(dbDiscount, storeId, null);
+                List<DiscountPolicy> policies = ((CompundDiscount)discountPolicy).getChildren();
+                foreach (DiscountPolicy policy in policies)
+                {
+                    InsertDiscountPolicy(discountPolicy: policy, storeId: storeId, parentId: dbPolicyId);
+                }
+            }
+        }
+
+        private int GetDbDiscountPolicyId(DbDiscountPolicy dbDiscountPolicy, int storeId, int? precondition)
+        {
+            DbDiscountPolicy dbFromDb = dbConn.DiscountPolicies.Where(dbDiscount => dbDiscountPolicy.Discount == dbDiscount.Discount &
+                                                        dbDiscountPolicy.DiscountProductId == dbDiscount.DiscountProductId &
+                                                        dbDiscountPolicy.MergeType == dbDiscount.MergeType &
+                                                        dbDiscountPolicy.StoreId == storeId &
+                                                        dbDiscountPolicy.ParentId == dbDiscount.ParentId &
+                                                        GetDbPreConditionNumberById((int)dbDiscountPolicy.PreConditionId) == precondition).FirstOrDefault();
+            return dbFromDb.Id;
+                                                        
+        }
+
+
+        private int GetDbPurchsePolicyId(DbPurchasePolicy dbPurchasePolicy, int storeId, int? precondition)
+        {
+            DbPurchasePolicy dbFromDb = dbConn.PurchasePolicies.Where(dbPurchase => dbPurchasePolicy.BuyerUserName == dbPurchase.BuyerUserName &
+                                                                    dbPurchasePolicy.MergeType == dbPurchase.MergeType&
+                                                                    dbPurchasePolicy.PolicyProductId == dbPurchase.PolicyProductId &
+                                                                    dbPurchasePolicy.StoreId == storeId &
+                                                                    dbPurchasePolicy.ParentId == dbPurchase.ParentId &
+                                                                    GetDbPreConditionNumberById((int)dbPurchasePolicy.PreConditionId) == precondition
+                                                                    ).FirstOrDefault();
+            return dbFromDb.Id;
+
+        }
+
+        private int GetDbPreConditionNumberById(int Id)
+        {
+            return dbConn.PreConditions.Where(pre => pre.Id == Id).FirstOrDefault().PreConditionNum;
+        }
+
+        private DbPreCondition GetDbPreCondition(int preCondition_num)
+        {
+            return dbConn.PreConditions.Where(pre => pre.PreConditionNum == preCondition_num).FirstOrDefault();
+        }
+
+        private void InsertPurchasePolicy(PurchasePolicy purchasepolicy)
+        {
+
+        }
+
+        private void InsertOwners(List<string> owners, int storeId)
+        {
+            foreach(string owner in owners)
+            {
+                InsertOwner(owner, storeId);
+            }
+            dbConn.SaveChanges();
+        }
+
+        private void InsertManagers(List<string> managers, int storeId)
+        {
+            foreach (string manager in managers)
+            {
+                InsertManager(manager, storeId);
+            }
+            dbConn.SaveChanges();
+        }
+
+        private void InsertOwner(string ownerName, int storeId)
+        {
+            dbConn.StoreManagers.Add(new StoreManager(storeId, ownerName));
+
+        }
+
+        private void InsertManager(string managerName, int storeId)
+        {
+            dbConn.StoreManagers.Add(new StoreManager(storeId, managerName));
+
+        }
+
+        //private void InsertInventory(Inventory inventory, int StoreId)
+        //{
+        //    List<DbInventoryItem> inv_items = new List<DbInventoryItem>();
+        //    foreach (KeyValuePair<int, Tuple<Product, int>> entry in inventory.InvProducts)
+        //    {
+        //        inv_items.Add(new DbInventoryItem(StoreId, ent))
+        //    }
+        //}
 
         public List<Store> GetAllStores()
         {
@@ -134,7 +383,9 @@ namespace Server.DAL
             store_params.Add(CommonStr.StoreParams.StorePuarchsePolicy, purchasePolicy);
             store_params.Add(CommonStr.StoreParams.StoreDiscountPolicy, discountPolicy);
             store_params.Add(CommonStr.StoreParams.StoreInventory, inventory);
-            store_params.Add(CommonStr.StoreParams.Owners, GetStoreOwners(StoreId));
+            List<string> owners = GetStoreOwners(StoreId);
+            store_params.Add(CommonStr.StoreParams.Owners, owners);
+            List<string> managers= GetStoreManagers(StoreId);
             store_params.Add(CommonStr.StoreParams.Managers, GetStoreManagers(StoreId));
             return new Store(store_params);
         }
@@ -148,39 +399,74 @@ namespace Server.DAL
         private Inventory GetInventory(int StoreId)
         {
             List<DbInventoryItem> invItems = dbConn.InventoriesItmes.Where(item => item.StoreId == StoreId).ToList();
-            Dictionary<int, Tuple<Product, int>> inventoryProducts = new Dictionary<int, Tuple<Product, int>>();
-            foreach(DbInventoryItem item in invItems)
+            if(invItems.Count == 0)
             {
-                DbProduct dbProduct = dbConn.Products.Where(prod => prod.Id == item.ProductId).FirstOrDefault();
-                Product product = new Product(dbProduct.Id, dbProduct.Details, dbProduct.Price, dbProduct.Name, dbProduct.Rank, dbProduct.Category, dbProduct.ImgUrl);
-                inventoryProducts.Add(item.ProductId, new Tuple<Product, int>(product, item.Amount));
+                return new Inventory();
             }
-            return new Inventory(inventoryProducts);
+            else
+            {
+                Dictionary<int, Tuple<Product, int>> inventoryProducts = new Dictionary<int, Tuple<Product, int>>();
+                foreach (DbInventoryItem item in invItems)
+                {
+                    DbProduct dbProduct = dbConn.Products.Where(prod => prod.Id == item.ProductId).FirstOrDefault();
+                    Product product = new Product(dbProduct.Id, dbProduct.Details, dbProduct.Price, dbProduct.Name, dbProduct.Rank, dbProduct.Category, dbProduct.ImgUrl);
+                    inventoryProducts.Add(item.ProductId, new Tuple<Product, int>(product, item.Amount));
+                }
+                return new Inventory(inventoryProducts);
+            }
+          
             
         }
 
         private List<string> GetStoreOwners(int StoreId)
         {
             List<StoreOwner> owners = dbConn.StoreOwners.Where(owner => owner.StoreId == StoreId).ToList();
-            List<string> userOwners = new List<string>();
-            foreach(StoreOwner owner in owners)
+            if(owners.Count == 0)
             {
-                userOwners.Add(owner.OwnerName);
+                return new List<string>();
             }
-            return userOwners;
+            else
+            {
+                List<string> userOwners = new List<string>();
+                foreach (StoreOwner owner in owners)
+                {
+                    userOwners.Add(owner.OwnerName);
+                }
+                return userOwners;
+            }
         }
 
         private List<string> GetStoreManagers(int StoreId)
         {
             List<StoreManager> managers = dbConn.StoreManagers.Where(manager => manager.StoreId == StoreId).ToList();
-            List<string> userManagers = new List<string>();
-            foreach (StoreManager manager in managers)
+            if(managers.Count == 0)
             {
-                userManagers.Add(manager.ManagerName);
+                return new List<string>();
             }
-            return userManagers;
+            else
+            {
+                List<string> userManagers = new List<string>();
+                foreach (StoreManager manager in managers)
+                {
+                    userManagers.Add(manager.ManagerName);
+                }
+                return userManagers;
+            }
+     
         }
 
+        public PreCondition GetPreCondition(int PreConditionId)
+        {
+            DbPreCondition pre = dbConn.PreConditions.Where(precon => precon.Id == PreConditionId).FirstOrDefault();
+            if(pre.PreConditionType == CommonStr.PreConditionType.DiscountPreCondition)
+            {
+                return new DiscountPreCondition(pre.PreConditionNum);
+            }
+            else
+            {
+                return new PurchasePreCondition(pre.PreConditionNum);
+            }
+        }
 
         private PurchasePolicy GetPurchasePolicy(int storeId)
         {

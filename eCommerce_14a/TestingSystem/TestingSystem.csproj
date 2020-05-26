@@ -163,6 +163,7 @@
     <Compile Include="AcceptanceTests\ViewStorePurchaseHistoryStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewAndEditCartStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewUserPurchaseHistoryStoryTest.cs" />
+    <Compile Include="UnitTests\DbManagerTests.cs" />
     <Compile Include="IntegrationTests\StubClass.cs" />
     <Compile Include="BridgeInterface.cs" />
     <Compile Include="Driver.cs" />

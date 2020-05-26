@@ -71,16 +71,33 @@ namespace Server.DAL.StoreDb
 
         public  DiscountPolicy ComposeDiscountPolicy(List<DbDiscountPolicy> dbDiscountPolicies)
         {
-            Dictionary<DbDiscountPolicy, List<DbDiscountPolicy>> discountGraph = BuildDiscountPolicyGraph(dbDiscountPolicies);
-            DbDiscountPolicy root = GetRoot(discountGraph);
-            return ConstrucuctDiscountRecursive(discountGraph, root);
+            if (dbDiscountPolicies.Count == 0)
+            {
+               return new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
+            }
+            else
+            {
+                Dictionary<DbDiscountPolicy, List<DbDiscountPolicy>> discountGraph = BuildDiscountPolicyGraph(dbDiscountPolicies);
+                DbDiscountPolicy root = GetRoot(discountGraph);
+                return ConstrucuctDiscountRecursive(discountGraph, root);
+            }
+            
         }
 
         public PurchasePolicy ComposePurchasePolicy(List<DbPurchasePolicy> dbPurchasePolicies)
         {
-            Dictionary<DbPurchasePolicy, List<DbPurchasePolicy>> purchasePolicyGraph = BuildPurchPolicyGraph(dbPurchasePolicies);
-            DbPurchasePolicy root = GetPurchaseRoot(purchasePolicyGraph);
-            return ConstrucuctPurchasePolicyRecursive(purchasePolicyGraph, root);
+            if( dbPurchasePolicies.Count == 0)
+            {
+                return  new BasketPurchasePolicy(new PurchasePreCondition(CommonStr.PurchasePreCondition.allwaysTrue));
+
+            }
+            else
+            {
+                Dictionary<DbPurchasePolicy, List<DbPurchasePolicy>> purchasePolicyGraph = BuildPurchPolicyGraph(dbPurchasePolicies);
+                DbPurchasePolicy root = GetPurchaseRoot(purchasePolicyGraph);
+                return ConstrucuctPurchasePolicyRecursive(purchasePolicyGraph, root);
+            }
+
         }
 
    
@@ -95,11 +112,13 @@ namespace Server.DAL.StoreDb
                 }
                 else if(node.DiscountType == CommonStr.DiscountPolicyTypes.ConditionalProductDiscount)
                 {
-                    return new ConditionalProductDiscount((int)node.DiscountProductId, new DiscountPreCondition(node.PreCondition.PreConditionNum), (double)node.Discount);
+                    DiscountPreCondition preCondition = (DiscountPreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
+                    return new ConditionalProductDiscount((int)node.DiscountProductId, preCondition, (double)node.Discount);
                 }
                 else if(node.DiscountType == CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount)
                 {
-                    return new ConditionalBasketDiscount(new DiscountPreCondition(node.PreCondition.PreConditionNum), (double)node.Discount);
+                    DiscountPreCondition preCondition = (DiscountPreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
+                    return new ConditionalBasketDiscount(preCondition, (double)node.Discount);
                 }
                 else
                 {
@@ -126,7 +145,7 @@ namespace Server.DAL.StoreDb
         {
            foreach(KeyValuePair <DbDiscountPolicy, List <DbDiscountPolicy>> entry in discountGraph)
             {
-                if(entry.Value.Count == 0)
+                if(entry.Key.ParentId == null)
                 {
                     return entry.Key;
                 }
@@ -188,7 +207,7 @@ namespace Server.DAL.StoreDb
         {
             foreach (KeyValuePair<DbPurchasePolicy, List<DbPurchasePolicy>> entry in purchasePolicyGraph)
             {
-                if (entry.Value.Count == 0)
+                if (entry.Key.ParentId == null)
                 {
                     return entry.Key;
                 }
@@ -202,19 +221,23 @@ namespace Server.DAL.StoreDb
             {
                 if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.ProductPurchasePolicy)
                 {
-                    return new ProductPurchasePolicy(new PurchasePreCondition(node.PreCondition.PreConditionNum), (int)node.PolicyProductId);
+                    PurchasePreCondition preCondition = (PurchasePreCondition) DbManager.Instance.GetPreCondition((int)node.PreConditionId);
+                    return new ProductPurchasePolicy(preCondition, (int)node.PolicyProductId);
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.BasketPurchasePolicy)
                 {
-                    return new BasketPurchasePolicy(new PurchasePreCondition(node.PreCondition.PreConditionNum));
+                    PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
+                    return new BasketPurchasePolicy(preCondition);
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.SystemPurchasePolicy)
                 {
-                    return new SystemPurchasePolicy(new PurchasePreCondition(node.PreCondition.PreConditionNum), node.StoreId); 
+                    PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
+                    return new SystemPurchasePolicy(preCondition, node.StoreId); 
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.UserPurchasePolicy)
                 {
-                    return new UserPurchasePolicy(new PurchasePreCondition(node.PreCondition.PreConditionNum), node.BuyerUserName); 
+                    PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
+                    return new UserPurchasePolicy(preCondition, node.BuyerUserName); 
                 }
                 else
                 {

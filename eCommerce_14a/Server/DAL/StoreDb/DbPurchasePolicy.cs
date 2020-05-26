@@ -48,5 +48,10 @@ namespace Server.DAL.StoreDb
             PurchasePolicyType = purchasepolictype;
         }
 
+        public DbPurchasePolicy()
+        {
+
+        }
+
     }
 }

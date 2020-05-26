@@ -89,9 +89,8 @@ namespace eCommerce_14a.Utils
             public static string StoreRank = "StoreRank";
             public static string IsActiveStore = "isActive";
             public static string Validator = "Validator";
-
-            public static string Owners { get; internal set; }
-            public static string Managers { get; internal set; }
+            public static string Owners = "Owners";
+            public static string Managers = "Managers";
         }
 
         public static class ProductParams

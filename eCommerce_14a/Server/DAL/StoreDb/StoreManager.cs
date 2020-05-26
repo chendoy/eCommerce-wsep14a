@@ -28,6 +28,11 @@ namespace Server.DAL.StoreDb
             StoreId = storeId;
             ManagerName = managerName;
         }
+        
+        public StoreManager()
+        {
+
+        }
 
     }
 }

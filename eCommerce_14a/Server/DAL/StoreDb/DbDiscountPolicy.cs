@@ -46,5 +46,10 @@ namespace Server.DAL.StoreDb
             DiscountType = discounttype;
         }
 
+        public DbDiscountPolicy()
+        {
+
+        }
+
     }
 }

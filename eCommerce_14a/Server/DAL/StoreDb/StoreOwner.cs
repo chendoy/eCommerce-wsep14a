@@ -25,5 +25,9 @@ namespace Server.DAL.StoreDb
             OwnerName = ownerName;
         }
 
+        public StoreOwner()
+        {
+
+        }
     }
 } 
