@@ -278,6 +278,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.CHANGE_PERMISSIONS:
+                    response = handler.HandleChangePermissions(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }

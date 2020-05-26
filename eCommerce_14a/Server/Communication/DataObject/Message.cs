@@ -44,6 +44,7 @@ namespace Server.Communication.DataObject
         ALL_BUYERS_HISTORY,
         GET_MANAGER_PERMISSION,
         STORE_BY_ID,
+        CHANGE_PERMISSIONS,
         INCREASE_PRODUCT_AMOUNT,
         DECREASE_PRODUCT_AMOUNT,
         NOTIFICATION,

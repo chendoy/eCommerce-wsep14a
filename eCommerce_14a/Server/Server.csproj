@@ -49,6 +49,7 @@
     <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\ChangePermissionsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ChangeProductAmountInCartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DecreaseProductAmountRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllRegisteredUsersRequest.cs" />
