@@ -423,5 +423,11 @@ namespace eCommerce_14a.Communication
             string jsonAns = Seralize(new DemoteManagerResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
+
+        public int SpecialHandleOpenStore(string username) 
+        {
+            Tuple<int, string> ans = storeService.createStore(username);
+            return ans.Item1;
+        }
     }
 }

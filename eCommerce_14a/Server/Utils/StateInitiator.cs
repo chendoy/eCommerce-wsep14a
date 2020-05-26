@@ -8,6 +8,7 @@ using eCommerce_14a.Communication;
 using Server.Communication.DataObject;
 using Server.Communication.DataObject.Requests;
 using Newtonsoft.Json;
+using eCommerce_14a.StoreComponent.ServiceLayer;
 
 namespace Server.Utils
 {
@@ -15,6 +16,8 @@ namespace Server.Utils
     {
         CommunicationHandler handler;
         List<string> lines;
+        StoreService storeService;
+        
 
         public StateInitiator() 
         {
@@ -26,7 +29,12 @@ namespace Server.Utils
         {
             MakeRegisterLine("Guy", "Guy");
             MakeLoginLine("Guy", "Guy");
-            MakeLogoutLine("Guy");
+            MakeRegisterLine("Liav", "Liav");
+            MakeLoginLine("Liav", "Liav");
+            int storeID = MakeOpenStoreLine("Guy");
+            MakeAddProductToStoreLine(storeID, "Guy", 1, "bananot", 1.7, "banana", "fruits", 3);
+            MakeAddProductToCartLine(storeID, "Liav", 1, 2);
+            MakePerformPurchaseLine("Liav", "BeerSheva Gimel", "111223334");
             WriteScenarioToFile();
         }
         public void WriteScenarioToFile()
@@ -59,6 +67,35 @@ namespace Server.Utils
         public void MakeLogoutLine(string username)
         {
             LogoutRequest req = new LogoutRequest(username);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+        }
+
+        public int MakeOpenStoreLine(string username)
+        {
+            OpenStoreRequest req = new OpenStoreRequest(username);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+            return handler.SpecialHandleOpenStore(username);
+        }
+
+        public void MakeAddProductToStoreLine(int storeID, string username, int productID, string pDetails, double pPrice, string pName, string pCategory, int amount)
+        {
+            AddProductToStoreRequest req = new AddProductToStoreRequest(storeID, username, productID, pDetails, pPrice, pName, pCategory, amount);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+        }
+
+        public void MakeAddProductToCartLine(int storeID, string username, int productID, int amount)
+        {
+            AddProductToCartRequest req = new AddProductToCartRequest(username, storeID, productID, amount);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+        }
+
+        public void MakePerformPurchaseLine(string username, string address, string paymentDetails)
+        {
+            PurchaseRequest req = new PurchaseRequest(username, address, paymentDetails);
             string json = JsonConvert.SerializeObject(req);
             lines.Add(json);
         }
@@ -119,7 +156,7 @@ namespace Server.Utils
                     break;
 
                 case Opcode.OPEN_STORE:
-                    handler.HandleOpenStore(json);
+                    //handler.HandleOpenStore(json);
                     break;
 
                 case Opcode.BUYER_HISTORY:

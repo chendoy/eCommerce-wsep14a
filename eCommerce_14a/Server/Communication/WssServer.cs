@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
 using Server.Utils;
+using System.Reflection;
+using log4net;
+using log4net.Config;
 
 namespace eCommerce_14a.Communication
 {
@@ -44,6 +47,10 @@ namespace eCommerce_14a.Communication
             config1.Port = port;
             config1.MaxConnectionNumber = 1000;
             config1.Security = "Tls";
+            config1.LogAllSocketException = false;
+            //config1.LogBasicSessionActivity = false;
+            config1.LogCommand = false;
+            
             config1.Certificate = new CertificateConfig
             {
                 FilePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Communication\cert.pfx",
@@ -54,10 +61,23 @@ namespace eCommerce_14a.Communication
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
+            disLogger();
             wsServer.Start();
+            enLogger();
+            XmlConfigurator.Configure();
             Console.WriteLine("Server is running on port " + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
+        }
+
+        private void disLogger()
+        {
+            LogManager.GetRepository().ResetConfiguration();
+        }
+
+        private void enLogger()
+        {
+            XmlConfigurator.Configure();
         }
 
 
@@ -280,6 +300,7 @@ namespace eCommerce_14a.Communication
                     break;
             }
         }
+
 
         public void checkFunc() 
         {
