@@ -17,6 +17,7 @@ using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
 using Server.Communication.DataObject.ThinObjects;
 using Server.UserComponent.Communication;
+using Server.UserComponent.DomainLayer;
 using SuperWebSocket;
 
 
@@ -242,6 +243,14 @@ namespace eCommerce_14a.Communication
             DecreaseProductAmountRequest res = JsonConvert.DeserializeObject<DecreaseProductAmountRequest>(json);
             Tuple<bool, string> ans = storeService.decraseProduct(res.StoreId, res.Username, res.ProductId, res.Amount);
             string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleGetManagersPermission(string json)
+        {
+            GetManagersPermissionRequest res = JsonConvert.DeserializeObject<GetManagersPermissionRequest>(json);
+            List<Tuple<string, Permission>> ans = userService.GetStoreManagersPermissions(res.username, res.StoreID);
+            string jsonAns = Seralize(new GetManagerPermissionResponse(ans));
             return security.Encrypt(jsonAns);
         }
 

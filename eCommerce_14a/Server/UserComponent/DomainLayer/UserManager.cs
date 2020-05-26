@@ -7,6 +7,7 @@ using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.UserComponent.Communication;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -291,6 +292,26 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
 
 
+        public List<Tuple<string, Permission>> GetStoreManagersPermissions(string appointer, int storeId)
+        {
+            User owner = GetUser(appointer);
+            if (owner is null)
+            {
+                return null;
+            }
+
+            List<Tuple<string, Permission>> permissionsSet = new List<Tuple<string, Permission>>();
+
+            foreach (User manager in users.Values)
+            {
+                if (manager.isAppointedBy(owner, storeId))
+                {
+                    permissionsSet.Add(new Tuple<string, Permission>(manager.getUserName(), new Permission(manager.GetUserPermissions()[storeId])));
+                }
+            }
+
+            return permissionsSet;
+        }
 
     }
 

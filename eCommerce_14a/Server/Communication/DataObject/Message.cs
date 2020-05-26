@@ -42,6 +42,7 @@ namespace Server.Communication.DataObject
         STORE_HISTORY,
         ALL_STORE_HISTORY,
         ALL_BUYERS_HISTORY,
+        GET_MANAGER_PERMISSION,
         STORE_BY_ID,
         INCREASE_PRODUCT_AMOUNT,
         DECREASE_PRODUCT_AMOUNT,

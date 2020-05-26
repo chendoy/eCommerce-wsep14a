@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.UserComponent.DomainLayer;
-
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.ServiceLayer
 {
@@ -59,6 +59,11 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             UM.cleanup();
+        }
+
+        public List<Tuple<string, Permission>> GetStoreManagersPermissions(string appointer, int storeId)
+        {
+            return UM.GetStoreManagersPermissions(appointer, storeId);
         }
     }
 }
