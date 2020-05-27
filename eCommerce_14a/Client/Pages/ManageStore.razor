@@ -1,5 +1,5 @@
 ﻿@page "/ManageStore/{storeid:int}"
-@using Server
+@using Server.UserComponent.DomainLayer
 @using Microsoft.EntityFrameworkCore
 
 <h1>Store Dashboard</h1>
@@ -90,30 +90,39 @@
                         Data="@ManagersPermissions" TItem="Tuple<string, Permission>">
                 <Columns>
                     <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Property="Item1" Title="User Name" />
-                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can View" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="View Puarchse History" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="permission">
-                            <RadzenCheckBox @bind-Value="@permission.Item2.CanView" Disabled="true" TValue="bool" />
+                            <RadzenCheckBox @bind-Value="@permission.Item2.ViewPuarchseHistory" Disabled="true" TValue="bool" />
                         </Template>
                         <EditTemplate Context="permission">
-                            <RadzenCheckBox @bind-Value="@permission.Item2.CanView" Disabled="false" TValue="bool" />
+                            <RadzenCheckBox @bind-Value="@permission.Item2.ViewPuarchseHistory" Disabled="false" TValue="bool" />
                         </EditTemplate>
                     </RadzenGridColumn>
 
-                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can Change Inventory" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Inventory" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="permission">
-                            <RadzenCheckBox @bind-Value="@permission.Item2.CanChangeInventory" Disabled="true" TValue="bool" />
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditInventory" Disabled="true" TValue="bool" />
                         </Template>
                         <EditTemplate Context="permission">
-                            <RadzenCheckBox @bind-Value="@permission.Item2.CanChangeInventory" Disabled="false" TValue="bool" />
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditInventory" Disabled="false" TValue="bool" />
                         </EditTemplate>
                     </RadzenGridColumn>
 
-                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Can Doodle" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Discount Policy" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="permission">
-                            <RadzenCheckBox @bind-Value="@permission.Item2.CanDoodle" Disabled="true" TValue="bool" />
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditDiscountPolicy" Disabled="true" TValue="bool" />
                         </Template>
                         <EditTemplate Context="permission">
-                            <RadzenCheckBox @bind-Value="@permission.Item2.CanDoodle" Disabled="false" TValue="bool" />
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditDiscountPolicy" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Purachse Policy" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditPurachsePolicy" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditPurachsePolicy" Disabled="false" TValue="bool" />
                         </EditTemplate>
                     </RadzenGridColumn>
 
@@ -133,6 +142,13 @@
 
             </RadzenGrid>
 
+            <div class="error-msg" style="text-align:left; font-weight:bold">
+                <span>@errorMsg</span>
+            </div>
+
+            <div class="success-msg" style="text-align:left; font-weight:bold">
+                <span>@successMsg</span>
+            </div>
 
         </RadzenTabsItem>
 
@@ -592,19 +608,6 @@
     public List<Tuple<string, Permission>> PermissionsInEdit { get; set; }
     public List<Tuple<string, Permission>> ManagersPermissions { get; set; }
 
-    public class Permission
-    {
-        public bool CanView { get; set; }
-        public bool CanChangeInventory { get; set; }
-        public bool CanDoodle { get; set; }
-
-        public Permission(int[] permissions)
-        {
-            CanView = permissions[0] == 1;
-            CanChangeInventory = permissions[1] == 1;
-            CanDoodle = permissions[2] == 1;
-        }
-    }
 
 
     void EditRow_Permission(Tuple<string, Permission> permission)
@@ -615,20 +618,19 @@
 
     async void SaveRow_Permission(Tuple<string, Permission> permission)
     {
-        //UpdateProductOfStoreRequest request = new UpdateProductOfStoreRequest(loggedInUser, StoreId, product.Item1.ProductId, product.Item1.Details,
-        //product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
-        //SuccessFailResponse response = await service.GetResponse<UpdateProductOfStoreRequest, SuccessFailResponse>(request);
-        //if (response.Success)
-        //{
-        //    successMsg = "Operation completed successfully";
-        //    errorMsg = "";
-        await permissionsGrid.UpdateRow(permission);
-        //}
-        //else
-        //{
-        //    successMsg = "";
-        //    errorMsg = response.Error;
-        //}
+        ChangePermissionsRequest req = new ChangePermissionsRequest(loggedInUser, permission.Item1, StoreId, permission.Item2);
+        SuccessFailResponse response = await service.GetResponse<ChangePermissionsRequest, SuccessFailResponse>(req);
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+            await permissionsGrid.UpdateRow(permission);
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
 
     }
 
@@ -640,10 +642,9 @@
 
     async Task UpdateManagersPermissions()
     {
-        ManagersPermissions = new List<Tuple<string, Permission>>();
-        ManagersPermissions.Add(new Tuple<string, Permission>("Mosh", new Permission(new int[] { 0, 1, 0 })));
-        ManagersPermissions.Add(new Tuple<string, Permission>("Josh", new Permission(new int[] { 1, 1, 0 })));
-        ManagersPermissions.Add(new Tuple<string, Permission>("Wosh", new Permission(new int[] { 0, 1, 1 })));
+        GetManagersPermissionRequest req = new GetManagersPermissionRequest(StoreId, loggedInUser);
+        GetManagerPermissionResponse response = await service.GetResponse<GetManagersPermissionRequest, GetManagerPermissionResponse>(req);
+        ManagersPermissions = response.ManagerPermissions;
     }
 
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetManagerPermissionResponse : Message
+    public class GetManagerPermissionResponse : Message
     {
         public GetManagerPermissionResponse() : base(Opcode.RESPONSE)
         {

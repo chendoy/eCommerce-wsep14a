@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class ChangePermissionsRequest : Message
+    public class ChangePermissionsRequest : Message
     {
         public string Owner { get; set; }
         public string Appoint { get; set; }
