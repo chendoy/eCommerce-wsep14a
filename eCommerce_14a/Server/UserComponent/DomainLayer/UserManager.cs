@@ -304,7 +304,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             foreach (User manager in users.Values)
             {
-                if (manager.isAppointedBy(owner, storeId))
+                if (manager.isAppointedBy(owner, storeId) && manager.isStorManager(storeId))
                 {
                     permissionsSet.Add(new Tuple<string, Permission>(manager.getUserName(), new Permission(manager.GetUserPermissions()[storeId])));
                 }
