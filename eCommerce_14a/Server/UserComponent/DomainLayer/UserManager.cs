@@ -15,9 +15,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
     public class UserManager
     {
-        private Dictionary<string, string> Users_And_Hashes;
-        private Dictionary<string, User> users;
-        private Dictionary<string, User> Active_users;
+        public Dictionary<string, string> Users_And_Hashes {get; set;}
+        public Dictionary<string, User> users { get; set; }
+        public Dictionary<string, User> Active_users { get; set; }
         private int Available_ID;
         private Security SB;
         private static readonly object padlock = new object();  
@@ -182,7 +182,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 Active_users.Add(tUser.getUserName(), tUser);
                 if (tUser.HasPendingMessages()) 
                 {
-                    LinkedList<NotifyData> messages = tUser.GetPendingMessages();
+                    List<NotifyData> messages = tUser.GetPendingMessages();
                     foreach (NotifyData msg in messages) 
                     {
                         Publisher.Instance.Notify(tUser.getUserName(), msg);
