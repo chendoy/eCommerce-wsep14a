@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetAvailableRawDiscountsResponse : Message
+    public class GetAvailableRawDiscountsResponse : Message
     {
-        Dictionary<int, string> DiscountPolicies { get; set; }
+        public Dictionary<int, string> DiscountPolicies { get; set; }
 
         public GetAvailableRawDiscountsResponse(Dictionary<int, string> discountPolicies) : base(Opcode.RESPONSE)
         {

@@ -85,8 +85,13 @@
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Discounts">
-            <h2>Add New Discount</h2>
-            <h2>Edit </h2>
+            <h2>Available discounts</h2>
+
+            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discounts" Data="@discounts" TextProperty="Value" ValueProperty="Value" Style="margin-bottom: 20px; height:200px; width:400px;" />
+
+            <h2>Your new composite discount </h2>
+
+            <RadzenTextArea Placeholder="Enter here..." Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px"; />
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Purchases">
@@ -306,6 +311,7 @@
     private string loggedInUser;
     public string AppointmentMessage { get; set; }
     private List<Tuple<ProductData, int>> inventory { get; set; }
+    private List<KeyValuePair<int, string>> discounts;
     private int selectedProductId;
     private int delta;
     private string errorMsg { get; set; }
@@ -325,6 +331,8 @@
         staffList = staff.ToList();
         InventoryData invData = await service.GetStoresInventory(StoreId);
         inventory = invData.invProducts;
+        Dictionary<int, string> discountPolicies = await service.GetRawDiscounts();
+        discounts = discountPolicies.ToList();
     }
 
     public class Product
@@ -346,7 +354,7 @@
     private async void AddProduct(Product p)
     {
         SuccessFailResponse response = await service.AddProductToStore(StoreId, loggedInUser, p.ProductId, p.ProductDetails, p.ProductPrice, p.ProductName, p.ProductCategory, p.Pamount, p.ImgUrl);
-        
+
         if (response.Success)
         {
             successMsg = "Operation completed successfully";
@@ -362,6 +370,11 @@
     void Cancel()
     {
         //
+    }
+
+    private void ParseDiscountText(object discount)
+    {
+
     }
 
 

@@ -191,5 +191,13 @@ namespace Client.Service
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
             return response;
         }
+
+        async public Task<Dictionary<int, string>> GetRawDiscounts()
+        {
+            GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
+            comm.SendRequest(request);
+            GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
+            return response.DiscountPolicies;
+        }
     }
 }
