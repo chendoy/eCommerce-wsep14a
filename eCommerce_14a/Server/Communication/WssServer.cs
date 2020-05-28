@@ -273,6 +273,16 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_MANAGER_PERMISSION:
+                    response = handler.HandleGetManagersPermission(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.CHANGE_PERMISSIONS:
+                    response = handler.HandleChangePermissions(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }

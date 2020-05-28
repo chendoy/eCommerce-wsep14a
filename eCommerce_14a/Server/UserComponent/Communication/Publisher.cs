@@ -121,7 +121,11 @@ namespace Server.UserComponent.Communication
 
         public Tuple<bool, string> Notify(string username, NotifyData notification)
         {
-           User user = UM.GetUser(username);
+            if (ws is null)
+            {
+                return new Tuple<bool, string>(true, "ws undefiened");
+            }
+            User user = UM.GetUser(username);
            if (!user.LoggedStatus())
                 user.AddMessage(notification);
            else

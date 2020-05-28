@@ -1,5 +1,5 @@
 ﻿@page "/ManageStore/{storeid:int}"
-@using Server
+@using Server.UserComponent.DomainLayer
 @using Microsoft.EntityFrameworkCore
 
 <h1>Store Dashboard</h1>
@@ -84,14 +84,77 @@
 
         </RadzenTabsItem>
 
+        <RadzenTabsItem Text="Edit Permissions">
+
+            <RadzenGrid @ref="permissionsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                        Data="@ManagersPermissions" TItem="Tuple<string, Permission>">
+                <Columns>
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Property="Item1" Title="User Name" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="View Puarchse History" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.ViewPuarchseHistory" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.ViewPuarchseHistory" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Inventory" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditInventory" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditInventory" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Discount Policy" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditDiscountPolicy" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditDiscountPolicy" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Purachse Policy" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditPurachsePolicy" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditPurachsePolicy" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn TItem="Tuple<string, Permission>" Context="permission" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="permission">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow_Permission(permission))">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow_Permission(permission))">
+                            </RadzenButton>
+                            <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit_Permission(permission))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenGridColumn>
+                </Columns>
+
+            </RadzenGrid>
+
+            <div class="error-msg" style="text-align:left; font-weight:bold">
+                <span>@errorMsg</span>
+            </div>
+
+            <div class="success-msg" style="text-align:left; font-weight:bold">
+                <span>@successMsg</span>
+            </div>
+
+        </RadzenTabsItem>
+
         <RadzenTabsItem Text="Discounts">
-            <h2>Available discounts</h2>
-
-            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discounts" Data="@discounts" TextProperty="Value" ValueProperty="Value" Style="margin-bottom: 20px; height:200px; width:400px;" />
-
-            <h2>Your new composite discount </h2>
-
-            <RadzenTextArea Placeholder="Enter here..." Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px"; />
+            <h2>Add New Discount</h2>
+            <h2>Edit </h2>
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Purchases">
@@ -109,17 +172,17 @@
                             <RadzenTextBox @bind-Value="product.Item1.Name" Style="width:100%; display: block" Name="ProductName" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category" >
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category">
                         <EditTemplate Context="product">
                             <RadzenTextBox @bind-Value="product.Item1.Category" Style="width:100%; display: block" Name="Category" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details" >
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details">
                         <EditTemplate Context="product">
                             <RadzenTextBox @bind-Value="product.Item1.Details" Style="width:100%; display: block" Name="Details" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price" >
+                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price">
                         <EditTemplate Context="product">
                             <RadzenNumeric TValue="double" @bind-Value="product.Item1.Price" Style="width:100%; display: block" Name="Price" />
                         </EditTemplate>
@@ -185,7 +248,7 @@
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Add product">
-            
+
             <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
                 <div class="row">
                     <div class="col-md-6">
@@ -311,7 +374,6 @@
     private string loggedInUser;
     public string AppointmentMessage { get; set; }
     private List<Tuple<ProductData, int>> inventory { get; set; }
-    private List<KeyValuePair<int, string>> discounts;
     private int selectedProductId;
     private int delta;
     private string errorMsg { get; set; }
@@ -329,10 +391,10 @@
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
-        InventoryData invData = await service.GetStoresInventory(StoreId);
-        inventory = invData.invProducts;
-        Dictionary<int, string> discountPolicies = await service.GetRawDiscounts();
-        discounts = discountPolicies.ToList();
+        await UpdateInventory();
+        await UpdateManagersPermissions();
+        ProductsInEdit = new List<Tuple<ProductData, int>>();
+        PermissionsInEdit = new List<Tuple<string, Permission>>();
     }
 
     public class Product
@@ -372,11 +434,6 @@
         //
     }
 
-    private void ParseDiscountText(object discount)
-    {
-
-    }
-
 
     private void SelectProduct(object productId)
     {
@@ -404,7 +461,7 @@
         }
     }
 
-    private async void Increase()
+    private async Task Increase()
     {
         SuccessFailResponse response = await service.IncreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
 
@@ -418,9 +475,11 @@
             successMsg = "";
             errorMsg = response.Error;
         }
+
+        await UpdateInventory();
     }
 
-    private async void Decrease()
+    private async Task Decrease()
     {
         SuccessFailResponse response = await service.DecreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
 
@@ -434,6 +493,8 @@
             successMsg = "";
             errorMsg = response.Error;
         }
+
+        await UpdateInventory();
     }
 
 
@@ -479,18 +540,23 @@
         selectedRole = selection;
     }
 
+
+    ///////////////////////////////////////////////////////////// Products GridView
+
     public RadzenGrid<Tuple<ProductData, int>> productsGrid { get; set; }
+    public List<Tuple<ProductData, int>> ProductsInEdit { get; set; }
 
 
     void EditRow(Tuple<ProductData, int> product)
     {
         productsGrid.EditRow(product);
+        ProductsInEdit.Add(product);
     }
 
     async void SaveRow(Tuple<ProductData, int> product)
     {
         UpdateProductOfStoreRequest request = new UpdateProductOfStoreRequest(loggedInUser, StoreId, product.Item1.ProductId, product.Item1.Details,
-            product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
+        product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
         SuccessFailResponse response = await service.GetResponse<UpdateProductOfStoreRequest, SuccessFailResponse>(request);
         if (response.Success)
         {
@@ -506,10 +572,16 @@
 
     }
 
-    void CancelEdit(Tuple<ProductData, int> product)
+    async void CancelEdit(Tuple<ProductData, int> product)
     {
         productsGrid.CancelEditRow(product);
+        await UpdateInventory();
+    }
 
+    async Task UpdateInventory()
+    {
+        InventoryData invData = await service.GetStoresInventory(StoreId);
+        inventory = invData.invProducts;
     }
 
     async void DeleteRow(Tuple<ProductData, int> product)
@@ -529,4 +601,50 @@
             errorMsg = response.Error;
         }
     }
+
+    ///////////////////////////////////////////////////////////// Permissions GridView
+
+    public RadzenGrid<Tuple<string, Permission>> permissionsGrid { get; set; }
+    public List<Tuple<string, Permission>> PermissionsInEdit { get; set; }
+    public List<Tuple<string, Permission>> ManagersPermissions { get; set; }
+
+
+
+    void EditRow_Permission(Tuple<string, Permission> permission)
+    {
+        permissionsGrid.EditRow(permission);
+        PermissionsInEdit.Add(permission);
+    }
+
+    async void SaveRow_Permission(Tuple<string, Permission> permission)
+    {
+        ChangePermissionsRequest req = new ChangePermissionsRequest(loggedInUser, permission.Item1, StoreId, permission.Item2);
+        SuccessFailResponse response = await service.GetResponse<ChangePermissionsRequest, SuccessFailResponse>(req);
+        if (response.Success)
+        {
+            successMsg = "Operation completed successfully";
+            errorMsg = "";
+            await permissionsGrid.UpdateRow(permission);
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+
+    }
+
+    async void CancelEdit_Permission(Tuple<string, Permission> permission)
+    {
+        permissionsGrid.CancelEditRow(permission);
+        await UpdateManagersPermissions();
+    }
+
+    async Task UpdateManagersPermissions()
+    {
+        GetManagersPermissionRequest req = new GetManagersPermissionRequest(StoreId, loggedInUser);
+        GetManagerPermissionResponse response = await service.GetResponse<GetManagersPermissionRequest, GetManagerPermissionResponse>(req);
+        ManagersPermissions = response.ManagerPermissions;
+    }
+
 }

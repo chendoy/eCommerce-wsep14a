@@ -49,6 +49,7 @@
     <Compile Include="Communication\DataObject\Requests\AppointOwnerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\BuyerHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\CartRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\ChangePermissionsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ChangeProductAmountInCartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DecreaseProductAmountRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllRegisteredUsersRequest.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="Communication\DataObject\Requests\GetAllStoresRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllUsersHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAvailableRawDiscountsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetManagersPermissionRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="Communication\DataObject\Responses\GetAllStoresHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAllUsersHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAvailableRawDiscountsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetManagerPermissionResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStaffOfStoreResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
     <Compile Include="StoreComponent\DomainLayer\Validator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
+    <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
     <Compile Include="UserComponent\DomainLayer\DeliveryHandler.cs" />
