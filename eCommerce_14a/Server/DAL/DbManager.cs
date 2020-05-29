@@ -68,7 +68,10 @@ namespace Server.DAL
             return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();*/
             return null;
         }
-
+        public List<DbUser> getAllDBUsers()
+        {
+            return dbConn.Users.ToList();
+        }
         public List<User> GetAllUsers()
         {
             List<string> usernames = dbConn.Users.Select(user => user.Name).Distinct().ToList();
@@ -746,6 +749,13 @@ namespace Server.DAL
         {
             dbConn.UserStorePermissions.Add(usp);
             dbConn.SaveChanges();
+        }
+        public void InsertUserStorePermissionSet(List<UserStorePermissions> usps)
+        {
+            foreach(UserStorePermissions usp in usps)
+            {
+                InsertUserStorePermission(usp);
+            }
         }
 
     }
