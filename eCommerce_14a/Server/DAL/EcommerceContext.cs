@@ -87,7 +87,17 @@ namespace Server.DAL
             .WithMany()
             .WillCascadeOnDelete(false);
 
-           modelBuilder.Entity<NeedToApprove>()
+            modelBuilder.Entity<CandidateToOwnership>()
+            .HasRequired(c => c.Candidate)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<CandidateToOwnership>()
+            .HasRequired(c => c.Store)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<NeedToApprove>()
            .HasRequired(c => c.Candidate)
            .WithMany()
            .WillCascadeOnDelete(false);

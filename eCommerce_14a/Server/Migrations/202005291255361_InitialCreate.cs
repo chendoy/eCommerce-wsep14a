@@ -70,8 +70,8 @@
                     })
                 .PrimaryKey(t => new { t.AppointerName, t.StoreId, t.CandidateName })
                 .ForeignKey("dbo.DbUsers", t => t.AppointerName)
-                .ForeignKey("dbo.DbUsers", t => t.CandidateName, cascadeDelete: true)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.CandidateName)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.AppointerName)
                 .Index(t => t.StoreId)
                 .Index(t => t.CandidateName);

@@ -51,6 +51,17 @@ namespace Server.DAL
             storeAdpter = new StoreAdapter();
         }
 
+        public CandidateToOwnership GetCandidate(string userName, int storeId)
+        {
+            return dbConn.CandidateToOwnerships.Where(candidate => candidate.CandidateName == userName && candidate.StoreId == storeId).FirstOrDefault();
+        }
+
+        public void DeleteCandidate(CandidateToOwnership candidateToOwnership)
+        {
+            dbConn.CandidateToOwnerships.Remove(candidateToOwnership);
+            dbConn.SaveChanges();
+        }
+
         public NotifyData GetNotifyWithMaxId()
         {
            
@@ -762,6 +773,8 @@ namespace Server.DAL
                 InsertUserStorePermission(usp);
             }
         }
+        
+
 
 
     }

@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Server.DAL;
 using eCommerce_14a.UserComponent.DomainLayer;
+using System.Data.Entity.Core.Metadata.Edm;
+using Server.DAL.UserDb;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -45,6 +47,21 @@ namespace TestingSystem.DbManger_Tests
         {
             List<User> useres = DbManager.Instance.GetAllUsers();
             int a = 1;
+        }
+
+        [TestMethod]
+        public void InsertCandidate()
+        {
+            DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
+        }
+
+
+
+        [TestMethod]
+        public void RemoveCandidate()
+        {
+            InsertCandidate();
+            DbManager.Instance.DeleteCandidate(DbManager.Instance.GetCandidate("yosi", 1));
         }
 
     }
