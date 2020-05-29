@@ -49,19 +49,26 @@ namespace TestingSystem.DbManger_Tests
             int a = 1;
         }
 
-        [TestMethod]
-        public void InsertCandidate()
-        {
-            DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
-        }
+        //[TestMethod]
+        //public void InsertCandidate()
+        //{
+        //    DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
+        //}
 
 
 
         [TestMethod]
         public void RemoveCandidate()
         {
-            InsertCandidate();
-            DbManager.Instance.DeleteCandidate(DbManager.Instance.GetCandidate("yosi", 1));
+            DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
+            DbManager.Instance.DeleteSingleCandidate(DbManager.Instance.GetCandidate("yosi", 1));
+        }
+        [TestMethod]
+        public void RemoveDBUser()
+        {
+            DbUser test = new DbUser("Test1", false, false, false);
+            DbManager.Instance.InsertUser(test);
+            DbManager.Instance.DeleteUser(test);
         }
 
     }

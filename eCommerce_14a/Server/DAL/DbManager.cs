@@ -56,22 +56,139 @@ namespace Server.DAL
             return dbConn.CandidateToOwnerships.Where(candidate => candidate.CandidateName == userName && candidate.StoreId == storeId).FirstOrDefault();
         }
 
-        public void DeleteCandidate(CandidateToOwnership candidateToOwnership)
+        public void DeleteSingleCandidate(CandidateToOwnership candidateToOwnership)
         {
             dbConn.CandidateToOwnerships.Remove(candidateToOwnership);
             dbConn.SaveChanges();
         }
-
-        public NotifyData GetNotifyWithMaxId()
+        public void DeleteUser(DbUser user)
         {
-           
-            /*if (!dbConn.Notifies.Any())
+            dbConn.Users.Remove(user);
+            dbConn.SaveChanges();
+        }
+        public void DeletePass(DbPassword pass)
+        {
+            dbConn.Passwords.Remove(pass);
+            dbConn.SaveChanges();
+        }
+        public void DeleteSingleMessage(DbNotifyData msg)
+        {
+            dbConn.Notifies.Remove(msg);
+            dbConn.SaveChanges();
+        }
+        public void DeleteMessages(List<DbNotifyData> lmessage)
+        {
+            foreach(DbNotifyData data in lmessage)
             {
-                // The table is empty
-                return null;
+                DeleteSingleMessage(data);
             }
-            return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();*/
-            return null;
+        }
+        public void DeleteCandidates(List<CandidateToOwnership> candidates)
+        {
+            foreach (CandidateToOwnership can in candidates)
+            {
+                DeleteSingleCandidate(can);
+            }
+        }
+        public void DeleteSingleApproval(NeedToApprove msg)
+        {
+            dbConn.NeedToApproves.Remove(msg);
+            dbConn.SaveChanges();
+        }
+        public void DeleteAprovals(List<NeedToApprove> list)
+        {
+            foreach (NeedToApprove single in list)
+            {
+                DeleteSingleApproval(single);
+            }
+        }
+        public void DeleteSingleOwnership(StoreOwnershipAppoint msg)
+        {
+            dbConn.StoreOwnershipAppoints.Remove(msg);
+            dbConn.SaveChanges();
+        }
+        public void DeleteOwnership(List<StoreOwnershipAppoint> list)
+        {
+            foreach (StoreOwnershipAppoint single in list)
+            {
+                DeleteSingleOwnership(single);
+            }
+        }
+        public void DeleteSingleManager(StoreManagersAppoint msg)
+        {
+            dbConn.StoreManagersAppoints.Remove(msg);
+            dbConn.SaveChanges();
+        }
+        public void DeleteManagers(List<StoreManagersAppoint> list)
+        {
+            foreach (StoreManagersAppoint single in list)
+            {
+                DeleteSingleManager(single);
+            }
+        }
+        public void DeleteSinglePermission(UserStorePermissions msg)
+        {
+            dbConn.UserStorePermissions.Remove(msg);
+            dbConn.SaveChanges();
+        }
+        public void DeletePermission(List<UserStorePermissions> list)
+        {
+            foreach (UserStorePermissions single in list)
+            {
+                DeleteSinglePermission(single);
+            }
+        }
+        public void DeleteSingleApprovalStatus(StoreOwnertshipApprovalStatus msg)
+        {
+            dbConn.StoreOwnertshipApprovalStatuses.Remove(msg);
+            dbConn.SaveChanges();
+        }
+        public void DeleteAprovalsStatuses(List<StoreOwnertshipApprovalStatus> list)
+        {
+            foreach (StoreOwnertshipApprovalStatus single in list)
+            {
+                DeleteSingleApprovalStatus(single);
+            }
+        }
+        public void DeleteUserFullCascase(User user)
+        {
+            string name = user.getUserName();
+            //Delete the user
+            DbUser usr = dbConn.Users.Where(buyer => buyer.Name == name).FirstOrDefault();
+            DeleteUser(usr);
+            //Delete the users hash
+            DbPassword pass = dbConn.Passwords.Where(buyer => buyer.UserName == name).FirstOrDefault();
+            DeletePass(pass);
+            //Delete Messages
+            List<DbNotifyData> messages = dbConn.Notifies.Where(m => m.UserName == name).ToList();
+            DeleteMessages(messages);
+            //Delete Candidations
+            List<CandidateToOwnership> candidations = dbConn.CandidateToOwnerships.Where(c => c.CandidateName == name).ToList();
+            DeleteCandidates(candidations);
+            //Delete all aprovvals requests
+            //INeedToApprove
+            List<NeedToApprove> ineed = dbConn.NeedToApproves.Where(n => n.ApproverName == name).ToList();
+            List<NeedToApprove> theyNeed = dbConn.NeedToApproves.Where(n => n.CandiateName == name).ToList();
+            ineed.AddRange(theyNeed);
+            DeleteAprovals(ineed);
+            //Ownership
+            List<StoreOwnershipAppoint> owner = dbConn.StoreOwnershipAppoints.Where(a => a.AppointerName == name).ToList();
+            List<StoreOwnershipAppoint> Maxowner = dbConn.StoreOwnershipAppoints.Where(a => a.AppointedName == name).ToList();
+            owner.AddRange(Maxowner);
+            DeleteOwnership(owner);
+            //Managers
+            List<StoreManagersAppoint> manager = dbConn.StoreManagersAppoints.Where(a => a.AppointerName == name).ToList();
+            List<StoreManagersAppoint> MaxManager = dbConn.StoreManagersAppoints.Where(a => a.AppointedName == name).ToList();
+            manager.AddRange(MaxManager);
+            DeleteManagers(manager);
+            //Permissions
+            List<UserStorePermissions> perm = dbConn.UserStorePermissions.Where(p => p.UserName == name).ToList();
+            DeletePermission(perm);
+            //Approvals
+            List<StoreOwnertshipApprovalStatus> apprvs = dbConn.StoreOwnertshipApprovalStatuses.Where(c => c.CandidateName == name).ToList();
+            DeleteAprovalsStatuses(apprvs);
+
+
         }
         public List<DbUser> getAllDBUsers()
         {
@@ -772,6 +889,11 @@ namespace Server.DAL
             {
                 InsertUserStorePermission(usp);
             }
+        }
+        public void InsertUserUnreadMessages(DbNotifyData ntfd)
+        {
+            dbConn.Notifies.Add(ntfd);
+            dbConn.SaveChanges();
         }
         
 
