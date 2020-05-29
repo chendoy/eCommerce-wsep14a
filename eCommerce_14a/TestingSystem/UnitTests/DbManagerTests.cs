@@ -10,6 +10,10 @@ using Server.DAL;
 using eCommerce_14a.UserComponent.DomainLayer;
 using System.Data.Entity.Core.Metadata.Edm;
 using Server.DAL.UserDb;
+using System.Security.AccessControl;
+using eCommerce_14a.Utils;
+using System.Data.Entity.Core.Common.CommandTrees;
+using Server.DAL.CommunicationDb;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -70,6 +74,56 @@ namespace TestingSystem.DbManger_Tests
             DbManager.Instance.InsertUser(test);
             DbManager.Instance.DeleteUser(test);
         }
+        [TestMethod]
+        public void RemovePassword()
+        {
+            DbPassword test = new DbPassword("Test1", "Test1");
+            DbManager.Instance.InsertPassword(test);
+            DbManager.Instance.DeletePass(test);
+        }
+        [TestMethod]
+        public void RemoveApproval()
+        {
+            NeedToApprove test = new NeedToApprove("liav", "yossi",1);
+            DbManager.Instance.InsertNeedToApprove(test);
+            DbManager.Instance.DeleteSingleApproval(test);
+        }
+        [TestMethod]
+        public void RemoveStoreManagerAppoint()
+        {
+            StoreManagersAppoint test = new StoreManagersAppoint("liav", "yossi", 1);
+            DbManager.Instance.InsertStoreManagerAppoint(test);
+            DbManager.Instance.DeleteSingleManager(test);
+        }
+        [TestMethod]
+        public void RemoveStoreOwnersAppoint()
+        {
+            StoreOwnershipAppoint test = new StoreOwnershipAppoint("liav", "yossi", 1);
+            DbManager.Instance.InsertStoreOwnershipAppoint(test);
+            DbManager.Instance.DeleteSingleOwnership(test);
+        }
+        [TestMethod]
+        public void RemoveApprovalStatus()
+        {
+            StoreOwnertshipApprovalStatus test = new StoreOwnertshipApprovalStatus(1, true, "yossi");
+            DbManager.Instance.InsertStoreOwnerShipApprovalStatus(test);
+            DbManager.Instance.DeleteSingleApprovalStatus(test);
+        }
+        [TestMethod]
+        public void RemoveNotifyMessage()
+        {
+            DbNotifyData test = new DbNotifyData("Test", "yossi");
+            DbManager.Instance.InsertUserNotification(test);
+            DbManager.Instance.DeleteSingleMessage(test);
+        }
+        [TestMethod]
+        public void RemoveStorePermission()
+        {
+            UserStorePermissions test = new UserStorePermissions("yossi", 1, CommonStr.MangerPermission.PurachsePolicy;
+            DbManager.Instance.InsertUserStorePermission(test);
+            DbManager.Instance.DeleteSinglePermission(test);
+        }
+
 
     }
 }
