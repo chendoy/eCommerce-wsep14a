@@ -359,7 +359,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             storeParam.Add(CommonStr.StoreParams.mainOwner, user);
             Store store = new Store(storeParam);
 
-            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store);
+            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id,userName);
 
             if (!ownershipAdded.Item1)
             {

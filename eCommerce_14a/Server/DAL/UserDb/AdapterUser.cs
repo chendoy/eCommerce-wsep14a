@@ -31,10 +31,10 @@ namespace Server.DAL.UserDb
             List<CandidateToOwnership> userOwnershipRequests = new List<CandidateToOwnership>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.MasterAppointers))
             {
-                Dictionary<int, User> AllMastersAppointers = user.MasterAppointer;
+                Dictionary<int, string> AllMastersAppointers = user.MasterAppointer;
                 foreach (int storeNum in AllMastersAppointers.Keys)
                 {
-                    string userName = AllMastersAppointers[storeNum].getUserName();
+                    string userName = AllMastersAppointers[storeNum];
                     CandidateToOwnership appoitment = new CandidateToOwnership(userName, user.getUserName(), storeNum);
                     userOwnershipRequests.Add(appoitment);
 
@@ -86,11 +86,11 @@ namespace Server.DAL.UserDb
             List<StoreManagersAppoint> StoresUserIsManaging = new List<StoreManagersAppoint>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.ManageStores))
             {
-                Dictionary<int, Store> AllManagingStores = user.Store_Managment;
-                Dictionary<int, User> AllManagerAppointers = user.AppointedByManager;
+                Dictionary<int, string> AllManagingStores = user.Store_Managment;
+                //Dictionary<int, User> AllManagerAppointers = user.AppointedByManager;
                 foreach (int storeNum in AllManagingStores.Keys)
                 {
-                    StoreManagersAppoint managingData = new StoreManagersAppoint(AllManagerAppointers[storeNum].getUserName(), user.getUserName(), storeNum);
+                    StoreManagersAppoint managingData = new StoreManagersAppoint(AllManagingStores[storeNum], user.getUserName(), storeNum);
                     StoresUserIsManaging.Add(managingData);
                 }
             }
@@ -101,20 +101,12 @@ namespace Server.DAL.UserDb
             List<StoreOwnershipAppoint> StoresUserIsOwner = new List<StoreOwnershipAppoint>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.OwnStores))
             {
-                Dictionary<int, Store> AllOwnerStores = user.Store_Managment;
-                Dictionary<int, User> AllOwnerAppointers = user.AppointedByOwner;
+                Dictionary<int, string> AllOwnerStores = user.Store_Ownership;
+                //Dictionary<int, User> AllOwnerAppointers = user.AppointedByOwner;
                 foreach (int storeNum in AllOwnerStores.Keys)
                 {
-                    if (AllOwnerAppointers.ContainsKey(storeNum))
-                    {
-                        StoreOwnershipAppoint Ownersdata = new StoreOwnershipAppoint(AllOwnerAppointers[storeNum].getUserName(), user.getUserName(), storeNum);
-                        StoresUserIsOwner.Add(Ownersdata);
-                    }
-                    else
-                    {
-                        StoreOwnershipAppoint Ownersdata = new StoreOwnershipAppoint(user.getUserName(), user.getUserName(), storeNum);
-                        StoresUserIsOwner.Add(Ownersdata);
-                    }
+                    StoreOwnershipAppoint Ownersdata = new StoreOwnershipAppoint(AllOwnerStores[storeNum], user.getUserName(), storeNum);
+                    StoresUserIsOwner.Add(Ownersdata);
                 }
             }
             return StoresUserIsOwner;

@@ -1,6 +1,7 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL.CommunicationDb;
 using Server.DAL.StoreDb;
 using Server.DAL.UserDb;
 using Server.StoreComponent.DomainLayer;
@@ -71,10 +72,22 @@ namespace Server.DAL
         public List<User> GetAllUsers()
         {
             List<string> usernames = dbConn.Users.Select(user => user.Name).Distinct().ToList();
+            List<DbPassword> passes = dbConn.Passwords.ToList();
+            //Dictionary<string, string> name_and_hashes = new Dictionary<string, string>();
+            foreach (DbPassword pass in passes)
+            {
+                UserManager.Instance.Users_And_Hashes.Add(pass.UserName, pass.PwdHash);
+            }
             List<User> users = new List<User>();
             foreach (string user in usernames)
             {
-                users.Add(BuildUser(user));
+                User usr = BuildUser(user);
+                if(usr.LoggedStatus())
+                {
+                    UserManager.Instance.Active_users.Add(user, usr);
+                }
+                UserManager.Instance.users.Add(user, usr);
+                users.Add(usr);
             }
             return users;
         }
@@ -85,37 +98,202 @@ namespace Server.DAL
             User user = new User(1, dbUser.Name, dbUser.IsGuest, dbUser.IsAdmin);
             user.IsLoggedIn = dbUser.IsLoggedIn;
 
-           /* Dictionary<int, Store> Store_Ownership = GetStoreOwnershipUser(userName);*/ //TODO
-        //public LinkedList<NotifyData> unreadMessages { set; get; }
-        //public Dictionary<int, Store> Store_Managment { get; }
-        //public Dictionary<int, int[]> Store_options { get; }
-        ////Contains the list of who appointed you to which store! not who you appointed to which store!
-        //public Dictionary<int, User> AppointedByOwner { get; }
-        //public Dictionary<int, User> AppointedByManager { get; }
-        ////Version 3 Use case - 4.3 Addings.
-        //public Dictionary<int, User> MasterAppointer { get; }
-        ////Contains the list of who need to Approve his Ownership
-        //public Dictionary<int, List<string>> NeedToApprove { get; }
-        ////Contains the list of who need to Approve his Ownership
-        //public Dictionary<int, List<string>> WaitingForApproval { get; }
-        ////Contains the status of the Appoitment
-        //public Dictionary<int, bool> IsApproved { get; }
+            user.Store_Ownership = GetStoreOwnershipUser(userName);
+            user.unreadMessages = GetUnreadMessages(userName);
+            user.Store_Managment = GetStoreManagmentUser(userName);
+            user.Store_options = GetStorePermissionsUser(userName);
+            user.MasterAppointer = GetMasterAppointersUsers(userName);
+            user.NeedToApprove = GetTheyNeedToApproveUsers(userName);
+            user.WaitingForApproval = GeTINeedToApproveUsers(userName);
+            user.IsApproved = GetIsApprovedStoreUsers(userName);
 
             return user;
         }
+        public Dictionary<int,bool> GetIsApprovedStoreUsers(string userName)
+        {
+            Dictionary<int, bool> status = new Dictionary<int, bool>();
+            List<StoreOwnertshipApprovalStatus> statuses = dbConn.StoreOwnertshipApprovalStatuses.Where(cand => cand.CandidateName == userName).ToList();
+            foreach(StoreOwnertshipApprovalStatus stat in statuses)
+            {
+                status.Add(stat.StoreId, stat.Status);
+            }
+            return status;
 
-        //private Dictionary<int, int> GetStoreOwnershipUser(string userName)
-        //{
+        }
+        public Dictionary<int, List<string>> GeTINeedToApproveUsers(string userName)
+        {
+            Dictionary<int, List<string>> INeedToApproveUser = new Dictionary<int, List<string>>();
+            List<NeedToApprove> listodusers = dbConn.NeedToApproves.Where(cand => cand.ApproverName == userName).ToList();
+            foreach (NeedToApprove rshuma in listodusers)
+            {
+                List<string> userslist;
+                if (!INeedToApproveUser.TryGetValue(rshuma.StoreId, out userslist))
+                {
+                    userslist = new List<string>();
+                    userslist.Add(rshuma.CandiateName);
+                    INeedToApproveUser.Add(rshuma.StoreId, userslist);
+                }
+                else
+                {
+                    if (!userslist.Contains(rshuma.CandiateName))
+                    {
+                        userslist.Add(rshuma.CandiateName);
+                        INeedToApproveUser[rshuma.StoreId] = userslist;
+                    }
+                }
+            }
+            return INeedToApproveUser;
+        }
+        public Dictionary<int,List<string>> GetTheyNeedToApproveUsers(string userName)
+        {
+            Dictionary<int, List<string>> theyneedToApproveUser = new Dictionary<int, List<string>>();
+            List<NeedToApprove> listodusers = dbConn.NeedToApproves.Where(cand => cand.CandiateName == userName).ToList();
+            foreach(NeedToApprove rshuma in listodusers)
+            {
+                List<string> userslist;
+                if(!theyneedToApproveUser.TryGetValue(rshuma.StoreId,out userslist))
+                {
+                    userslist = new List<string>();
+                    userslist.Add(rshuma.ApproverName);
+                    theyneedToApproveUser.Add(rshuma.StoreId, userslist);
+                }
+                else
+                {
+                    if(!userslist.Contains(rshuma.ApproverName))
+                    {
+                        userslist.Add(rshuma.ApproverName);
+                        theyneedToApproveUser[rshuma.StoreId] = userslist;
+                    }
+                }
+            }
+            return theyneedToApproveUser;
+        }
+        public Dictionary<int,string> GetMasterAppointersUsers(string userName)
+        {
+            List<CandidateToOwnership> canidadtions = dbConn.CandidateToOwnerships.Where(cand => cand.CandidateName == userName).ToList();
+            Dictionary<int, string> candidtaes = new Dictionary<int, string>();
+            foreach(CandidateToOwnership can in canidadtions)
+            {
+                candidtaes.Add(can.StoreId, can.AppointerName);
+            }
+            return candidtaes;
+        }
+        public Dictionary<int, int[]> GetStorePermissionsUser(string userName)
+        {
+            Dictionary<int,int[]> perms  = new Dictionary<int, int[]>();
+            List<UserStorePermissions> AllPerms = dbConn.UserStorePermissions.Where(storeP => storeP.UserName == userName).ToList();
+            foreach(UserStorePermissions permmission in AllPerms)
+            {
+                int[] p;
+                string permmisionName = permmission.Permission;
+                if(permmisionName.Equals(CommonStr.MangerPermission.Comments))
+                {
+                    if (!perms.TryGetValue(permmission.StoreId, out p))
+                    {
+                        p = new int[] { 1,0,0,0,0};
+                        perms.Add(permmission.StoreId, p);
+                    }
+                    else
+                    {
+                        p[0] = 1;
+                        perms[permmission.StoreId] = p;
+                    }
 
-        //    List<StoreOwnershipAppoint> storeOwnershipAppoints = dbConn.StoreOwnershipAppoints.Where(soa => soa.AppointerName == userName).ToList();
-        //    Dictionary<int, int> ownershipsDict = new Dictionary<int, int>();  
-        //    foreach(StoreOwnershipAppoint soa in storeOwnershipAppoints)
-        //    {
-        //        ownershipsDict.Add()
-        //    }
-        //}
+                }
+                else if (permmisionName.Equals(CommonStr.MangerPermission.Purchase))
+                {
+                    if (!perms.TryGetValue(permmission.StoreId, out p))
+                    {
+                        p = new int[] { 0, 1, 0, 0, 0 };
+                        perms.Add(permmission.StoreId, p);
+                    }
+                    else
+                    {
+                        p[1] = 1;
+                        perms[permmission.StoreId] = p;
+                    }
 
-       public void InsertStore(Store store)
+                }
+                else if (permmisionName.Equals(CommonStr.MangerPermission.Product))
+                {
+                    if (!perms.TryGetValue(permmission.StoreId, out p))
+                    {
+                        p = new int[] { 0, 0, 1, 0, 0 };
+                        perms.Add(permmission.StoreId, p);
+                    }
+                    else
+                    {
+                        p[2] = 1;
+                        perms[permmission.StoreId] = p;
+                    }
+
+                }
+                else if (permmisionName.Equals(CommonStr.MangerPermission.PurachsePolicy))
+                {
+                    if (!perms.TryGetValue(permmission.StoreId, out p))
+                    {
+                        p = new int[] { 0, 0, 0, 1, 0 };
+                        perms.Add(permmission.StoreId, p);
+                    }
+                    else
+                    {
+                        p[3] = 1;
+                        perms[permmission.StoreId] = p;
+                    }
+
+                }
+                else if (permmisionName.Equals(CommonStr.MangerPermission.DiscountPolicy))
+                {
+                    if (!perms.TryGetValue(permmission.StoreId, out p))
+                    {
+                        p = new int[] { 0, 0, 0, 0, 1 };
+                        perms.Add(permmission.StoreId, p);
+                    }
+                    else
+                    {
+                        p[4] = 1;
+                        perms[permmission.StoreId] = p;
+                    }
+
+                }
+            }
+            return perms;
+        }
+        public Dictionary<int, string> GetStoreManagmentUser(string userName)
+        {
+
+            List<StoreManagersAppoint> storeManagingAppoints = dbConn.StoreManagersAppoints.Where(soa => soa.AppointedName == userName).ToList();
+            Dictionary<int, string> ManagersDict = new Dictionary<int, string>();
+            foreach (StoreManagersAppoint soa in storeManagingAppoints)
+            {
+                ManagersDict.Add(soa.StoreId, soa.AppointerName);
+            }
+            return ManagersDict;
+        }
+        public List<NotifyData> GetUnreadMessages(string userName)
+        {
+            List<NotifyData> messages = new List<NotifyData>();
+            List<DbNotifyData> DBMessages = dbConn.Notifies.Where(message => message.UserName == userName).ToList();
+            foreach(DbNotifyData message in DBMessages)
+            {
+                NotifyData ndata = new NotifyData(message.Context, message.UserName);
+                messages.Add(ndata);
+            }
+            return messages;
+        }
+        public Dictionary<int, string> GetStoreOwnershipUser(string userName)
+        {
+
+            List<StoreOwnershipAppoint> storeOwnershipAppoints = dbConn.StoreOwnershipAppoints.Where(soa => soa.AppointedName == userName).ToList();
+            Dictionary<int, string> ownershipsDict = new Dictionary<int, string>();
+            foreach (StoreOwnershipAppoint soa in storeOwnershipAppoints)
+            {
+                ownershipsDict.Add(soa.StoreId, soa.AppointerName);
+            }
+            return ownershipsDict;
+        }
+
+        public void InsertStore(Store store)
         {
             DbStore dbStore = new DbStore(store.Id, store.Rank, store.StoreName, store.ActiveStore);
             dbConn.Stores.Add(dbStore);
@@ -267,7 +445,7 @@ namespace Server.DAL
                                                               preconditionid: null,
                                                               discountproductid: null,
                                                               discount: null,
-                                                              discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount));
+                                                              discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount);
                 dbConn.DiscountPolicies.Add(dbDiscount);
                 dbConn.SaveChanges();
                 int dbPolicyId = GetDbDiscountPolicyId(dbDiscount, storeId, null);

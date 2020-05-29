@@ -19,21 +19,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
 
 
-        public Dictionary<int, Store> Store_Ownership { get; }
-        public LinkedList<NotifyData> unreadMessages { set; get; }
-        public Dictionary<int, Store> Store_Managment { get; }
-        public Dictionary<int, int[]> Store_options { get; }
+        public Dictionary<int, string> Store_Ownership { get; set; }
+        public List<NotifyData> unreadMessages { set; get; }
+        public Dictionary<int, string> Store_Managment { get; set; }
+        public Dictionary<int, int[]> Store_options { get; set; }
         //Contains the list of who appointed you to which store! not who you appointed to which store!
-        public Dictionary<int, User> AppointedByOwner { get; }
-        public Dictionary<int, User> AppointedByManager { get; }
+        //public Dictionary<int, User> AppointedByOwner { get; }
+        //public Dictionary<int, User> AppointedByManager { get; }
         //Version 3 Use case - 4.3 Addings.
-        public Dictionary<int, User> MasterAppointer { get; }
+        public Dictionary<int, string> MasterAppointer { get; set; }
         //Contains the list of who need to Approve his Ownership
-        public Dictionary<int, List<string>> NeedToApprove { get; }
-        //Contains the list of who need to Approve his Ownership
-        public Dictionary<int, List<string>> WaitingForApproval { get; }
+        public Dictionary<int, List<string>> NeedToApprove { set;  get; }
+        //Contains the list of who waiting for his approval
+        public Dictionary<int, List<string>> WaitingForApproval { set;  get; }
         //Contains the status of the Appoitment
-        public Dictionary<int, bool> IsApproved { get; }
+        public Dictionary<int, bool> IsApproved { get; set; }
 
 
         public User(int id, string name, bool isGuest = true, bool isAdmin = false)
@@ -43,16 +43,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             IsGuest = isGuest;
             IsAdmin = isAdmin;
             IsLoggedIn = false;
-            Store_Ownership = new Dictionary<int, Store>();
-            Store_Managment = new Dictionary<int, Store>();
-            AppointedByOwner = new Dictionary<int, User>();
-            AppointedByManager = new Dictionary<int, User>();
+            Store_Ownership = new Dictionary<int, string>();
+            Store_Managment = new Dictionary<int, string>();
+            //AppointedByOwner = new Dictionary<int, User>();
+            //AppointedByManager = new Dictionary<int, User>();
             Store_options = new Dictionary<int, int[]>();
             //Version 3 Addings use casr 4.3
-            MasterAppointer = new Dictionary<int, User>();
+            MasterAppointer = new Dictionary<int, string>();
             NeedToApprove = new Dictionary<int, List<string>>();
             WaitingForApproval = new Dictionary<int, List<string>>();
-            unreadMessages = new LinkedList<NotifyData>();
+            unreadMessages = new List<NotifyData>();
             IsApproved = new Dictionary<int, bool>();
         }
         //Get Function that Added
@@ -106,16 +106,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public bool AppointerMasterAppointer(int storeID)
         {
-            User masterA;
+            string masterA;
             if (!MasterAppointer.TryGetValue(storeID, out masterA))
             {
                 return false;
             }
             MasterAppointer.Remove(storeID);
-            if (!AppointedByOwner.ContainsKey(storeID))
+            if (Store_Ownership.ContainsKey(storeID))
             {
-                AppointedByOwner.Add(storeID, masterA);
+                return false;
             }
+            Store_Ownership.Add(storeID, masterA);
             return true;
         }
         public bool RemoveMasterAppointer(int storeID)
@@ -124,12 +125,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public Tuple<bool, string> SetMasterAppointer(int storeID, User masterA)
         {
-            User master;
+            string master;
             if (MasterAppointer.TryGetValue(storeID, out master))
             {
                 return new Tuple<bool, string>(false, "Already has a master Appointer to this storeID");
             }
-            MasterAppointer.Add(storeID, masterA);
+            MasterAppointer.Add(storeID, masterA.getUserName());
             return new Tuple<bool, string>(true, "Appointer Master Added");
         }
         public bool GetApprovalStatus(int storeID)
@@ -254,7 +255,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             this.IsLoggedIn = true;
         }
 
-        public LinkedList<NotifyData> GetPendingMessages()
+        public List<NotifyData> GetPendingMessages()
         {
             return this.unreadMessages;
         }
@@ -270,7 +271,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public void RemoveAllPendingMessages()
         {
-            this.unreadMessages = new LinkedList<NotifyData>();
+            this.unreadMessages = new List<NotifyData>();
         }
 
         public void Logout()
@@ -332,65 +333,65 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
 
         //This user will be store Owner 
-        public Tuple<bool, string> addStoreOwnership(Store store)
+        public Tuple<bool, string> addStoreOwnership(int storeId, string appointer)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
-            if (Store_Ownership.ContainsValue(store))
+            if (Store_Ownership.ContainsKey(storeId))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Ownership.Add(store.GetStoreId(), store);
-            return setPermmisions(store.GetStoreId(), CommonStr.StorePermissions.FullPermissions);
+            Store_Ownership.Add(storeId, appointer);
+            return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
         {
-            this.unreadMessages.AddLast(notification);
+            this.unreadMessages.Add(notification);
         }
 
         //Add a user to be store Manager
-        public Tuple<bool, string> addStoreManagment(Store store)
+        public Tuple<bool, string> addStoreManagment(Store store, string appointer)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
                 return new Tuple<bool, string>(false, "Guest user cannot be store Manager\n");
-            if (Store_Managment.ContainsValue(store))
+            if (Store_Managment.ContainsKey(store.Id))
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
-            Store_Managment.Add(store.GetStoreId(), store);
+            Store_Managment.Add(store.GetStoreId(), appointer);
             return new Tuple<bool, string>(true, "");
         }
         //Checks if User user appointed this current user to be owner or manager to this store
-        public bool isAppointedByOwner(User user, int store_id)
+        public bool isAppointedByOwner(string user, int store_id)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            User owner;
-            if (!AppointedByOwner.TryGetValue(store_id, out owner))
+            string owner;
+            if (!Store_Ownership.TryGetValue(store_id, out owner))
                 return false;
-            return owner == user;
+            return owner.Equals(user);
         }
         public bool isAppointedByManager(User user, int store_id)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            User owner;
-            if (!AppointedByManager.TryGetValue(store_id, out owner))
+            string owner;
+            if (!Store_Managment.TryGetValue(store_id, out owner))
                 return false;
-            return owner == user;
+            return owner.Equals(user.getUserName());
         }
         //Add appointment from user to store
         //owner appointed current to be store manager\owner
         //If this apppointment exist do not add.
-        public void addManagerAppointment(User owner, int id)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            if (!isAppointedByManager(owner, id))
-                AppointedByManager.Add(id, owner);
-        }
-        public void addOwnerAppointment(User owner, int id)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            if (!isAppointedByOwner(owner, id))
-                AppointedByOwner.Add(id, owner);
-        }
+        //public void addManagerAppointment(User owner, int id)
+        //{
+        //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+        //    if (!isAppointedByManager(owner, id))
+        //        AppointedByManager.Add(id, owner);
+        //}
+        //public void addOwnerAppointment(User owner, int id)
+        //{
+        //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+        //    if (!isAppointedByOwner(owner., id))
+        //        AppointedByOwner.Add(id, owner);
+        //}
         //Remove Manager
         public bool RemoveStoreManagment(int store_id)
         {
@@ -403,16 +404,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return Store_Ownership.Remove(store_id);
         }
         //Remove Appoitment
-        public bool RemoveAppoitmentOwner(User owner, int id)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return AppointedByOwner.Remove(id);
-        }
-        public bool RemoveAppoitmentManager(User owner, int id)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return AppointedByManager.Remove(id);
-        }
+        //public bool RemoveAppoitmentOwner(User owner, int id)
+        //{
+        //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+        //    return AppointedByOwner.Remove(id);
+        //}
+        //public bool RemoveAppoitmentManager(User owner, int id)
+        //{
+        //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+        //    return AppointedByManager.Remove(id);
+        //}
         //Check if the user is Currently Store Owner
         public bool isStoreOwner(int store)
         {
