@@ -8,14 +8,8 @@ using Server.StoreComponent.DomainLayer;
 using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Server.DAL
 {
@@ -400,6 +394,18 @@ namespace Server.DAL
             }
 
         }
+
+        internal int GetNextStoreId()
+        {
+            if(dbConn.Stores.Count() == 0)
+            {
+                return 1;
+            }
+
+            int max_storeId= dbConn.Stores.Max(store => store.Id);
+            return max_storeId + 1;
+        }
+
         public void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId)
         {
 
@@ -555,7 +561,6 @@ namespace Server.DAL
         
         private void InsertInventory(Inventory inventory, int StoreId)
         {
-            List<DbInventoryItem> inv_items = new List<DbInventoryItem>();
             foreach (KeyValuePair<int, Tuple<Product, int>> entry in inventory.InvProducts)
             {
                 InsretInventoryItem(new DbInventoryItem(StoreId, entry.Key, entry.Value.Item2));
@@ -747,6 +752,7 @@ namespace Server.DAL
             dbConn.UserStorePermissions.Add(usp);
             dbConn.SaveChanges();
         }
+
 
     }
 }

@@ -27,10 +27,17 @@ namespace TestingSystem.DbManger_Tests
         }
 
         [TestMethod]
-        public void TestGetAllStores ()
+        public List<Store> TestGetAllStores ()
         {
             List<Store> stores = DbManager.Instance.GetAllStores();
-            int a = 1;
+            return stores;
+        }
+        [TestMethod]
+        public void TestLoadStores()
+        {
+            List<Store> stores = TestGetAllStores();
+            StoreManagment.Instance.LoadStores(stores);
+            int b = 1;
         }
 
         [TestMethod]

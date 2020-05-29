@@ -15,7 +15,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class StoreManagment
     {
         private Dictionary<int, Store> stores;
-        private int nextStoreId = 0;
         private UserManager userManager = UserManager.Instance;
         private static StoreManagment instance = null;
         private static readonly object padlock = new object();
@@ -85,8 +84,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             foreach(Store store in Allstores)
             {
                 stores.Add(store.Id, store);
-                Publisher.Instance.subscribe(store.owners[0], nextStoreId);
-                nextStoreId += 1;
+                Publisher.Instance.subscribe(store.owners[0], store.Id);
             }
           
         }
@@ -351,10 +349,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<int, string>(-1, CommonStr.StoreMangmentErrorMessage.illegalStoreName);
             }
 
-            nextStoreId += 1;
 
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
-            storeParam.Add(CommonStr.StoreParams.StoreId, nextStoreId);
+            int next_id = DbManager.Instance.GetNextStoreId();
+            storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
             storeParam.Add(CommonStr.StoreParams.StoreName, storename);
             storeParam.Add(CommonStr.StoreParams.mainOwner, user);
             Store store = new Store(storeParam);
@@ -363,18 +361,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (!ownershipAdded.Item1)
             {
-                nextStoreId -= 1;
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownershipAdded.Item2);
                 return new Tuple<int, string>(-1, ownershipAdded.Item2);
             }
             else
             {        
-                stores.Add(nextStoreId, store);
+                stores.Add(next_id, store);
                 //Version 2 Addition
-                Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, nextStoreId);
+                Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
                 if (!ans.Item1)
                     return new Tuple<int, string>(-1, ans.Item2);
-                return new Tuple<int, string>(nextStoreId, "");
+                return new Tuple<int, string>(next_id, "");
             }
 
         }
@@ -446,7 +443,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public void cleanup()
         {
             this.stores = new Dictionary<int, Store>();
-            this.nextStoreId = 0;
             userManager = UserManager.Instance;
         }
     }
