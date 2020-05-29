@@ -22,6 +22,10 @@ namespace Server.DAL.UserDb
             List<StoreOwnertshipApprovalStatus> StoreOwnershipWatingForApproval = ConvertUsersOwnershipApprovalStatuses(user);
             List<UserStorePermissions> StorePermissionsSet = COnvertUsersPermissionsStores(user);
         }
+        public List<DbUser> GetAllUsersFlat()
+        {
+            return DbManager.Instance.getAllDBUsers();
+        }
         public DbUser ConvertDBUser(User user)
         {
             return new DbUser(user.getUserName(), user.isguest(), user.isSystemAdmin(), user.LoggedStatus());
@@ -143,6 +147,66 @@ namespace Server.DAL.UserDb
             }
             return StorePermissionsSet;
         }
+        public DbUser CreateDBUser(string userName, bool isGuest, bool isAdmin, bool logStatus)
+        {
+            return new DbUser(userName, isGuest, isAdmin, logStatus);
+        }
+        public CandidateToOwnership CreateCandidate(string owner, string candidtaeName, int storeId)
+        {
+            return new CandidateToOwnership(owner, candidtaeName, storeId);
+        }
+        public NeedToApprove CreateNewApprovalNote(string approvaerName, string needtobeapproved, int storeId)
+        {
+            return new NeedToApprove(approvaerName, needtobeapproved, storeId);
+        }
+        public DbPassword CreateNewPasswordEntry(string userName, string sha5)
+        {
+            return new DbPassword(userName, sha5);
+        }
+        public StoreManagersAppoint CreateNewManagerAppoitment(string appoiter, string appointed , int storeId)
+        {
+            return new StoreManagersAppoint(appoiter, appointed, storeId);
+        }
+        public StoreOwnershipAppoint CreateNewOwnerAppoitment(string appointer, string appointed, int storeId)
+        {
+            return new StoreOwnershipAppoint(appointer, appointed, storeId);
+        }
+        public StoreOwnertshipApprovalStatus CreateNewStoreAppoitmentApprovalStatus(int storeId, bool candidtaeStatus, string candidateName)
+        {
+            return new StoreOwnertshipApprovalStatus(storeId, candidtaeStatus, candidateName);
+        }
+        public UserStorePermissions CreateNewPermission(string userName, int StoreId, string PermissionName)
+        {
+            return new UserStorePermissions(userName, StoreId, PermissionName);
+        }
+        public List<UserStorePermissions> CreateNewPermissionSet(string userName, int StoreId, int[] permissionsNumbers)
+        {
+            List<UserStorePermissions> results = new List<UserStorePermissions>();
+            if(permissionsNumbers[0] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Comments));
+            }
+            if (permissionsNumbers[1] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Purchase));
+            }
+            if (permissionsNumbers[2] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Product));
+            }
+            if (permissionsNumbers[3] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.PurachsePolicy));
+            }
+            if (permissionsNumbers[4] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.DiscountPolicy));
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.DiscountPolicy));
+            }
+            return results;
+        }
+
+
 
     }
 }
