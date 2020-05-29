@@ -368,7 +368,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<int, string>(-1, ownershipAdded.Item2);
             }
             else
-            {
+            {        
                 stores.Add(nextStoreId, store);
                 //Version 2 Addition
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, nextStoreId);
