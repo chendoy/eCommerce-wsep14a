@@ -22,5 +22,10 @@ namespace Server.DAL.UserDb
             IsAdmin = isadmin;
             IsLoggedIn = isloggedin;
         }
+
+        public DbUser ()
+        {
+
+        }
     }
 }

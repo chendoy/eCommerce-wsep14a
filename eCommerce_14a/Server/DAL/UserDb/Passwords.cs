@@ -23,5 +23,10 @@ namespace Server.DAL.UserDb
             PwdHash = pwdhash;
         }
 
+        public DbPassword()
+        {
+
+        }
+
     }
 }

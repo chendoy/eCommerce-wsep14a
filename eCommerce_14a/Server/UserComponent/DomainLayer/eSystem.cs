@@ -56,8 +56,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public void loaddata()
         {
-            //List<User> users = DbManager.Instance
-            //UManagment.LoadUsers();
+            List<User> users = DbManager.Instance.GetAllUsers();
             List<Store> stores = DbManager.Instance.GetAllStores();
             StoreManagment.Instance.LoadStores(stores);
             // AppoitmentManager.Instance.LoadAppointments();

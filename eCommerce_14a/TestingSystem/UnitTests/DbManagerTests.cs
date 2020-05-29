@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Server.DAL;
+using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -31,6 +32,13 @@ namespace TestingSystem.DbManger_Tests
             List<Store> stores = DbManager.Instance.GetAllStores();
             int a = 1;
         }
-    
+
+        [TestMethod]
+        public void TestGetAllUsers()
+        {
+            List<User> useres = DbManager.Instance.GetAllUsers();
+            int a = 1;
+        }
+
     }
 }

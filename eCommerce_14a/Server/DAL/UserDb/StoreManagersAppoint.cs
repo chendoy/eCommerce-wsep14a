@@ -42,5 +42,10 @@ namespace Server.DAL.UserDb
             StoreId = storeid;
         }
 
+        public StoreManagersAppoint()
+        {
+
+        }
+
     }
 }

@@ -36,5 +36,10 @@ namespace Server.DAL.UserDb
             StoreId = storeid;
             Permission = permission;
         }
+
+        public UserStorePermissions()
+        {
+
+        }
     }
 }

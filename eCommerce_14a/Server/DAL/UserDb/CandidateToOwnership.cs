@@ -40,5 +40,10 @@ namespace Server.DAL.UserDb
             AppointerName = appointer;
             StoreId = storeid;
         }
+
+        public CandidateToOwnership()
+        {
+
+        }
     }
 }

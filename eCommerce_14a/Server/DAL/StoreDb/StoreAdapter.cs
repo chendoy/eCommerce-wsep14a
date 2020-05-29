@@ -18,10 +18,7 @@ namespace Server.DAL.StoreDb
            return new DbStore(s.Id,s.Rank, s.StoreName, s.ActiveStore);
         }
 
-        public DbProduct ToDbProduct(Product p)
-        {
-            return new DbProduct(p.Id, p.Details, p.Price, p.Name, p.Rank, p.Category, p.ImgUrl);
-        }
+
 
         public List<DbInventoryItem> ToInventoryItems(Inventory inventory, int storeid)
         {

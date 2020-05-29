@@ -76,7 +76,10 @@ namespace Server.DAL
             //Dictionary<string, string> name_and_hashes = new Dictionary<string, string>();
             foreach (DbPassword pass in passes)
             {
-                UserManager.Instance.Users_And_Hashes.Add(pass.UserName, pass.PwdHash);
+                if (!UserManager.Instance.Users_And_Hashes.ContainsKey(pass.UserName))
+                {
+                    UserManager.Instance.Users_And_Hashes.Add(pass.UserName, pass.PwdHash);
+                }
             }
             List<User> users = new List<User>();
             foreach (string user in usernames)
@@ -84,9 +87,16 @@ namespace Server.DAL
                 User usr = BuildUser(user);
                 if(usr.LoggedStatus())
                 {
-                    UserManager.Instance.Active_users.Add(user, usr);
+                    if (!UserManager.Instance.Active_users.ContainsKey(user))
+                    {
+                        UserManager.Instance.Active_users.Add(user, usr);
+
+                    }
                 }
-                UserManager.Instance.users.Add(user, usr);
+                if (!UserManager.Instance.users.ContainsKey(user))
+                {
+                    UserManager.Instance.users.Add(user, usr);
+                }
                 users.Add(usr);
             }
             return users;
@@ -297,14 +307,16 @@ namespace Server.DAL
         {
             DbStore dbStore = new DbStore(store.Id, store.Rank, store.StoreName, store.ActiveStore);
             dbConn.Stores.Add(dbStore);
-            //InsertInventory(store.Inventory, store.Id);  TODO: impl!
+            InsertInventory(store.Inventory, store.Id);
             InsertDiscountPolicy(store.DiscountPolicy, store.Id, parentId: null);
             InsertPurchasePolicy(store.PurchasePolicy, store.Id, parentId: null);
             InsertOwners(store.owners, store.Id);
             InsertManagers(store.managers, store.Id);
         }
 
-        private void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId)
+      
+
+        public void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId)
         {
             if (policyData.GetType() == typeof(ProductPurchasePolicy))
             {
@@ -388,7 +400,7 @@ namespace Server.DAL
             }
 
         }
-        private void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId)
+        public void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId)
         {
 
             if (discountPolicy.GetType() == typeof(ConditionalProductDiscount))
@@ -457,6 +469,18 @@ namespace Server.DAL
             }
         }
 
+        public void InsertPreCondition(DbPreCondition preCoondition)
+        {
+            dbConn.PreConditions.Add(preCoondition);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertProduct(DbProduct product)
+        {
+            dbConn.Products.Add(product);
+            dbConn.SaveChanges();
+        }
+
         private int GetDbDiscountPolicyId(DbDiscountPolicy dbDiscountPolicy, int storeId, int? precondition)
         {
             DbDiscountPolicy dbFromDb = dbConn.DiscountPolicies.Where(dbDiscount => dbDiscountPolicy.Discount == dbDiscount.Discount &
@@ -502,7 +526,7 @@ namespace Server.DAL
         {
             foreach(string owner in owners)
             {
-                InsertOwner(owner, storeId);
+                InsertOwner(new StoreOwner(storeId, owner));
             }
             dbConn.SaveChanges();
         }
@@ -511,31 +535,39 @@ namespace Server.DAL
         {
             foreach (string manager in managers)
             {
-                InsertManager(manager, storeId);
+                InsertManager(new StoreManager(storeId, manager));
             }
             dbConn.SaveChanges();
         }
 
-        private void InsertOwner(string ownerName, int storeId)
+        public void InsertOwner(StoreOwner owner)
         {
-            dbConn.StoreManagers.Add(new StoreManager(storeId, ownerName));
+            dbConn.StoreOwners.Add(owner);
+            dbConn.SaveChanges();
+        }
+
+        private void InsertManager(StoreManager manager)
+        {
+            dbConn.StoreManagers.Add(manager);
+            dbConn.SaveChanges();
+        }
+
+        
+        private void InsertInventory(Inventory inventory, int StoreId)
+        {
+            List<DbInventoryItem> inv_items = new List<DbInventoryItem>();
+            foreach (KeyValuePair<int, Tuple<Product, int>> entry in inventory.InvProducts)
+            {
+                InsretInventoryItem(new DbInventoryItem(StoreId, entry.Key, entry.Value.Item2));
+            }
 
         }
 
-        private void InsertManager(string managerName, int storeId)
+        public void InsretInventoryItem(DbInventoryItem invItem)
         {
-            dbConn.StoreManagers.Add(new StoreManager(storeId, managerName));
-
+            dbConn.InventoriesItmes.Add(invItem);
+            dbConn.SaveChanges();
         }
-
-        //private void InsertInventory(Inventory inventory, int StoreId)
-        //{
-        //    List<DbInventoryItem> inv_items = new List<DbInventoryItem>();
-        //    foreach (KeyValuePair<int, Tuple<Product, int>> entry in inventory.InvProducts)
-        //    {
-        //        inv_items.Add(new DbInventoryItem(StoreId, ent))
-        //    }
-        //}
 
         public List<Store> GetAllStores()
         {
@@ -668,5 +700,53 @@ namespace Server.DAL
         }
 
    
+        public void InsertUser(DbUser user)
+        {
+            dbConn.Users.Add(user);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertCandidateToOwnerShip(CandidateToOwnership candidate)
+        {
+            dbConn.CandidateToOwnerships.Add(candidate);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertNeedToApprove(NeedToApprove nta)
+        {
+            dbConn.NeedToApproves.Add(nta);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertPassword(DbPassword password)
+        {
+            dbConn.Passwords.Add(password);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertStoreManagerAppoint(StoreManagersAppoint sma)
+        {
+            dbConn.StoreManagersAppoints.Add(sma);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertStoreOwnershipAppoint(StoreOwnershipAppoint soa)
+        {
+            dbConn.StoreOwnershipAppoints.Add(soa);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertStoreOwnerShipApprovalStatus(StoreOwnertshipApprovalStatus soas)
+        {
+            dbConn.StoreOwnertshipApprovalStatuses.Add(soas);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertUserStorePermission(UserStorePermissions usp)
+        {
+            dbConn.UserStorePermissions.Add(usp);
+            dbConn.SaveChanges();
+        }
+
     }
 }

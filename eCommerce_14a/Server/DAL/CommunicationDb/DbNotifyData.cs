@@ -28,5 +28,10 @@ namespace Server.DAL.CommunicationDb
             UserName = name;
         }
 
+        public DbNotifyData()
+        {
+
+        }
+
     }
 }

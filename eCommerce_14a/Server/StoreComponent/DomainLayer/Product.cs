@@ -7,7 +7,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     {
         public int Id { set; get; }
         
-
         public double Price { set; get; }
 
         public string Details { set; get; }

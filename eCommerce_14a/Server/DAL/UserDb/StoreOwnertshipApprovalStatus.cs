@@ -35,6 +35,9 @@ namespace Server.DAL.UserDb
             Status = status;
         }
 
+        public StoreOwnertshipApprovalStatus()
+        {
 
+        }
     }
 }
