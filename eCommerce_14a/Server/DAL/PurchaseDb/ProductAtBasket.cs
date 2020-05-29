@@ -20,17 +20,30 @@ namespace Server.DAL.PurchaseDb
 
 
         [Key, ForeignKey("Product")]
-        [Column(Order = 4)]
+        [Column(Order = 2)]
         public int ProductId { set; get; }
         public DbProduct Product { set; get; }
 
+
+
+        [ForeignKey("Store")]
+        public int StoreId { set; get; }
+        public DbStore Store { set; get; }
+
+
         public int ProductAmount { set; get; }
 
-        public ProductAtBasket (int basketid, int productid, int productamount)
+        public ProductAtBasket (int basketid, int productid, int productamount, int storeId)
         {
+            StoreId = storeId;
             BasketId = basketid;
             ProductId = productid;
             ProductAmount = productamount;
+        }
+        
+        public ProductAtBasket()
+        {
+
         }
 
     }

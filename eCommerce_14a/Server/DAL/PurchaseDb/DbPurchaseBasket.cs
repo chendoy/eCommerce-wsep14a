@@ -42,5 +42,10 @@ namespace Server.DAL.PurchaseDb
             CartId = cartid;
         }
 
+        public DbPurchaseBasket()
+        {
+
+        }
+
     }
 }

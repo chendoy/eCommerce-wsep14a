@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.DAL.UserDb;
 using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
@@ -337,10 +339,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
+            {
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
+
+            }
             if (Store_Ownership.ContainsKey(storeId))
+            {
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
+            }
             Store_Ownership.Add(storeId, appointer);
+            
+            //DB Insert//
+            StoreOwnershipAppoint soa = new StoreOwnershipAppoint(appointer, this.Name, storeId);
+            DbManager.Instance.InsertStoreOwnershipAppoint(soa);
+
+
             return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes

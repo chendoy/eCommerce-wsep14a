@@ -25,5 +25,10 @@ namespace Server.DAL.PurchaseDb
             UserName = username;
             Price = price;
         }
+
+        public DbCart()
+        {
+
+        }
     }
 }

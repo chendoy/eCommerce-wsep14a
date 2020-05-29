@@ -367,6 +367,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             else
             {        
                 stores.Add(next_id, store);
+                
+                //DB Insert Store
+                DbManager.Instance.InsertStore(store);
+                
                 //Version 2 Addition
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
                 if (!ans.Item1)
@@ -421,6 +425,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return ans;
             if (!Publisher.Instance.RemoveSubscriptionStore(storeId))
                 return new Tuple<bool, string>(false,"Cannot Remove Subscription Store");
+
+            //DB addition 
+            DbManager.Instance.DeleteFullStore(stores[storeId]);
             stores.Remove(storeId);
             return new Tuple<bool, string>(true, "");
         }

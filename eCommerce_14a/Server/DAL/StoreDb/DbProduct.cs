@@ -12,6 +12,8 @@ namespace Server.DAL.StoreDb
         [Key]
         public int Id { set; get; }
 
+        public int StoreId { set; get; }
+
         public double Price { set; get; }
 
         public string Details { set; get; }
@@ -24,8 +26,9 @@ namespace Server.DAL.StoreDb
 
         public string ImgUrl { set; get; }
 
-        public DbProduct(string details = "this is product", double price = 100, string name = "", int rank = 3, string category = "Electricity", string imgUrl = "")
+        public DbProduct(int storeId,string details = "this is product", double price = 100, string name = "", int rank = 3, string category = "Electricity", string imgUrl = "")
         {
+            StoreId = storeId; 
             Details = details;
             Price = price;
             Name = name;

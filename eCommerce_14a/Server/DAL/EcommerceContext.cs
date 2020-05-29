@@ -102,15 +102,139 @@ namespace Server.DAL
            .WithMany()
            .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<NeedToApprove>()
+           .HasRequired(c => c.Approver)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<NeedToApprove>()
+           .HasRequired(c => c.Store)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StoreManagersAppoint>()
+           .HasRequired(c => c.Appointer)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
            modelBuilder.Entity<StoreManagersAppoint>()
+          .HasRequired(c => c.Appointed)
+          .WithMany()
+          .WillCascadeOnDelete(false);
+
+           modelBuilder.Entity<StoreManagersAppoint>()
+          .HasRequired(c => c.Store)
+          .WithMany()
+          .WillCascadeOnDelete(false);
+
+           modelBuilder.Entity<StoreOwnershipAppoint>()
            .HasRequired(c => c.Appointer)
            .WithMany()
            .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<StoreOwnershipAppoint>()
-            .HasRequired(c => c.Appointer)
+            .HasRequired(c => c.Appointed)
             .WithMany()
             .WillCascadeOnDelete(false);
+
+           modelBuilder.Entity<StoreOwnershipAppoint>()
+          .HasRequired(c => c.Store)
+          .WithMany()
+          .WillCascadeOnDelete(false);
+
+          modelBuilder.Entity<StoreOwnertshipApprovalStatus>()
+         .HasRequired(c => c.Candidate)
+         .WithMany()
+         .WillCascadeOnDelete(false);
+
+         modelBuilder.Entity<StoreOwnertshipApprovalStatus>()
+        .HasRequired(c => c.Store)
+        .WithMany()
+        .WillCascadeOnDelete(false);
+
+        modelBuilder.Entity<UserStorePermissions>()
+       .HasRequired(c => c.User)
+       .WithMany()
+       .WillCascadeOnDelete(false);
+
+        modelBuilder.Entity<UserStorePermissions>()
+            .HasRequired(c => c.Store)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DbDiscountPolicy>()
+                        .HasRequired(c => c.Store)
+                        .WithMany()
+                        .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DbInventoryItem>()
+                .HasRequired(c => c.Store)
+                .WithMany()
+                .WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<DbInventoryItem>()
+                .HasRequired(c => c.Product)
+                .WithMany()
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DbPurchasePolicy>()
+            .HasRequired(c => c.Store)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<DbNotifyData>()
+            .HasRequired(c => c.User)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+         modelBuilder.Entity<StoreOwner>()
+        .HasRequired(c => c.Owner)
+        .WithMany()
+        .WillCascadeOnDelete(false);
+
+
+         modelBuilder.Entity<StoreOwner>()
+        .HasRequired(c => c.Store)
+        .WithMany()
+        .WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<StoreManager>()
+        .HasRequired(c => c.Manager)
+        .WithMany()
+        .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<StoreManager>()
+        .HasRequired(c => c.Store)
+        .WithMany()
+        .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DbPurchaseBasket>()
+          .HasRequired(c => c.Store)
+          .WithMany()
+          .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DbPurchaseBasket>()
+         .HasRequired(c => c.Cart)
+         .WithMany()
+         .WillCascadeOnDelete(false);
+
+         modelBuilder.Entity<ProductAtBasket>()
+         .HasRequired(c => c.Product)
+         .WithMany()
+         .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ProductAtBasket>()
+            .HasRequired(c => c.Basket)
+            .WithMany()
+            .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<ProductAtBasket>()
+           .HasRequired(c => c.Store)
+           .WithMany()
+           .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
         }
