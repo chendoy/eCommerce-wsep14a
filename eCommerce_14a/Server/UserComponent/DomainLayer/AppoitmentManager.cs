@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.DAL.UserDb;
 using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
@@ -73,14 +75,26 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (appointer.isguest() || appointed.isguest())
                 return new Tuple<bool, string>(false, "One of the users is a Guest\n");
             //Remove this approvalRequest
-            appointer.INeedToApproveRemove(storeID, Appointed);
-            //Remove The Pending for the user
-            appointed.RemoveOtherApprovalRequest(storeID, owner);
+            if(appointer.INeedToApproveRemove(storeID, Appointed))
+            {
+                //Remove The Pending for the user
+                if (appointed.RemoveOtherApprovalRequest(storeID, owner))
+                {
+                    //Remove Need to Approve From DB
+                    DbManager.Instance.DeleteSingleApproval(AdapterUser.CreateNewApprovalNote(owner, Appointed, storeID));
+                }
+            }
             //Set to false if False and the operation will fail.
             if(!approval)
             {
                 appointed.SetApprovalStatus(storeID, approval);
+                //Update The Approval Status in the DB
+                StoreOwnertshipApprovalStatus status = DbManager.Instance.getApprovalStat(Appointed, storeID);
+                DbManager.Instance.UpdateApprovalStatus(status, approval);
+                //Remove MasterAppointer - Candidtae Table from DB
+                string masterNmae = appointed.MasterAppointer[storeID];
                 appointed.RemoveMasterAppointer(storeID);
+                DbManager.Instance.DeleteSingleCandidate(AdapterUser.CreateCandidate(masterNmae, Appointed, storeID));
                 return new Tuple<bool, string>(true, "User failed to become an owner");
             }
             if(appointed.CheckSApprovalStatus(storeID))
@@ -92,16 +106,29 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "Store Does not Exist");
                 }
                 appointed.RemoveApprovalStatus(storeID);
+                //Delete Approval Status from DB
+                StoreOwnertshipApprovalStatus status = DbManager.Instance.getApprovalStat(Appointed, storeID);
+                DbManager.Instance.DeleteSingleApprovalStatus(status);
+                //Add Store Ownership in store Liav is incharge of this
                 store.AddStoreOwner(appointed);
                 string Mappointer = appointed.MasterAppointer[storeID];
+                //Remove Candidation From DB
+                CandidateToOwnership cand = AdapterUser.CreateCandidate(Mappointer, Appointed, storeID);
+                DbManager.Instance.DeleteSingleCandidate(cand);
                 appointed.AppointerMasterAppointer(storeID);
+                appointed.addStoreOwnership(storeID, Mappointer);
+                //Add Store Ownership to DB
+                StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(Mappointer, Appointed, storeID);
+                DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
                 int[] p = { 1, 1, 1, 1, 1 };
                 appointed.setPermmisions(store.GetStoreId(), p);
+                //Add StorePermissions to DB
+                List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(Appointed, storeID, p);
+                DbManager.Instance.InsertUserStorePermissionSet(permissions);
+                //Adapter Will Insert EveryThing Needed
                 Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " is Approved"));
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(Appointed, storeID);
-                if (!ans.Item1)
-                    return ans;
-                return appointed.addStoreOwnership(storeID,Mappointer);
+                return ans;
             }
             return new Tuple<bool, string>(true, "User Still has some Work to do before he can become an Owner of this Store.");
 
@@ -145,20 +172,32 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 //Is ready to become Owner.
                 store.AddStoreOwner(appointed);
                 appointed.AppointerMasterAppointer(storeId);
+                //Remove Candidtation from DataBase
+                CandidateToOwnership cand = AdapterUser.CreateCandidate(owner, addto, storeId);
+                DbManager.Instance.DeleteSingleCandidate(cand);
+                appointed.addStoreOwnership(storeId, appointer.getUserName());
+                StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(owner, addto, storeId);
+                DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
                 int[] p = { 1, 1, 1, 1, 1 };
                 appointed.setPermmisions(store.GetStoreId(), p);
+                //Insert Permissions Into DB
+                List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
+                DbManager.Instance.InsertUserStorePermissionSet(permissions);
                 Publisher.Instance.Notify(addto, new NotifyData("Your request to be an Owner to Store - " + storeId + " is Approved"));
                 Tuple<bool, string> ansSuccess = Publisher.Instance.subscribe(addto, storeId);
-                if (!ansSuccess.Item1)
-                    return ansSuccess;
-                return appointed.addStoreOwnership(storeId,appointer.getUserName());
+                return ansSuccess;
             }
             appointed.SetApprovalStatus(storeId, true);
+            //Add AptovmentStatus to DB
+            DbManager.Instance.InsertStoreOwnerShipApprovalStatus(AdapterUser.CreateNewStoreAppoitmentApprovalStatus(storeId, true, addto));
+            //No need to Inser Here Approvals we will Insert in the Inner Loop by the Owners.
             appointed.InsertOtherApprovalRequest(storeId, owners);
             foreach(string storeOwner in owners)
             {
                 User tmpOwner = UM.GetUser(storeOwner);
                 tmpOwner.INeedToApproveInsert(storeId, addto);
+                //Insert Approval To DB
+                DbManager.Instance.InsertNeedToApprove(AdapterUser.CreateNewApprovalNote(storeOwner, addto, storeId));
                 Publisher.Instance.Notify(storeOwner, new NotifyData("User: " + addto + " Is want to Be store:" + storeId + " Owner Let him know what you think"));
 
             }
@@ -204,11 +243,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, addto + " Is already Store Owner or Manager\n");
             if (!store.IsStoreOwner(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
+            //Liav Will Insert In the correct Table in the DB here
             store.AddStoreManager(appointed);
             //appointed.addManagerAppointment(appointer, store.GetStoreId());
             Tuple<bool, string> res = appointed.addStoreManagment(store,owner);
+            //Insert StoreManager Appoint Into DB
+            DbManager.Instance.InsertStoreManagerAppoint(AdapterUser.CreateNewManagerAppoitment(owner, addto, storeId));
             int[] p = {1, 1, 0, 0, 0};
             appointed.setPermmisions(store.GetStoreId(), p);
+            //Insert Permissions into DB
+            List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
+            DbManager.Instance.InsertUserStorePermissionSet(permissions);
             //Version 2 Addition
             Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
             if (!ans.Item1)
@@ -247,17 +292,22 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, o + "Is not a store Owner\n");
             if (!manager.isAppointedByManager(owner, store.GetStoreId()) && !(manager.isAppointedByOwner(o, store.GetStoreId())))
                 return new Tuple<bool, string>(false, m + "Is not appointed by " + o + "to be store manager\n");
+            //Liav will delete from DB Here
             store.RemoveManager(manager);
             manager.RemoveStoreManagment(store.GetStoreId());
+            //Remove Store Manager Appoint From here
+            DbManager.Instance.DeleteSingleManager(AdapterUser.GetManagerNote(o, m, storeId));
+            int[] p = manager.Store_options[storeId];
             manager.RemovePermission(store.GetStoreId());
+            //Remove Permissions From DB
+            List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(m, storeId, p);
+            DbManager.Instance.DeletePermission(permissions);
             //Version 2 Addition
             Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a StoreID: "+storeId +" StoreName: "+store.GetName() +" Manager any More"));
             if (!message.Item1)
                 return message;
             Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(m, storeId);
-            if (!ans.Item1)
-                return ans;
-            return new Tuple<bool, string>(manager.RemoveStoreManagment(store.GetStoreId()),"");
+            return ans;
         }
 
         //Remove Store Owner New Function Vers.3
@@ -295,6 +345,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             List<User> OwnersToRemove = RemoveOwnerLoop(appointer, DemotedOwner, store);
             foreach(User Prevowner in OwnersToRemove)
             {
+                //Liav Remove from DB Here
                 store.RemoveOwner(Prevowner);
             }
             return new Tuple<bool, string>(true, PrevOwner + " Removed from store: - " + store.StoreName + "\n");
@@ -305,10 +356,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             List<User> OwnersToRemove = new List<User>();
             OwnersToRemove.Add(DemoteOwner);
             string OwnerRemovalMessage = "You have been Removed From Owner position in the Store " + store.StoreName +"By you appointer - "+appointer.getUserName()+"\n";
-            //Remove him from storeOwnership! Here
             //store.RemoveOwner(DemoteOwner);
             DemoteOwner.RemoveStoreOwner(store.GetStoreId());
+            //Remove Store Ownership from DB here
+            StoreOwnershipAppoint s = AdapterUser.GetOwnerNote(appointer.getUserName(), DemoteOwner.getUserName(), store.Id);
+            DbManager.Instance.DeleteSingleOwnership(s);
+            int[] p = DemoteOwner.Store_options[store.Id];
             DemoteOwner.RemovePermission(store.GetStoreId());
+            //Remove Owners Store Permissions from DB here
+            List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(DemoteOwner.getUserName(), store.Id, p);
+            DbManager.Instance.DeletePermission(permissions);
             Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(OwnerRemovalMessage));
             Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
             //DemoteOwner.RemoveAppoitmentOwner(appointer, store.GetStoreId());
@@ -323,14 +380,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 {
                     ManagersToRemove.Add(manager);
                     manager.RemoveStoreManagment(store.GetStoreId());
+                    //Remove Managment From DB
+                    DbManager.Instance.DeleteSingleManager(AdapterUser.GetManagerNote(DemoteOwner.getUserName(), managerName, store.Id));
+                    int[] pm = manager.Store_options[store.Id];
                     manager.RemovePermission(store.GetStoreId());
+                    //Remove Permissions From DB
+                    List<UserStorePermissions> perms = AdapterUser.CreateNewPermissionSet(managerName, store.GetStoreId(), pm);
+                    DbManager.Instance.DeletePermission(perms);
                     Publisher.Instance.Notify(manager.getUserName(), new NotifyData(Message));
                     Publisher.Instance.Unsubscribe(manager.getUserName(), store.GetStoreId());
-                    manager.RemoveStoreManagment(store.GetStoreId());
+                    //manager.RemoveStoreManagment(store.GetStoreId());
                 }
             }
             foreach(User manager in ManagersToRemove)
             {
+                //Liav Will Delete From DB Here
                 store.RemoveManager(manager);
             }
             foreach (string ownername in Owners)
@@ -375,6 +439,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, ownerS + "Is not a store Owner\n");
             if (!manager.isAppointedByManager(owner, store.GetStoreId()) && !(manager.isAppointedByOwner(ownerS, store.GetStoreId())))
                 return new Tuple<bool, string>(false, worker + "Is not appointed by " + ownerS + "to be store manager\n");
+            //Insert New Permissions TO DB will happen in SetPermissions func
+
             return manager.setPermmisions(store.GetStoreId(), permissions);
         }
         //Temp function for tests

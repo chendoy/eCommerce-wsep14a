@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.DAL;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -59,6 +60,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             List<User> users = DbManager.Instance.GetAllUsers();
             List<Store> stores = DbManager.Instance.GetAllStores();
             StoreManagment.Instance.LoadStores(stores);
+            Publisher.Instance.StoreSubscribers = DbManager.Instance.GetAllsubsribers();
             // AppoitmentManager.Instance.LoadAppointments();
 
         }

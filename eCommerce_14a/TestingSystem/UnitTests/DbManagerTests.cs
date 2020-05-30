@@ -119,7 +119,7 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void RemoveStorePermission()
         {
-            UserStorePermissions test = new UserStorePermissions("yossi", 1, CommonStr.MangerPermission.PurachsePolicy;
+            UserStorePermissions test = new UserStorePermissions("yossi", 1, CommonStr.MangerPermission.PurachsePolicy);
             DbManager.Instance.InsertUserStorePermission(test);
             DbManager.Instance.DeleteSinglePermission(test);
         }

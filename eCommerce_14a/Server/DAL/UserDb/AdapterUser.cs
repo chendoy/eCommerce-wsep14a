@@ -11,7 +11,7 @@ namespace Server.DAL.UserDb
 {
     public class AdapterUser
     {
-        public void InsertUserToDB(User user)
+        public static void InsertUserToDB(User user)
         {
             DbUser dbuser = new DbUser(user.getUserName(), user.isguest(), user.isSystemAdmin(), user.LoggedStatus());
             List<CandidateToOwnership> userOwnershipRequests = ConvertAllMasterAppointers(user);
@@ -22,15 +22,15 @@ namespace Server.DAL.UserDb
             List<StoreOwnertshipApprovalStatus> StoreOwnershipWatingForApproval = ConvertUsersOwnershipApprovalStatuses(user);
             List<UserStorePermissions> StorePermissionsSet = COnvertUsersPermissionsStores(user);
         }
-        public List<DbUser> GetAllUsersFlat()
+        public static List<DbUser> GetAllUsersFlat()
         {
             return DbManager.Instance.getAllDBUsers();
         }
-        public DbUser ConvertDBUser(User user)
+        public static DbUser ConvertDBUser(User user)
         {
             return new DbUser(user.getUserName(), user.isguest(), user.isSystemAdmin(), user.LoggedStatus());
         }
-        public List<CandidateToOwnership> ConvertAllMasterAppointers(User user)
+        public static List<CandidateToOwnership> ConvertAllMasterAppointers(User user)
         {
             List<CandidateToOwnership> userOwnershipRequests = new List<CandidateToOwnership>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.MasterAppointers))
@@ -47,7 +47,7 @@ namespace Server.DAL.UserDb
             return userOwnershipRequests;
 
         }
-        public List<NeedToApprove> ConvertUsersThatINeedToApprove(User user)
+        public static List<NeedToApprove> ConvertUsersThatINeedToApprove(User user)
         {
             List<NeedToApprove> UsersNeedToBeApprovedByuser = new List<NeedToApprove>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.IsNeedToApprove))
@@ -66,7 +66,7 @@ namespace Server.DAL.UserDb
             }
             return UsersNeedToBeApprovedByuser;
         }
-        public List<NeedToApprove> ConvertUsersThatTheyNeedToApprove(User user)
+        public static List<NeedToApprove> ConvertUsersThatTheyNeedToApprove(User user)
         {
             List<NeedToApprove> UsersNeedToApprovedThsUser = new List<NeedToApprove>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.TheyNeedApprove))
@@ -85,7 +85,7 @@ namespace Server.DAL.UserDb
             }
             return UsersNeedToApprovedThsUser;
         }
-        public List<StoreManagersAppoint> ConvertStoresUserManaging(User user)
+        public static List<StoreManagersAppoint> ConvertStoresUserManaging(User user)
         {
             List<StoreManagersAppoint> StoresUserIsManaging = new List<StoreManagersAppoint>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.ManageStores))
@@ -100,7 +100,7 @@ namespace Server.DAL.UserDb
             }
             return StoresUserIsManaging;
         }
-        public List<StoreOwnershipAppoint> ConvertStoresUserOwnes(User user)
+        public static List<StoreOwnershipAppoint> ConvertStoresUserOwnes(User user)
         {
             List<StoreOwnershipAppoint> StoresUserIsOwner = new List<StoreOwnershipAppoint>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.OwnStores))
@@ -115,7 +115,7 @@ namespace Server.DAL.UserDb
             }
             return StoresUserIsOwner;
         }
-        public List<StoreOwnertshipApprovalStatus> ConvertUsersOwnershipApprovalStatuses(User user)
+        public static List<StoreOwnertshipApprovalStatus> ConvertUsersOwnershipApprovalStatuses(User user)
         {
             List<StoreOwnertshipApprovalStatus> StoreOwnershipWatingForApproval = new List<StoreOwnertshipApprovalStatus>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.StoreApprovalStatus))
@@ -129,7 +129,7 @@ namespace Server.DAL.UserDb
             }
             return StoreOwnershipWatingForApproval;
         }
-        public List<UserStorePermissions> COnvertUsersPermissionsStores(User user)
+        public static List<UserStorePermissions> COnvertUsersPermissionsStores(User user)
         {
             List<UserStorePermissions> StorePermissionsSet = new List<UserStorePermissions>();
             if (user.IsListNotEmpty(CommonStr.UserListsOptions.Permmisions))
@@ -147,39 +147,39 @@ namespace Server.DAL.UserDb
             }
             return StorePermissionsSet;
         }
-        public DbUser CreateDBUser(string userName, bool isGuest, bool isAdmin, bool logStatus)
+        public static DbUser CreateDBUser(string userName, bool isGuest, bool isAdmin, bool logStatus)
         {
             return new DbUser(userName, isGuest, isAdmin, logStatus);
         }
-        public CandidateToOwnership CreateCandidate(string owner, string candidtaeName, int storeId)
+        public static CandidateToOwnership CreateCandidate(string owner, string candidtaeName, int storeId)
         {
             return new CandidateToOwnership(owner, candidtaeName, storeId);
         }
-        public NeedToApprove CreateNewApprovalNote(string approvaerName, string needtobeapproved, int storeId)
+        public static NeedToApprove CreateNewApprovalNote(string approvaerName, string needtobeapproved, int storeId)
         {
             return new NeedToApprove(approvaerName, needtobeapproved, storeId);
         }
-        public DbPassword CreateNewPasswordEntry(string userName, string sha5)
+        public static DbPassword CreateNewPasswordEntry(string userName, string sha5)
         {
             return new DbPassword(userName, sha5);
         }
-        public StoreManagersAppoint CreateNewManagerAppoitment(string appoiter, string appointed , int storeId)
+        public static StoreManagersAppoint CreateNewManagerAppoitment(string appoiter, string appointed , int storeId)
         {
             return new StoreManagersAppoint(appoiter, appointed, storeId);
         }
-        public StoreOwnershipAppoint CreateNewOwnerAppoitment(string appointer, string appointed, int storeId)
+        public static StoreOwnershipAppoint CreateNewOwnerAppoitment(string appointer, string appointed, int storeId)
         {
             return new StoreOwnershipAppoint(appointer, appointed, storeId);
         }
-        public StoreOwnertshipApprovalStatus CreateNewStoreAppoitmentApprovalStatus(int storeId, bool candidtaeStatus, string candidateName)
+        public static StoreOwnertshipApprovalStatus CreateNewStoreAppoitmentApprovalStatus(int storeId, bool candidtaeStatus, string candidateName)
         {
             return new StoreOwnertshipApprovalStatus(storeId, candidtaeStatus, candidateName);
         }
-        public UserStorePermissions CreateNewPermission(string userName, int StoreId, string PermissionName)
+        public static UserStorePermissions CreateNewPermission(string userName, int StoreId, string PermissionName)
         {
             return new UserStorePermissions(userName, StoreId, PermissionName);
         }
-        public List<UserStorePermissions> CreateNewPermissionSet(string userName, int StoreId, int[] permissionsNumbers)
+        public static List<UserStorePermissions> CreateNewPermissionSet(string userName, int StoreId, int[] permissionsNumbers)
         {
             List<UserStorePermissions> results = new List<UserStorePermissions>();
             if(permissionsNumbers[0] == 1)
@@ -205,7 +205,16 @@ namespace Server.DAL.UserDb
             }
             return results;
         }
-
+        public static StoreManagersAppoint GetManagerNote(string appointer,string appointed,int storeID)
+        {
+            StoreManagersAppoint s = new StoreManagersAppoint(appointer, appointed, storeID);
+            return DbManager.Instance.GetManagerAppoint(s);
+        }
+        public static StoreOwnershipAppoint GetOwnerNote(string appointer, string appointed, int storeID)
+        {
+            StoreOwnershipAppoint s = new StoreOwnershipAppoint(appointer, appointed, storeID);
+            return DbManager.Instance.GetOwnerAppoint(s);
+        }
 
 
     }

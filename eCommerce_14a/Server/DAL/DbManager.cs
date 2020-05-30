@@ -9,7 +9,7 @@ using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Reflection.PortableExecutable;
 
 namespace Server.DAL
 {
@@ -819,12 +819,36 @@ namespace Server.DAL
             List<DbPurchasePolicy> storePurchasePolicies = dbConn.PurchasePolicies.Where(policy => policy.StoreId == storeId).ToList();
             return storeAdpter.ComposePurchasePolicy(storePurchasePolicies);
         }
-        public void InsertUserNotification(NotifyData notification)
+        public void InsertUserNotification(DbNotifyData notification)
         {
-            //dbConn.Notifies.Add(notification);
-            //dbConn.SaveChanges();
+            dbConn.Notifies.Add(notification);
+            dbConn.SaveChanges();
         }
+        public void UpdateUserLogInStatus(string user,bool status)
+        {
+            DbUser usr = dbConn.Users.Where(u => u.Name == user).SingleOrDefault();
+            if(usr != null)
+            {
+                usr.IsLoggedIn = status;
+                dbConn.SaveChanges();
+            }
 
+        }
+        public StoreOwnertshipApprovalStatus getApprovalStat(string cand, int storeID)
+        {
+            StoreOwnertshipApprovalStatus s = dbConn.StoreOwnertshipApprovalStatuses.Where(u => u.CandidateName == cand && u.StoreId == storeID).SingleOrDefault();
+            return s;
+        }
+        public void UpdateApprovalStatus(StoreOwnertshipApprovalStatus aps, bool status)
+        {
+            StoreOwnertshipApprovalStatus s = dbConn.StoreOwnertshipApprovalStatuses.Where(u => u.CandidateName == aps.CandidateName && u.StoreId == aps.StoreId).SingleOrDefault();
+            if (s != null)
+            {
+                s.Status = status;
+                dbConn.SaveChanges();
+            }
+
+        }
         public  DbDiscountPolicy getParentDiscount(DbDiscountPolicy dbDiscountPolicy)
         {
             return dbConn.DiscountPolicies.Where(policy => policy.Id == dbDiscountPolicy.ParentId).FirstOrDefault();
@@ -895,7 +919,53 @@ namespace Server.DAL
             dbConn.Notifies.Add(ntfd);
             dbConn.SaveChanges();
         }
-        
+        public Dictionary<int,LinkedList<string>> GetAllsubsribers()
+        {
+            Dictionary<int, LinkedList<string>> subscruberList = new Dictionary<int, LinkedList<string>>();
+            List<StoreOwnershipAppoint> owners = dbConn.StoreOwnershipAppoints.ToList();
+            List<StoreManagersAppoint> managers = dbConn.StoreManagersAppoints.ToList();
+            foreach(StoreOwnershipAppoint on in owners)
+            {
+                if(!subscruberList.ContainsKey(on.StoreId))
+                {
+                    subscruberList.Add(on.StoreId, new LinkedList<string>());
+                    subscruberList[on.StoreId].AddFirst(on.AppointedName);
+                }
+                else
+                {
+                    if(!subscruberList[on.StoreId].Contains(on.AppointedName))
+                    {
+                        subscruberList[on.StoreId].AddFirst(on.AppointedName);
+                    }
+                }
+            }
+            foreach (StoreManagersAppoint on in managers)
+            {
+                if (!subscruberList.ContainsKey(on.StoreId))
+                {
+                    subscruberList.Add(on.StoreId, new LinkedList<string>());
+                    subscruberList[on.StoreId].AddFirst(on.AppointedName);
+                }
+                else
+                {
+                    if (!subscruberList[on.StoreId].Contains(on.AppointedName))
+                    {
+                        subscruberList[on.StoreId].AddFirst(on.AppointedName);
+                    }
+                }
+            }
+            return subscruberList;
+        }
+        public StoreManagersAppoint GetManagerAppoint(StoreManagersAppoint s)
+        {
+            return dbConn.StoreManagersAppoints.Find(s);
+        }
+        public StoreOwnershipAppoint GetOwnerAppoint(StoreOwnershipAppoint s)
+        {
+            return dbConn.StoreOwnershipAppoints.Find(s);
+        }
+
+
 
 
 
