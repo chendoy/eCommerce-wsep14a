@@ -9,6 +9,7 @@ using Server.Communication.DataObject;
 using Server.Communication.DataObject.ThinObjects;
 using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
+using Server.UserComponent.DomainLayer;
 
 namespace Client.Service
 {
@@ -19,15 +20,24 @@ namespace Client.Service
         {
             comm = new Communication();
             Time = DateTime.Now;
+            Permissions = new Dictionary<int, Permission>();
         }
 
         public DateTime Time { get; private set; }
-        
+        public Dictionary<int, Permission> Permissions { get; set; }
+
         public NotifierService NotifierService
         {
             get { return comm.NotifierService; }
         }
 
+        public void SetPermissions(Dictionary<int, int[]> permissions)
+        {
+            foreach (var item in permissions)
+            {
+                Permissions.Add(item.Key, new Permission(item.Value));
+            }
+        }
 
         async public Task<List<StoreData>> GetAllActiveStores()
         {
@@ -85,6 +95,10 @@ namespace Client.Service
             LogoutRequest request = new LogoutRequest(username);
             comm.SendRequest(request);
             LogoutResponse response = await comm.Get<LogoutResponse>();
+            if (response.Success)
+            {
+                Permissions = new Dictionary<int, Permission>();
+            }
             return response;
         }
 
