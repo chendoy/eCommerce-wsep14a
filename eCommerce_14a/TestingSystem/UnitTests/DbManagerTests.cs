@@ -11,6 +11,7 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using System.Data.Entity.Core.Metadata.Edm;
 using Server.DAL.UserDb;
 using eCommerce_14a.Utils;
+using Server.DAL.CommunicationDb;
 
 namespace TestingSystem.DbManger_Tests
 {
