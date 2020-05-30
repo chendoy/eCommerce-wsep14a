@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using eCommerce_14a.Communication;
 using eCommerce_14a.UserComponent.DomainLayer;
 using Server.DAL;
+using Server.DAL.CommunicationDb;
 
 namespace Server.UserComponent.Communication
 {
     public class Publisher
     {
-        private Dictionary<int, LinkedList<string>> StoreSubscribers;
+        public Dictionary<int, LinkedList<string>> StoreSubscribers { get; set; }
         private UserManager UM;
         private WssServer ws;
         Publisher()
@@ -118,7 +119,7 @@ namespace Server.UserComponent.Communication
                 {
                     user.AddMessage(notification);
                     //add message to db, thus user can get it later
-                    DbManager.Instance.InsertUserNotification(notification);
+                    DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
                 }
                 else
                 {
@@ -141,7 +142,7 @@ namespace Server.UserComponent.Communication
             {
                 user.AddMessage(notification);
                 //add message to db, thus user can get it later
-                DbManager.Instance.InsertUserNotification(notification);
+                DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
             }
             else
             {

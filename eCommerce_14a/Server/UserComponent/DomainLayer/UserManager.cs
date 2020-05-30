@@ -8,6 +8,8 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.UserComponent.Communication;
 using Server.DAL;
+using Server.DAL.UserDb;
+using Server.DAL.CommunicationDb;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -135,8 +137,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return ans;
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
+            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
             User System_Admin = new User(0, username, false, true);
             users.Add(username, System_Admin);
+            DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, true, false));
             return new Tuple<bool, string>(true, "");
         }
         //Register regular user to the system 
@@ -149,9 +153,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return ans;
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
+            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
             User nUser = new User(Available_ID, username, false);
             users.Add(username, nUser);
             //insert to user to db:
+            DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, false, false));
             Available_ID++;
             return new Tuple<bool, string>(true, "");
         }
@@ -163,6 +169,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 string Uname = addGuest();
                 return new Tuple<bool, string>(true, Uname);
+                //No need to Insert Guest to DB
             }
             Tuple<bool, string> ans = check_args(username, pass);
             if (!ans.Item1)
@@ -179,12 +186,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 if (tUser.LoggedStatus())
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
+                //Update LogginStatus
+                DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), true);
                 Active_users.Add(tUser.getUserName(), tUser);
                 if (tUser.HasPendingMessages()) 
                 {
                     List<NotifyData> messages = tUser.GetPendingMessages();
                     foreach (NotifyData msg in messages) 
                     {
+                        //Remove From DB Message
+                        DbManager.Instance.DeleteSingleMessage(AdapterCommunication.ConvertNotifyData(msg));
+                        //Try to send the message and if not recieved it will be enetred to DB Again inside Notify
                         Publisher.Instance.Notify(tUser.getUserName(), msg);
                         //tUser.RemovePendingMessage(msg);
                     }
@@ -211,12 +223,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Guest cannot Log out.\n");
             user.Logout();
             Active_users.Remove(user.getUserName());
+            //Change LogInStatus at DB
+            DbManager.Instance.UpdateUserLogInStatus(user.getUserName(), false);
             addGuest();
             return new Tuple<bool, string>(true, sname + " Logged out succesuffly\n");
         }
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+            //Add Guest DO not Require DB Changes
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             string tName = "Guest" + Available_ID;
             User nUser = new User(Available_ID, tName);

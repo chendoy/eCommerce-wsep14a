@@ -11,6 +11,7 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using System.Data.Entity.Core.Metadata.Edm;
 using Server.DAL.UserDb;
 using eCommerce_14a.Utils;
+using Server.DAL.CommunicationDb;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -50,18 +51,75 @@ namespace TestingSystem.DbManger_Tests
             int a = 1;
         }
 
-        [TestMethod]
-        public void InsertCandidate()
-        {
-            DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
-        }
+        //[TestMethod]
+        //public void InsertCandidate()
+        //{
+        //    DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
+        //}
+
 
 
         [TestMethod]
         public void RemoveCandidate()
         {
-            InsertCandidate();
-            DbManager.Instance.DeleteCandidate(DbManager.Instance.GetCandidate("yosi", 1));
+            DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
+            DbManager.Instance.DeleteSingleCandidate(DbManager.Instance.GetCandidate("yosi", 1));
+        }
+        [TestMethod]
+        public void RemoveDBUser()
+        {
+            DbUser test = new DbUser("Test1", false, false, false);
+            DbManager.Instance.InsertUser(test);
+            DbManager.Instance.DeleteUser(test);
+        }
+        [TestMethod]
+        public void RemovePassword()
+        {
+            DbPassword test = new DbPassword("Test1", "Test1");
+            DbManager.Instance.InsertPassword(test);
+            DbManager.Instance.DeletePass(test);
+        }
+        [TestMethod]
+        public void RemoveApproval()
+        {
+            NeedToApprove test = new NeedToApprove("liav", "yossi",1);
+            DbManager.Instance.InsertNeedToApprove(test);
+            DbManager.Instance.DeleteSingleApproval(test);
+        }
+        [TestMethod]
+        public void RemoveStoreManagerAppoint()
+        {
+            StoreManagersAppoint test = new StoreManagersAppoint("liav", "yossi", 1);
+            DbManager.Instance.InsertStoreManagerAppoint(test);
+            DbManager.Instance.DeleteSingleManager(test);
+        }
+        [TestMethod]
+        public void RemoveStoreOwnersAppoint()
+        {
+            StoreOwnershipAppoint test = new StoreOwnershipAppoint("liav", "yossi", 1);
+            DbManager.Instance.InsertStoreOwnershipAppoint(test);
+            DbManager.Instance.DeleteSingleOwnership(test);
+        }
+        [TestMethod]
+        public void RemoveApprovalStatus()
+        {
+            StoreOwnertshipApprovalStatus test = new StoreOwnertshipApprovalStatus(1, true, "yossi");
+            DbManager.Instance.InsertStoreOwnerShipApprovalStatus(test);
+            DbManager.Instance.DeleteSingleApprovalStatus(test);
+        }
+        [TestMethod]
+        public void RemoveNotifyMessage()
+        {
+            DbNotifyData test = new DbNotifyData("Test", "yossi");
+            DbManager.Instance.InsertUserNotification(test);
+            DbManager.Instance.DeleteSingleMessage(test);
+        }
+        [TestMethod]
+        public void RemoveStorePermission()
+        {
+            UserStorePermissions test = new UserStorePermissions("yossi", 1, CommonStr.MangerPermission.PurachsePolicy);
+            DbManager.Instance.InsertUserStorePermission(test);
+            DbManager.Instance.DeleteSinglePermission(test);
         }
 
         [TestMethod]

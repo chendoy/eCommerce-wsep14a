@@ -454,8 +454,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Null Argument\n");
             if (!isStorManager(store_id) && !isStoreOwner(store_id))
                 return new Tuple<bool, string>(false, "The user is not Store Manager or owner\n");
+            
             if (Store_options.ContainsKey(store_id))
+            {
+                int[] oldp = Store_options[store_id];
                 Store_options.Remove(store_id);
+                List<UserStorePermissions> perms = AdapterUser.CreateNewPermissionSet(Name, store_id, oldp);
+                DbManager.Instance.DeletePermission(perms);
+            }
+
+            List<UserStorePermissions> permsN = AdapterUser.CreateNewPermissionSet(Name, store_id, permission_set);
+            DbManager.Instance.InsertUserStorePermissionSet(permsN);
             Store_options.Add(store_id, permission_set);
             return new Tuple<bool, string>(true, "");
         }

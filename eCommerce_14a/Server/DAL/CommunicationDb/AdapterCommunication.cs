@@ -9,7 +9,7 @@ namespace Server.DAL.CommunicationDb
 {
     class AdapterCommunication
     {
-        public List<DbNotifyData> ConvertNotifyData(List<NotifyData> notifications)
+        public static List<DbNotifyData> ConvertNotifyData(List<NotifyData> notifications)
         {
             List<DbNotifyData> Notifications = new List<DbNotifyData>();
             foreach(NotifyData Message in notifications)
@@ -19,7 +19,7 @@ namespace Server.DAL.CommunicationDb
             return Notifications;
 
         }
-        public DbNotifyData ConvertNotifyData(NotifyData notification)
+        public static DbNotifyData ConvertNotifyData(NotifyData notification)
         {
             DbNotifyData DBnotification = new DbNotifyData(notification.Context, notification.UserName);
             return DBnotification;
