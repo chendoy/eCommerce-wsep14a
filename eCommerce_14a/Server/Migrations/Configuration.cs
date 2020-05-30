@@ -50,47 +50,104 @@
 
         }
 
+
+
+        private void AddInventories(EcommerceContext context)
+        {
+            var inventories = new List<DbInventoryItem>();
+            inventories.Add(new DbInventoryItem(1, 1, 100));
+            inventories.Add(new DbInventoryItem(1, 2, 1000));
+            inventories.Add(new DbInventoryItem(2, 3, 100));
+            inventories.Add(new DbInventoryItem(2, 4, 1000));
+            inventories.Add(new DbInventoryItem(3, 5, 100));
+            inventories.Add(new DbInventoryItem(3, 6, 1000));
+            inventories.Add(new DbInventoryItem(3, 17, 1000));
+            inventories.Add(new DbInventoryItem(4, 7, 100));
+            inventories.Add(new DbInventoryItem(4, 8, 1000));
+            inventories.Add(new DbInventoryItem(5, 9, 100));
+            inventories.Add(new DbInventoryItem(5, 10, 1000));
+            inventories.Add(new DbInventoryItem(6, 11, 100));
+            inventories.Add(new DbInventoryItem(6, 12, 1000));
+            inventories.Add(new DbInventoryItem(7, 13, 100));
+            inventories.Add(new DbInventoryItem(7, 14, 100));
+            inventories.Add(new DbInventoryItem(8, 15, 1000));
+            inventories.Add(new DbInventoryItem(8, 16, 1000));
+
+            inventories.ForEach(i => context.InventoriesItmes.Add(i));
+            context.SaveChanges();
+
+
+        }
+
+        private void AddProducts(EcommerceContext context)
+        {
+
+
+            var products = new List<DbProduct>();
+            products.Add(new DbProduct(1, "CoffeMachine", 1000, "Coffe Maker 3", 4, CommonStr.ProductCategoty.CoffeMachine)); //ID=1
+            products.Add(new DbProduct(1, "CoffeMachine", 100, "Coffe Maker 3", 3, CommonStr.ProductCategoty.CoffeMachine)); //ID=2
+            products.Add(new DbProduct(2, "Tv", 1000, "Samsung TV 3", 5, CommonStr.ProductCategoty.Consola)); //ID=3
+            products.Add(new DbProduct(2, "Dell Xps", 500, "Dell Xps 9560", 1, CommonStr.ProductCategoty.Computers)); //ID=4
+            products.Add(new DbProduct(3, "TRX cables", 100, "Trx v3", 2, CommonStr.ProductCategoty.Health)); //ID=5
+            products.Add(new DbProduct(3, "Healhy shake", 200, "Healthy shake v5", 3, CommonStr.ProductCategoty.Health));//ID=6
+            products.Add(new DbProduct(4, "Mixer", 1700, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=7
+            products.Add(new DbProduct(4, "Mixer", 1800, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=8
+            products.Add(new DbProduct(5, "Mixer", 1900, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=9
+            products.Add(new DbProduct(5, "Mixer", 2000, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=10
+            products.Add(new DbProduct(6, "Blender", 1755, "MegaBlender v3", 4, CommonStr.ProductCategoty.Kitchen)); //ID=11
+            products.Add(new DbProduct(6, "Disposer", 1555.5, "MegaDisposer v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=12
+            products.Add(new DbProduct(7, "Dust Cleaner", 3000, "Irobot roomba", 5, CommonStr.ProductCategoty.Cleaning)); //ID=13
+            products.Add(new DbProduct(7,"Dust Cleaner", 4000, "Dyson Animal v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=14
+            products.Add(new DbProduct(8,"Dust Cleaner", 5000, "Dyson Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=15
+            products.Add(new DbProduct(8, "Dust Cleaner", 1000, "Xiaomi Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=16
+            products.Add(new DbProduct(3, "Dust Cleaner", 2000, "Xiaomi Absoulue v12", 5, CommonStr.ProductCategoty.Cleaning)); //ID=17
+            products.ForEach(p => context.Products.Add(p));
+            context.SaveChanges();
+        }
+
+
         private void AddProductAtBasket(EcommerceContext context)
         {
             var product_atbasket = new List<ProductAtBasket>();
-            product_atbasket.Add(new ProductAtBasket(basketid: 1, productid: 2, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 2, productid: 2, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 3, productid: 5, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 4, productid: 7, productamount: 2));
-            product_atbasket.Add(new ProductAtBasket(basketid: 5, productid: 16, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 6, productid: 17, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 7, productid: 14, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 8, productid: 15, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 9, productid: 7, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 10, productid: 6, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(basketid: 10, productid: 8, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 2, basketid: 1, productid: 3, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 3, basketid: 2, productid: 5, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 4, basketid: 3, productid: 7, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 5, basketid: 4, productid: 10, productamount: 2));
+            product_atbasket.Add(new ProductAtBasket(storeId: 6, basketid: 5, productid: 11, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 6, basketid: 6, productid: 12, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 8, basketid: 7, productid: 15, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 8, basketid: 8, productid: 16, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 3, basketid: 9, productid: 6, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 3, basketid: 9, productid: 17, productamount: 1));
+
+
             product_atbasket.ForEach(pab => context.ProductsAtBaskets.Add(pab));
             context.SaveChanges();
         }
+      
 
         private void AddBaskets(EcommerceContext context)
         {
             var baskets = new List<DbPurchaseBasket>();
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 2, basketprice: 100,// ID = 1
+            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 2, basketprice: 1000,// ID = 1
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 1));
             baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 3, basketprice: 100, // ID = 2
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 1));
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 4, basketprice: 100, // ID = 3
+            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 4, basketprice: 1700, // ID = 3
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 18, minute: 10, second: 10), cartid: 1));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 5, basketprice: 3400, // ID = 4
+            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 5, basketprice: 4000, // ID = 4
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 20, hour: 15, minute: 10, second: 10), cartid: 2));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 6, basketprice: 1000, // ID = 5
+            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 6, basketprice: 1755, // ID = 5
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 3));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 6, basketprice: 2000,  // ID = 6
+            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 6, basketprice: 1555.5,  // ID = 6
                                          purchasetime: new DateTime(year: 2020, month: 5, day: 22, hour: 15, minute: 10, second: 10), cartid: 3));
-            baskets.Add(new DbPurchaseBasket(username: "Guy", storeid: 8, basketprice: 4000,  // ID = 7
+            baskets.Add(new DbPurchaseBasket(username: "Guy", storeid: 8, basketprice: 5000,  // ID = 7
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 4));
-            baskets.Add(new DbPurchaseBasket(username: "Guy", storeid: 8, basketprice: 5000,  // ID = 8
+            baskets.Add(new DbPurchaseBasket(username: "Guy", storeid: 8, basketprice: 1000,  // ID = 8
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 4));
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 5, basketprice: 1700, // ID = 9
+            baskets.Add(new DbPurchaseBasket(username: "Naor", storeid: 3, basketprice: 2200,  // ID = 9
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 13, hour: 15, minute: 10, second: 10), cartid: 5));
-            baskets.Add(new DbPurchaseBasket(username: "Naor", storeid: 3, basketprice: 2000,  // ID = 10
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 13, hour: 15, minute: 10, second: 10), cartid: 6));
+
             baskets.ForEach(b => context.Baskets.Add(b));
             context.SaveChanges();
         }
@@ -98,12 +155,12 @@
         private void AddCarts(EcommerceContext context)
         {
             var carts = new List<DbCart>();
-            carts.Add(new DbCart("Liav", 300)); //ID = 1
-            carts.Add(new DbCart("Sundy", 3400)); // ID = 2
-            carts.Add(new DbCart("Sundy", 3000)); // ID =3
-            carts.Add(new DbCart("Guy", 9000)); // ID =4
-            carts.Add(new DbCart("Liav", 1700)); // ID =5
-            carts.Add(new DbCart("Naor", 2000)); // ID = 6
+            carts.Add(new DbCart("Liav", 2800)); //ID = 1
+            carts.Add(new DbCart("Sundy", 4000)); // ID = 2
+            carts.Add(new DbCart("Sundy", 3310.5)); // ID =3
+            carts.Add(new DbCart("Guy", 6000)); // ID =4
+            carts.Add(new DbCart("Naor", 2200)); // ID = 5
+
             carts.ForEach(c => context.Carts.Add(c));
             context.SaveChanges();
         }
@@ -135,6 +192,69 @@
                                                      buyerusername: null,
                                                      purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy
                                                      )); // ID=3
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 2,
+                                              mergetype: null, //not compund policy, there is no mergetype
+                                              parentid: null, // if parent id is null then it's a root purchasepolicy
+                                              preconditionid: 7, // default purchasePolicy allways true!
+                                              policyproductid: null,
+                                              buyerusername: null,
+                                              purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                              )); // ID=4
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 3,
+                                           mergetype: null, //not compund policy, there is no mergetype
+                                           parentid: null, // if parent id is null then it's a root purchasepolicy
+                                           preconditionid: 7, // default purchasePolicy allways true!
+                                           policyproductid: null,
+                                           buyerusername: null,
+                                           purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                           )); // ID=5
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 4,
+                                           mergetype: null, //not compund policy, there is no mergetype
+                                           parentid: null, // if parent id is null then it's a root purchasepolicy
+                                           preconditionid: 7, // default purchasePolicy allways true!
+                                           policyproductid: null,
+                                           buyerusername: null,
+                                           purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                           )); // ID=6
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 5,
+                                           mergetype: null, //not compund policy, there is no mergetype
+                                           parentid: null, // if parent id is null then it's a root purchasepolicy
+                                           preconditionid: 7, // default purchasePolicy allways true!
+                                           policyproductid: null,
+                                           buyerusername: null,
+                                           purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                           )); // ID=7
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 6,
+                                           mergetype: null, //not compund policy, there is no mergetype
+                                           parentid: null, // if parent id is null then it's a root purchasepolicy
+                                           preconditionid: 7, // default purchasePolicy allways true!
+                                           policyproductid: null,
+                                           buyerusername: null,
+                                           purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                           )); // ID=8
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 7,
+                                           mergetype: null, //not compund policy, there is no mergetype
+                                           parentid: null, // if parent id is null then it's a root purchasepolicy
+                                           preconditionid: 7, // default purchasePolicy allways true!
+                                           policyproductid: null,
+                                           buyerusername: null,
+                                           purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                           )); // ID=9
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 8,
+                                           mergetype: null, //not compund policy, there is no mergetype
+                                           parentid: null, // if parent id is null then it's a root purchasepolicy
+                                           preconditionid: 7, // default purchasePolicy allways true!
+                                           policyproductid: null,
+                                           buyerusername: null,
+                                           purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
+                                           )); // ID=10
 
             purchasepolicies.ForEach(pp => context.PurchasePolicies.Add(pp));
             context.SaveChanges();
@@ -189,6 +309,82 @@
                                                       discount: 10,
                                                       discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
                                                       )); // ID=5
+
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 1,
+                                                      mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                      parentId: 1,
+                                                      preconditionid: 3,
+                                                      discountproductid: null,
+                                                      discount: 10,
+                                                      discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                      )); // ID=5
+
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 2,
+                                                      mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                      parentId: null,
+                                                      preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                      discountproductid: null,
+                                                      discount: 0,
+                                                      discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                      )); // ID=6
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 3,
+                                                    mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                    parentId: null,
+                                                    preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                    discountproductid: null,
+                                                    discount: 0,
+                                                    discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                    )); // ID=7
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 4,
+                                                    mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                    parentId: null,
+                                                    preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                    discountproductid: null,
+                                                    discount: 0,
+                                                    discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                    )); // ID=8
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 5,
+                                                    mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                    parentId: null,
+                                                    preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                    discountproductid: null,
+                                                    discount: 0,
+                                                    discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                    )); // ID=9
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 6,
+                                                    mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                    parentId: null,
+                                                    preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                    discountproductid: null,
+                                                    discount: 0,
+                                                    discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                    )); // ID=10
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 7,
+                                                    mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                    parentId: null,
+                                                    preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                    discountproductid: null,
+                                                    discount: 0,
+                                                    discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                    )); // ID=11
+
+            discountPolicies.Add(new DbDiscountPolicy(storeid: 8,
+                                                    mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                    parentId: null,
+                                                    preconditionid: 4,  //Default DiscountPolicy -> 0% discount!
+                                                    discountproductid: null,
+                                                    discount: 0,
+                                                    discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount
+                                                    )); // ID=12
+
+
             discountPolicies.ForEach(dp => context.DiscountPolicies.Add(dp));
             context.SaveChanges();
 
@@ -248,56 +444,8 @@
             context.SaveChanges();
         }
 
-        private void AddInventories(EcommerceContext context)
-        {
-            var inventories = new List<DbInventoryItem>();
-            inventories.Add(new DbInventoryItem(1, 1, 100));
-            inventories.Add(new DbInventoryItem(1, 3, 1000));
-            inventories.Add(new DbInventoryItem(2, 2, 100));
-            inventories.Add(new DbInventoryItem(2, 5, 1000));
-            inventories.Add(new DbInventoryItem(3, 8, 100));
-            inventories.Add(new DbInventoryItem(3, 6, 1000));
-            inventories.Add(new DbInventoryItem(4, 9, 100));
-            inventories.Add(new DbInventoryItem(4, 4, 1000));
-            inventories.Add(new DbInventoryItem(5, 7, 100));
-            inventories.Add(new DbInventoryItem(5, 11, 1000));
-            inventories.Add(new DbInventoryItem(6, 12, 100));
-            inventories.Add(new DbInventoryItem(6, 13, 1000));
-            inventories.Add(new DbInventoryItem(6, 16, 1000));
-            inventories.Add(new DbInventoryItem(6, 17, 1000));
-            inventories.Add(new DbInventoryItem(8, 14, 100));
-            inventories.Add(new DbInventoryItem(8, 15, 1000));
-            inventories.ForEach(i => context.InventoriesItmes.Add(i));
-            context.SaveChanges();
 
-
-        }
-
-        private void AddProducts(EcommerceContext context)
-        {
-
-
-            var products = new List<DbProduct>();
-            products.Add(new DbProduct("CoffeMachine", 1000, "Coffe Maker 3", 4, CommonStr.ProductCategoty.CoffeMachine));
-            products.Add(new DbProduct("CoffeMachine", 100, "Coffe Maker 3", 3, CommonStr.ProductCategoty.CoffeMachine));
-            products.Add(new DbProduct("Tv", 1000, "Samsung TV 3", 5, CommonStr.ProductCategoty.Consola));
-            products.Add(new DbProduct("Dell Xps", 10000, "Dell Xps 9560", 1, CommonStr.ProductCategoty.Computers));
-            products.Add(new DbProduct("TRX cables", 100, "Trx v3", 2, CommonStr.ProductCategoty.Health));
-            products.Add(new DbProduct("Healhy shake", 200, "Healthy shake v5", 3, CommonStr.ProductCategoty.Health));
-            products.Add(new DbProduct("Mixer", 1700, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));
-            products.Add(new DbProduct("Mixer", 1800, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));
-            products.Add(new DbProduct("Mixer", 1900, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));
-            products.Add(new DbProduct("Mixer", 2000, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));
-            products.Add(new DbProduct("Blender", 1755, "MegaBlender v3", 4, CommonStr.ProductCategoty.Kitchen));
-            products.Add(new DbProduct("Disposer", 1555.5, "MegaDisposer v6", 5, CommonStr.ProductCategoty.Kitchen));
-            products.Add(new DbProduct("Dust Cleaner", 3000, "Irobot roomba", 5, CommonStr.ProductCategoty.Cleaning));
-            products.Add(new DbProduct("Dust Cleaner", 4000, "Dyson Animal v11", 5, CommonStr.ProductCategoty.Cleaning));
-            products.Add(new DbProduct("Dust Cleaner", 5000, "Dyson Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning));
-            products.Add(new DbProduct("Dust Cleaner", 1000, "Xiaomi Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning));
-            products.Add(new DbProduct("Dust Cleaner", 2000, "Xiaomi Absoulue v12", 5, CommonStr.ProductCategoty.Cleaning));
-            products.ForEach(p => context.Products.Add(p));
-            context.SaveChanges();
-        }
+      
 
         private void AddApprovalStatus(EcommerceContext context)
         {

@@ -10,10 +10,7 @@ using Server.DAL;
 using eCommerce_14a.UserComponent.DomainLayer;
 using System.Data.Entity.Core.Metadata.Edm;
 using Server.DAL.UserDb;
-using System.Security.AccessControl;
 using eCommerce_14a.Utils;
-using System.Data.Entity.Core.Common.CommandTrees;
-using Server.DAL.CommunicationDb;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -122,6 +119,33 @@ namespace TestingSystem.DbManger_Tests
             UserStorePermissions test = new UserStorePermissions("yossi", 1, CommonStr.MangerPermission.PurachsePolicy);
             DbManager.Instance.InsertUserStorePermission(test);
             DbManager.Instance.DeleteSinglePermission(test);
+        }
+
+        [TestMethod]
+        public void InsertStore_t1()
+        {
+            Dictionary<string, object> storeParam = new Dictionary<string, object>();
+            int next_id = DbManager.Instance.GetNextStoreId();
+            storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
+            storeParam.Add(CommonStr.StoreParams.StoreName, "shopiShop");
+            storeParam.Add(CommonStr.StoreParams.mainOwner, "liav");
+            Store store = new Store(storeParam);
+            DbManager.Instance.InsertStore(store);
+
+        }
+
+        [TestMethod]
+        public Store TestGetStore(int sid=9)
+        {
+            return DbManager.Instance.GetStore(sid);
+        }
+
+        [TestMethod]
+        public void TestDeleteFullStore_t1()
+        {
+            Store s = TestGetStore(1);
+            DbManager.Instance.DeleteFullStore(s);
+
         }
 
 

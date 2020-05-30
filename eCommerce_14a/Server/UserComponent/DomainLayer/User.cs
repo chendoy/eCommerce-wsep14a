@@ -339,10 +339,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
+            {
                 return new Tuple<bool, string>(false, "Guest user cannot be store Owner\n");
+
+            }
             if (Store_Ownership.ContainsKey(storeId))
+            {
                 return new Tuple<bool, string>(false, getUserName() + " is already store Owner\n");
+            }
             Store_Ownership.Add(storeId, appointer);
+            
+            //DB Insert//
+            StoreOwnershipAppoint soa = new StoreOwnershipAppoint(appointer, this.Name, storeId);
+            DbManager.Instance.InsertStoreOwnershipAppoint(soa);
+
+
             return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions);
         }
         //Version 2 changes

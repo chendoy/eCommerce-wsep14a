@@ -19,8 +19,8 @@
                         PurchaseTime = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.DbCarts", t => t.CartId, cascadeDelete: true)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbCarts", t => t.CartId)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .ForeignKey("dbo.DbUsers", t => t.UserName)
                 .Index(t => t.UserName)
                 .Index(t => t.CartId)
@@ -92,7 +92,7 @@
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DbPreConditions", t => t.PreConditionId)
                 .ForeignKey("dbo.DbProducts", t => t.DiscountProductId)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.StoreId)
                 .Index(t => t.PreConditionId)
                 .Index(t => t.DiscountProductId);
@@ -112,6 +112,7 @@
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        StoreId = c.Int(nullable: false),
                         Price = c.Double(nullable: false),
                         Details = c.String(),
                         Rank = c.Int(nullable: false),
@@ -130,8 +131,8 @@
                         Amount = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.StoreId, t.ProductId })
-                .ForeignKey("dbo.DbProducts", t => t.ProductId, cascadeDelete: true)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbProducts", t => t.ProductId)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.StoreId)
                 .Index(t => t.ProductId);
             
@@ -144,9 +145,9 @@
                         CandiateName = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.ApproverName, t.StoreId, t.CandiateName })
-                .ForeignKey("dbo.DbUsers", t => t.ApproverName, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.ApproverName)
                 .ForeignKey("dbo.DbUsers", t => t.CandiateName)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.ApproverName)
                 .Index(t => t.StoreId)
                 .Index(t => t.CandiateName);
@@ -160,7 +161,7 @@
                         Context = c.String(),
                     })
                 .PrimaryKey(t => new { t.Id, t.UserName })
-                .ForeignKey("dbo.DbUsers", t => t.UserName, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.UserName)
                 .Index(t => t.UserName);
             
             CreateTable(
@@ -180,13 +181,16 @@
                     {
                         BasketId = c.Int(nullable: false),
                         ProductId = c.Int(nullable: false),
+                        StoreId = c.Int(nullable: false),
                         ProductAmount = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.BasketId, t.ProductId })
-                .ForeignKey("dbo.DbPurchaseBaskets", t => t.BasketId, cascadeDelete: true)
-                .ForeignKey("dbo.DbProducts", t => t.ProductId, cascadeDelete: true)
+                .ForeignKey("dbo.DbPurchaseBaskets", t => t.BasketId)
+                .ForeignKey("dbo.DbProducts", t => t.ProductId)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.BasketId)
-                .Index(t => t.ProductId);
+                .Index(t => t.ProductId)
+                .Index(t => t.StoreId);
             
             CreateTable(
                 "dbo.DbPurchasePolicies",
@@ -205,7 +209,7 @@
                 .ForeignKey("dbo.DbUsers", t => t.BuyerUserName)
                 .ForeignKey("dbo.DbPreConditions", t => t.PreConditionId)
                 .ForeignKey("dbo.DbProducts", t => t.PolicyProductId)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.StoreId)
                 .Index(t => t.PreConditionId)
                 .Index(t => t.PolicyProductId)
@@ -219,8 +223,8 @@
                         StoreId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.ManagerName, t.StoreId })
-                .ForeignKey("dbo.DbUsers", t => t.ManagerName, cascadeDelete: true)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.ManagerName)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.ManagerName)
                 .Index(t => t.StoreId);
             
@@ -233,9 +237,9 @@
                         AppointedName = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.AppointerName, t.StoreId, t.AppointedName })
-                .ForeignKey("dbo.DbUsers", t => t.AppointedName, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.AppointedName)
                 .ForeignKey("dbo.DbUsers", t => t.AppointerName)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.AppointerName)
                 .Index(t => t.StoreId)
                 .Index(t => t.AppointedName);
@@ -248,8 +252,8 @@
                         StoreId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.OwnerName, t.StoreId })
-                .ForeignKey("dbo.DbUsers", t => t.OwnerName, cascadeDelete: true)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.OwnerName)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.OwnerName)
                 .Index(t => t.StoreId);
             
@@ -262,9 +266,9 @@
                         AppointedName = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.AppointerName, t.StoreId, t.AppointedName })
-                .ForeignKey("dbo.DbUsers", t => t.AppointedName, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.AppointedName)
                 .ForeignKey("dbo.DbUsers", t => t.AppointerName)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.AppointerName)
                 .Index(t => t.StoreId)
                 .Index(t => t.AppointedName);
@@ -278,8 +282,8 @@
                         Status = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => new { t.StoreId, t.CandidateName })
-                .ForeignKey("dbo.DbUsers", t => t.CandidateName, cascadeDelete: true)
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
+                .ForeignKey("dbo.DbUsers", t => t.CandidateName)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.StoreId)
                 .Index(t => t.CandidateName);
             
@@ -292,8 +296,8 @@
                         Permission = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => new { t.UserName, t.StoreId, t.Permission })
-                .ForeignKey("dbo.DbStores", t => t.StoreId, cascadeDelete: true)
-                .ForeignKey("dbo.DbUsers", t => t.UserName, cascadeDelete: true)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
+                .ForeignKey("dbo.DbUsers", t => t.UserName)
                 .Index(t => t.UserName)
                 .Index(t => t.StoreId);
             
@@ -319,6 +323,7 @@
             DropForeignKey("dbo.DbPurchasePolicies", "PolicyProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbPurchasePolicies", "PreConditionId", "dbo.DbPreConditions");
             DropForeignKey("dbo.DbPurchasePolicies", "BuyerUserName", "dbo.DbUsers");
+            DropForeignKey("dbo.ProductAtBaskets", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.ProductAtBaskets", "ProductId", "dbo.DbProducts");
             DropForeignKey("dbo.ProductAtBaskets", "BasketId", "dbo.DbPurchaseBaskets");
             DropForeignKey("dbo.DbPasswords", "UserName", "dbo.DbUsers");
@@ -356,6 +361,7 @@
             DropIndex("dbo.DbPurchasePolicies", new[] { "PolicyProductId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "PreConditionId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "StoreId" });
+            DropIndex("dbo.ProductAtBaskets", new[] { "StoreId" });
             DropIndex("dbo.ProductAtBaskets", new[] { "ProductId" });
             DropIndex("dbo.ProductAtBaskets", new[] { "BasketId" });
             DropIndex("dbo.DbPasswords", new[] { "UserName" });

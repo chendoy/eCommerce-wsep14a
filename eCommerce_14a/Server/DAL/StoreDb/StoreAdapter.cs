@@ -18,38 +18,11 @@ namespace Server.DAL.StoreDb
            return new DbStore(s.Id,s.Rank, s.StoreName, s.ActiveStore);
         }
 
-
-
-        public List<DbInventoryItem> ToInventoryItems(Inventory inventory, int storeid)
+        public DbInventoryItem ToDbInventoryItem(int productId, int amount, int storeId)
         {
-            List<DbInventoryItem> inv_items = new List<DbInventoryItem>();
-            foreach(KeyValuePair<int, Tuple<Product, int>> entry in inventory.Inv)
-            {
-                inv_items.Add(new DbInventoryItem(storeid, entry.Key, entry.Value.Item2));
-            }
-            return inv_items;
+            return new DbInventoryItem(storeId, productId, amount);
         }
 
-        public List<StoreOwner> ToDbStoreOwnerList(List<User> owners, int storeid)
-        {
-            List<StoreOwner> dbStoreOwners = new List<StoreOwner>();
-            foreach(User user in owners)
-            {
-                dbStoreOwners.Add(new StoreOwner(storeid, user.Name));
-            }
-            return dbStoreOwners;
-        }
-
-
-        public List<StoreManager> ToDbStoreManagersList(List<User> owners, int storeid)
-        {
-            List<StoreManager> dbStoreManagers = new List<StoreManager>();
-            foreach (User user in owners)
-            {
-                dbStoreManagers.Add(new StoreManager(storeid, user.Name));
-            }
-            return dbStoreManagers;
-        }
         
         public DbPreCondition ToDbDiscountPreCondition(DiscountPreCondition preCondition)
         {
