@@ -153,13 +153,42 @@
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Discounts">
-            <h2>Available discounts</h2>
 
-            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discounts" Data="@discounts" TextProperty="Value" ValueProperty="Value" Style="margin-bottom: 20px; height:200px; width:400px;" />
+            <div class="row">
+
+                <div class="col-md-4">
+                    <h2>Available discounts</h2>
+                    <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@discounts" TextProperty="Value" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+
+                </div>
+                <&nbsp></&nbsp>
+
+                <div class="col-md-4">
+                    <h2>Picked discounts</h2>
+                    <RadzenCard style="overflow: auto;height:250px;">
+                        @foreach (var e in events.OrderByDescending(i => i.Key))
+                        {
+                            @e.Value
+                            <br />
+                        }
+                    </RadzenCard>
+                </div>
+
+            </div>
+
 
             <h2>Your new composite discount </h2>
 
-            <RadzenTextArea Placeholder="Enter here..." Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px"; />
+            <RadzenTextArea Placeholder="Enter here..." Cols="50" Rows="3" Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+
+            <div class="error-msg" style="text-align:left; font-weight:bold">
+                <span>@errorMsg</span>
+            </div>
+
+            <div class="success-msg" style="text-align:left; font-weight:bold">
+                <span>@successMsg</span>
+            </div>
+
         </RadzenTabsItem>
 
         <RadzenTabsItem Text="Purchases">
@@ -387,6 +416,8 @@
     private string selectedUser;
     private string selectedRole;
     private string selectedOption;
+    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+    KeyValuePair<int, string> value = new KeyValuePair<int, string> (1, "discount");
 
 
     protected async override Task OnInitializedAsync()
@@ -399,6 +430,8 @@
         staffList = staff.ToList();
         InventoryData invData = await service.GetStoresInventory(StoreId);
         inventory = invData.invProducts;
+        Dictionary<int, string> discountsDict = await service.GetRawDiscounts();
+        discounts = discountsDict.ToList();
     }
 
     public class Product
@@ -438,9 +471,21 @@
         //
     }
 
-    private void ParseDiscountText(object discount)
+    async private void ParseDiscountText(object discount)
     {
+        string discountText = (string)discount;
+        SuccessFailResponse response = await service.UpdateDiscountPolicy(StoreId, loggedInUser, discountText);
 
+        if (response.Success)
+        {
+            successMsg = "Discount added successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
     }
 
 
@@ -579,6 +624,17 @@
             errorMsg = response.Error;
         }
 
+    }
+
+    void Change(object value)
+    {
+        KeyValuePair<int, string> discount = ((KeyValuePair<int, string>)value);
+        string discountNum = discount.Key.ToString();
+        string discountText = discount.Value;
+
+
+        events.Add(DateTime.Now, $"{discountText}: {discountNum}");
+        StateHasChanged();
     }
 
     async void CancelEdit(Tuple<ProductData, int> product)

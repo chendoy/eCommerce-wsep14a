@@ -199,5 +199,13 @@ namespace Client.Service
             GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
             return response.DiscountPolicies;
         }
+
+        async public Task<SuccessFailResponse> UpdateDiscountPolicy(int StoreId, string loggedInUser, string discountText)
+        {
+            UpdateDiscountPolicyRequest request = new UpdateDiscountPolicyRequest();
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
     }
 }

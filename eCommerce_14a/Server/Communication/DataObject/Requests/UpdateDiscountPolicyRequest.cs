@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class UpdateDiscountPolicyRequest : Message
+    public class UpdateDiscountPolicyRequest : Message
     {
         public int storeId { get; set; }
         public string userName { get; set; }

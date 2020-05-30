@@ -144,6 +144,7 @@
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
     <Compile Include="Utils\DeliverySystem.cs" />
+    <Compile Include="Utils\DiscountParser.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
   </ItemGroup>
