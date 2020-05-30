@@ -55,11 +55,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             // DB Addition
             Product product = new Product(sid:storeId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
-            int pid = DbManager.Instance.GetNextProductId();
-            product.Id = pid;
             DbManager.Instance.InsertProduct(StoreAdapter.Instance.ToDbProduct(product));
-            DbManager.Instance.InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(pid, amount, storeId));
-            InvProducts.Add(pid, new Tuple<Product, int>(product, amount));
+            DbManager.Instance.InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(product.Id, amount, storeId));
+            InvProducts.Add(product.Id, new Tuple<Product, int>(product, amount));
             return new Tuple<bool, string>(true, "");
         }
 

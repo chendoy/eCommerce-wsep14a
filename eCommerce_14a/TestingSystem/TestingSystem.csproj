@@ -184,7 +184,6 @@
     <Compile Include="UnitTests\Stubs\DeliveryHandlerStub.cs" />
     <Compile Include="UnitTests\Stubs\PaymentHandlerStub.cs" />
     <Compile Include="UnitTests\Stubs\purchaseBasketStub.cs" />
-    <Compile Include="UnitTests\Stubs\StoreManagementStub.cs" />
     <Compile Include="UnitTests\Stubs\StoreStub.cs" />
     <Compile Include="UnitTests\Stubs\UserManagerStub.cs" />
     <Compile Include="UnitTests\System_init.cs" />

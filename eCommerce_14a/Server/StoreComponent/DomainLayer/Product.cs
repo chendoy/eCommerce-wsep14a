@@ -1,3 +1,4 @@
+using Server.DAL;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,6 +24,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         
         public Product(int sid, string details="this is product", double price=100, string name="", int rank=3, string category="Electricity", string imgUrl="")
         {
+            Id = DbManager.Instance.GetNextProductId();
             StoreId = sid; 
             Details = details;
             Price = price;

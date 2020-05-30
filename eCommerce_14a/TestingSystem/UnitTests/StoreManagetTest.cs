@@ -76,7 +76,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
 
         private Tuple<bool, string> appendProductDriver(int storeId, string userName, int Pid, string pDetails, double price, string pName, string pCategory, int amount)
         {
-            return storeManagment.appendProduct(storeId, userName, Pid, pDetails, price, pName, pCategory, amount, "");
+            return storeManagment.appendProduct(storeId, userName, pDetails, price, pName, pCategory, amount, "");
         }
 
 

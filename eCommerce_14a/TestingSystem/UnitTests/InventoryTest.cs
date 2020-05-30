@@ -125,14 +125,14 @@ namespace TestingSystem.UnitTests.InventroyTest
 
         private Tuple<bool, string> AppendProductDriver(Inventory inv, Dictionary<string, object> productParams, int amount)
         {
-            return inv.appendProduct(productParams, amount);
+            return inv.appendProduct(productParams, amount, 1);
         }
 
         [TestMethod]
         /// <test cref ="eCommerce_14a.Inventory.removeProduct(int)
         public void TestRemoveProduct_nonExistingId()
         {
-            Tuple<bool, string> isRemoved = RemoveProductDriver(validInventory,13);
+            Tuple<bool, string> isRemoved = RemoveProductDriver(validInventory,13, 1);
             if (isRemoved.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.InventoryErrorMessage.ProductNotExistErrMsg, isRemoved.Item2);
@@ -142,12 +142,12 @@ namespace TestingSystem.UnitTests.InventroyTest
         /// <test cref ="eCommerce_14a.Inventory.removeProduct(int)
         public void TestRemoveProduct_Valid()
         {
-            Assert.IsTrue(RemoveProductDriver(validInventory, 1).Item1);
+            Assert.IsTrue(RemoveProductDriver(validInventory, 1, 1).Item1);
         }
 
-        private Tuple<bool, string> RemoveProductDriver(Inventory inv,  int productId)
+        private Tuple<bool, string> RemoveProductDriver(Inventory inv,  int productId, int storeid)
         {
-            return inv.removeProduct(productId);
+            return inv.removeProduct(productId, storeid);
         }
 
 
@@ -225,7 +225,7 @@ namespace TestingSystem.UnitTests.InventroyTest
 
         private Tuple<bool, string> AddProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.IncreaseProductAmount(productId, amount);
+            return inv.IncreaseProductAmount(productId, amount, 1);
         }
 
 
@@ -283,7 +283,7 @@ namespace TestingSystem.UnitTests.InventroyTest
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         private Tuple<bool, string> decraseProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.DecraseProductAmount(productId, amount);
+            return inv.DecraseProductAmount(productId, amount, 1);
         }
 
 
@@ -324,8 +324,8 @@ namespace TestingSystem.UnitTests.InventroyTest
         public void TestValidInventory_valid()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:"",price: 100), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details: "",price:100), 100));
+            inv.Add(1, new Tuple<Product, int>(new Product(sid:1, details:"",price: 100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(sid: 1, details: "",price:100), 100));
             Tuple<bool, string> isValidAns = ValidInventoryDriver(inv);
             Assert.IsTrue(isValidAns.Item1);
         }
@@ -352,10 +352,10 @@ namespace TestingSystem.UnitTests.InventroyTest
         public void TestValidInventory_negativeAmount()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details:"", price:100), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details: "", price:100), 100));
-            inv.Add(3, new Tuple<Product, int>(new Product(product_id: 3, details: "", price:100), 100));
-            inv.Add(4, new Tuple<Product, int>(new Product(product_id: 4, details: "", price:100), -1));
+            inv.Add(1, new Tuple<Product, int>(new Product(sid:1, details:"", price:100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(sid: 1, details: "", price:100), 100));
+            inv.Add(3, new Tuple<Product, int>(new Product(sid: 1, details: "", price:100), 100));
+            inv.Add(4, new Tuple<Product, int>(new Product(sid: 1, details: "", price:100), -1));
             Tuple<bool, string> isValidAns = ValidInventoryDriver(inv);
             Assert.IsFalse(isValidAns.Item1);
         }
@@ -365,10 +365,10 @@ namespace TestingSystem.UnitTests.InventroyTest
         public void TestValidInventory_notMatchingKeyAndProductId()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(product_id: 1, details: "", price:100), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(product_id: 2, details: "", price:100), 100));
-            inv.Add(3, new Tuple<Product, int>(new Product(product_id: 3, details: ""), 100));
-            inv.Add(4, new Tuple<Product, int>(new Product(product_id: 6, details: ""), 100));
+            inv.Add(1, new Tuple<Product, int>(new Product(sid: 1, details: "", price:100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(sid: 1, details: "", price:100), 100));
+            inv.Add(3, new Tuple<Product, int>(new Product(sid: 1, details: ""), 100));
+            inv.Add(4, new Tuple<Product, int>(new Product(sid: 1, details: ""), 100));
             Tuple<bool, string> isValidAns = ValidInventoryDriver(inv);
             Assert.IsFalse(isValidAns.Item1);
         }
