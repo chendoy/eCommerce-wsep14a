@@ -32,7 +32,7 @@
             AddusersPwds(context);
             AddStores(context);
             List<StoreOwnershipAppoint> owners_appointments = AddOwnerAppointments(context);
-            List<StoreManagersAppoint>  managers_appointments = AddManagersAppointmets(context);
+            List<StoreManagersAppoint> managers_appointments = AddManagersAppointmets(context);
             AddUsersPermissions(context, owners_appointments, managers_appointments);
             AddCandidateOwnerships(context);
             AddNeedApprovae(context);
@@ -97,8 +97,8 @@
             products.Add(new DbProduct(11, 6, "Blender", 1755, "MegaBlender v3", 4, CommonStr.ProductCategoty.Kitchen)); //ID=11
             products.Add(new DbProduct(12, 6, "Disposer", 1555.5, "MegaDisposer v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=12
             products.Add(new DbProduct(13, 7, "Dust Cleaner", 3000, "Irobot roomba", 5, CommonStr.ProductCategoty.Cleaning)); //ID=13
-            products.Add(new DbProduct(14, 7,"Dust Cleaner", 4000, "Dyson Animal v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=14
-            products.Add(new DbProduct(15, 8,"Dust Cleaner", 5000, "Dyson Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=15
+            products.Add(new DbProduct(14, 7, "Dust Cleaner", 4000, "Dyson Animal v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=14
+            products.Add(new DbProduct(15, 8, "Dust Cleaner", 5000, "Dyson Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=15
             products.Add(new DbProduct(16, 8, "Dust Cleaner", 1000, "Xiaomi Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=16
             products.Add(new DbProduct(17, 3, "Dust Cleaner", 2000, "Xiaomi Absoulue v12", 5, CommonStr.ProductCategoty.Cleaning)); //ID=17
             products.ForEach(p => context.Products.Add(p));
@@ -124,7 +124,7 @@
             product_atbasket.ForEach(pab => context.ProductsAtBaskets.Add(pab));
             context.SaveChanges();
         }
-      
+
 
         private void AddBaskets(EcommerceContext context)
         {
@@ -174,7 +174,7 @@
                                                       preconditionid: null, //compund policy, not have pre condition
                                                       policyproductid: null, //compund policy not have product based condition
                                                       buyerusername: null, //compund policy not based on username
-                                                      purchasepolictype:CommonStr.PurchasePolicyTypes.CompundPurchasePolicy
+                                                      purchasepolictype: CommonStr.PurchasePolicyTypes.CompundPurchasePolicy
                                                       )); // ID=1
             purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
                                                       mergetype: null, //not compund policy, there is no mergetype
@@ -445,7 +445,7 @@
         }
 
 
-      
+
 
         private void AddApprovalStatus(EcommerceContext context)
         {
@@ -474,7 +474,7 @@
             context.SaveChanges();
         }
 
-        private void AddUsersPermissions(EcommerceContext context, List<StoreOwnershipAppoint>  owners_appoints, List<StoreManagersAppoint> mangers_appoint)
+        private void AddUsersPermissions(EcommerceContext context, List<StoreOwnershipAppoint> owners_appoints, List<StoreManagersAppoint> mangers_appoint)
         {
 
             var userpermissions = GetPermissions(owners_appoints, mangers_appoint);
@@ -572,7 +572,7 @@
         private List<UserStorePermissions> GetPermissions(List<StoreOwnershipAppoint> ownersappoint, List<StoreManagersAppoint> managersappoints)
         {
             List<UserStorePermissions> userpermission = new List<UserStorePermissions>();
-            foreach(StoreOwnershipAppoint appoint in ownersappoint)
+            foreach (StoreOwnershipAppoint appoint in ownersappoint)
             {
                 userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Comments));
                 userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.DiscountPolicy));
@@ -581,7 +581,7 @@
                 userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.PurachsePolicy));
             }
 
-            foreach(StoreManagersAppoint appoint in managersappoints)
+            foreach (StoreManagersAppoint appoint in managersappoints)
             {
                 userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Comments));
                 userpermission.Add(new UserStorePermissions(appoint.AppointedName, appoint.StoreId, CommonStr.MangerPermission.Purchase));
