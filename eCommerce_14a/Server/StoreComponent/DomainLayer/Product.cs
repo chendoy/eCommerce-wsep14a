@@ -6,6 +6,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class Product
     {
         public int Id { set; get; }
+
+        public int StoreId { set; get; }
         
         public double Price { set; get; }
 
@@ -19,9 +21,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public string ImgUrl { set; get; }
         
-        public Product(int product_id, string details="this is product", double price=100, string name="", int rank=3, string category="Electricity", string imgUrl="")
+        public Product(int sid, string details="this is product", double price=100, string name="", int rank=3, string category="Electricity", string imgUrl="")
         {
-            Id = product_id;
+            StoreId = sid; 
             Details = details;
             Price = price;
             Name = name;

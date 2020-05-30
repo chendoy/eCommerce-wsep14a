@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,9 @@ namespace Server.DAL.StoreDb
         [Key]
         public int Id { set; get; }
 
+        [ForeignKey("Store")]
         public int StoreId { set; get; }
+        public DbStore Store { set; get; }
 
         public double Price { set; get; }
 
@@ -26,8 +29,9 @@ namespace Server.DAL.StoreDb
 
         public string ImgUrl { set; get; }
 
-        public DbProduct(int storeId,string details = "this is product", double price = 100, string name = "", int rank = 3, string category = "Electricity", string imgUrl = "")
+        public DbProduct(int id, int storeId,string details = "this is product", double price = 100, string name = "", int rank = 3, string category = "Electricity", string imgUrl = "")
         {
+            Id = id;
             StoreId = storeId; 
             Details = details;
             Price = price;

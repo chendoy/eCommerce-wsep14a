@@ -1,6 +1,8 @@
-﻿using eCommerce_14a.StoreComponent.DomainLayer;
+﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL.PurchaseDb;
 using Server.StoreComponent.DomainLayer;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,28 @@ namespace Server.DAL.StoreDb
 {
     public class StoreAdapter
     {
+        private static StoreAdapter instance = null;
+        private static readonly object padlock = new object();
+        private StoreAdapter()
+        {
+ 
+        }
+
+        public static StoreAdapter Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new StoreAdapter();
+                    }
+                    return instance;
+                }
+            }
+        }
+
         public DbStore ToDbStore(Store s)
         {
            return new DbStore(s.Id,s.Rank, s.StoreName, s.ActiveStore);
@@ -23,7 +47,10 @@ namespace Server.DAL.StoreDb
             return new DbInventoryItem(storeId, productId, amount);
         }
 
-        
+        public DbPurchase ToDbPurchase(Purchase newPurchase)
+        {
+            return new DbPurchase(newPurchase.UserCart.Id, newPurchase.User);
+        }
         public DbPreCondition ToDbDiscountPreCondition(DiscountPreCondition preCondition)
         {
             return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);
@@ -39,6 +66,11 @@ namespace Server.DAL.StoreDb
             return new DbDiscountPolicy(storeid, null, parentid, null, revealdDiscount.discountProdutId, revealdDiscount.discount, CommonStr.DiscountPolicyTypes.RevealdDiscount);
         }
 
+        public DbPurchaseBasket ToDbPurchseBasket(PurchaseBasket basket, int cartid)
+        {
+            return new DbPurchaseBasket(basket.user, basket.store.Id, basket.Price, basket.PurchaseTime, cartid);
+        }
+
         public  DiscountPolicy ComposeDiscountPolicy(List<DbDiscountPolicy> dbDiscountPolicies)
         {
             if (dbDiscountPolicies.Count == 0)
@@ -52,6 +84,11 @@ namespace Server.DAL.StoreDb
                 return ConstrucuctDiscountRecursive(discountGraph, root);
             }
             
+        }
+
+        public DbProduct ToDbProduct(Product product)
+        {
+            return new DbProduct(product.Id, product.StoreId, product.Details, product.Price, product.Name, product.Rank, product.Category, product.ImgUrl);
         }
 
         public PurchasePolicy ComposePurchasePolicy(List<DbPurchasePolicy> dbPurchasePolicies)
@@ -70,7 +107,10 @@ namespace Server.DAL.StoreDb
 
         }
 
-   
+        public ProductAtBasket ToProductAtBasket(int basketId, int productId, int wantedAmount, int storeid)
+        {
+            return new ProductAtBasket(basketId, productId, wantedAmount, storeid);
+        }
 
         private DiscountPolicy ConstrucuctDiscountRecursive(Dictionary<DbDiscountPolicy, List<DbDiscountPolicy>> discountGraph, DbDiscountPolicy node)
         {
@@ -230,5 +270,6 @@ namespace Server.DAL.StoreDb
             return new CompundPurchasePolicy((int)node.MergeType, childrens);
         }
 
+     
     }
 }

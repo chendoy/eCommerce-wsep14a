@@ -22,7 +22,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         /// <summary>
         /// Public ONLY For generatin Stubs
         /// </summary>
-        public StoreManagment()
+        private StoreManagment()
         {
             stores = new Dictionary<int, Store>();
         }
@@ -53,32 +53,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             return retList;
         }
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int pId, string pDetails, double pPrice, string pName, string pCategory, int amount, string imgUrl)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-            {
-                Logger.logError(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg,this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            }
-
-            if (!stores.ContainsKey(storeId))
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            }
-
-            Dictionary<string, object> productParams = new Dictionary<string, object>();
-            productParams.Add(CommonStr.ProductParams.ProductId, pId);
-            productParams.Add(CommonStr.ProductParams.ProductDetails, pDetails);
-            productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
-            productParams.Add(CommonStr.ProductParams.ProductName, pName);
-            productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
-            productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
-            return stores[storeId].appendProduct(user, productParams, amount);
-        }
+      
         public void LoadStores(List<Store> Allstores)
         {
             foreach(Store store in Allstores)
@@ -112,6 +87,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return avilablePurchasePolicy;
         }
 
+
+
         public  Dictionary<string, string> GetStaffStroe(int storeID)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -122,6 +99,33 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             return stores[storeID].getStaff();
         }
+
+        public Tuple<bool, string> appendProduct(int storeId, string userName, string pDetails, double pPrice, string pName, string pCategory, int amount, string imgUrl)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logError(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+
+            Dictionary<string, object> productParams = new Dictionary<string, object>();
+            productParams.Add(CommonStr.ProductParams.ProductDetails, pDetails);
+            productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
+            productParams.Add(CommonStr.ProductParams.ProductName, pName);
+            productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
+            productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
+            return stores[storeId].appendProduct(user, productParams, amount);
+        }
+
 
         public Tuple<bool, string> removeProduct(int storeId, string userName, int productId)
         {
@@ -141,6 +145,76 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
 
             return stores[storeId].removeProduct(user, productId);
+        }
+
+        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+
+            Dictionary<string, object> productParams = new Dictionary<string, object>();
+            productParams.Add(CommonStr.ProductParams.ProductId, productId);
+            productParams.Add(CommonStr.ProductParams.ProductDetails, pDetails);
+            productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
+            productParams.Add(CommonStr.ProductParams.ProductName, pName);
+            productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
+            productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
+
+
+            return stores[storeId].UpdateProduct(user, productParams);
+        }
+
+
+        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+
+            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount);
+        }
+
+        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+
+            return stores[storeId].decrasePrdouctAmount(user: user, productId: productId, amount: amount);
         }
 
 
@@ -198,45 +272,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return retList;
         }
 
-        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            }
-
-            if (!stores.ContainsKey(storeId))
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            }
-
-            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount);
-        }
-
-        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            }
-
-            if (!stores.ContainsKey(storeId))
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            }
-
-            return stores[storeId].decrasePrdouctAmount(user:user , productId: productId, amount: amount);
-        }
 
         public Dictionary<string, object> getStoreInfo(int storeId)
         {
@@ -274,34 +309,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
         
-        public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)
-        {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            }
-
-            if (!stores.ContainsKey(storeId))
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            }
-
-            Dictionary<string, object> productParams = new Dictionary<string, object>();
-            productParams.Add(CommonStr.ProductParams.ProductId, productId);
-            productParams.Add(CommonStr.ProductParams.ProductDetails, pDetails);
-            productParams.Add(CommonStr.ProductParams.ProductPrice, pPrice);
-            productParams.Add(CommonStr.ProductParams.ProductName, pName);
-            productParams.Add(CommonStr.ProductParams.ProductCategory, pCategory);
-            productParams.Add(CommonStr.ProductParams.ProductImgUrl, imgUrl);
-
-
-            return stores[storeId].UpdateProduct(user, productParams);
-        }
+       
 
 
         public virtual Store getStore(int storeId)

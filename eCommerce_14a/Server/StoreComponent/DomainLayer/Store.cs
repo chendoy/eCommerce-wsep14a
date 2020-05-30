@@ -5,6 +5,7 @@ using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.Communication.DataObject.ThinObjects;
+using Server.DAL;
 using Server.DAL.StoreDb;
 using Server.StoreComponent.DomainLayer;
 
@@ -172,7 +173,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return Inventory.IncreaseProductAmount(productId, amount);
+            return Inventory.IncreaseProductAmount(productId, amount, this.Id);
         }
         public List<string> getOwners()
         {
@@ -212,7 +213,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return Inventory.DecraseProductAmount(productId, amount);
+            return Inventory.DecraseProductAmount(productId, amount, this.Id);
         }
 
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
@@ -234,6 +235,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
             ActiveStore = newStatus;
+            //DB-UPDATE
+            DbManager.Instance.UpdateStore(DbManager.Instance.GetDbStore(this.Id), this);
             return new Tuple<bool, string>(true, "");
         }
 
@@ -264,6 +267,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             else
             {
                 this.DiscountPolicy = newPolicy;
+
+                //DB update Discount Policy
+                DbManager.Instance.UpdateDiscountPolicy(newPolicy, this);
                 return new Tuple<bool, string>(true, "");
             }
         }
@@ -293,6 +299,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else {
                 this.PurchasePolicy = newPolicy;
+                //DB update Purchase Policy
+                DbManager.Instance.UpdatePurchasePolicy(newPolicy, this);
                 return new Tuple<bool, string>(true, "");
             }
           
@@ -403,7 +411,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return Inventory.removeProduct(productId);
+            return Inventory.removeProduct(productId, this.Id);
         }
 
         public Tuple<bool, string> appendProduct(User user, Dictionary<string, object> productParams, int amount)
@@ -426,7 +434,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return Inventory.appendProduct(productParams, amount);
+            return Inventory.appendProduct(productParams, amount, this.Id);
         }
 
 
@@ -456,11 +464,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> DecraseProductAmountAfterPuarchse(int productId, int amount)
         {
-            return Inventory.DecraseProductAmount(productId, amount);
+            return Inventory.DecraseProductAmount(productId, amount, this.Id);
         }
         public Tuple<bool, string> IncreaseProductAmountAfterFailedPuarchse(int productId, int amount)
         {
-            return Inventory.IncreaseProductAmount(productId, amount);
+            return Inventory.IncreaseProductAmount(productId, amount, this.Id);
         }
 
         public Dictionary<string, object> getSotoreInfo()

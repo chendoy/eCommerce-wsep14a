@@ -4,18 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Server.DAL;
+using Server.DAL.StoreDb;
+
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
 
     public class Cart
     {
 
+        public int Id { get; set; }
         public string user { get; set; }
         public Dictionary<Store, PurchaseBasket> baskets { get; set; }
         public double Price { get; private set; }
 
         public Cart(string user)
         {
+            Id = DbManager.Instance.GetnextCartId();
             this.user = user;
             this.baskets = new Dictionary<Store, PurchaseBasket>();
             Price = 0;
@@ -49,13 +53,20 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 basket = new PurchaseBasket(this.user, store);
                 baskets.Add(store, basket);
+
+                //Inserting new basket To db
+                DbManager.Instance.InsertPurchaseBasket(StoreAdapter.Instance.ToDbPurchseBasket(basket, this.Id));
             }
 
             Tuple<bool, string> res = basket.AddProduct(productId, wantedAmount, exist);
+
             if (basket.IsEmpty())
             {
                 baskets.Remove(store);
+                //Update DB delete purchase basket
+                DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id));
             }
+
             UpdateCartPrice();
             return res;
         }
@@ -68,6 +79,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 Price += basket.UpdateCartPrice();
             }
+            //Update CART PRICE AT DB
+            DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this);
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>

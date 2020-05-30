@@ -1,6 +1,8 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.DAL.StoreDb;
 using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
@@ -106,11 +108,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             if (!this.carts.TryGetValue(userId, out Cart cart))
             {
                 cart = new Cart(userId);
-                carts.Add(userId, cart);
+                AddNewCart(userId, cart);
             }
 
             return cart.AddProduct(store, productId, wantedAmount, exist);
         }
+
+      
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         public Tuple<Cart, string> GetCartDetails(string userName)
@@ -130,7 +134,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             if (!carts.TryGetValue(userName, out Cart cart))
             {
                 cart = new Cart(userName);
-                carts.Add(userName, cart);
+                AddNewCart(userName, cart);
             }
 
             return new Tuple<Cart, string>(cart, "");
@@ -218,6 +222,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             userHistory.Add(newPurchase);
+            // DB Insert New Purchase
+            DbManager.Instance.InsertPurchase(StoreAdapter.Instance.ToDbPurchase(newPurchase));
             purchasesHistoryByUser[user] = userHistory;
 
             carts[user] = new Cart(user);
@@ -370,6 +376,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             this.userManager = userManager;
             this.paymentHandler = paymentHandler;
             this.deliveryHandler = deliveryHandler;
+        }
+
+        private void AddNewCart(string userId, Cart cart)
+        {
+            carts.Add(userId, cart);
+            //DB Insert New Cart
+            DbManager.Instance.InsertDbCart(DbManager.Instance.GetDbCart(cart.Id));
         }
     }
 }

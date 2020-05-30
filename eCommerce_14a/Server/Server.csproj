@@ -140,6 +140,7 @@
     <Compile Include="DAL\EcommerceContext.cs" />
     <Compile Include="DAL\DbManager.cs" />
     <Compile Include="DAL\PurchaseDb\DbCart.cs" />
+    <Compile Include="DAL\PurchaseDb\DbPurchase.cs" />
     <Compile Include="DAL\PurchaseDb\DbPurchaseBasket.cs" />
     <Compile Include="DAL\PurchaseDb\ProductAtBasket.cs" />
     <Compile Include="DAL\StoreDb\DbDiscountPolicy.cs" />

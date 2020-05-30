@@ -74,7 +74,6 @@ namespace TestingSystem.DbManger_Tests
             storeParam.Add(CommonStr.StoreParams.mainOwner, "liav");
             Store store = new Store(storeParam);
             DbManager.Instance.InsertStore(store);
-
         }
 
         [TestMethod]
@@ -86,9 +85,8 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void TestDeleteFullStore_t1()
         {
-            Store s = TestGetStore(1);
+            Store s = TestGetStore(6);
             DbManager.Instance.DeleteFullStore(s);
-
         }
 
 

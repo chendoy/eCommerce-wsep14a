@@ -84,23 +84,23 @@
 
 
             var products = new List<DbProduct>();
-            products.Add(new DbProduct(1, "CoffeMachine", 1000, "Coffe Maker 3", 4, CommonStr.ProductCategoty.CoffeMachine)); //ID=1
-            products.Add(new DbProduct(1, "CoffeMachine", 100, "Coffe Maker 3", 3, CommonStr.ProductCategoty.CoffeMachine)); //ID=2
-            products.Add(new DbProduct(2, "Tv", 1000, "Samsung TV 3", 5, CommonStr.ProductCategoty.Consola)); //ID=3
-            products.Add(new DbProduct(2, "Dell Xps", 500, "Dell Xps 9560", 1, CommonStr.ProductCategoty.Computers)); //ID=4
-            products.Add(new DbProduct(3, "TRX cables", 100, "Trx v3", 2, CommonStr.ProductCategoty.Health)); //ID=5
-            products.Add(new DbProduct(3, "Healhy shake", 200, "Healthy shake v5", 3, CommonStr.ProductCategoty.Health));//ID=6
-            products.Add(new DbProduct(4, "Mixer", 1700, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=7
-            products.Add(new DbProduct(4, "Mixer", 1800, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=8
-            products.Add(new DbProduct(5, "Mixer", 1900, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=9
-            products.Add(new DbProduct(5, "Mixer", 2000, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=10
-            products.Add(new DbProduct(6, "Blender", 1755, "MegaBlender v3", 4, CommonStr.ProductCategoty.Kitchen)); //ID=11
-            products.Add(new DbProduct(6, "Disposer", 1555.5, "MegaDisposer v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=12
-            products.Add(new DbProduct(7, "Dust Cleaner", 3000, "Irobot roomba", 5, CommonStr.ProductCategoty.Cleaning)); //ID=13
-            products.Add(new DbProduct(7,"Dust Cleaner", 4000, "Dyson Animal v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=14
-            products.Add(new DbProduct(8,"Dust Cleaner", 5000, "Dyson Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=15
-            products.Add(new DbProduct(8, "Dust Cleaner", 1000, "Xiaomi Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=16
-            products.Add(new DbProduct(3, "Dust Cleaner", 2000, "Xiaomi Absoulue v12", 5, CommonStr.ProductCategoty.Cleaning)); //ID=17
+            products.Add(new DbProduct(1, 1, "CoffeMachine", 1000, "Coffe Maker 3", 4, CommonStr.ProductCategoty.CoffeMachine)); //ID=1
+            products.Add(new DbProduct(2, 1, "CoffeMachine", 100, "Coffe Maker 3", 3, CommonStr.ProductCategoty.CoffeMachine)); //ID=2
+            products.Add(new DbProduct(3, 2, "Tv", 1000, "Samsung TV 3", 5, CommonStr.ProductCategoty.Consola)); //ID=3
+            products.Add(new DbProduct(4, 2, "Dell Xps", 500, "Dell Xps 9560", 1, CommonStr.ProductCategoty.Computers)); //ID=4
+            products.Add(new DbProduct(5, 3, "TRX cables", 100, "Trx v3", 2, CommonStr.ProductCategoty.Health)); //ID=5
+            products.Add(new DbProduct(6, 3, "Healhy shake", 200, "Healthy shake v5", 3, CommonStr.ProductCategoty.Health));//ID=6
+            products.Add(new DbProduct(7, 4, "Mixer", 1700, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=7
+            products.Add(new DbProduct(8, 4, "Mixer", 1800, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=8
+            products.Add(new DbProduct(9, 5, "Mixer", 1900, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=9
+            products.Add(new DbProduct(10, 5, "Mixer", 2000, "MegaMix v6", 5, CommonStr.ProductCategoty.Kitchen));//ID=10
+            products.Add(new DbProduct(11, 6, "Blender", 1755, "MegaBlender v3", 4, CommonStr.ProductCategoty.Kitchen)); //ID=11
+            products.Add(new DbProduct(12, 6, "Disposer", 1555.5, "MegaDisposer v6", 5, CommonStr.ProductCategoty.Kitchen)); //ID=12
+            products.Add(new DbProduct(13, 7, "Dust Cleaner", 3000, "Irobot roomba", 5, CommonStr.ProductCategoty.Cleaning)); //ID=13
+            products.Add(new DbProduct(14, 7,"Dust Cleaner", 4000, "Dyson Animal v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=14
+            products.Add(new DbProduct(15, 8,"Dust Cleaner", 5000, "Dyson Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=15
+            products.Add(new DbProduct(16, 8, "Dust Cleaner", 1000, "Xiaomi Absoulue v11", 5, CommonStr.ProductCategoty.Cleaning)); //ID=16
+            products.Add(new DbProduct(17, 3, "Dust Cleaner", 2000, "Xiaomi Absoulue v12", 5, CommonStr.ProductCategoty.Cleaning)); //ID=17
             products.ForEach(p => context.Products.Add(p));
             context.SaveChanges();
         }

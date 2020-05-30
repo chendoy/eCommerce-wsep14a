@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using eCommerce_14a.Utils;
 using System.ComponentModel.DataAnnotations;
+using Server.DAL;
+using Server.DAL.StoreDb;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -12,6 +14,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class Inventory
     {
         public Dictionary<int, Tuple<Product, int>> InvProducts { get; set; }
+        
 
         public Inventory()
         {
@@ -28,7 +31,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             get { return InvProducts; }
         }
 
-        public Tuple<bool, string> appendProduct(Dictionary<string, object> productParams, int amount)
+        public Tuple<bool, string> appendProduct(Dictionary<string, object> productParams, int amount, int storeId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -36,13 +39,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg);
-            }
-
-            int pId = (int)productParams[CommonStr.ProductParams.ProductId];
-            if (InvProducts.ContainsKey(pId))
-            {
-                Logger.logError(CommonStr.InventoryErrorMessage.ProductAlreadyExistErrMsg, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductAlreadyExistErrMsg);
             }
 
             double pPrice = (double)productParams[CommonStr.ProductParams.ProductPrice];
@@ -57,13 +53,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             string pCategory = (string)productParams[CommonStr.ProductParams.ProductCategory];
             string imgUrl = (string)productParams[CommonStr.ProductParams.ProductImgUrl];
 
-            Product product = new Product(product_id: pId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
-            InvProducts.Add(pId, new Tuple<Product, int>(product, amount));
-
+            // DB Addition
+            Product product = new Product(sid:storeId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
+            int pid = DbManager.Instance.GetNextProductId();
+            product.Id = pid;
+            DbManager.Instance.InsertProduct(StoreAdapter.Instance.ToDbProduct(product));
+            DbManager.Instance.InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(pid, amount, storeId));
+            InvProducts.Add(pid, new Tuple<Product, int>(product, amount));
             return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, string> removeProduct(int productId)
+        public Tuple<bool, string> removeProduct(int productId, int storeid)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -75,8 +75,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (InvProducts.Remove(productId))
             {
+                //Remove product and inventory item from db!
+                DbManager.Instance.DeleteInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid));
+                DbManager.Instance.DeleteProduct(DbManager.Instance.GetDbProductItem(productId));
                 return new Tuple<bool, string>(true, "");
-
             }
             else
             {
@@ -85,6 +87,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
 
         }
+
 
         public Tuple<bool, string> UpdateProduct(Dictionary<string, object> productParams)
         {
@@ -113,13 +116,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             int amount = InvProducts[productId].Item2;
 
             InvProducts[productId] = new Tuple<Product, int>(product, amount);
+            DbProduct dbProd = DbManager.Instance.GetDbProductItem(productId);
+            //DB update 
+            DbManager.Instance.UpdatePrdouct(dbProd, product);
 
             return new Tuple<bool, string>(true, "");
         }
 
 
 
-        public Tuple<bool, string> IncreaseProductAmount(int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(int productId, int amount, int storeid)
         {
             // purpose: add amount to the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
@@ -140,13 +146,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             int currentAmount = InvProducts[productId].Item2;
             InvProducts[productId] = new Tuple<Product, int>(InvProducts[productId].Item1, currentAmount + amount);
 
+            //DB Update InventoryItem amount
+            DbManager.Instance.UpdateInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid), currentAmount + amount);
+
             return new Tuple<bool, string>(true, "");
         }
 
 
      
 
-        public Tuple<bool, string> DecraseProductAmount(int productId, int amount)
+        public Tuple<bool, string> DecraseProductAmount(int productId, int amount, int storeid)
         {
             // purpose: decrase amount from the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
@@ -171,7 +180,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.InventoryErrorMessage.productAmountErrMsg + " amount after decrase is less than 0");
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
             }
+
             InvProducts[productId] = new Tuple<Product, int>(InvProducts[productId].Item1, newAmount);
+
+            //DB updating inventoryItem
+            DbManager.Instance.UpdateInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid), newAmount);
+
             return new Tuple<bool, string>(true, "");
         }
 

@@ -64,6 +64,8 @@ namespace Server.DAL
 
         public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
 
+        public virtual DbSet<DbPurchase> Purchases { get; set; }
+
 
 
 
@@ -235,6 +237,22 @@ namespace Server.DAL
            .HasRequired(c => c.Store)
            .WithMany()
            .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<DbPurchase>()
+           .HasRequired(c => c.Cart)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<DbPurchase>()
+           .HasRequired(c => c.User)
+           .WithMany()
+           .WillCascadeOnDelete(false);
+
+           modelBuilder.Entity<DbProduct>()
+         .HasRequired(c => c.Store)
+         .WithMany()
+         .WillCascadeOnDelete(false);
 
             base.OnModelCreating(modelBuilder);
         }

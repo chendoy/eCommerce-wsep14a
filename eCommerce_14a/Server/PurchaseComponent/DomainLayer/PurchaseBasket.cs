@@ -8,12 +8,15 @@ using System.ComponentModel.DataAnnotations;
 
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.DAL.StoreDb;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseBasket
     {
 
+        public int Id { get; set; }
         public string user { get; set; }
 
         public  Store store { get; set; }
@@ -23,6 +26,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
         public PurchaseBasket(string user, Store store)
         {
+            Id = DbManager.Instance.GetNextPurchBasketId();
             this.user = user;
             this.store = store;
             this.products = new Dictionary<int, int>();
@@ -62,10 +66,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 if (wantedAmount == 0)
                 {
                     products.Remove(productId);
+                    //DB Delete Product From Basekt
+                    DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
                 }
                 else
                 {
                     products[productId] = wantedAmount;
+                    //DB Update product amount at basket!
+                    DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount);
                 }
             }
             else
@@ -76,6 +84,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 }
 
                 products.Add(productId, wantedAmount);
+                // DB Insert Product At Basket
+                DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
             }
 
             Tuple<bool, string> isValidBasket = store.CheckIsValidBasket(this);
@@ -87,6 +97,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
             Price = store.GetBasketPriceWithDiscount(this);
 
+            // DB Updating basket Price
+            DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             return new Tuple<bool, string>(true, null);
         }
 
@@ -99,12 +111,17 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         internal double UpdateCartPrice()
         {
             Price = store.GetBasketPriceWithDiscount(this);
+            // DB update purchase BasketPrice
+            DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             return Price;
         }
 
         internal void SetPurchaseTime(DateTime purchaseTime)
         {
             PurchaseTime = purchaseTime;
+
+            //UPDATING purchase time in db
+            DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
         }
 
         internal void RemoveFromStoreStock()

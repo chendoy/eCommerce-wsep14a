@@ -1,4 +1,5 @@
-﻿using eCommerce_14a.StoreComponent.DomainLayer;
+﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.Communication.DataObject;
@@ -22,12 +23,10 @@ namespace Server.DAL
         private static readonly object padlock = new object();
         private static DbManager instance = null;
 
-        public int GetNextProductId()
+        private DbManager()
         {
-            return dbConn.Products.Max(product => product.Id) + 1;
+            dbConn = new EcommerceContext();
         }
-
-        StoreAdapter storeAdpter;
 
         public static DbManager Instance
         {
@@ -47,17 +46,38 @@ namespace Server.DAL
             }
         }
 
-        private DbManager()
+
+
+
+        public int GetNextProductId()
         {
-            dbConn = new EcommerceContext();
-            storeAdpter = new StoreAdapter();
+            if (dbConn.Products.Any())
+            {
+                return dbConn.Products.Max(product => product.Id) + 1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public int GetNextPurchBasketId()
+        {
+            if (dbConn.Baskets.Any())
+            {
+                return dbConn.Baskets.Max(b => b.Id) + 1;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
 
         //Insert Store Componenet Functions 
         public void InsertStore(Store store)
         {
-            InsertDbstore(storeAdpter.ToDbStore(store));
+            InsertDbstore(StoreAdapter.Instance.ToDbStore(store));
             //InsertInventory(store.Inventory, store.Id);
             InsertDiscountPolicy(store.DiscountPolicy, store.Id, parentId: null);
             InsertPurchasePolicy(store.PurchasePolicy, store.Id, parentId: null);
@@ -65,9 +85,39 @@ namespace Server.DAL
             InsertManagers(store.managers, store.Id);
         }
 
+        public void InsertPurchaseBasket(DbPurchaseBasket dbPurchaseBasket)
+        {
+            dbConn.Baskets.Add(dbPurchaseBasket);
+            dbConn.SaveChanges();
+        }
+
+     
+        public ProductAtBasket GetProductAtBasket(int basketId, int productId)
+        {
+            return dbConn.ProductsAtBaskets.Where(pab => pab.BasketId == basketId && pab.ProductId == productId).FirstOrDefault();
+        }
+
+        public void UpdateProductAtBasket(ProductAtBasket productAtBasket, int wantedAmount)
+        {
+            productAtBasket.ProductAmount = wantedAmount;
+            dbConn.SaveChanges();
+        }
+
         private void InsertDbstore(DbStore dbStore)
         {
             dbConn.Stores.Add(dbStore);
+            dbConn.SaveChanges();
+        }
+
+        public void UpdateDbCart(DbCart dbCart, Cart cart)
+        {
+            dbCart.Price = cart.Price;
+            dbConn.SaveChanges();
+        }
+
+        public void InsertProductAtBasket(ProductAtBasket productAtBasket)
+        {
+            dbConn.ProductsAtBaskets.Add(productAtBasket);
             dbConn.SaveChanges();
         }
 
@@ -156,7 +206,82 @@ namespace Server.DAL
 
         }
 
-        
+
+        public DbPurchaseBasket GetDbPurchaseBasket(int id)
+        {
+            return dbConn.Baskets.Where(b => b.Id == id).FirstOrDefault();
+        }
+
+        public DbCart GetDbCart(int id)
+        {
+            return dbConn.Carts.Where(c => c.Id == id).FirstOrDefault();
+        }
+
+        public void UpdatePrdouct(DbProduct dbProd, Product product)
+        {
+            dbProd.Category = product.Category;
+            dbProd.Details = product.Details;
+            dbProd.ImgUrl = product.ImgUrl;
+            dbProd.Name = product.Name;
+            dbProd.Price = product.Price;
+            dbProd.Rank = product.Rank;
+            dbConn.SaveChanges();
+        }
+
+        public void UpdateInventoryItem(DbInventoryItem dbInventoryItem, int amount)
+        {
+            dbInventoryItem.Amount = amount;
+            dbConn.SaveChanges();
+        }
+
+        public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s)
+        {
+            DeleteAllStoreDiscountPolicy(s);
+            InsertDiscountPolicy(newPolicy, s.Id, null);
+        }
+
+        public void UpdatePurchasePolicy(PurchasePolicy newPolicy, Store store)
+        {
+            DeleteAllStorePurchasePolicy(store);
+            InsertPurchasePolicy(newPolicy, store.Id, null);
+        }
+
+        public void UpdateStore(DbStore dbstore, Store store)
+        {
+            dbstore.ActiveStore = store.ActiveStore;
+            dbstore.Rank = store.Rank;
+            dbstore.StoreName = store.StoreName;
+            dbConn.SaveChanges();
+        }
+
+        public void UpdatePurchaseBasket(DbPurchaseBasket dbPurchaseBasket, PurchaseBasket basket)
+        {
+            dbPurchaseBasket.Price = basket.Price;
+            dbPurchaseBasket.PurchaseTime = basket.PurchaseTime;
+            dbConn.SaveChanges();
+        }
+
+        public DbProduct GetDbProductItem(int productId)
+        {
+           return  dbConn.Products.Where(p => p.Id == productId).FirstOrDefault();
+        }
+
+        internal DbInventoryItem GetDbInventoryItem(int productId, int storeId)
+        {
+            return dbConn.InventoriesItmes.Where(invItem => invItem.ProductId == productId  && invItem.StoreId == storeId).FirstOrDefault();
+        }
+
+        internal void InsertInventoryItem(DbInventoryItem dbInventoryItem)
+        {
+            dbConn.InventoriesItmes.Add(dbInventoryItem);
+            dbConn.SaveChanges();
+        }
+
+        public void InsertDbCart(DbCart dbCart)
+        {
+            dbConn.Carts.Add(dbCart);
+            dbConn.SaveChanges();
+        }
 
         public int GetNextStoreId()
         {
@@ -237,6 +362,13 @@ namespace Server.DAL
                     InsertDiscountPolicy(discountPolicy: policy, storeId: storeId, parentId: dbPolicyId);
                 }
             }
+        }
+
+     
+
+        public DbStore GetDbStore(int id)
+        {
+            return dbConn.Stores.Where(s => s.Id == id).FirstOrDefault();
         }
 
         private int GetDbDiscountPolicyId(DbDiscountPolicy dbDiscountPolicy, int storeId, int? precondition)
@@ -325,16 +457,12 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
+        public void InsertPurchase(DbPurchase dbPurchase)
+        {
+            dbConn.Purchases.Add(dbPurchase);
+            dbConn.SaveChanges();
+        }
 
-
-        //private void InsertInventory(Inventory inventory, int StoreId)
-        //{
-        //    foreach (KeyValuePair<int, Tuple<Product, int>> entry in inventory.InvProducts)
-        //    {
-        //        InsretInventoryItem(new DbInventoryItem(StoreId, entry.Key, entry.Value.Item2));
-        //    }
-
-        //}
 
 
         public List<Store> GetAllStores()
@@ -379,7 +507,7 @@ namespace Server.DAL
         private DiscountPolicy GetDiscountPolicy(int storeId)
         {
             List<DbDiscountPolicy> storeDiscountPolicies = dbConn.DiscountPolicies.Where(policy => policy.StoreId == storeId).ToList();
-            return storeAdpter.ComposeDiscountPolicy(storeDiscountPolicies);
+            return StoreAdapter.Instance.ComposeDiscountPolicy(storeDiscountPolicies);
         }
 
         private Inventory GetInventory(int StoreId)
@@ -457,7 +585,7 @@ namespace Server.DAL
         private PurchasePolicy GetPurchasePolicy(int storeId)
         {
             List<DbPurchasePolicy> storePurchasePolicies = dbConn.PurchasePolicies.Where(policy => policy.StoreId == storeId).ToList();
-            return storeAdpter.ComposePurchasePolicy(storePurchasePolicies);
+            return StoreAdapter.Instance.ComposePurchasePolicy(storePurchasePolicies);
         }
         public void InsertUserNotification(NotifyData notification)
         {
@@ -1023,6 +1151,16 @@ namespace Server.DAL
             return ownershipsDict;
         }
 
-
+        public int GetnextCartId()
+        {
+            if(dbConn.Carts.Any())
+            {
+                return dbConn.Carts.Max(c => c.Id) + 1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
     }
 }
