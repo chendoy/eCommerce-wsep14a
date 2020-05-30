@@ -238,18 +238,13 @@ namespace Server.DAL
            .WithMany()
            .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<DbPurchase>()
-           .HasRequired(c => c.Cart)
-           .WithMany()
-           .WillCascadeOnDelete(false);
-
 
             modelBuilder.Entity<DbPurchase>()
            .HasRequired(c => c.User)
            .WithMany()
            .WillCascadeOnDelete(false);
 
-           modelBuilder.Entity<DbProduct>()
+            modelBuilder.Entity<DbProduct>()
          .HasRequired(c => c.Store)
          .WithMany()
          .WillCascadeOnDelete(false);

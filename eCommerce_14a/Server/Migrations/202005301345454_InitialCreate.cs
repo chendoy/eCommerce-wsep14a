@@ -120,7 +120,9 @@
                         Category = c.String(),
                         ImgUrl = c.String(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.DbStores", t => t.StoreId)
+                .Index(t => t.StoreId);
             
             CreateTable(
                 "dbo.DbInventoryItems",
@@ -214,6 +216,19 @@
                 .Index(t => t.PreConditionId)
                 .Index(t => t.PolicyProductId)
                 .Index(t => t.BuyerUserName);
+            
+            CreateTable(
+                "dbo.DbPurchases",
+                c => new
+                    {
+                        CartId = c.Int(nullable: false),
+                        UserName = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => t.CartId)
+                .ForeignKey("dbo.DbCarts", t => t.CartId)
+                .ForeignKey("dbo.DbUsers", t => t.UserName)
+                .Index(t => t.CartId)
+                .Index(t => t.UserName);
             
             CreateTable(
                 "dbo.StoreManagers",
@@ -319,6 +334,8 @@
             DropForeignKey("dbo.StoreManagersAppoints", "AppointedName", "dbo.DbUsers");
             DropForeignKey("dbo.StoreManagers", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.StoreManagers", "ManagerName", "dbo.DbUsers");
+            DropForeignKey("dbo.DbPurchases", "UserName", "dbo.DbUsers");
+            DropForeignKey("dbo.DbPurchases", "CartId", "dbo.DbCarts");
             DropForeignKey("dbo.DbPurchasePolicies", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.DbPurchasePolicies", "PolicyProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbPurchasePolicies", "PreConditionId", "dbo.DbPreConditions");
@@ -335,6 +352,7 @@
             DropForeignKey("dbo.DbInventoryItems", "ProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbDiscountPolicies", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.DbDiscountPolicies", "DiscountProductId", "dbo.DbProducts");
+            DropForeignKey("dbo.DbProducts", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.DbDiscountPolicies", "PreConditionId", "dbo.DbPreConditions");
             DropForeignKey("dbo.CandidateToOwnerships", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.CandidateToOwnerships", "CandidateName", "dbo.DbUsers");
@@ -357,6 +375,8 @@
             DropIndex("dbo.StoreManagersAppoints", new[] { "AppointerName" });
             DropIndex("dbo.StoreManagers", new[] { "StoreId" });
             DropIndex("dbo.StoreManagers", new[] { "ManagerName" });
+            DropIndex("dbo.DbPurchases", new[] { "UserName" });
+            DropIndex("dbo.DbPurchases", new[] { "CartId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "BuyerUserName" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "PolicyProductId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "PreConditionId" });
@@ -371,6 +391,7 @@
             DropIndex("dbo.NeedToApproves", new[] { "ApproverName" });
             DropIndex("dbo.DbInventoryItems", new[] { "ProductId" });
             DropIndex("dbo.DbInventoryItems", new[] { "StoreId" });
+            DropIndex("dbo.DbProducts", new[] { "StoreId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "DiscountProductId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "PreConditionId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "StoreId" });
@@ -387,6 +408,7 @@
             DropTable("dbo.StoreOwners");
             DropTable("dbo.StoreManagersAppoints");
             DropTable("dbo.StoreManagers");
+            DropTable("dbo.DbPurchases");
             DropTable("dbo.DbPurchasePolicies");
             DropTable("dbo.ProductAtBaskets");
             DropTable("dbo.DbPasswords");
