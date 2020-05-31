@@ -48,7 +48,7 @@ namespace eCommerce_14a.Communication
             config1.MaxConnectionNumber = 1000;
             config1.Security = "Tls";
             config1.LogAllSocketException = false;
-            //config1.LogBasicSessionActivity = false;
+            config1.LogBasicSessionActivity = false;
             config1.LogCommand = false;
             
             config1.Certificate = new CertificateConfig
@@ -63,7 +63,7 @@ namespace eCommerce_14a.Communication
             wsServer.NewDataReceived += ReceiveData;
             disLogger();
             wsServer.Start();
-            enLogger();
+            //enLogger();
             XmlConfigurator.Configure();
             Console.WriteLine("Server is running on port " + ". Press ENTER to exit....");
             Console.ReadKey();
