@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class ApproveAppointmentRequest : Message
+    public class ApproveAppointmentRequest : Message
     {
         public ApproveAppointmentRequest() : base(Opcode.APPROVE_APPOINTMENT) { }
         public ApproveAppointmentRequest(string owner, string appointed, int storeID, bool approval) : base(Opcode.APPROVE_APPOINTMENT)
