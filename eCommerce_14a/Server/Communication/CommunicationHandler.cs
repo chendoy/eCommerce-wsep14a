@@ -213,6 +213,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleGetAvailablePurchases(string json)
+        {
+            GetAvailableRawPurchaseRequest res = JsonConvert.DeserializeObject<GetAvailableRawPurchaseRequest>(json);
+            Dictionary<int, string> ans = storeService.GetAvailableRawPurchasePolicy();
+            string jsonAns = Seralize(new GetAvailableRawPurchaseResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleGetAvailableDiscounts(string json)
         {
             GetAvailableRawDiscountsRequest res = JsonConvert.DeserializeObject<GetAvailableRawDiscountsRequest>(json);

@@ -62,6 +62,7 @@
     <Compile Include="Communication\DataObject\Requests\GetAllUsersHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetApprovalListRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAvailableRawDiscountsRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetAvailableRawPurchaseRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetManagersPermissionRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Communication\DataObject\Responses\GetAllUsersHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetApprovalListResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAvailableRawDiscountsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetAvailableRawPurchaseResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetManagerPermissionResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStaffOfStoreResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />

@@ -114,8 +114,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             List<DiscountPolicyData> discountAllChildren = new List<DiscountPolicyData>();
             discountAllChildren.Add(discount_xor_aboveUnits);
             discountAllChildren.Add(basketDiscount);
-            DiscountPolicyData discountPolicyfinal = new CompoundDiscountPolicyData(CommonStr.DiscountMergeTypes.AND, discountAllChildren);
-            UpdateDiscountPolicy(2, "user5", discountPolicyfinal);
+            //DiscountPolicyData discountPolicyfinal = new CompoundDiscountPolicyData(CommonStr.DiscountMergeTypes.AND, discountAllChildren);
+            //UpdateDiscountPolicy(2, "user5", discountPolicyfinal);
         }
 
         public Dictionary<int, string> GetAvilableRawDiscount()

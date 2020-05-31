@@ -228,6 +228,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_AVAILABLE_PURCHASES:
+                    response = handler.HandleGetAvailablePurchases(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 case Opcode.ADD_PRODUCT_TO_STORE:
                     response = handler.HandleAddProductToStore(json);
                     session.Send(response, 0, response.Length);
@@ -314,8 +319,7 @@ namespace eCommerce_14a.Communication
         public static void Main(string[] argv)
         {
 
-            DiscountParser parser = new DiscountParser();
-            DiscountPolicy dp = parser.Parse("(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))");
+            DiscountPolicy dp = DiscountParser.Parse("(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))");
 
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());
