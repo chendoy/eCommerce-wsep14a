@@ -222,6 +222,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     if (user.getUserName().Equals(username))
                         retList.Add(store);
                 }
+
+                foreach (User user in store.managers)
+                {
+                    if (user.getUserName().Equals(username))
+                        retList.Add(store);
+                }
             }
             return retList;
         }

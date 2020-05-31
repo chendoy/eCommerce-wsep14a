@@ -152,245 +152,262 @@
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Discounts">
+        @if (service.Permissions[StoreId].EditDiscountPolicy)
+        {
+            <RadzenTabsItem Text="Discounts">
 
-            <div class="row">
-
-                <div class="col-md-4">
-                    <h2>Available discounts</h2>
-                    <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@discounts" TextProperty="Value" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
-
-                </div>
-                <&nbsp></&nbsp>
-
-                <div class="col-md-4">
-                    <h2>Picked discounts</h2>
-                    <RadzenCard style="overflow: auto;height:250px;">
-                        @foreach (var e in events.OrderByDescending(i => i.Key))
-                        {
-                            @e.Value
-                            <br />
-                        }
-                    </RadzenCard>
-                </div>
-
-            </div>
-
-
-            <h2>Your new composite discount </h2>
-
-            <RadzenTextArea Placeholder="Enter here..." Cols="50" Rows="3" Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
-
-            <div class="error-msg" style="text-align:left; font-weight:bold">
-                <span>@errorMsg</span>
-            </div>
-
-            <div class="success-msg" style="text-align:left; font-weight:bold">
-                <span>@successMsg</span>
-            </div>
-
-        </RadzenTabsItem>
-
-        <RadzenTabsItem Text="Purchases">
-            <StoreHistory Username="@loggedInUser" StoreId="StoreId" />
-        </RadzenTabsItem>
-
-        <RadzenTabsItem Text="Products">
-
-            <RadzenGrid @ref="productsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
-                        Data="@inventory" TItem="Tuple<ProductData, int>">
-                <Columns>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.ProductId" Title="Product ID" />
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Name" Title="Product Name">
-                        <EditTemplate Context="product">
-                            <RadzenTextBox @bind-Value="product.Item1.Name" Style="width:100%; display: block" Name="ProductName" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category">
-                        <EditTemplate Context="product">
-                            <RadzenTextBox @bind-Value="product.Item1.Category" Style="width:100%; display: block" Name="Category" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details">
-                        <EditTemplate Context="product">
-                            <RadzenTextBox @bind-Value="product.Item1.Details" Style="width:100%; display: block" Name="Details" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price">
-                        <EditTemplate Context="product">
-                            <RadzenNumeric TValue="double" @bind-Value="product.Item1.Price" Style="width:100%; display: block" Name="Price" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item2" Title="Amount" />
-
-                    <RadzenGridColumn TItem="Tuple<ProductData, int>" Context="product" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
-                        <Template Context="product">
-                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(product))">
-                            </RadzenButton>
-                        </Template>
-                        <EditTemplate Context="product">
-                            <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow(product))">
-                            </RadzenButton>
-                            <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(product))">
-                            </RadzenButton>
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn TItem="Tuple<ProductData, int>" Context="product" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
-                        <Template Context="product">
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(product))">
-                            </RadzenButton>
-                        </Template>
-                        <EditTemplate Context="product">
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(product))">
-                            </RadzenButton>
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                </Columns>
-
-            </RadzenGrid>
-
-            <br /><br />
-
-            <h2>Choose Product</h2>
-            <RadzenDropDown AllowClear="true" TValue="int"
-                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
-                            Data="@inventory" TextProperty="Item1.Name" ValueProperty="Item1.ProductId" Style="margin-bottom: 20px" Change="@(args => SelectProduct(args))" />
-            <br />
-
-            @*<RadzenButton Click="@(() => DeleteProduct())" Text="Delete All" Style="margin-bottom: 20px; width: 150px" />
-
-            <br />*@
-
-            <h2>Choose amount to increase/increase</h2>
-            <RadzenNumeric TValue="int" Style="margin-bottom: 20px" Change="@(args => ChangeDelta(args))" />
-
-            <br />
-
-            <RadzenButton Click="@(() => Increase())" Icon="add" Style="margin-bottom: 20px; width: 80px" />
-
-            <RadzenButton Click="@(() => Decrease())" Icon="remove" Style="margin-bottom: 20px; width: 80px" />
-
-
-            <div class="error-msg" style="text-align:left; font-weight:bold">
-                <span>@errorMsg</span>
-            </div>
-
-            <div class="success-msg" style="text-align:left; font-weight:bold">
-                <span>@successMsg</span>
-            </div>
-
-        </RadzenTabsItem>
-
-        <RadzenTabsItem Text="Add product">
-
-            <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
                 <div class="row">
-                    <div class="col-md-6">
-                        <RadzenFieldset Text="Product Info">
 
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="ID" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenNumeric @bind-Value="product.ProductId" style="width: 100%;" Name="Name" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Details" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ProductDetails" style="width: 100%;" Name="ProductDetails" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Price" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenNumeric @bind-Value="product.ProductPrice" style="width: 100%;" Name="Name" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Name" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ProductName" style="width: 100%;" Name="ProductName" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Category" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ProductCategory" style="width: 100%;" Name="ProductCategory" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Amount" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenNumeric @bind-Value="product.Pamount" style="width: 100%;" Name="Name" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Image URL" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ImgUrl" style="width: 100%;" Name="ImgUrl" />
-                                </div>
-                            </div>
-
-                        </RadzenFieldset>
+                    <div class="col-md-4">
+                        <h2>Available discounts</h2>
+                        <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@discounts" TextProperty="Value" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
 
                     </div>
+                    <&nbsp></&nbsp>
+
+                    <div class="col-md-4">
+                        <h2>Picked discounts</h2>
+                        <RadzenCard style="overflow: auto;height:250px;">
+                            @foreach (var e in events.OrderByDescending(i => i.Key))
+                            {
+                                @e.Value
+                                <br />
+                            }
+                        </RadzenCard>
+                    </div>
+
                 </div>
 
 
+                <h2>Your new composite discount </h2>
 
-                <div class="row justify-content-center">
-                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Add Product" />
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
-                    </div>
+                <RadzenTextArea Placeholder="Enter here..." Cols="50" Rows="3" Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+
+                <div class="error-msg" style="text-align:left; font-weight:bold">
+                    <span>@errorMsg</span>
                 </div>
-            </RadzenTemplateForm>
 
-            <div class="error-msg" style="text-align:left; font-weight:bold">
-                <span>@errorMsg</span>
-            </div>
+                <div class="success-msg" style="text-align:left; font-weight:bold">
+                    <span>@successMsg</span>
+                </div>
 
-            <div class="success-msg" style="text-align:left; font-weight:bold">
-                <span>@successMsg</span>
-            </div>
+            </RadzenTabsItem>
+        }
+
+        @if (service.Permissions[StoreId].EditPurachsePolicy)
+        {
+            <RadzenTabsItem Text="Purchase Policy">
+                <p> placeholder for purchase policy</p>
+            </RadzenTabsItem>
+        }
+
+        @if (service.Permissions[StoreId].ViewPuarchseHistory)
+        {
+            <RadzenTabsItem Text="Purchases">
+                <StoreHistory Username="@loggedInUser" StoreId="StoreId" />
+            </RadzenTabsItem>
+
+        }
+
+        @if (service.Permissions[StoreId].EditInventory)
+        {
+            <RadzenTabsItem Text="Products">
+
+                <RadzenGrid @ref="productsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                            Data="@inventory" TItem="Tuple<ProductData, int>">
+                    <Columns>
+                        <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.ProductId" Title="Product ID" />
+                        <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Name" Title="Product Name">
+                            <EditTemplate Context="product">
+                                <RadzenTextBox @bind-Value="product.Item1.Name" Style="width:100%; display: block" Name="ProductName" />
+                            </EditTemplate>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category">
+                            <EditTemplate Context="product">
+                                <RadzenTextBox @bind-Value="product.Item1.Category" Style="width:100%; display: block" Name="Category" />
+                            </EditTemplate>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details">
+                            <EditTemplate Context="product">
+                                <RadzenTextBox @bind-Value="product.Item1.Details" Style="width:100%; display: block" Name="Details" />
+                            </EditTemplate>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price">
+                            <EditTemplate Context="product">
+                                <RadzenNumeric TValue="double" @bind-Value="product.Item1.Price" Style="width:100%; display: block" Name="Price" />
+                            </EditTemplate>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item2" Title="Amount" />
+
+                        <RadzenGridColumn TItem="Tuple<ProductData, int>" Context="product" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                            <Template Context="product">
+                                <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(product))">
+                                </RadzenButton>
+                            </Template>
+                            <EditTemplate Context="product">
+                                <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow(product))">
+                                </RadzenButton>
+                                <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(product))">
+                                </RadzenButton>
+                            </EditTemplate>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="Tuple<ProductData, int>" Context="product" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                            <Template Context="product">
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(product))">
+                                </RadzenButton>
+                            </Template>
+                            <EditTemplate Context="product">
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(product))">
+                                </RadzenButton>
+                            </EditTemplate>
+                        </RadzenGridColumn>
+                    </Columns>
+
+                </RadzenGrid>
+
+                <br /><br />
+
+                <h2>Choose Product</h2>
+                <RadzenDropDown AllowClear="true" TValue="int"
+                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
+                                Data="@inventory" TextProperty="Item1.Name" ValueProperty="Item1.ProductId" Style="margin-bottom: 20px" Change="@(args => SelectProduct(args))" />
+                <br />
+
+                @*<RadzenButton Click="@(() => DeleteProduct())" Text="Delete All" Style="margin-bottom: 20px; width: 150px" />
+
+                <br />*@
+
+                <h2>Choose amount to increase/increase</h2>
+                <RadzenNumeric TValue="int" Style="margin-bottom: 20px" Change="@(args => ChangeDelta(args))" />
+
+                <br />
+
+                <RadzenButton Click="@(() => Increase())" Icon="add" Style="margin-bottom: 20px; width: 80px" />
+
+                <RadzenButton Click="@(() => Decrease())" Icon="remove" Style="margin-bottom: 20px; width: 80px" />
 
 
-        </RadzenTabsItem>
+                <div class="error-msg" style="text-align:left; font-weight:bold">
+                    <span>@errorMsg</span>
+                </div>
+
+                <div class="success-msg" style="text-align:left; font-weight:bold">
+                    <span>@successMsg</span>
+                </div>
+
+            </RadzenTabsItem>
+
+            <RadzenTabsItem Text="Add product">
+
+                <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <RadzenFieldset Text="Product Info">
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="ID" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenNumeric @bind-Value="product.ProductId" style="width: 100%;" Name="Name" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Details" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value="product.ProductDetails" style="width: 100%;" Name="ProductDetails" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Price" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenNumeric @bind-Value="product.ProductPrice" style="width: 100%;" Name="Name" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Name" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value="product.ProductName" style="width: 100%;" Name="ProductName" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Category" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value="product.ProductCategory" style="width: 100%;" Name="ProductCategory" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Amount" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenNumeric @bind-Value="product.Pamount" style="width: 100%;" Name="Name" />
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-4 align-items-center d-flex">
+                                        <RadzenLabel Text="Image URL" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <RadzenTextBox @bind-Value="product.ImgUrl" style="width: 100%;" Name="ImgUrl" />
+                                    </div>
+                                </div>
+
+                            </RadzenFieldset>
+
+                        </div>
+                    </div>
 
 
-    </Tabs>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Add Product" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
+                        </div>
+                    </div>
+                </RadzenTemplateForm>
+
+                <div class="error-msg" style="text-align:left; font-weight:bold">
+                    <span>@errorMsg</span>
+                </div>
+
+                <div class="success-msg" style="text-align:left; font-weight:bold">
+                    <span>@successMsg</span>
+                </div>
+
+
+            </RadzenTabsItem>
+
+        }
+
+        </Tabs>
 </RadzenTabs>
 
 
@@ -428,10 +445,15 @@
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
-        InventoryData invData = await service.GetStoresInventory(StoreId);
-        inventory = invData.invProducts;
+        
         Dictionary<int, string> discountsDict = await service.GetRawDiscounts();
         discounts = discountsDict.ToList();
+
+        await UpdateInventory();
+        ProductsInEdit = new List<Tuple<ProductData, int>>();
+
+        await UpdateManagersPermissions();
+        PermissionsInEdit = new List<Tuple<string, Permission>>();
     }
 
     public class Product

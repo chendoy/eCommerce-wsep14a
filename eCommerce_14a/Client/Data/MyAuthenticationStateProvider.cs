@@ -65,7 +65,6 @@ namespace Client.Data
             }
 
 
-
             var userClaim = new ClaimsPrincipal(identity);
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
