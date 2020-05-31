@@ -49,6 +49,11 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         
         }
 
+        public List<string> GetApprovalListByStoreAndUser(string username, int storeID) 
+        {
+           return UM.GetApprovalListByStoreAndUser(username, storeID);
+        }
+
         public List<User> GetAllRegisteredUsers()
         {
             return UM.GetAllRegisteredUsers();

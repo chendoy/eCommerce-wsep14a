@@ -307,6 +307,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Available_ID = 1;
         }
 
+        public List<string> GetApprovalListByStoreAndUser(string username, int storeID) 
+        {
+            List<string> appList;
+            User appUser;
+            if (!users.TryGetValue(username, out appUser) || !appUser.WaitingForApproval.TryGetValue(storeID, out appList))
+                return new List<string>();
+            return appList;
+        }
+
 
 
     }
