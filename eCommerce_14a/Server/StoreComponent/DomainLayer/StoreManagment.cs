@@ -173,7 +173,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
 
-        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicyData)
+        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, string discountPolicyData)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);

@@ -29,7 +29,7 @@ namespace eCommerce_14a.Utils
         static Regex revealdDiscountRegex = new Regex(@"r:\d*\.?\d*:\d*");
         static string[] operators = new string[3] { "XOR", "OR", "AND" };
 
-        public DiscountPolicy Parse(string text)
+        public static DiscountPolicy Parse(string text)
         {
             if (simpleDiscountRegex.IsMatch(text))
             {
