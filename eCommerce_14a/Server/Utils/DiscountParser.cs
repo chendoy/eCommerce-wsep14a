@@ -57,9 +57,9 @@ namespace eCommerce_14a.Utils
                 // string opStr = constructs[1];
 
                 // int op = opStr == "XOR" ? 0 : opStr == "OR" ? 1 : opStr == "AND" ? 2 : -1;
-                DiscountPolicy leftDiscount = Parse(discountPolicyText1);
-                DiscountPolicy rightDiscount = Parse(discountPolicyText2);
-                return new 
+                //DiscountPolicy leftDiscount = Parse(discountPolicyText1);
+                //DiscountPolicy rightDiscount = Parse(discountPolicyText2);
+                //return new 
             }
 
             return null;
