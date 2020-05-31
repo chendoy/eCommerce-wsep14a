@@ -15,7 +15,7 @@
     using eCommerce_14a.UserComponent.DomainLayer;
 
     internal sealed class Configuration : DbMigrationsConfiguration<EcommerceContext>
-    {
+    { 
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
