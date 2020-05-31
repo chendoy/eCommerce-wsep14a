@@ -254,6 +254,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public byte[] HandleApproveAppointment(string json)
+        {
+            ApproveAppointmentRequest res = JsonConvert.DeserializeObject<ApproveAppointmentRequest>(json);
+            Tuple<bool, string> ans = appointService.ApproveAppointment(res.Owner, res.Appointed, res.StoreID, res.Approval);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleChangePermissions(string json)
         {
             ChangePermissionsRequest res = JsonConvert.DeserializeObject<ChangePermissionsRequest>(json);

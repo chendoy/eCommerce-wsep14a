@@ -45,6 +45,7 @@ namespace Server.Communication.DataObject
         GET_MANAGER_PERMISSION,
         STORE_BY_ID,
         CHANGE_PERMISSIONS,
+        APPROVE_APPOINTMENT,
         INCREASE_PRODUCT_AMOUNT,
         DECREASE_PRODUCT_AMOUNT,
         NOTIFICATION,

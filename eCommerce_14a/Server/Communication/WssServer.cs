@@ -283,6 +283,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.APPROVE_APPOINTMENT:
+                    response = handler.HandleApproveAppointment(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }
