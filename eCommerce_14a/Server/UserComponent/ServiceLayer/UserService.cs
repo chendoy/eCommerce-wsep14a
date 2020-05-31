@@ -65,5 +65,13 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         {
             return UM.GetStoreManagersPermissions(appointer, storeId);
         }
+
+        public List<string> GetApprovalListByStoreAndUser(string username, int storeID)
+        {
+            List<string> retList = new List<string>();
+            retList.Add("Naor");
+            return retList; 
+            //return UM.GetApprovalListByStoreAndUser(username, storeID);
+        }
     }
 }

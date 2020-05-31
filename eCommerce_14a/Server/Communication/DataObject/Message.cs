@@ -50,6 +50,7 @@ namespace Server.Communication.DataObject
         DECREASE_PRODUCT_AMOUNT,
         NOTIFICATION,
         GET_ALL_PRECONDITIONS,
+        GET_APPROVAL_LIST,
         RESPONSE,
         ERROR
     }

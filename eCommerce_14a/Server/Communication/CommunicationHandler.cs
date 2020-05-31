@@ -262,6 +262,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleApprovalList(string json)
+        {
+            GetApprovalListRequest res = JsonConvert.DeserializeObject<GetApprovalListRequest>(json);
+            List<string> ans = userService.GetApprovalListByStoreAndUser(res.Username, res.StoreID);
+            string jsonAns = Seralize(new GetApprovalListResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleChangePermissions(string json)
         {
             ChangePermissionsRequest res = JsonConvert.DeserializeObject<ChangePermissionsRequest>(json);
