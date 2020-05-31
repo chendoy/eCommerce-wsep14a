@@ -162,21 +162,10 @@
 
                     <div class="col-md-4">
                         <h2>Available discounts</h2>
-                        <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@discounts" TextProperty="Value" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+                        <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
 
                     </div>
-                    <&nbsp></&nbsp>
-
-                    <div class="col-md-4">
-                        <h2>Picked discounts</h2>
-                        <RadzenCard style="overflow: auto;height:250px;">
-                            @foreach (var e in events.OrderByDescending(i => i.Key))
-                            {
-                                @e.Value
-                                <br />
-                            }
-                        </RadzenCard>
-                    </div>
+                    
 
                 </div>
 
@@ -437,6 +426,7 @@
     private string selectedOption;
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
     KeyValuePair<int, string> value = new KeyValuePair<int, string> (1, "discount");
+    List<string> discountsWithId = new List<string>();
 
 
     protected async override Task OnInitializedAsync()
@@ -447,9 +437,14 @@
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
-        
+
         Dictionary<int, string> discountsDict = await service.GetRawDiscounts();
-        discounts = discountsDict.ToList();
+        SortedDictionary<int, string> sortedDiscounts = new SortedDictionary<int, string>(discountsDict);
+        discounts = sortedDiscounts.ToList();
+        foreach (KeyValuePair<int, string> kv in discounts)
+            discountsWithId.Add(kv.Key + ": " + kv.Value);
+
+
 
         await UpdateInventory();
         ProductsInEdit = new List<Tuple<ProductData, int>>();
@@ -652,13 +647,7 @@
 
     void Change(object value)
     {
-        KeyValuePair<int, string> discount = ((KeyValuePair<int, string>)value);
-        string discountNum = discount.Key.ToString();
-        string discountText = discount.Value;
-
-
-        events.Add(DateTime.Now, $"{discountText}: {discountNum}");
-        StateHasChanged();
+        // nothing for now
     }
 
     async void CancelEdit(Tuple<ProductData, int> product)

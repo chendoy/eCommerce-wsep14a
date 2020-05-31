@@ -21,6 +21,7 @@ namespace eCommerce_14a.Utils
         // RevealedDiscount(-1, -1) -> "parenthesis are not balanced in outer expression"
         // RevealedDiscount(-2, -2) -> "parenthesis are not balanced in one if the inner expressions"
         // RevealedDiscount(-3, -3) -> "invalid operator: must be one of {XOR, OR, AND}
+        // RevealdDiscount(-4, -4); -> "unknown discount type"
         // ---------------------------------------------------------------------------------------
 
         static Regex simpleDiscountRegex = new Regex(@"\b(?<word>\w+):\d*$");
@@ -117,7 +118,7 @@ namespace eCommerce_14a.Utils
                 DiscountPolicy compoundDiscount = new CompundDiscount(op, children);
                 return compoundDiscount;
             }
-            return null;
+            return new RevealdDiscount(-4, -4);
         }
         // will return true iff <param> discountPolicy is a malformed discount, i.e failed
         // to parse, i.e if it is instance of RevealdDiscount with negative product id.
