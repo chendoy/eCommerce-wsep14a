@@ -213,6 +213,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleGetAvailablePurchases(string json)
+        {
+            GetAvailableRawPurchaseRequest res = JsonConvert.DeserializeObject<GetAvailableRawPurchaseRequest>(json);
+            Dictionary<int, string> ans = storeService.GetAvailableRawPurchasePolicy();
+            string jsonAns = Seralize(new GetAvailableRawPurchaseResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleGetAvailableDiscounts(string json)
         {
             GetAvailableRawDiscountsRequest res = JsonConvert.DeserializeObject<GetAvailableRawDiscountsRequest>(json);
@@ -259,6 +267,14 @@ namespace eCommerce_14a.Communication
             ApproveAppointmentRequest res = JsonConvert.DeserializeObject<ApproveAppointmentRequest>(json);
             Tuple<bool, string> ans = appointService.ApproveAppointment(res.Owner, res.Appointed, res.StoreID, res.Approval);
             string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleApprovalList(string json)
+        {
+            GetApprovalListRequest res = JsonConvert.DeserializeObject<GetApprovalListRequest>(json);
+            List<string> ans = userService.GetApprovalListByStoreAndUser(res.Username, res.StoreID);
+            string jsonAns = Seralize(new GetApprovalListResponse(ans));
             return security.Encrypt(jsonAns);
         }
 

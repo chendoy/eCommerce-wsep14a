@@ -36,6 +36,7 @@ namespace Server.Communication.DataObject
         CHANGE_PRODUCT_AMOUNT_CART,
         GET_STAFF_OF_STORE,
         GET_AVAILABLE_DISCOUNTS,
+        GET_AVAILABLE_PURCHASES,
         ADD_PRODUCT_TO_STORE,
         REMOVE_PRODUCT_FROM_STORE,
         UPDATE_PRODUCT_OF_STORE,
@@ -50,6 +51,7 @@ namespace Server.Communication.DataObject
         DECREASE_PRODUCT_AMOUNT,
         NOTIFICATION,
         GET_ALL_PRECONDITIONS,
+        GET_APPROVAL_LIST,
         RESPONSE,
         ERROR
     }
