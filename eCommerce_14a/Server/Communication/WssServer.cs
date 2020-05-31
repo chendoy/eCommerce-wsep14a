@@ -13,6 +13,8 @@ using Server.Communication.DataObject.Responses;
 using System.Collections.Generic;
 using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
+using eCommerce_14a.Utils;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.Communication
 {
@@ -301,6 +303,10 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
+
+            DiscountParser parser = new DiscountParser();
+            DiscountPolicy dp = parser.Parse();
+
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());
             //string json = JsonConvert.SerializeObject(res);
@@ -310,7 +316,6 @@ namespace eCommerce_14a.Communication
             CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
-
         }
     }
 }

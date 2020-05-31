@@ -48,6 +48,7 @@ namespace Server.Communication.DataObject
         INCREASE_PRODUCT_AMOUNT,
         DECREASE_PRODUCT_AMOUNT,
         NOTIFICATION,
+        GET_ALL_PRECONDITIONS,
         RESPONSE,
         ERROR
     }
