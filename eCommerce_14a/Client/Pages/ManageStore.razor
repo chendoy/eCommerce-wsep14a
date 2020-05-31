@@ -1,6 +1,5 @@
 ﻿@page "/ManageStore/{storeid:int}"
 @using Server.UserComponent.DomainLayer
-@using Microsoft.EntityFrameworkCore
 
 <h1>Store Dashboard</h1>
 
@@ -82,7 +81,7 @@
 
             </div>
             <br /><br />
-            <ViewAppointRequest Username="@loggedInUser" StoreId="@StoreId"/>
+            <ViewAppointRequest Username="@loggedInUser" StoreId="@StoreId" />
 
         </RadzenTabsItem>
 
@@ -156,33 +155,54 @@
 
         @if (service.Permissions[StoreId].EditDiscountPolicy)
         {
-            <RadzenTabsItem Text="Discounts">
+    <RadzenTabsItem Text="Discounts">
 
-                <div class="row">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Current discount policies in your store</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="currentDiscounts" Data="@currentDiscounts" TextProperty="currentDiscounts" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:1200px;" />
+            </div>
+        </div>
 
-                    <div class="col-md-4">
-                        <h2>Available discounts</h2>
-                        <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+        <div class="row">
 
-                    </div>
-                    
+            <div class="col-md-4">
+                <h2>Available discounts</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
 
-                </div>
+            </div>
+            <div class="col-md-4">
+                <h2>Available preconditions</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="preconditions" Data="@preconditions" TextProperty="preconditions" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+            </div>
+            <div class="col-md-4">
+                <h2>Available products</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="products" Data="@products" TextProperty="products" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+            </div>
+
+        </div>
 
 
-                <h2>Your new composite discount </h2>
+        <h2>Your new composite discount </h2>
 
-                <RadzenTextArea Placeholder="Enter here..." Cols="50" Rows="3" Change="@(args => ParseDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenTextArea Placeholder="Enter here..." Cols="70" Rows="3" Change="@(args => ChnageDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+            </div>
+            <div class="col-md-4">
+                <RadzenButton Click="@((args) => ParseDiscountText(args))" Text="Submit" Style="margin-bottom: 20px; width: 150px" />
+            </div>
+        </div>
 
-                <div class="error-msg" style="text-align:left; font-weight:bold">
-                    <span>@errorMsg</span>
-                </div>
+        <div class="error-msg" style="text-align:left; font-weight:bold">
+            <span>@errorMsg</span>
+        </div>
 
-                <div class="success-msg" style="text-align:left; font-weight:bold">
-                    <span>@successMsg</span>
-                </div>
+        <div class="success-msg" style="text-align:left; font-weight:bold">
+            <span>@successMsg</span>
+        </div>
 
-            </RadzenTabsItem>
+    </RadzenTabsItem>
         }
 
         @if (service.Permissions[StoreId].EditPurachsePolicy)
@@ -266,7 +286,7 @@
 
                 @*<RadzenButton Click="@(() => DeleteProduct())" Text="Delete All" Style="margin-bottom: 20px; width: 150px" />
 
-                <br />*@
+                    <br />*@
 
                 <h2>Choose amount to increase/increase</h2>
                 <RadzenNumeric TValue="int" Style="margin-bottom: 20px" Change="@(args => ChangeDelta(args))" />
@@ -398,8 +418,8 @@
 
         }
 
-        </Tabs>
-</RadzenTabs>
+    </Tabs>
+    </RadzenTabs>
 
 
 @code {
@@ -424,9 +444,11 @@
     private string selectedUser;
     private string selectedRole;
     private string selectedOption;
-    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
-    KeyValuePair<int, string> value = new KeyValuePair<int, string> (1, "discount");
     List<string> discountsWithId = new List<string>();
+    List<string> preconditions = new List<string>();
+    List<string> products = new List<string>();
+    List<string> currentDiscounts = new List<string>();
+    private string discountText { get; set; }
 
 
     protected async override Task OnInitializedAsync()
@@ -444,6 +466,11 @@
         foreach (KeyValuePair<int, string> kv in discounts)
             discountsWithId.Add(kv.Key + ": " + kv.Value);
 
+        // GetAllDiscountPreconditionsResponse preResponse = await service.GetDiscountsPreconditions();
+        // Dictionary<int, string> precondDict = preResponse.preconditions;
+        Dictionary<int, string> precondDict = new Dictionary<int, string>();
+        foreach (KeyValuePair<int, string> kv in precondDict)
+            preconditions.Add(kv.Key + ": " + kv.Value);
 
 
         await UpdateInventory();
@@ -451,6 +478,9 @@
 
         await UpdateManagersPermissions();
         PermissionsInEdit = new List<Tuple<string, Permission>>();
+
+        foreach (Tuple<ProductData, int> tuple in inventory)
+            products.Add(tuple.Item1.ProductId + ": " + tuple.Item1.Name);
     }
 
     public class Product
@@ -490,9 +520,8 @@
         //
     }
 
-    async private void ParseDiscountText(object discount)
+    async private void ParseDiscountText(object args)
     {
-        string discountText = (string)discount;
         SuccessFailResponse response = await service.UpdateDiscountPolicy(StoreId, loggedInUser, discountText);
 
         if (response.Success)
@@ -505,6 +534,12 @@
             successMsg = "";
             errorMsg = response.Error;
         }
+    }
+
+
+    private void ChnageDiscountText(object discount)
+    {
+        discountText = (string)discount;
     }
 
 
@@ -725,4 +760,4 @@
         ManagersPermissions = response.ManagerPermissions;
     }
 
-}
+    }

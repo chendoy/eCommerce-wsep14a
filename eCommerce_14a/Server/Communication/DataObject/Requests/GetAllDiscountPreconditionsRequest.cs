@@ -9,7 +9,7 @@ namespace Server.Communication.DataObject.Requests
     public class GetAllDiscountPreconditionsRequest : Message
     {
 
-        public GetAllDiscountPreconditionsRequest(string admin) : base(Opcode.GET_ALL_PRECONDITIONS)
+        public GetAllDiscountPreconditionsRequest() : base(Opcode.GET_ALL_PRECONDITIONS)
         {
         }
     }

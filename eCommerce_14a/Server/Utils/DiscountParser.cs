@@ -61,7 +61,10 @@ namespace eCommerce_14a.Utils
             {
                 int counter = 0;
                 string curr = "";
-                string opStr = Regex.Split(text, "(XOR|OR|AND)")[1];
+                string[] constructs = Regex.Split(text, "(XOR|OR|AND)");
+                if (constructs.Length <= 1)
+                    return new RevealdDiscount(-1, -1);
+                string opStr = constructs[1];
                 int op = opStr == "XOR" ? 0 : opStr == "OR" ? 1 : opStr == "AND" ? 2 : -1;
                 if(op == -1)
                     return new RevealdDiscount(-3, -3);

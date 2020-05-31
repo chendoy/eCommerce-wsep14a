@@ -216,9 +216,25 @@ namespace Client.Service
 
         async public Task<SuccessFailResponse> UpdateDiscountPolicy(int StoreId, string loggedInUser, string discountText)
         {
-            UpdateDiscountPolicyRequest request = new UpdateDiscountPolicyRequest();
+            UpdateDiscountPolicyRequest request = new UpdateDiscountPolicyRequest(StoreId, loggedInUser, discountText);
             comm.SendRequest(request);
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<GetAllDiscountPreconditionsResponse> GetDiscountsPreconditions()
+        {
+            GetAllDiscountPreconditionsRequest request = new GetAllDiscountPreconditionsRequest();
+            comm.SendRequest(request);
+            GetAllDiscountPreconditionsResponse response = await comm.Get<GetAllDiscountPreconditionsResponse>();
+            return response;
+        }
+
+        async public Task<GetAvailableRawDiscountsResponse> GetAllCurrentDiscounts()
+        {
+            GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
+            comm.SendRequest(request);
+            GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
             return response;
         }
     }
