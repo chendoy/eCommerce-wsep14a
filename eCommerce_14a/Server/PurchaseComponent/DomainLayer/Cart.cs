@@ -17,12 +17,23 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public Dictionary<Store, PurchaseBasket> baskets { get; set; }
         public double Price { get; private set; }
 
+        public bool IsPurchased { get; set; }
+
         public Cart(string user)
         {
             Id = DbManager.Instance.GetnextCartId();
             this.user = user;
             this.baskets = new Dictionary<Store, PurchaseBasket>();
             Price = 0;
+            IsPurchased = false;
+        }
+        public Cart(int id, string username, double price, Dictionary<Store, PurchaseBasket> purchasebaskets, bool ispurchased)
+        {
+            user = username;
+            Id = id;
+            Price = price;
+            baskets = purchasebaskets;
+            IsPurchased = ispurchased;
         }
 
         internal Dictionary<Store, PurchaseBasket> GetBaskets()

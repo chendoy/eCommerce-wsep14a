@@ -298,7 +298,7 @@ namespace eCommerce_14a.Communication
             //Console.WriteLine(json);
             //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
             //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
-            CommunicationHandler hand = new CommunicationHandler();
+            //CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
 

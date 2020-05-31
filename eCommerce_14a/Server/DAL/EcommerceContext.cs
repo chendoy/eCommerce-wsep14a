@@ -84,6 +84,8 @@ namespace Server.DAL
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.DiscountProductId).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.Discount).IsOptional();
 
+            modelBuilder.Entity<DbPurchaseBasket>().Property(p => p.PurchaseTime).IsOptional();
+
             modelBuilder.Entity<CandidateToOwnership>()
             .HasRequired(c => c.Appointer)
             .WithMany()

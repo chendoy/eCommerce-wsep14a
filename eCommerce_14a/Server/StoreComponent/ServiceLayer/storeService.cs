@@ -126,7 +126,6 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.GetAvilableRawDiscount();
         }
 
-
         public Dictionary<int, string> GetAvailableRawPurchasePolicy()
         {
             return storeManagment.GetAvilableRawPurchasePolicy();

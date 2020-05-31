@@ -46,13 +46,13 @@ namespace eCommerce_14a.Communication
         public void loaddata()
         {
             sysService.loaddata();
-            userService.Login("user6", "Test6");
-            purchService.AddProductToShoppingCart("user6", 1, 1, 3);
-            purchService.AddProductToShoppingCart("user6", 2, 1, 1);
-            purchService.AddProductToShoppingCart("user6", 2, 3, 2);
-            userService.Logout("user6");
-            userService.Logout("user4");
-            userService.Logout("user5");
+            //userService.Login("user6", "Test6");
+            //purchService.AddProductToShoppingCart("user6", 1, 1, 3);
+            //purchService.AddProductToShoppingCart("user6", 2, 1, 1);
+            //purchService.AddProductToShoppingCart("user6", 2, 3, 2);
+            //userService.Logout("user6");
+            //userService.Logout("user4");
+            //userService.Logout("user5");
         }
 
         public string Seralize(object obj)

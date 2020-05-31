@@ -38,7 +38,7 @@ namespace Server.Communication
 
         public PurchaseBasketData ToPurchaseBasketData(PurchaseBasket pBasket)
         {
-            return new PurchaseBasketData(ToStoreData(pBasket.Store), pBasket.user, pBasket.Price, pBasket.PurchaseTime, pBasket.Products);
+            return new PurchaseBasketData(ToStoreData(pBasket.Store), pBasket.User, pBasket.Price, pBasket.PurchaseTime, pBasket.Products);
         }
 
         public InventoryData ToInventoryData(Inventory inv)

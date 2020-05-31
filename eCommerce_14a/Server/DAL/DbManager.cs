@@ -109,6 +109,9 @@ namespace Server.DAL
                 DeleteSingleCandidate(can);
             }
         }
+
+       
+
         public void DeleteSingleApproval(NeedToApprove msg)
         {
             dbConn.NeedToApproves.Remove(msg);
@@ -169,6 +172,8 @@ namespace Server.DAL
                 DeleteSingleApprovalStatus(single);
             }
         }
+
+     
         public void DeleteUserFullCascase(User user)
         {
             string name = user.getUserName();
@@ -209,6 +214,12 @@ namespace Server.DAL
 
 
         }
+
+        internal DbUser GetUser(string username)
+        {
+            return dbConn.Users.Where(u => u.Name == username).FirstOrDefault();
+        }
+
         public List<DbUser> getAllDBUsers()
         {
             return dbConn.Users.ToList();
@@ -321,6 +332,17 @@ namespace Server.DAL
             }
             return theyneedToApproveUser;
         }
+
+        public List<DbPurchaseBasket> GetCartBaskets(int cartid)
+        {
+            return dbConn.Baskets.Where(b => b.CartId == cartid).ToList();
+        }
+
+        public List<ProductAtBasket> GetAllProductAtBasket(int basketid)
+        {
+            return dbConn.ProductsAtBaskets.Where(pab => pab.BasketId == basketid).ToList();
+        }
+
         public Dictionary<int,string> GetMasterAppointersUsers(string userName)
         {
             List<CandidateToOwnership> canidadtions = dbConn.CandidateToOwnerships.Where(cand => cand.CandidateName == userName).ToList();
@@ -835,30 +857,51 @@ namespace Server.DAL
 
 
 
-        public List<Store> GetAllStores()
+        public List<Store> LoadAllStores()
         {
             List<int> storesIds = dbConn.Stores.Select(store => store.Id).Distinct().ToList();
             List<Store> stores = new List<Store>();
             foreach(int storeId in storesIds)
             {
-                stores.Add(GetStore(storeId));
+                stores.Add(LoadStore(storeId));
             }
             return stores;
         }
 
+        public List<Purchase> LoadPurchases()
+        {
+            List<Purchase> purchases = new List<Purchase>();
+            foreach (DbPurchase dbPurchase in dbConn.Purchases)
+            {
+                purchases.Add(StoreAdapter.Instance.ComposePurchse(dbPurchase));
+            }
+            return purchases;
+        }
+
+        public List<Cart> LoadNotPurchasedCarts()
+        {
+            List<Cart> carts = new List<Cart>();
+            List<DbCart> dbcarts = dbConn.Carts.Where(c => c.IsPurchased == false).ToList();
+            foreach(DbCart dbCart in dbcarts)
+            {
+                carts.Add(StoreAdapter.Instance.ComposeCart(dbCart.Id, dbCart.UserName));
+            }
+            return carts;
+        }
+
+      
 
         //GET Store Component Functions
-        public Store GetStore(int StoreId)
+        public Store LoadStore(int StoreId)
         {
-
             DbStore dbstore = dbConn.Stores.Where(store => store.Id == StoreId).FirstOrDefault();
             if(dbstore == null)
             {
                 return null;
             }
-            DiscountPolicy discountPolicy = GetDiscountPolicy(StoreId);
-            PurchasePolicy purchasePolicy = GetPurchasePolicy(StoreId);
-            Inventory inventory = GetInventory(StoreId);
+            DiscountPolicy discountPolicy = LoadDiscountPolicy(StoreId);
+            PurchasePolicy purchasePolicy = LoadPurchasePolicy(StoreId);
+            Inventory inventory = LoadInventory(StoreId);
             Dictionary<string, object> store_params = new Dictionary<string, object>();
             store_params.Add(CommonStr.StoreParams.StoreId, StoreId);
             store_params.Add(CommonStr.StoreParams.StoreName, dbstore.StoreName);
@@ -867,20 +910,20 @@ namespace Server.DAL
             store_params.Add(CommonStr.StoreParams.StorePuarchsePolicy, purchasePolicy);
             store_params.Add(CommonStr.StoreParams.StoreDiscountPolicy, discountPolicy);
             store_params.Add(CommonStr.StoreParams.StoreInventory, inventory);
-            List<string> owners = GetStoreOwners(StoreId);
+            List<string> owners = LoadStoreOwners(StoreId);
             store_params.Add(CommonStr.StoreParams.Owners, owners);
-            List<string> managers= GetStoreManagers(StoreId);
-            store_params.Add(CommonStr.StoreParams.Managers, GetStoreManagers(StoreId));
+            List<string> managers= LoadStoreManagers(StoreId);
+            store_params.Add(CommonStr.StoreParams.Managers, managers);
             return new Store(store_params);
         }
 
-        private DiscountPolicy GetDiscountPolicy(int storeId)
+        private DiscountPolicy LoadDiscountPolicy(int storeId)
         {
             List<DbDiscountPolicy> storeDiscountPolicies = dbConn.DiscountPolicies.Where(policy => policy.StoreId == storeId).ToList();
             return StoreAdapter.Instance.ComposeDiscountPolicy(storeDiscountPolicies);
         }
 
-        private Inventory GetInventory(int StoreId)
+        private Inventory LoadInventory(int StoreId)
         {
             List<DbInventoryItem> invItems = dbConn.InventoriesItmes.Where(item => item.StoreId == StoreId).ToList();
             if(invItems.Count == 0)
@@ -902,7 +945,7 @@ namespace Server.DAL
             
         }
 
-        private List<string> GetStoreOwners(int StoreId)
+        private List<string> LoadStoreOwners(int StoreId)
         {
             List<StoreOwner> owners = dbConn.StoreOwners.Where(owner => owner.StoreId == StoreId).ToList();
             if(owners.Count == 0)
@@ -920,7 +963,7 @@ namespace Server.DAL
             }
         }
 
-        private List<string> GetStoreManagers(int StoreId)
+        private List<string> LoadStoreManagers(int StoreId)
         {
             List<StoreManager> managers = dbConn.StoreManagers.Where(manager => manager.StoreId == StoreId).ToList();
             if(managers.Count == 0)
@@ -952,7 +995,7 @@ namespace Server.DAL
             }
         }
 
-        private PurchasePolicy GetPurchasePolicy(int storeId)
+        private PurchasePolicy LoadPurchasePolicy(int storeId)
         {
             List<DbPurchasePolicy> storePurchasePolicies = dbConn.PurchasePolicies.Where(policy => policy.StoreId == storeId).ToList();
             return StoreAdapter.Instance.ComposePurchasePolicy(storePurchasePolicies);

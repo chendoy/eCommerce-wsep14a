@@ -17,20 +17,31 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
     {
 
         public int Id { get; set; }
-        public string user { get; set; }
+        public string User { get; set; }
 
         public  Store store { get; set; }
         public Dictionary<int, int> products { get; set; }
         public double Price { get; set; }
-        public DateTime PurchaseTime { get; private set; }
+        public DateTime? PurchaseTime { get; private set; }
 
         public PurchaseBasket(string user, Store store)
         {
             Id = DbManager.Instance.GetNextPurchBasketId();
-            this.user = user;
+            this.User = user;
             this.store = store;
             this.products = new Dictionary<int, int>();
             Price = 0;
+            PurchaseTime = null;
+        }
+
+        public PurchaseBasket(int id, string user, Store store, Dictionary<int, int> products, double price, DateTime? purchaseTime)
+        {
+            Id = id;
+            User = user;
+            this.store = store;
+            this.products = products;
+            Price = price;
+            PurchaseTime = purchaseTime;
         }
 
         public override string ToString()
@@ -50,7 +61,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            if (!this.store.ProductExist(productId))
+            if (!this.Store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
@@ -88,14 +99,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
             }
 
-            Tuple<bool, string> isValidBasket = store.CheckIsValidBasket(this);
+            Tuple<bool, string> isValidBasket = Store.CheckIsValidBasket(this);
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
                 return isValidBasket;
             }
 
-            Price = store.GetBasketPriceWithDiscount(this);
+            Price = Store.GetBasketPriceWithDiscount(this);
 
             // DB Updating basket Price
             DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
@@ -110,7 +121,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
-            Price = store.GetBasketPriceWithDiscount(this);
+            Price = Store.GetBasketPriceWithDiscount(this);
             // DB update purchase BasketPrice
             DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             return Price;
@@ -128,7 +139,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             foreach (var product in products.Keys)
             {
-                store.DecraseProductAmountAfterPuarchse(product, products[product]);
+                Store.DecraseProductAmountAfterPuarchse(product, products[product]);
             }
         }
 
@@ -136,12 +147,12 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-buying-policy-282</req>
         internal Tuple<bool, string> CheckProductsValidity()
         {
-            if (store == null || !store.ActiveStore)
+            if (Store == null || !Store.ActiveStore)
             {
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return store.CheckIsValidBasket(this);
+            return Store.CheckIsValidBasket(this);
         }
 
         // For tests
@@ -152,15 +163,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
         public Store Store
         {
-            get { return store; }
+            get { return Store; }
         }
         public double GetBasketPriceWithDiscount()
         {
-            return store.GetBasketPriceWithDiscount(this);
+            return Store.GetBasketPriceWithDiscount(this);
         }
         public double GetBasketOrigPrice()
         {
-            return store.GetBasketOrigPrice(this);
+            return Store.GetBasketOrigPrice(this);
         }
 
         public double getBasketDiscount()
@@ -185,7 +196,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             foreach (var product in products.Keys)
             {
-                store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
+                Store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
             }
         }
     }

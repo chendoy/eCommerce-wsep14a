@@ -135,12 +135,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Tuple<bool, string> ans = name_and_pass_check(username, pass);
             if (!ans.Item1)
                 return ans;
+        
+            User System_Admin = new User(0, username, false, true);  
+            users.Add(username, System_Admin);
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
-            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
-            User System_Admin = new User(0, username, false, true);
-            users.Add(username, System_Admin);
-            DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, true, false));
+            DbUser dbadmin = DbManager.Instance.GetUser(username);
+            if(dbadmin == null)
+            {
+                DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, true, false));
+                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
+            }
+
             return new Tuple<bool, string>(true, "");
         }
         //Register regular user to the system 

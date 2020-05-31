@@ -54,9 +54,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return retList;
         }
       
-        public void LoadStores(List<Store> Allstores)
+        public void LoadFromDb()
         {
-            foreach(Store store in Allstores)
+            List<Store> allstores = DbManager.Instance.LoadAllStores();
+            foreach(Store store in allstores)
             {
                 stores.Add(store.Id, store);
                 Publisher.Instance.subscribe(store.owners[0], store.Id);

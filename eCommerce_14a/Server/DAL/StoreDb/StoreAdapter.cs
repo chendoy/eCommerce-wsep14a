@@ -68,7 +68,7 @@ namespace Server.DAL.StoreDb
 
         public DbPurchaseBasket ToDbPurchseBasket(PurchaseBasket basket, int cartid)
         {
-            return new DbPurchaseBasket(basket.user, basket.store.Id, basket.Price, basket.PurchaseTime, cartid);
+            return new DbPurchaseBasket(basket.User, basket.Store.Id, basket.Price, basket.PurchaseTime, cartid);
         }
 
         public  DiscountPolicy ComposeDiscountPolicy(List<DbDiscountPolicy> dbDiscountPolicies)
@@ -270,6 +270,41 @@ namespace Server.DAL.StoreDb
             return new CompundPurchasePolicy((int)node.MergeType, childrens);
         }
 
-     
+        public Purchase ComposePurchse(DbPurchase dbPurchase)
+        {
+            Cart cart = ComposeCart(dbPurchase.CartId, dbPurchase.UserName);
+            return new Purchase(dbPurchase.UserName, cart);
+        }
+
+        public DbCart ToDbCart(Cart cart)
+        {
+            return new DbCart(cart.Id, cart.user, cart.Price, cart.IsPurchased);
+        }
+
+        public Cart ComposeCart(int cartid, string username)
+        {
+            List<DbPurchaseBasket> dbBskets = DbManager.Instance.GetCartBaskets(cartid);
+            Dictionary<Store, PurchaseBasket> baskets = new Dictionary<Store, PurchaseBasket>();
+            foreach(DbPurchaseBasket dbPurBasket in dbBskets)
+            {
+                Store store = StoreManagment.Instance.getStore(dbPurBasket.StoreId);
+                baskets.Add(store, ComposeBasket(dbPurBasket, store));
+            }
+            DbCart dbCart = DbManager.Instance.GetDbCart(cartid);
+            return new Cart(cartid, username, dbCart.Price, baskets, dbCart.IsPurchased);
+
+        }
+
+        public PurchaseBasket ComposeBasket(DbPurchaseBasket dbBasket, Store store)
+        {
+            List<ProductAtBasket> dbProdsAtBasket = DbManager.Instance.GetAllProductAtBasket(dbBasket.Id);
+            Dictionary<int, int> products = new Dictionary<int, int>();
+            foreach(ProductAtBasket product in dbProdsAtBasket)
+            {
+                products.Add(product.ProductId, product.ProductAmount);
+            }
+
+            return new PurchaseBasket(dbBasket.Id, dbBasket.UserName, store, products, dbBasket.Price, dbBasket.PurchaseTime);
+        }
     }
 }

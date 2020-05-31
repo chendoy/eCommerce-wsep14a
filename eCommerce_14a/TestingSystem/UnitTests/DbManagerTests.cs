@@ -12,6 +12,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using Server.DAL.UserDb;
 using eCommerce_14a.Utils;
 using Server.DAL.CommunicationDb;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -31,16 +32,15 @@ namespace TestingSystem.DbManger_Tests
         }
 
         [TestMethod]
-        public List<Store> TestGetAllStores ()
+        public List<Store> GetAllStore()
         {
-            List<Store> stores = DbManager.Instance.GetAllStores();
+            List<Store> stores = DbManager.Instance.LoadAllStores();
             return stores;
         }
         [TestMethod]
         public void TestLoadStores()
         {
-            List<Store> stores = TestGetAllStores();
-            StoreManagment.Instance.LoadStores(stores);
+            StoreManagment.Instance.LoadFromDb();
             int b = 1;
         }
 
@@ -82,7 +82,7 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void RemoveApproval()
         {
-            NeedToApprove test = new NeedToApprove("liav", "yossi",1);
+            NeedToApprove test = new NeedToApprove("liav", "yossi", 1);
             DbManager.Instance.InsertNeedToApprove(test);
             DbManager.Instance.DeleteSingleApproval(test);
         }
@@ -135,16 +135,25 @@ namespace TestingSystem.DbManger_Tests
         }
 
         [TestMethod]
-        public Store TestGetStore(int sid=9)
+        public Store TestLoadStore(int sid = 9)
         {
-            return DbManager.Instance.GetStore(sid);
+            return DbManager.Instance.LoadStore(sid);
         }
 
         [TestMethod]
         public void TestDeleteFullStore_t1()
         {
-            Store s = TestGetStore(6);
+            Store s = TestLoadStore(6);
             DbManager.Instance.DeleteFullStore(s);
+        }
+
+        [TestMethod]
+        public void TestLoadAllPurchase()
+        {
+            StoreManagment.Instance.LoadFromDb();
+            PurchaseManagement.Instance.LoadFromDb();
+            int a = 1;
+
         }
 
 

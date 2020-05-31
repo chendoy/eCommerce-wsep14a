@@ -47,10 +47,11 @@
             AddCarts(context);
             AddBaskets(context);
             AddProductAtBasket(context);
+            AddPurchases(context);
 
         }
 
-
+      
 
         private void AddInventories(EcommerceContext context)
         {
@@ -111,14 +112,10 @@
             var product_atbasket = new List<ProductAtBasket>();
             product_atbasket.Add(new ProductAtBasket(storeId: 2, basketid: 1, productid: 3, productamount: 1));
             product_atbasket.Add(new ProductAtBasket(storeId: 3, basketid: 2, productid: 5, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 4, basketid: 3, productid: 7, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 5, basketid: 4, productid: 10, productamount: 2));
-            product_atbasket.Add(new ProductAtBasket(storeId: 6, basketid: 5, productid: 11, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 6, basketid: 6, productid: 12, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 8, basketid: 7, productid: 15, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 8, basketid: 8, productid: 16, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 3, basketid: 9, productid: 6, productamount: 1));
-            product_atbasket.Add(new ProductAtBasket(storeId: 3, basketid: 9, productid: 17, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 1, basketid: 3, productid: 1, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 1, basketid: 3, productid: 2, productamount: 1));
+            product_atbasket.Add(new ProductAtBasket(storeId: 4, basketid: 4, productid: 7, productamount: 2));
+
 
 
             product_atbasket.ForEach(pab => context.ProductsAtBaskets.Add(pab));
@@ -129,24 +126,13 @@
         private void AddBaskets(EcommerceContext context)
         {
             var baskets = new List<DbPurchaseBasket>();
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 2, basketprice: 1000,// ID = 1
+            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 2, basketprice: 1000, // ID = 1
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 1));
             baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 3, basketprice: 100, // ID = 2
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 1));
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 4, basketprice: 1700, // ID = 3
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 18, minute: 10, second: 10), cartid: 1));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 5, basketprice: 4000, // ID = 4
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 20, hour: 15, minute: 10, second: 10), cartid: 2));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 6, basketprice: 1755, // ID = 5
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 3));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 6, basketprice: 1555.5,  // ID = 6
-                                         purchasetime: new DateTime(year: 2020, month: 5, day: 22, hour: 15, minute: 10, second: 10), cartid: 3));
-            baskets.Add(new DbPurchaseBasket(username: "Guy", storeid: 8, basketprice: 5000,  // ID = 7
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 4));
-            baskets.Add(new DbPurchaseBasket(username: "Guy", storeid: 8, basketprice: 1000,  // ID = 8
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 15, minute: 10, second: 10), cartid: 4));
-            baskets.Add(new DbPurchaseBasket(username: "Naor", storeid: 3, basketprice: 2200,  // ID = 9
-                                             purchasetime: new DateTime(year: 2020, month: 5, day: 13, hour: 15, minute: 10, second: 10), cartid: 5));
+                                    purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 12, minute: 10, second: 10), cartid: 1));
+            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 1, basketprice: 1100, // ID = 3
+                purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 2)); 
+            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 4, basketprice: 1700, null, cartid: 3)); //ID=4
 
             baskets.ForEach(b => context.Baskets.Add(b));
             context.SaveChanges();
@@ -155,16 +141,20 @@
         private void AddCarts(EcommerceContext context)
         {
             var carts = new List<DbCart>();
-            carts.Add(new DbCart("Liav", 2800)); //ID = 1
-            carts.Add(new DbCart("Sundy", 4000)); // ID = 2
-            carts.Add(new DbCart("Sundy", 3310.5)); // ID =3
-            carts.Add(new DbCart("Guy", 6000)); // ID =4
-            carts.Add(new DbCart("Naor", 2200)); // ID = 5
-
+            carts.Add(new DbCart(1, "Liav", 1100, true)); //ID = 1
+            carts.Add(new DbCart(2, "Sundy", 1100, true)); // ID = 2
+            carts.Add(new DbCart(3, "Sundy", 3400, false)); // ID =3
             carts.ForEach(c => context.Carts.Add(c));
             context.SaveChanges();
         }
-
+        private void AddPurchases(EcommerceContext context)
+        {
+            var purchases = new List<DbPurchase>();
+            purchases.Add(new DbPurchase(1, "Liav"));
+            purchases.Add(new DbPurchase(2, "Sundy"));
+            purchases.ForEach(p => context.Purchases.Add(p));
+            context.SaveChanges();
+        }
         private void AddPurchasePolicies(EcommerceContext context)
         {
             var purchasepolicies = new List<DbPurchasePolicy>();

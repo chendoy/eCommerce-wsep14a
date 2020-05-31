@@ -16,7 +16,7 @@
                         CartId = c.Int(nullable: false),
                         StoreId = c.Int(nullable: false),
                         Price = c.Double(nullable: false),
-                        PurchaseTime = c.DateTime(nullable: false),
+                        PurchaseTime = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DbCarts", t => t.CartId)
@@ -33,6 +33,7 @@
                         UserName = c.String(maxLength: 128),
                         Id = c.Int(nullable: false, identity: true),
                         Price = c.Double(nullable: false),
+                        IsPurchased = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DbUsers", t => t.UserName)

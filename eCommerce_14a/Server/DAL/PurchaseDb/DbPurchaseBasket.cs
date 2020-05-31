@@ -31,16 +31,18 @@ namespace Server.DAL.PurchaseDb
 
         public double Price { set; get; }
 
-        public DateTime PurchaseTime { get; set; }
+        public DateTime? PurchaseTime { get; set; }
 
-        public DbPurchaseBasket(string username, int storeid, double basketprice, DateTime purchasetime, int cartid)
+        public DbPurchaseBasket(string username, int storeid, double basketprice, DateTime? purchasetime, int cartid)
         {
             UserName = username;
             StoreId = storeid;
             Price = basketprice;
             PurchaseTime = purchasetime;
             CartId = cartid;
+            PurchaseTime = purchasetime;
         }
+
 
         public DbPurchaseBasket()
         {

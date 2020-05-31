@@ -20,10 +20,16 @@ namespace Server.DAL.PurchaseDb
 
         public double Price { get; set; }
 
-        public DbCart(string username, double price)
+        public bool IsPurchased { get; set; }
+
+   
+
+        public DbCart(int id, string username, double price, bool isPurchased)
         {
+            Id = id;
             UserName = username;
             Price = price;
+            IsPurchased = isPurchased;
         }
 
         public DbCart()
