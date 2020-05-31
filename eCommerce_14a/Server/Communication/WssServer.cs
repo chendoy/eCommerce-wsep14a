@@ -310,7 +310,7 @@ namespace eCommerce_14a.Communication
         {
 
             DiscountParser parser = new DiscountParser();
-            DiscountPolicy dp = parser.Parse();
+            DiscountPolicy dp = parser.Parse("(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))");
 
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());
