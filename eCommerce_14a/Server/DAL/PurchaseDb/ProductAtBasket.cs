@@ -16,7 +16,7 @@ namespace Server.DAL.PurchaseDb
         [Key, ForeignKey("Basket")]
         [Column(Order = 1)]
         public int BasketId { set; get; }
-        public virtual DbPurchaseBasket Basket { set; get; }
+        public  DbPurchaseBasket Basket { set; get; }
 
 
         [Key, ForeignKey("Product")]
