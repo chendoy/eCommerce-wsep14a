@@ -126,13 +126,13 @@
         private void AddBaskets(EcommerceContext context)
         {
             var baskets = new List<DbPurchaseBasket>();
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 2, basketprice: 1000, // ID = 1
+            baskets.Add(new DbPurchaseBasket(1, username: "Liav", storeid: 2, basketprice: 1000, // ID = 1
                                              purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 1));
-            baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 3, basketprice: 100, // ID = 2
+            baskets.Add(new DbPurchaseBasket(2, username: "Liav", storeid: 3, basketprice: 100, // ID = 2
                                     purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 12, minute: 10, second: 10), cartid: 1));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 1, basketprice: 1100, // ID = 3
+            baskets.Add(new DbPurchaseBasket(3, username: "Sundy", storeid: 1, basketprice: 1100, // ID = 3
                 purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 2));
-            baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 4, basketprice: 1700, null, cartid: 3)); //ID=4
+            baskets.Add(new DbPurchaseBasket(4, username: "Sundy", storeid: 4, basketprice: 1700, null, cartid: 3)); //ID=4
 
             baskets.ForEach(b => context.Baskets.Add(b));
             context.SaveChanges();

@@ -103,6 +103,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
+                DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
                 return isValidBasket;
             }
 

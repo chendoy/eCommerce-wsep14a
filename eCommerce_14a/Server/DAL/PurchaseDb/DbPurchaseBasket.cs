@@ -33,8 +33,9 @@ namespace Server.DAL.PurchaseDb
 
         public DateTime? PurchaseTime { get; set; }
 
-        public DbPurchaseBasket(string username, int storeid, double basketprice, DateTime? purchasetime, int cartid)
+        public DbPurchaseBasket(int id, string username, int storeid, double basketprice, DateTime? purchasetime, int cartid)
         {
+            Id = id;
             UserName = username;
             StoreId = storeid;
             Price = basketprice;
