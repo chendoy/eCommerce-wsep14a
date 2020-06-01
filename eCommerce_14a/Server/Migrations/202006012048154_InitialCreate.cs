@@ -11,7 +11,7 @@
                 "dbo.DbPurchaseBaskets",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
                         UserName = c.String(maxLength: 128),
                         CartId = c.Int(nullable: false),
                         StoreId = c.Int(nullable: false),
