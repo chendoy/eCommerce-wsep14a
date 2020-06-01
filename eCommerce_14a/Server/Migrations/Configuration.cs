@@ -15,7 +15,7 @@
     using eCommerce_14a.UserComponent.DomainLayer;
 
     internal sealed class Configuration : DbMigrationsConfiguration<EcommerceContext>
-    { 
+    {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
@@ -51,7 +51,7 @@
 
         }
 
-      
+
 
         private void AddInventories(EcommerceContext context)
         {
@@ -131,7 +131,7 @@
             baskets.Add(new DbPurchaseBasket(username: "Liav", storeid: 3, basketprice: 100, // ID = 2
                                     purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 12, minute: 10, second: 10), cartid: 1));
             baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 1, basketprice: 1100, // ID = 3
-                purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 2)); 
+                purchasetime: new DateTime(year: 2020, month: 5, day: 21, hour: 10, minute: 10, second: 10), cartid: 2));
             baskets.Add(new DbPurchaseBasket(username: "Sundy", storeid: 4, basketprice: 1700, null, cartid: 3)); //ID=4
 
             baskets.ForEach(b => context.Baskets.Add(b));
@@ -547,14 +547,14 @@
 
             var users = new List<DbUser>();
             users.Add(new DbUser("Liav", false, true, false));
-            users.Add(new DbUser("Sundy", false, true, true));
-            users.Add(new DbUser("Shmulik", false, true, true));
-            users.Add(new DbUser("Yosi", true, false, true));
+            users.Add(new DbUser("Sundy", false, true, false));
+            users.Add(new DbUser("Shmulik", false, true, false));
+            users.Add(new DbUser("Yosi", true, false, false));
             users.Add(new DbUser("Eitan", false, false, false));
-            users.Add(new DbUser("Naor", false, false, true));
-            users.Add(new DbUser("Chen", false, false, true));
-            users.Add(new DbUser("Guy", false, false, true));
-            users.Add(new DbUser("Shlomo", false, false, true));
+            users.Add(new DbUser("Naor", false, false, false));
+            users.Add(new DbUser("Chen", false, false, false));
+            users.Add(new DbUser("Guy", false, false, false));
+            users.Add(new DbUser("Shlomo", false, false, false));
             users.ForEach(u => context.Users.Add(u));
             context.SaveChanges();
         }

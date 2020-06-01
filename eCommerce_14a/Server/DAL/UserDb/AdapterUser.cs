@@ -201,7 +201,6 @@ namespace Server.DAL.UserDb
             if (permissionsNumbers[4] == 1)
             {
                 results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.DiscountPolicy));
-                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.DiscountPolicy));
             }
             return results;
         }

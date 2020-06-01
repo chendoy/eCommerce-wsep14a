@@ -380,22 +380,22 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             int next_id = DbManager.Instance.GetNextStoreId();
             storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
             storeParam.Add(CommonStr.StoreParams.StoreName, storename);
-            storeParam.Add(CommonStr.StoreParams.mainOwner, user);
+            storeParam.Add(CommonStr.StoreParams.mainOwner, user.Name);
             Store store = new Store(storeParam);
+            //DB Insert Store
+            DbManager.Instance.InsertStore(store);
 
             Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id,userName);
 
             if (!ownershipAdded.Item1)
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownershipAdded.Item2);
+                DbManager.Instance.DeleteFullStore(store);
                 return new Tuple<int, string>(-1, ownershipAdded.Item2);
             }
             else
             {        
                 stores.Add(next_id, store);
-                
-                //DB Insert Store
-                DbManager.Instance.InsertStore(store);
                 
                 //Version 2 Addition
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
