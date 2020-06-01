@@ -90,6 +90,13 @@ namespace eCommerce_14a.Communication
             return session;
         }
 
+        public byte[] HandleLogin(string json)
+        {
+            LoginRequest res = JsonConvert.DeserializeObject<LoginRequest>(json);
+            userService.Login(res.Username, res.Password);
+            return new byte[5];
+        }
+
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
             bool isAdmin = false;
@@ -415,6 +422,12 @@ namespace eCommerce_14a.Communication
             Tuple<bool, string> ans = appointService.RemoveStoreManager(res.Appointer, res.Appointed, res.StoreId);
             string jsonAns = Seralize(new DemoteManagerResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
+        }
+
+        public int SpecialHandleOpenStore(string username) 
+        {
+            Tuple<int, string> ans = storeService.createStore(username);
+            return ans.Item1;
         }
     }
 }

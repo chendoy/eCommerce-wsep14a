@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Collections;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
@@ -237,6 +237,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+            if(0 == Interlocked.Exchange(ref usingResource, 1))
             //Add Guest DO not Require DB Changes
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             string tName = "Guest" + Available_ID;
@@ -245,6 +246,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             nUser.LogIn();
             Active_users.Add(tName, nUser);
             Available_ID++;
+            Interlocked.Exchange(ref usingResource, 0);
             return tName;
         }
         //Tries to get User from users list

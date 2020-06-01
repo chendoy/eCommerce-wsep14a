@@ -190,6 +190,8 @@
     <Compile Include="Utils\DeliverySystem.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
+    <Compile Include="Utils\RequestMaker.cs" />
+    <Compile Include="Utils\StateInitiator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">

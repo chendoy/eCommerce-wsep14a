@@ -13,7 +13,10 @@ using Server.Communication.DataObject.Responses;
 using System.Collections.Generic;
 using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
-using Server.DAL;
+using Server.Utils;
+using System.Reflection;
+using log4net;
+using log4net.Config;
 
 namespace eCommerce_14a.Communication
 {
@@ -42,7 +45,12 @@ namespace eCommerce_14a.Communication
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
+            config1.MaxConnectionNumber = 1000;
             config1.Security = "Tls";
+            config1.LogAllSocketException = false;
+            config1.LogBasicSessionActivity = false;
+            config1.LogCommand = false;
+            
             config1.Certificate = new CertificateConfig
             {
                 FilePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Communication\cert.pfx",
@@ -53,10 +61,23 @@ namespace eCommerce_14a.Communication
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
+            disLogger();
             wsServer.Start();
+            //enLogger();
+            XmlConfigurator.Configure();
             Console.WriteLine("Server is running on port " + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
+        }
+
+        private void disLogger()
+        {
+            LogManager.GetRepository().ResetConfiguration();
+        }
+
+        private void enLogger()
+        {
+            XmlConfigurator.Configure();
         }
 
 
@@ -67,18 +88,19 @@ namespace eCommerce_14a.Communication
 
         private void StartSession(WebSocketSession session)
         {
-            checkFunc(); // for tests
+            //checkFunc(); // for tests
             Console.WriteLine("NewSessionConnected");
         }
 
         private void ReceiveData(WebSocketSession session, byte[] value)
         {
+            //Console.WriteLine("Receive Msg:" + value.ToString()) ;
             HandleMessage(session, value);
         }
 
         private void ReceiveMessage(WebSocketSession session, string value)
         {
-            //Console.WriteLine("Receive Msg:" + value);
+            Console.WriteLine("Receive Msg:" + value);
         }
 
         public void notify(string username, NotifyData msg)
@@ -279,6 +301,7 @@ namespace eCommerce_14a.Communication
             }
         }
 
+
         public void checkFunc() 
         {
             handler.HandleRegister(JsonConvert.SerializeObject(new RegisterRequest("admin", "admin")));
@@ -298,10 +321,11 @@ namespace eCommerce_14a.Communication
             //Console.WriteLine(json);
             //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
             //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
+            //RequestMaker req = new RequestMaker();
+            //req.GenerateBinReq();
             //CommunicationHandler hand = new CommunicationHandler();
             WssServer notifier = new WssServer();
             notifier.InitServer();
-
         }
     }
 }
