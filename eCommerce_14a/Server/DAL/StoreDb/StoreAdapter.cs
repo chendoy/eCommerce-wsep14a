@@ -68,7 +68,7 @@ namespace Server.DAL.StoreDb
 
         public DbPurchaseBasket ToDbPurchseBasket(PurchaseBasket basket, int cartid)
         {
-            return new DbPurchaseBasket(basket.User, basket.Store.Id, basket.Price, basket.PurchaseTime, cartid);
+            return new DbPurchaseBasket(basket.Id, basket.User, basket.Store.Id, basket.Price, basket.PurchaseTime, cartid);
         }
 
         public  DiscountPolicy ComposeDiscountPolicy(List<DbDiscountPolicy> dbDiscountPolicies)
