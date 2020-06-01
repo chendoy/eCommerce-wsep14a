@@ -33,7 +33,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Contains the list of who need to Approve his Ownership
         public Dictionary<int, List<string>> NeedToApprove { set;  get; }
         //Contains the list of who waiting for his approval
-        public Dictionary<int, List<string>> WaitingForApproval { set;  get; }
+        public Dictionary<int, List<string>> WaitingForApproval { set;  get; } //the user I need to approve
         //Contains the status of the Appoitment
         public Dictionary<int, bool> IsApproved { get; set; }
 

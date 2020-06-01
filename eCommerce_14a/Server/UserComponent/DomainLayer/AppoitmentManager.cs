@@ -94,6 +94,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 //Remove MasterAppointer - Candidtae Table from DB
                 string masterNmae = appointed.MasterAppointer[storeID];
                 appointed.RemoveMasterAppointer(storeID);
+                Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " Didn't Approved"));
                 DbManager.Instance.DeleteSingleCandidate(AdapterUser.CreateCandidate(masterNmae, Appointed, storeID));
                 return new Tuple<bool, string>(true, "User failed to become an owner");
             }
@@ -241,7 +242,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "One of the users is a Guest\n");
             if (store.IsStoreOwner(appointed) || store.IsStoreManager(appointed))
                 return new Tuple<bool, string>(false, addto + " Is already Store Owner or Manager\n");
-            if (!store.IsStoreOwner(appointer))
+            if (!store.IsStoreOwner(appointer) && !store.IsStoreManager(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
             //Liav Will Insert In the correct Table in the DB here
             store.AddStoreManager(appointed);
@@ -343,13 +344,44 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!DemotedOwner.isAppointedByOwner(owner,storeId))
                 return new Tuple<bool, string>(false, PrevOwner + " Did Not Appointed by:" +owner+"\n");
             List<User> OwnersToRemove = RemoveOwnerLoop(appointer, DemotedOwner, store);
-            foreach(User Prevowner in OwnersToRemove)
+            List<User> ManagersToRemove = RemoveManagerLoop(appointer, DemotedOwner, store);
+            foreach (User manager in ManagersToRemove)
+            {
+                //Liav Will Delete From DB Here
+                store.RemoveManager(manager);
+            }
+            foreach (User Prevowner in OwnersToRemove)
             {
                 //Liav Remove from DB Here
                 store.RemoveOwner(Prevowner);
             }
             return new Tuple<bool, string>(true, PrevOwner + " Removed from store: - " + store.StoreName + "\n");
 
+        }
+        public List<User> RemoveManagerLoop(User appointer, User DemoteOwner, Store store)
+        {
+            List<User> ManagersToRemove = new List<User>();
+            ManagersToRemove.Add(DemoteOwner);
+            string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
+            DemoteOwner.RemoveStoreManagment(store.GetStoreId());
+            DbManager.Instance.DeleteSingleManager(AdapterUser.GetManagerNote(appointer.getUserName(), DemoteOwner.getUserName(), store.Id));
+            int[] pm = DemoteOwner.Store_options[store.Id];
+            DemoteOwner.RemovePermission(store.GetStoreId());
+            //Remove Permissions From DB
+            List<UserStorePermissions> perms = AdapterUser.CreateNewPermissionSet(DemoteOwner.getUserName(), store.GetStoreId(), pm);
+            DbManager.Instance.DeletePermission(perms);
+            Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(Message));
+            Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
+            List<string> Managers = store.managers;
+            foreach (string managerName in Managers)
+            {
+                User manager = UserManager.Instance.GetUser(managerName);
+                if (manager.isAppointedByManager(DemoteOwner, store.GetStoreId()))
+                {
+                    ManagersToRemove.AddRange(RemoveManagerLoop(DemoteOwner, manager, store));
+                }
+            }
+            return ManagersToRemove;
         }
         private List<User> RemoveOwnerLoop(User appointer,User DemoteOwner,Store store)
         {
@@ -369,34 +401,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(OwnerRemovalMessage));
             Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
             //DemoteOwner.RemoveAppoitmentOwner(appointer, store.GetStoreId());
-            string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
-            List<string> Managers = store.managers;
-            List<User> ManagersToRemove = new List<User>();
             List<string> Owners = store.owners;
-            foreach (string managerName in Managers)
-            {
-                User manager = UserManager.Instance.GetUser(managerName);
-                if (manager.isAppointedByManager(DemoteOwner, store.GetStoreId()))
-                {
-                    ManagersToRemove.Add(manager);
-                    manager.RemoveStoreManagment(store.GetStoreId());
-                    //Remove Managment From DB
-                    DbManager.Instance.DeleteSingleManager(AdapterUser.GetManagerNote(DemoteOwner.getUserName(), managerName, store.Id));
-                    int[] pm = manager.Store_options[store.Id];
-                    manager.RemovePermission(store.GetStoreId());
-                    //Remove Permissions From DB
-                    List<UserStorePermissions> perms = AdapterUser.CreateNewPermissionSet(managerName, store.GetStoreId(), pm);
-                    DbManager.Instance.DeletePermission(perms);
-                    Publisher.Instance.Notify(manager.getUserName(), new NotifyData(Message));
-                    Publisher.Instance.Unsubscribe(manager.getUserName(), store.GetStoreId());
-                    //manager.RemoveStoreManagment(store.GetStoreId());
-                }
-            }
-            foreach(User manager in ManagersToRemove)
-            {
-                //Liav Will Delete From DB Here
-                store.RemoveManager(manager);
-            }
             foreach (string ownername in Owners)
             {
                 User owner = UserManager.Instance.GetUser(ownername);

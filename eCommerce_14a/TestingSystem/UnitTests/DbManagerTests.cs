@@ -103,7 +103,7 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void RemoveApprovalStatus()
         {
-            StoreOwnertshipApprovalStatus test = new StoreOwnertshipApprovalStatus(1, true, "yossi");
+            StoreOwnertshipApprovalStatus test = new StoreOwnertshipApprovalStatus(1, true, "guy");
             DbManager.Instance.InsertStoreOwnerShipApprovalStatus(test);
             DbManager.Instance.DeleteSingleApprovalStatus(test);
         }
