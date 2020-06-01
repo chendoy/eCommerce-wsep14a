@@ -17,6 +17,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
     public class UserManager
     {
+        public static int usingResource = 0 ;
         public Dictionary<string, string> Users_And_Hashes {get; set;}
         public Dictionary<string, User> users { get; set; }
         public Dictionary<string, User> Active_users { get; set; }
@@ -237,6 +238,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+
             if(0 == Interlocked.Exchange(ref usingResource, 1))
             //Add Guest DO not Require DB Changes
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
