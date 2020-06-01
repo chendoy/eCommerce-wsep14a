@@ -47,7 +47,7 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void TestGetAllUsers()
         {
-            List<User> useres = DbManager.Instance.GetAllUsers();
+            List<User> useres = DbManager.Instance.LoadAllUsers();
             int a = 1;
         }
 

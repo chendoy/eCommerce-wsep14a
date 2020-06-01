@@ -224,7 +224,7 @@ namespace Server.DAL
         {
             return dbConn.Users.ToList();
         }
-        public List<User> GetAllUsers()
+        public List<User> LoadAllUsers()
         {
             List<string> usernames = dbConn.Users.Select(user => user.Name).Distinct().ToList();
             List<DbPassword> passes = dbConn.Passwords.ToList();

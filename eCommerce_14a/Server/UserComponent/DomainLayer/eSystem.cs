@@ -58,16 +58,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public void loaddata()
         {
-            List<User> users = DbManager.Instance.GetAllUsers();
+            DbManager.Instance.LoadAllUsers();
             StoreManagment.Instance.LoadFromDb();
             PurchaseManagement.Instance.LoadFromDb();
             Publisher.Instance.StoreSubscribers = DbManager.Instance.GetAllsubsribers();
-            StoreManagment a = StoreManagment.Instance;
-            PurchaseManagement b = PurchaseManagement.Instance;
-            UserManager c = UserManager.Instance;
-            int d = 1;
             //AppoitmentManager.Instance.LoadAppointments();
-
         }
         public bool SetDeliveryConnection(bool conn)
         {
