@@ -8,6 +8,7 @@ using Server.StoreComponent.DomainLayer;
 using Server.Communication.DataObject.ThinObjects;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 using Server.DAL;
+using Server.Utils;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -183,16 +184,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             List<Store> allStores = stores.Values.ToList();
             foreach (Store store in allStores) 
             {
-                List<User> owners = store.owners;
-                foreach (User user in owners) 
+                List<string> owners = store.owners;
+                foreach (string user in owners) 
                 {
-                    if (user.getUserName().Equals(username))
+                    if (user.Equals(username))
                         retList.Add(store);
                 }
 
-                foreach (User user in store.managers)
+                foreach (string user in store.managers)
                 {
-                    if (user.getUserName().Equals(username))
+                    if (user.Equals(username))
                         retList.Add(store);
                 }
             }
@@ -240,7 +241,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
 
-        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicyData)
+        public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, string discountPolicy)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);
@@ -254,12 +255,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
-            return stores[storeId].UpdateDiscountPolicy(user, discountPolicyData);
+            DiscountPolicy parsedDiscount = DiscountParser.Parse(discountPolicy);
+            if(!DiscountParser.checkDiscount(parsedDiscount))
+            {
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.DiscountPolicyParsedFailed);
+            }
+            return stores[storeId].UpdateDiscountPolicy(user, parsedDiscount);
 
         }
 
 
-        public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, PurchasePolicyData purchasePolicyData)
+        public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, string purchasePolicy)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);
@@ -273,27 +279,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
-            return stores[storeId].UpdatePurchasePolicy(user, purchasePolicyData);
-
-        }
-
-        internal List<Store> GetStoresOwnedBy(string username)
-        {
-            List<Store> retList = new List<Store>();
-            List<Store> allStores = stores.Values.ToList();
-            foreach (Store store in allStores) 
+            PurchasePolicy parsedPurchase = PurchasePolicyParser.Parse(purchasePolicy);
+            if(!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
             {
-                List<string> owners = store.owners;
-                foreach (string ownername in owners) 
-                {
-                    User owner = UserManager.Instance.GetUser(ownername);
-                    if (owner.getUserName().Equals(username))
-                        retList.Add(store);
-                }
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.PurchasePolicyParsedFailed);
+
             }
-            return retList;
+            return stores[storeId].UpdatePurchasePolicy(user, parsedPurchase);
+
         }
 
+     
 
         public Dictionary<string, object> getStoreInfo(int storeId)
         {

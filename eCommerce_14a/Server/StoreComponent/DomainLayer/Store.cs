@@ -240,7 +240,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, string> UpdateDiscountPolicy(User user, string discountPolicyData)
+        public Tuple<bool, string> UpdateDiscountPolicy(User user, DiscountPolicy discountPolicy)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -258,23 +258,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }
-            DiscountPolicy newPolicy = DiscountParser.Parse(discountPolicyData);
-            if (newPolicy == null)
-            {
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.PurchasePolicyErrMessage);
 
-            }
-            else
-            {
-                this.DiscountPolicy = newPolicy;
-
-                //DB update Discount Policy
-                DbManager.Instance.UpdateDiscountPolicy(newPolicy, this);
-                return new Tuple<bool, string>(true, "");
-            }
+            DiscountPolicy = discountPolicy;
+            //DB update Discount Policy
+            DbManager.Instance.UpdateDiscountPolicy(DiscountPolicy, this);
+            return new Tuple<bool, string>(true, "");
+            
         }
 
-        public Tuple<bool, string> UpdatePurchasePolicy(User user, PurchasePolicyData purchasePolicyData)
+        public Tuple<bool, string> UpdatePurchasePolicy(User user, PurchasePolicy purchasePolicy)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -292,17 +284,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }
-            PurchasePolicy newPolicy = ToFatPurchasePolicy(purchasePolicyData);
-            if (newPolicy == null) {
-                return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.PurchasePolicyErrMessage);
 
-            }
-            else {
-                this.PurchasePolicy = newPolicy;
-                //DB update Purchase Policy
-                DbManager.Instance.UpdatePurchasePolicy(newPolicy, this);
-                return new Tuple<bool, string>(true, "");
-            }
+            PurchasePolicy = purchasePolicy;
+            //DB update Purchase Policy
+            DbManager.Instance.UpdatePurchasePolicy(purchasePolicy, this);
+            return new Tuple<bool, string>(true, "");
           
         }
 

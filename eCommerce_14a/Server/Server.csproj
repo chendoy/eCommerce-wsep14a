@@ -202,6 +202,7 @@
     <Compile Include="Utils\DiscountParser.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
+    <Compile Include="Utils\PurchasePolicyParser.cs" />
     <Compile Include="Utils\RequestMaker.cs" />
     <Compile Include="Utils\StateInitiator.cs" />
   </ItemGroup>

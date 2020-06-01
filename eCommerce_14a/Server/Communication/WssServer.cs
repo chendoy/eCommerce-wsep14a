@@ -62,7 +62,7 @@ namespace eCommerce_14a.Communication
             wsServer.SessionClosed += EndSession;
             wsServer.NewMessageReceived += ReceiveMessage;
             wsServer.NewDataReceived += ReceiveData;
-            disLogger();
+            //disLogger();
             wsServer.Start();
             //enLogger();
             XmlConfigurator.Configure();
@@ -342,7 +342,6 @@ namespace eCommerce_14a.Communication
         public static void Main(string[] argv)
         {
 
-            DiscountPolicy dp = DiscountParser.Parse("(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))");
 
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());

@@ -146,6 +146,10 @@ namespace eCommerce_14a.Utils
             public static string notStoreOwnerErrMessage = "This Action can't  be performed because the user is not a store Owner";
             public static string userNotFoundErrMsg = "Null User Supplied";
             public static string illegalStoreName = "Store name iilegal";
+            public static string DiscountPolicyParsedFailed = "There was error parsing the discount policy";
+            public static string PurchasePolicyParsedFailed = "There was error parsing the purchase policy";
+
+
         }
         public static class MangerPermission
         {

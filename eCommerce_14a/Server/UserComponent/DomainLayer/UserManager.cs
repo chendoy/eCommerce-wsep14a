@@ -159,14 +159,17 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Tuple<bool, string> ans = name_and_pass_check(username, pass);
             if (!ans.Item1)
                 return ans;
-            string sha1 = SB.CalcSha1(pass);
-            Users_And_Hashes.Add(username, sha1);
-            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
+
             User nUser = new User(Available_ID, username, false);
             users.Add(username, nUser);
             //insert to user to db:
             DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, false, false));
             Available_ID++;
+
+            string sha1 = SB.CalcSha1(pass);
+            Users_And_Hashes.Add(username, sha1);
+            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
+        
             return new Tuple<bool, string>(true, "");
         }
         //Login to Unlogged Register User with valid user name and pass.
@@ -340,7 +343,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             foreach (User manager in users.Values)
             {
-                if (manager.isAppointedBy(owner, storeId) && manager.isStorManager(storeId))
+                if (manager.isStorManager(storeId) && manager.isAppointedByManager(owner, storeId))
                 {
                     permissionsSet.Add(new Tuple<string, Permission>(manager.getUserName(), new Permission(manager.GetUserPermissions()[storeId])));
                 }

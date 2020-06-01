@@ -125,16 +125,16 @@ namespace eCommerce_14a.Utils
         }
         // will return true iff <param> discountPolicy is a malformed discount, i.e failed
         // to parse, i.e if it is instance of RevealdDiscount with negative product id.
-        static bool checkDiscount(DiscountPolicy discountPolicy)
+        public static bool checkDiscount(DiscountPolicy discountPolicy)
         {
             try
             {
                 RevealdDiscount revealedDiscount = ((RevealdDiscount)discountPolicy);
-                return revealedDiscount.discountProdutId < 0 ? true : false;
+                return revealedDiscount.discountProdutId < 0 ? false : true;
             }
             catch (Exception)
             {
-                return false;
+                return true;
             }
         }
     }

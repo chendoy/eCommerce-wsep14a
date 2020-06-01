@@ -68,7 +68,7 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.createStore(userName,storename);
         }
 
-        public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , PurchasePolicyData purchasePolicy)
+        public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , string purchasePolicy)
         {
             return storeManagment.UpdatePurchasePolicy(storeId, userName, purchasePolicy);
         }
