@@ -9,6 +9,7 @@ using Server.Communication.DataObject;
 using Server.Communication.DataObject.ThinObjects;
 using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
+using Server.UserComponent.DomainLayer;
 
 namespace Client.Service
 {
@@ -19,15 +20,24 @@ namespace Client.Service
         {
             comm = new Communication();
             Time = DateTime.Now;
+            Permissions = new Dictionary<int, Permission>();
         }
 
         public DateTime Time { get; private set; }
-        
+        public Dictionary<int, Permission> Permissions { get; set; }
+
         public NotifierService NotifierService
         {
             get { return comm.NotifierService; }
         }
 
+        public void SetPermissions(Dictionary<int, int[]> permissions)
+        {
+            foreach (var item in permissions)
+            {
+                Permissions.Add(item.Key, new Permission(item.Value));
+            }
+        }
 
         async public Task<List<StoreData>> GetAllActiveStores()
         {
@@ -85,6 +95,10 @@ namespace Client.Service
             LogoutRequest request = new LogoutRequest(username);
             comm.SendRequest(request);
             LogoutResponse response = await comm.Get<LogoutResponse>();
+            if (response.Success)
+            {
+                Permissions = new Dictionary<int, Permission>();
+            }
             return response;
         }
 
@@ -189,6 +203,38 @@ namespace Client.Service
             AddProductToStoreRequest request = new AddProductToStoreRequest(StoreId, UserName, ProductId, ProductDetails, ProductPrice, ProductName, ProductCategory, Pamount, ImgUrl);
             comm.SendRequest(request);
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<Dictionary<int, string>> GetRawDiscounts()
+        {
+            GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
+            comm.SendRequest(request);
+            GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
+            return response.DiscountPolicies;
+        }
+
+        async public Task<SuccessFailResponse> UpdateDiscountPolicy(int StoreId, string loggedInUser, string discountText)
+        {
+            UpdateDiscountPolicyRequest request = new UpdateDiscountPolicyRequest(StoreId, loggedInUser, discountText);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<GetAllDiscountPreconditionsResponse> GetDiscountsPreconditions()
+        {
+            GetAllDiscountPreconditionsRequest request = new GetAllDiscountPreconditionsRequest();
+            comm.SendRequest(request);
+            GetAllDiscountPreconditionsResponse response = await comm.Get<GetAllDiscountPreconditionsResponse>();
+            return response;
+        }
+
+        async public Task<GetAvailableRawDiscountsResponse> GetAllCurrentDiscounts()
+        {
+            GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
+            comm.SendRequest(request);
+            GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
             return response;
         }
     }

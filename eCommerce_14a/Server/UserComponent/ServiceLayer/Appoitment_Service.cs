@@ -49,6 +49,11 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return AppoitmentManager.Instance.RemoveStoreOwner(owner, PrevOwner, storeId);
         }
+
+        internal Tuple<bool, string> ApproveAppointment(string owner, string appointed, int storeID, bool approval)
+        {
+            return new Tuple<bool, string>(true, "This is only stub, please change to the real implementation");
+        }
         //For Adim Uses
     }
 }

@@ -177,6 +177,27 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return stores[storeId].UpdateProduct(user, productParams);
         }
 
+        internal List<Store> GetStoresOwnedBy(string username)
+        {
+            List<Store> retList = new List<Store>();
+            List<Store> allStores = stores.Values.ToList();
+            foreach (Store store in allStores) 
+            {
+                List<User> owners = store.owners;
+                foreach (User user in owners) 
+                {
+                    if (user.getUserName().Equals(username))
+                        retList.Add(store);
+                }
+
+                foreach (User user in store.managers)
+                {
+                    if (user.getUserName().Equals(username))
+                        retList.Add(store);
+                }
+            }
+            return retList;
+        }
 
         public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
         {

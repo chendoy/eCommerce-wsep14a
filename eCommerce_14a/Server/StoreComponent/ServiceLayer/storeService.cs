@@ -73,7 +73,7 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.UpdatePurchasePolicy(storeId, userName, purchasePolicy);
         }
 
-        public Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicy)
+        public Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, string discountPolicy)
         {
             return storeManagment.UpdateDiscountPolicy(storeId, userName, discountPolicy);
         }

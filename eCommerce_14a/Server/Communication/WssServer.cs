@@ -17,6 +17,7 @@ using Server.Utils;
 using System.Reflection;
 using log4net;
 using log4net.Config;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.Communication
 {
@@ -249,6 +250,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_AVAILABLE_PURCHASES:
+                    response = handler.HandleGetAvailablePurchases(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 case Opcode.ADD_PRODUCT_TO_STORE:
                     response = handler.HandleAddProductToStore(json);
                     session.Send(response, 0, response.Length);
@@ -296,6 +302,26 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_MANAGER_PERMISSION:
+                    response = handler.HandleGetManagersPermission(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.CHANGE_PERMISSIONS:
+                    response = handler.HandleChangePermissions(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.APPROVE_APPOINTMENT:
+                    response = handler.HandleApproveAppointment(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_APPROVAL_LIST:
+                    response = handler.HandleApprovalList(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }
@@ -315,6 +341,9 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
+
+            DiscountPolicy dp = DiscountParser.Parse("(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))");
+
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());
             //string json = JsonConvert.SerializeObject(res);

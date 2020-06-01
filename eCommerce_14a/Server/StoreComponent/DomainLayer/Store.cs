@@ -240,7 +240,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return new Tuple<bool, string>(true, "");
         }
 
-        public Tuple<bool, string> UpdateDiscountPolicy(User user, DiscountPolicyData discountPolicyData)
+        public Tuple<bool, string> UpdateDiscountPolicy(User user, string discountPolicyData)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -258,7 +258,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg);
                 }
             }
-            DiscountPolicy newPolicy = ToFatDiscountPolicy(discountPolicyData);
+            DiscountPolicy newPolicy = DiscountParser.Parse(discountPolicyData);
             if (newPolicy == null)
             {
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.PurchasePolicyErrMessage);
