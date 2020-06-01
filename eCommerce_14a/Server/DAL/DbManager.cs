@@ -936,7 +936,7 @@ namespace Server.DAL
                 foreach (DbInventoryItem item in invItems)
                 {
                     DbProduct dbProduct = dbConn.Products.Where(prod => prod.Id == item.ProductId).FirstOrDefault();
-                    Product product = new Product(dbProduct.Id, dbProduct.Details, dbProduct.Price, dbProduct.Name, dbProduct.Rank, dbProduct.Category, dbProduct.ImgUrl);
+                    Product product = new Product(dbProduct.Id, dbProduct.StoreId, dbProduct.Details, dbProduct.Price, dbProduct.Name, dbProduct.Rank, dbProduct.Category, dbProduct.ImgUrl);
                     inventoryProducts.Add(item.ProductId, new Tuple<Product, int>(product, item.Amount));
                 }
                 return new Inventory(inventoryProducts);

@@ -34,8 +34,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             ImgUrl = imgUrl;
         }
 
+        public Product(int pid, int sid, string details = "this is product", double price = 100, string name = "", int rank = 3, string category = "Electricity", string imgUrl = "")
+        {
+            Id = pid;
+            StoreId = sid;
+            Details = details;
+            Price = price;
+            Name = name;
+            Rank = rank;
+            Category = category;
+            ImgUrl = imgUrl;
+        }
 
- 
+
+
+
 
 
 

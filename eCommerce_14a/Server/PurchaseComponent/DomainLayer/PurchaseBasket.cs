@@ -163,7 +163,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
         public Store Store
         {
-            get { return Store; }
+            get { return store; }
         }
         public double GetBasketPriceWithDiscount()
         {
