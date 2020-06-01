@@ -41,7 +41,8 @@ namespace TestingSystem.DbManger_Tests
         public void TestLoadStores()
         {
             StoreManagment.Instance.LoadFromDb();
-            int b = 1;
+            StoreManagment b = StoreManagment.Instance;
+            int a = 1;
         }
 
         [TestMethod]

@@ -103,6 +103,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <param name="exist">  means this product meant to be already in the cart (in case of change/remove existing product </param>
         public Tuple<bool, string> AddProductToShoppingCart(string userId, int storeId, int productId, int wantedAmount, bool exist)
         {
+
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (String.IsNullOrWhiteSpace(userId))
             {
@@ -146,9 +147,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductShortageErrMsg);
             }
 
-            if (!this.carts.TryGetValue(userId, out Cart cart))
+            Cart cart;
+            if (!carts.TryGetValue(userId, out cart))
             {
-                carts.Add(userId, CreateNewCart(userId));
+                cart = CreateNewCart(userId);
+                carts.Add(userId, cart);
             }
 
             return cart.AddProduct(store, productId, wantedAmount, exist);
