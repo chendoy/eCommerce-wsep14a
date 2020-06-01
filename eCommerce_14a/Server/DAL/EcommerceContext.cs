@@ -93,6 +93,21 @@ namespace Server.DAL
              .Property(t => t.Id)
              .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
+            modelBuilder.Entity<DbStore>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<DbProduct>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<DbCart>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
             modelBuilder.Entity<CandidateToOwnership>()
             .HasRequired(c => c.Appointer)
             .WithMany()
