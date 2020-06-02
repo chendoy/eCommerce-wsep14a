@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetUserPermissionsResponse : Message
+    public class GetUserPermissionsResponse : Message
     {
         public GetUserPermissionsResponse() : base(Opcode.RESPONSE){ }
         public GetUserPermissionsResponse(Dictionary<int, int[]> permissions) : base(Opcode.RESPONSE)

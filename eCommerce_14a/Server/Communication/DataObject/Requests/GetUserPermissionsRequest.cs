@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class GetUserPermissionsRequest : Message
+    public class GetUserPermissionsRequest : Message
     {
 
         public GetUserPermissionsRequest() : base(Opcode.GET_USER_PERMISSIONS){ }
