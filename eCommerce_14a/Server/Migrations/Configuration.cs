@@ -403,17 +403,10 @@
         private void AddStoreManagers(EcommerceContext context)
         {
             var store_managers = new List<StoreManager>();
-            store_managers.Add(new StoreManager(1, "Chen"));
-            store_managers.Add(new StoreManager(1, "Yosi"));
-            store_managers.Add(new StoreManager(1, "Sundy"));
-            store_managers.Add(new StoreManager(2, "Liav"));
+            store_managers.Add(new StoreManager(1, "Naor"));
             store_managers.Add(new StoreManager(2, "Naor"));
-            store_managers.Add(new StoreManager(3, "Naor"));
-            store_managers.Add(new StoreManager(4, "Shmulik"));
-            store_managers.Add(new StoreManager(5, "Chen"));
-            store_managers.Add(new StoreManager(6, "Guy"));
-            store_managers.Add(new StoreManager(7, "Liav"));
-            store_managers.Add(new StoreManager(8, "Chen"));
+            store_managers.Add(new StoreManager(2, "Chen"));
+
             store_managers.ForEach(sm => context.StoreManagers.Add(sm));
             context.SaveChanges();
 
@@ -423,12 +416,14 @@
         {
             var storeOwners = new List<StoreOwner>();
             storeOwners.Add(new StoreOwner(1, "Liav"));
+            storeOwners.Add(new StoreOwner(1, "Sundy"));
             storeOwners.Add(new StoreOwner(2, "Sundy"));
             storeOwners.Add(new StoreOwner(3, "Shmulik"));
             storeOwners.Add(new StoreOwner(4, "Yosi"));
             storeOwners.Add(new StoreOwner(5, "Eitan"));
             storeOwners.Add(new StoreOwner(6, "Naor"));
             storeOwners.Add(new StoreOwner(7, "Chen"));
+            storeOwners.Add(new StoreOwner(7, "Guy"));
             storeOwners.Add(new StoreOwner(8, "Guy"));
             storeOwners.ForEach(so => context.StoreOwners.Add(so));
             context.SaveChanges();

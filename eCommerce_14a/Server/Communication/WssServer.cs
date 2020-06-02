@@ -65,21 +65,11 @@ namespace eCommerce_14a.Communication
             //disLogger();
             wsServer.Start();
             //enLogger();
-            XmlConfigurator.Configure();
             Console.WriteLine("Server is running on port " + ". Press ENTER to exit....");
             Console.ReadKey();
             wsServer.Stop();
         }
 
-        private void disLogger()
-        {
-            LogManager.GetRepository().ResetConfiguration();
-        }
-
-        private void enLogger()
-        {
-            XmlConfigurator.Configure();
-        }
 
 
         private void EndSession(WebSocketSession session, CloseReason value)
