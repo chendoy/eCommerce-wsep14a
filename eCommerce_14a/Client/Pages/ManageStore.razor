@@ -155,7 +155,7 @@
 
         @if (service.Permissions[StoreId].EditDiscountPolicy)
         {
-    <RadzenTabsItem Text="Discounts">
+    <RadzenTabsItem Text="Discount Policy">
 
         <div class="row">
             <div class="col-md-8">
@@ -164,42 +164,71 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row col-md-12">
 
-            <div class="col-md-4">
-                <h2>Available discounts</h2>
-                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
-
-            </div>
             <div class="col-md-4">
                 <h2>Available preconditions</h2>
-                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="preconditions" Data="@preconditions" TextProperty="preconditions" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+
             </div>
             <div class="col-md-4">
                 <h2>Available products</h2>
                 <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="products" Data="@products" TextProperty="products" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
             </div>
+            <div class="col-md-4">
+                <h2>How formatting works?</h2>
+                <RadzenCard Style="margin-bottom: 20px; height:200px; width:400px; overflow:scroll;">
+                    <h4>Revealed Discount</h4>
+                    <span>Revealed discounts are denoted by the term r:[discount%]:[product ID]</span>
+                    <br />
+                    <sapn>For example: r:2:20</sapn>
+                    <hr>
+                    <h4>Conditional Basket Discount</h4>
+                    <span>Conditional basket discounts are denoted by the term cb:[pre condition]:[discount%]</span>
+                    <br />
+                    <sapn>For example: cb:3:20</sapn>
+                    <hr>
+                    <h4>Conditional Product Discount</h4>
+                    <span>Conditional product discounts are denoted by the term cp:[Produt ID]:[pre condition]:[discount%]</span>
+                    <br />
+                    <sapn>For example: cb:3:20</sapn>
+                    <hr>
+                    <h4>Compound Discount</h4>
+                    <span>Compound discount are denoted by the term (Opeator Child-Discount_1 ... Child-Discount_n)</span>
+                    <br />
+                    <span>i.e there should be parentheses around</span>
+                    <br />
+                    <span>Note the prefix operator!</span>
+                    <br />
+                    <span>child discoutns can be compund themselves, considier the following compound discount:</span>
+                    <br />
+                    <span>(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))</span>
 
+                </RadzenCard>
+            </div>
         </div>
 
-
-        <h2>Your new composite discount </h2>
+        <h2>Your new composite purchase policy goes here </h2>
 
         <div class="row">
             <div class="col-md-8">
                 <RadzenTextArea Placeholder="Enter here..." Cols="70" Rows="3" Change="@(args => ChnageDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
             </div>
-            <div class="col-md-4">
-                <RadzenButton Click="@((args) => ParseDiscountText(args))" Text="Submit" Style="margin-bottom: 20px; width: 150px" />
-            </div>
-        </div>
+                
+                <div class="col-md-4">
+                    <div class="row">
+                        <RadzenButton Click="@((args) => ParseDiscountText(args))" Text="Submit" Style="margin-bottom: 20px; width: 150px" />
+                    </div>
+                    <div class="row">
+                        <div class="error-msg" style="text-align:left; font-weight:bold">
+                            <span>@errorMsg</span>
+                        </div>
 
-        <div class="error-msg" style="text-align:left; font-weight:bold">
-            <span>@errorMsg</span>
-        </div>
-
-        <div class="success-msg" style="text-align:left; font-weight:bold">
-            <span>@successMsg</span>
+                        <div class="success-msg" style="text-align:left; font-weight:bold">
+                            <span>@successMsg</span>
+                        </div>
+                    </div>
+                </div>
         </div>
 
     </RadzenTabsItem>
@@ -207,9 +236,86 @@
 
         @if (service.Permissions[StoreId].EditPurachsePolicy)
         {
-            <RadzenTabsItem Text="Purchase Policy">
-                <p> placeholder for purchase policy</p>
-            </RadzenTabsItem>
+    <RadzenTabsItem Text="Purchase Policy">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Current purchase policies in your store</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="currentDiscounts" Data="@currentDiscounts" TextProperty="currentDiscounts" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:1200px;" />
+            </div>
+        </div>
+
+        <div class="row col-md-12">
+
+            <div class="col-md-4">
+                <h2>Available preconditions</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+
+            </div>
+            <div class="col-md-4">
+                <h2>Available products</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="products" Data="@products" TextProperty="products" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+            </div>
+            <div class="col-md-4">
+                <h2>How formatting works?</h2>
+                <RadzenCard Style="margin-bottom: 20px; height:200px; width:400px; overflow:scroll;">
+                    <h4>Product Purchase Policy</h4>
+                    <span>Product purchase policies are denoted by the term p:[precondition]:[productId]</span>
+                    <br />
+                    <sapn>For example: p:3:546</sapn>
+                    <hr>
+                    <h4>Basket Purchase Policy</h4>
+                    <span>Basket purchase policies are denoted by the term b:[pre condition]</span>
+                    <br />
+                    <sapn>For example: b:6</sapn>
+                    <hr>
+                    <h4>System Purchase Policy</h4>
+                    <span>System purchase policies are denoted by the term s:[precondition]:[storeID]</span>
+                    <br />
+                    <sapn>For example: s:3:41</sapn>
+                    <hr>
+                    <h4>User Purchase Policy</h4>
+                    <span>User purchase policies are denoted by the term u:[precondition]:[username]</span>
+                    <br />
+                    <sapn>For example: s:3:josh</sapn>
+                    <hr>
+                    <h4>Compund Purchase Policy</h4>
+                    <span>Compound purchase policies are denoted by the term (Opeator Child_Policy_1 ... Child_Policy_n)</span>
+                    <br />
+                    <span>i.e there should be parentheses around</span>
+                    <br />
+                    <span>Note the prefix operator!</span>
+                    <br />
+                    <span>children polcies can be compund themselves, considier the following compound policy:</span>
+                    <br />
+                    <span>(AND (XOR (OR b:1 p:2:3) s:1:1) (OR u:3:user1 u:2:user2))</span>
+                </RadzenCard>
+            </div>
+        </div>
+
+        <h2>Your new composite purchase policy goes here </h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenTextArea Placeholder="Enter here..." Cols="70" Rows="3" Change="@(args => ChangePolicyText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+            </div>
+
+            <div class="col-md-4">
+                <div class="row">
+                    <RadzenButton Click="@((args) => ParsePolicyText(args))" Text="Submit" Style="margin-bottom: 20px; width: 150px" />
+                </div>
+                <div class="row">
+                    <div class="error-msg" style="text-align:left; font-weight:bold">
+                        <span>@errorMsg</span>
+                    </div>
+
+                    <div class="success-msg" style="text-align:left; font-weight:bold">
+                        <span>@successMsg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </RadzenTabsItem>
         }
 
         @if (service.Permissions[StoreId].ViewPuarchseHistory)
@@ -445,11 +551,10 @@
     private string selectedRole;
     private string selectedOption;
     List<string> discountsWithId = new List<string>();
-    List<string> preconditions = new List<string>();
     List<string> products = new List<string>();
     List<string> currentDiscounts = new List<string>();
     private string discountText { get; set; }
-
+    private string policyText { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
@@ -465,13 +570,6 @@
         discounts = sortedDiscounts.ToList();
         foreach (KeyValuePair<int, string> kv in discounts)
             discountsWithId.Add(kv.Key + ": " + kv.Value);
-
-        // GetAllDiscountPreconditionsResponse preResponse = await service.GetDiscountsPreconditions();
-        // Dictionary<int, string> precondDict = preResponse.preconditions;
-        Dictionary<int, string> precondDict = new Dictionary<int, string>();
-        foreach (KeyValuePair<int, string> kv in precondDict)
-            preconditions.Add(kv.Key + ": " + kv.Value);
-
 
         await UpdateInventory();
         ProductsInEdit = new List<Tuple<ProductData, int>>();
@@ -535,13 +633,57 @@
             errorMsg = response.Error;
         }
     }
+    async private void ParsePolicyText(object args)
+    {
+        SuccessFailResponse response = await service.UpdatePurchasePolicy(StoreId, loggedInUser, policyText);
+
+        if (response.Success)
+        {
+            successMsg = "Policy added successfully";
+            errorMsg = "";
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+    }
+
 
 
     private void ChnageDiscountText(object discount)
     {
         discountText = (string)discount;
-    }
+        bool balancedParen = CheckForBalancedBracketing(discountText);
+        if (!balancedParen)
+        {
+            errorMsg = "Expression is not balanced";
+            successMsg = "";
+        }
 
+        else
+        {
+            errorMsg = "";
+            successMsg = "Expression is well balanced";
+        }
+    }
+    private void ChangePolicyText(object policy)
+    {
+        policyText = (string)policy;
+        bool balancedParen = CheckForBalancedBracketing(policyText);
+        if (!balancedParen)
+        {
+            errorMsg = "Expression is not balanced";
+            successMsg = "";
+        }
+
+        else
+        {
+            errorMsg = "";
+            successMsg = "Expression is well balanced";
+        }
+    }
+    
 
     private void SelectProduct(object productId)
     {
@@ -760,4 +902,46 @@
         ManagersPermissions = response.ManagerPermissions;
     }
 
-    }
+    private bool CheckForBalancedBracketing(string IncomingString)
+    {
+        const char LeftParenthesis = '(';
+        const char RightParenthesis = ')';
+        uint BracketCount = 0;
+
+        try
+        {
+            checked  // Turns on overflow checking.
+            {
+                for (int Index = 0; Index < IncomingString.Length; Index++)
+                {
+                    switch (IncomingString[Index])
+                    {
+                        case LeftParenthesis:
+                            BracketCount++;
+                            continue;
+                        case RightParenthesis:
+                            BracketCount--;
+                            continue;
+                        default:
+                            continue;
+                    }  // end of switch()
+
+                }
+            }
+        }
+
+        catch (OverflowException)
+        {
+            return false;
+        }
+
+        if (BracketCount == 0)
+        {
+            return true;
+        }
+
+        return false;
+
+    }  // end of CheckForBalancedBracketing()
+
+}
