@@ -181,24 +181,29 @@ namespace Server.DAL.UserDb
         }
         public static List<UserStorePermissions> CreateNewPermissionSet(string userName, int StoreId, int[] permissionsNumbers)
         {
+            int[] oldPerm;
+            if(!UserManager.Instance.GetUser(userName).Store_options.TryGetValue(StoreId, out oldPerm))
+            {
+                oldPerm = new int[] { 0,0,0,0,0};
+            }
             List<UserStorePermissions> results = new List<UserStorePermissions>();
-            if(permissionsNumbers[0] == 1)
+            if(permissionsNumbers[0] == 1 && oldPerm[0] != 1)
             {
                 results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Comments));
             }
-            if (permissionsNumbers[1] == 1)
+            if (permissionsNumbers[1] == 1 && oldPerm[1] != 1)
             {
                 results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Purchase));
             }
-            if (permissionsNumbers[2] == 1)
+            if (permissionsNumbers[2] == 1 && oldPerm[2] != 1)
             {
                 results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Product));
             }
-            if (permissionsNumbers[3] == 1)
+            if (permissionsNumbers[3] == 1 && oldPerm[3] != 1)
             {
                 results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.PurachsePolicy));
             }
-            if (permissionsNumbers[4] == 1)
+            if (permissionsNumbers[4] == 1 && oldPerm[4] != 1)
             {
                 results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.DiscountPolicy));
             }
