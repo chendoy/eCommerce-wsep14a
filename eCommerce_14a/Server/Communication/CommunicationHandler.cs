@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
@@ -282,6 +283,22 @@ namespace eCommerce_14a.Communication
             GetApprovalListRequest res = JsonConvert.DeserializeObject<GetApprovalListRequest>(json);
             List<string> ans = userService.GetApprovalListByStoreAndUser(res.Username, res.StoreID);
             string jsonAns = Seralize(new GetApprovalListResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleDiscountPolicy(string json)
+        {
+            GetDiscountPolicyRequest res = JsonConvert.DeserializeObject<GetDiscountPolicyRequest>(json);
+            string ans = storeService.GetDiscountPolicy(res.StoreID);
+            string jsonAns = Seralize(new GetDiscountPolicyResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandlePurchasePolicy(string json)
+        {
+            GetPurchasePolicyRequest res = JsonConvert.DeserializeObject<GetPurchasePolicyRequest>(json);
+            string ans = storeService.GetPurchasePolicy(res.StoreID);
+            string jsonAns = Seralize(new GetPurchasePolicyResponse(ans));
             return security.Encrypt(jsonAns);
         }
 

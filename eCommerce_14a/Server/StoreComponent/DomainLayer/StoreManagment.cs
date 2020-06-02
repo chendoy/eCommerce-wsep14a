@@ -149,6 +149,22 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return stores[storeId].removeProduct(user, productId);
         }
 
+        internal string GetDiscountPolicy(int storeID)
+        {
+            Store store;
+            if (!stores.TryGetValue(storeID, out store))
+                return "";
+            return store.DiscountPolicy.ToString();
+        }
+
+        internal string GetPurchasePolicy(int storeID)
+        {
+            Store store;
+            if (!stores.TryGetValue(storeID, out store))
+                return "";
+            return store.PurchasePolicy.ToString();
+        }
+
         public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
