@@ -56,18 +56,14 @@ namespace eCommerce_14a.Utils
                     string[] constructs = text.Split(':');
                     int preCondition = Convert.ToInt32(constructs[1]);
                     int storeID = Convert.ToInt32(constructs[2]);
-                    StoreManagment sm = new StoreManagment();
-                    Store store = sm.getStore(storeID);
-                    return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), store);
+                    return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), storeID);
                 }
                 else if (userPurchasePolicyRegex.IsMatch(text)) // (u:precondition:username)
                 {
                     string[] constructs = text.Split(':');
                     int precondition = Convert.ToInt32(constructs[1]);
                     string username = constructs[2];
-                    UserManager um = new UserManager();
-                    User user = um.GetUser(username);
-                    return new UserPurchasePolicy(new PurchasePreCondition(precondition), user);
+                    return new UserPurchasePolicy(new PurchasePreCondition(precondition), username);
                 }
             }
             else // compound purchase policy
@@ -126,7 +122,7 @@ namespace eCommerce_14a.Utils
                 foreach (string policy in policies)
                 {
                     PurchasePolicy purchasePolicy = Parse(policy);
-                    if (checkDiscount(purchasePolicy) == true) // this indicates an error!
+                    if (CheckPurchasePolicy(purchasePolicy) == true) // this indicates an error!
                         return new ProductPurchasePolicy(new PurchasePreCondition(- 2), -2);
                     else
                         children.Add(purchasePolicy);
@@ -138,7 +134,7 @@ namespace eCommerce_14a.Utils
         }
         // will return true iff <param> purchasePolicy is a malformed policy, i.e failed
         // to parse, i.e if it is instance of ProductPurchasePolicy with negative precondition.
-        static bool checkDiscount(PurchasePolicy purchasePolicy)
+        public static bool CheckPurchasePolicy(PurchasePolicy purchasePolicy)
         {
             try
             {
