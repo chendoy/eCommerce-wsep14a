@@ -285,6 +285,15 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleUserPermissions(string json)
+        {
+            Dictionary<int, int[]> permissions;
+            GetUserPermissionsRequest res = JsonConvert.DeserializeObject<GetUserPermissionsRequest>(json);
+            permissions = userService.GetUserPermissions(res.Username);
+            string jsonAns = Seralize(new GetUserPermissionsResponse(permissions));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleChangePermissions(string json)
         {
             ChangePermissionsRequest res = JsonConvert.DeserializeObject<ChangePermissionsRequest>(json);

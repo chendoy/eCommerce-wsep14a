@@ -41,6 +41,7 @@ namespace Server.Communication.DataObject
         REMOVE_PRODUCT_FROM_STORE,
         UPDATE_PRODUCT_OF_STORE,
         STORE_HISTORY,
+        GET_USER_PERMISSIONS,
         ALL_STORE_HISTORY,
         ALL_BUYERS_HISTORY,
         GET_MANAGER_PERMISSION,
