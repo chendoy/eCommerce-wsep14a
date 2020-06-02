@@ -146,7 +146,7 @@ namespace Client.Service
         {
             DemoteOwnerRequest request = new DemoteOwnerRequest(appointer, appointed, storeId);
             comm.SendRequest(request);
-            DemoteManagerResponse response = await comm.Get<DemoteManagerResponse>();
+            DemoteOwnerResponse response = await comm.Get<DemoteOwnerResponse>();
             return new Tuple<bool, string>(response.Success, response.Error);
         }
 

@@ -460,8 +460,8 @@ namespace eCommerce_14a.Communication
         public byte[] HandleDemoteOwner(string json)
         {
             DemoteOwnerRequest res = JsonConvert.DeserializeObject<DemoteOwnerRequest>(json);
-            Tuple<bool, string> ans = appointService.RemoveStoreManager(res.Appointer, res.Appointed, res.StoreId);
-            string jsonAns = Seralize(new DemoteManagerResponse(ans.Item1, ans.Item2));
+            Tuple<bool, string> ans = appointService.RemoveStoreOwner(res.Appointer, res.Appointed, res.StoreId);
+            string jsonAns = Seralize(new DemoteOwnerResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 
