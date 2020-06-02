@@ -508,9 +508,10 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void UpdateDbCart(DbCart dbCart, Cart cart)
+        public void UpdateDbCart(DbCart dbCart, Cart cart, bool isPurchased)
         {
             dbCart.Price = cart.Price;
+            dbCart.IsPurchased = isPurchased;
             dbConn.SaveChanges();
         }
 
@@ -1346,17 +1347,19 @@ namespace Server.DAL
 
 
 
-        public NotifyData GetNotifyWithMaxId()
+        public int GetNotifyWithMaxId()
         {
-
-            /*if (!dbConn.Notifies.Any())
+            if (dbConn.Notifies.Any())
             {
-                // The table is empty
-                return null;
+                return dbConn.Notifies.Max(n => n.Id) + 1;
             }
-            return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();*/
-            return null;
+            else
+            {
+                return 1;
+            }
+          
         }
+
         public void InsertUserUnreadMessages(DbNotifyData ntfd)
         {
             dbConn.Notifies.Add(ntfd);

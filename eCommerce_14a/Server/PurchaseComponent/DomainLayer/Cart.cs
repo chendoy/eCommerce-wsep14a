@@ -104,7 +104,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             //Update CART PRICE AT DB
             if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
             {
-                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this);
+                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this, IsPurchased);
             }
         }
 
