@@ -15,6 +15,7 @@ using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
 using eCommerce_14a.Utils;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using System.Security.Cryptography.X509Certificates;
 
 namespace eCommerce_14a.Communication
 {
@@ -33,6 +34,15 @@ namespace eCommerce_14a.Communication
             wsServer = new WebSocketServer();
             Publisher.Instance.setServer(this);
             LoadData();
+
+            /// DELETE THIS //////
+
+            DiscountPolicy dp = DiscountParser.Parse("(AND (XOR (OR r:1:1 cb:1:1) r:1:1) (OR cp:1:1:1 cb:1:1))");
+            string str = dp.ToString();
+            int x = 1;
+
+            /// ^^^^^^ DELETE THIS ///////^^^^^
+
         }
         private void LoadData()
         {
@@ -319,7 +329,8 @@ namespace eCommerce_14a.Communication
         public static void Main(string[] argv)
         {
 
-            DiscountPolicy dp = DiscountParser.Parse("(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))");
+            // PurchasePolicy pp = PurchasePolicyParser.Parse("(AND (XOR (OR b:1 p:2:3) s:1:1) (OR u:3:user1 u:2:user2))");
+
 
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());

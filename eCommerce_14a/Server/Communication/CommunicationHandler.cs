@@ -396,7 +396,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleUpdatePurchasePolicy(string json)
         {
             UpdatePurchasePolicyRequest res = JsonConvert.DeserializeObject<UpdatePurchasePolicyRequest>(json);
-            Tuple<bool, string> ans = storeService.updatePurchasePolicy(res.storeId, res.userName, res.purchasePolicy);
+            Tuple<bool, string> ans = storeService.updatePurchasePolicy(res.storeId, res.userName, null);
             string jsonAns = Seralize(new UpdatePurchasePolicyResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }

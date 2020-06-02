@@ -9,6 +9,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public interface PurchasePolicy
     {
         bool IsEligiblePurchase(PurchaseBasket basket, Validator validator);
+        string ToString();
     }
     public class CompundPurchasePolicy : PurchasePolicy
     {
@@ -75,6 +76,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return children;
         }
+
+        public override string ToString()
+        {
+            string ret = "(";
+            ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
+            foreach (DiscountPolicy discount in children)
+                ret += discount.ToString() + " ";
+            ret += ")";
+            return ret;
+        }
     }
 
     abstract 
@@ -107,6 +118,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return PreCondition.IsFulfilled(basket, policyProductId, null, null, validator);
         }
+
+        public override string ToString()
+        {
+            Inventory inv = new Inventory();
+            string productStr = inv.getProductDetails(policyProductId).Item1.Name;
+            StoreManagment sm = new StoreManagment();
+            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            return "[Product Purchase Policy: " + productStr + " - " + preStr + " ]";
+        }
     }
 
     public class BasketPurchasePolicy : SimplePurchasePolicy
@@ -120,6 +141,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
         {
             return PreCondition.IsFulfilled(basket, -1, null, null, validator);
+        }
+
+        public override string ToString()
+        {
+            StoreManagment sm = new StoreManagment();
+            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            return "[Basket Purchase Policy: " + preStr + "]";
         }
     }
 
@@ -135,6 +164,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return PreCondition.IsFulfilled(basket, -1, null, store, validator);
         }
+
+        public override string ToString()
+        {
+            StoreManagment sm = new StoreManagment();
+            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            return "[SystemPurchasePolicy: " + preStr + " in store #" + store.Id + "]";
+        }
     }
 
     public class UserPurchasePolicy : SimplePurchasePolicy
@@ -148,6 +185,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
         {
             return PreCondition.IsFulfilled(basket, -1, user, null, validator);
+        }
+
+        public override string ToString()
+        {
+            StoreManagment sm = new StoreManagment();
+            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            return "[User Purchase Policy: " + preStr + " on user \"" + user.getUserName() + "\"]";
         }
     }
 }
