@@ -1339,17 +1339,19 @@ namespace Server.DAL
 
 
 
-        public NotifyData GetNotifyWithMaxId()
+        public int GetNotifyWithMaxId()
         {
-
-            /*if (!dbConn.Notifies.Any())
+            if (dbConn.Notifies.Any())
             {
-                // The table is empty
-                return null;
+                return dbConn.Notifies.Max(n => n.Id) + 1;
             }
-            return dbConn.Notifies.OrderByDescending(n => n.Id).FirstOrDefault();*/
-            return null;
+            else
+            {
+                return 1;
+            }
+          
         }
+
         public void InsertUserUnreadMessages(DbNotifyData ntfd)
         {
             dbConn.Notifies.Add(ntfd);
