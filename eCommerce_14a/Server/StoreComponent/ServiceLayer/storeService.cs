@@ -136,6 +136,16 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.getStore(storeID);
         }
 
+        public string GetPurchasePolicy(int storeID) 
+        {
+            return storeManagment.GetPurchasePolicy(storeID);
+        }
+
+        public string GetDiscountPolicy(int storeID)
+        {
+            return storeManagment.GetDiscountPolicy(storeID);
+        }
+
 
 
 

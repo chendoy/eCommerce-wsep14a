@@ -42,6 +42,8 @@ namespace Server.Communication.DataObject
         UPDATE_PRODUCT_OF_STORE,
         STORE_HISTORY,
         GET_USER_PERMISSIONS,
+        GET_DISCOUNT_POLICY,
+        GET_PURCHASE_POLICY,
         ALL_STORE_HISTORY,
         ALL_BUYERS_HISTORY,
         GET_MANAGER_PERMISSION,
