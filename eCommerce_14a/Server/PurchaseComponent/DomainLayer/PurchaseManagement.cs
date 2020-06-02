@@ -273,7 +273,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             //DB Updating cart status to purchased
             if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
             {
-                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(carts[user].Id), carts[user]);
+                
+                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(carts[user].Id), carts[user], true);
             }
 
             carts[user] = CreateNewCart(user);

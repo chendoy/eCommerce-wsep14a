@@ -501,9 +501,10 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void UpdateDbCart(DbCart dbCart, Cart cart)
+        public void UpdateDbCart(DbCart dbCart, Cart cart, bool isPurchased)
         {
             dbCart.Price = cart.Price;
+            dbCart.IsPurchased = isPurchased;
             dbConn.SaveChanges();
         }
 
