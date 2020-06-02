@@ -3,13 +3,13 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.StoreComponent.DomainLayer;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {  
     public interface PurchasePolicy
     {
-        bool IsEligiblePurchase(PurchaseBasket basket, Validator validator);
+        bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
         string ToString();
     }
     public class CompundPurchasePolicy : PurchasePolicy
@@ -126,8 +126,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Inventory inv = new Inventory();
             string productStr = inv.getProductDetails(policyProductId).Item1.Name;
-            StoreManagment sm = new StoreManagment();
-            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
             return "[Product Purchase Policy: " + productStr + " - " + preStr + " ]";
         }
@@ -148,8 +147,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override string ToString()
         {
-            StoreManagment sm = new StoreManagment();
-            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
             return "[Basket Purchase Policy: " + preStr + "]";
         }
@@ -170,10 +168,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override string ToString()
         {
-            StoreManagment sm = new StoreManagment();
-            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[SystemPurchasePolicy: " + preStr + " in store #" + store.Id + "]";
+            return "[SystemPurchasePolicy: " + preStr + " in store #" + StoreId + "]";
         }
     }
 
@@ -192,10 +189,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override string ToString()
         {
-            StoreManagment sm = new StoreManagment();
-            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[User Purchase Policy: " + preStr + " on user \"" + user.getUserName() + "\"]";
+            return "[User Purchase Policy: " + preStr + " on user \"" + UserName + "\"]";
         }
     }
 }

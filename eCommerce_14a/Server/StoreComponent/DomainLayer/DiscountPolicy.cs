@@ -12,7 +12,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public interface DiscountPolicy
     {
-        double CalcDiscount(PurchaseBasket basket, Validator validator);
+        double CalcDiscount(PurchaseBasket basket, PolicyValidator validator);
         string ToString();
     }
 
@@ -143,8 +143,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Inventory inv = new Inventory();
             string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
-            StoreManagment sm = new StoreManagment();
-            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
             return "[Conditional Product Discount: buy" + productStr + " ," + preStr + "get "+ Discount + "% off]";
         }
@@ -164,8 +163,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public override string ToString()
         {
-            StoreManagment sm = new StoreManagment();
-            Dictionary<int, string> dic = sm.GetAvilableRawDiscount();
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
 
             return "[Conditional Basket Discount:" + preStr + "get " + Discount + "% off]";
