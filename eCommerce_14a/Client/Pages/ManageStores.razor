@@ -52,6 +52,10 @@ else
         string username = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         GetStoresOwnedByResponse response = await service.GetStoresOwnedBy(username);
         storesImanage = response.Stores;
+
+        GetUserPermissionsRequest request = new GetUserPermissionsRequest(username);
+        GetUserPermissionsResponse res = await service.GetResponse<GetUserPermissionsRequest, GetUserPermissionsResponse>(request);
+        service.SetPermissions(res.Permissions);
     }
 
 }

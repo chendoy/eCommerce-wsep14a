@@ -33,6 +33,7 @@ namespace Client.Service
 
         public void SetPermissions(Dictionary<int, int[]> permissions)
         {
+            Permissions = new Dictionary<int, Permission>();
             foreach (var item in permissions)
             {
                 Permissions.Add(item.Key, new Permission(item.Value));
@@ -82,12 +83,12 @@ namespace Client.Service
 
         }
 
-        async public Task<bool> Register(UserData _user)
+        async public Task<RegisterResponse> Register(UserData _user)
         {
             RegisterRequest registerRequest = new RegisterRequest(_user.Username, _user.Password);
             comm.SendRequest(registerRequest);
             RegisterResponse response = await comm.Get<RegisterResponse>();
-            return response.Success;
+            return response;
         }
 
         async public Task<LogoutResponse> Logout(string username)
@@ -146,7 +147,7 @@ namespace Client.Service
         {
             DemoteOwnerRequest request = new DemoteOwnerRequest(appointer, appointed, storeId);
             comm.SendRequest(request);
-            DemoteManagerResponse response = await comm.Get<DemoteManagerResponse>();
+            DemoteOwnerResponse response = await comm.Get<DemoteOwnerResponse>();
             return new Tuple<bool, string>(response.Success, response.Error);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
@@ -285,6 +286,31 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleDiscountPolicy(string json)
+        {
+            GetDiscountPolicyRequest res = JsonConvert.DeserializeObject<GetDiscountPolicyRequest>(json);
+            string ans = storeService.GetDiscountPolicy(res.StoreID);
+            string jsonAns = Seralize(new GetDiscountPolicyResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandlePurchasePolicy(string json)
+        {
+            GetPurchasePolicyRequest res = JsonConvert.DeserializeObject<GetPurchasePolicyRequest>(json);
+            string ans = storeService.GetPurchasePolicy(res.StoreID);
+            string jsonAns = Seralize(new GetPurchasePolicyResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleUserPermissions(string json)
+        {
+            Dictionary<int, int[]> permissions;
+            GetUserPermissionsRequest res = JsonConvert.DeserializeObject<GetUserPermissionsRequest>(json);
+            permissions = userService.GetUserPermissions(res.Username);
+            string jsonAns = Seralize(new GetUserPermissionsResponse(permissions));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleChangePermissions(string json)
         {
             ChangePermissionsRequest res = JsonConvert.DeserializeObject<ChangePermissionsRequest>(json);
@@ -460,8 +486,8 @@ namespace eCommerce_14a.Communication
         public byte[] HandleDemoteOwner(string json)
         {
             DemoteOwnerRequest res = JsonConvert.DeserializeObject<DemoteOwnerRequest>(json);
-            Tuple<bool, string> ans = appointService.RemoveStoreManager(res.Appointer, res.Appointed, res.StoreId);
-            string jsonAns = Seralize(new DemoteManagerResponse(ans.Item1, ans.Item2));
+            Tuple<bool, string> ans = appointService.RemoveStoreOwner(res.Appointer, res.Appointed, res.StoreId);
+            string jsonAns = Seralize(new DemoteOwnerResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 

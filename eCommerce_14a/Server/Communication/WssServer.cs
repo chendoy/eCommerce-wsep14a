@@ -312,6 +312,21 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_USER_PERMISSIONS:
+                    response = handler.HandleUserPermissions(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_DISCOUNT_POLICY:
+                    response = handler.HandleDiscountPolicy(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_PURCHASE_POLICY:
+                    response = handler.HandlePurchasePolicy(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }

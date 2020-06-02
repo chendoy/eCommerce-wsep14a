@@ -62,13 +62,13 @@
     {
         var registered = await service.Register(user);
 
-        if (registered)
+        if (registered.Success)
         {
             NavigationManager.NavigateTo("/index");
         }
         else
         {
-            // insert register message here
+            RegisterMesssage = registered.Error;
         }
 
     }
