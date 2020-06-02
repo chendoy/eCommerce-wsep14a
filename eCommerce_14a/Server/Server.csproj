@@ -70,7 +70,6 @@
     <Compile Include="Communication\DataObject\Requests\ChangePermissionsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ChangeProductAmountInCartRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DecreaseProductAmountRequest.cs" />
-    <Compile Include="Communication\DataObject\Requests\GetAllDiscountPreconditionsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetAllRegisteredUsersRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteManagerRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\DemoteOwnerRequest.cs" />
@@ -101,7 +100,6 @@
     <Compile Include="Communication\DataObject\Requests\UpdateDiscountPolicyRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdateProductOfStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\UpdatePurchasePolicyRequest.cs" />
-    <Compile Include="Communication\DataObject\Responses\GetAllDiscountPreconditionsResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAllStoresHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetAllUsersHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetApprovalListResponse.cs" />
@@ -171,9 +169,9 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006012027364_InitialCreate.cs" />
-    <Compile Include="Migrations\202006012027364_InitialCreate.designer.cs">
-      <DependentUpon>202006012027364_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006012108461_InitialCreate.cs" />
+    <Compile Include="Migrations\202006012108461_InitialCreate.designer.cs">
+      <DependentUpon>202006012108461_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -199,7 +197,7 @@
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
     <Compile Include="Utils\DeliverySystem.cs" />
-    <Compile Include="Utils\DiscountParser.cs" />
+    <Compile Include="Utils\DiscountPolicyParser.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
     <Compile Include="Utils\PurchasePolicyParser.cs" />
@@ -293,8 +291,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006012027364_InitialCreate.resx">
-      <DependentUpon>202006012027364_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006012108461_InitialCreate.resx">
+      <DependentUpon>202006012108461_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

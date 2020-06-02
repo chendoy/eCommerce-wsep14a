@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class UpdatePurchasePolicyResponse : Message
+    public class UpdatePurchasePolicyResponse : Message
     {
         public bool Success { get; set; }
         public string Error { get; set; }

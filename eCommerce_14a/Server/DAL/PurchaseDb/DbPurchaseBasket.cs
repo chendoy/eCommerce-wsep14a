@@ -12,7 +12,7 @@ namespace Server.DAL.PurchaseDb
 {
     public class DbPurchaseBasket
     {
-        [Key]
+        [Key, Column(Order =0)]
         public int Id { set; get; }
 
         [ForeignKey("User")]

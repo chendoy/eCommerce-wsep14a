@@ -11,7 +11,7 @@
                 "dbo.DbPurchaseBaskets",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
                         UserName = c.String(maxLength: 128),
                         CartId = c.Int(nullable: false),
                         StoreId = c.Int(nullable: false),
@@ -31,7 +31,7 @@
                 c => new
                     {
                         UserName = c.String(maxLength: 128),
-                        Id = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
                         Price = c.Double(nullable: false),
                         IsPurchased = c.Boolean(nullable: false),
                     })
@@ -54,7 +54,7 @@
                 "dbo.DbStores",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
                         Rank = c.Int(nullable: false),
                         StoreName = c.String(),
                         ActiveStore = c.Boolean(nullable: false),
@@ -112,7 +112,7 @@
                 "dbo.DbProducts",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
+                        Id = c.Int(nullable: false),
                         StoreId = c.Int(nullable: false),
                         Price = c.Double(nullable: false),
                         Details = c.String(),

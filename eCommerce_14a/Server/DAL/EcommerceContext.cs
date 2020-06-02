@@ -10,6 +10,7 @@ namespace Server.DAL
     using Server.DAL.PurchaseDb;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Server.DAL.CommunicationDb;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class EcommerceContext : DbContext
     {
@@ -85,6 +86,27 @@ namespace Server.DAL
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.Discount).IsOptional();
 
             modelBuilder.Entity<DbPurchaseBasket>().Property(p => p.PurchaseTime).IsOptional();
+
+
+            modelBuilder.Entity<DbPurchaseBasket>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<DbStore>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<DbProduct>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+            modelBuilder.Entity<DbCart>()
+             .HasKey(t => t.Id)
+             .Property(t => t.Id)
+             .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             modelBuilder.Entity<CandidateToOwnership>()
             .HasRequired(c => c.Appointer)

@@ -222,19 +222,18 @@ namespace Client.Service
             return response;
         }
 
-        async public Task<GetAllDiscountPreconditionsResponse> GetDiscountsPreconditions()
-        {
-            GetAllDiscountPreconditionsRequest request = new GetAllDiscountPreconditionsRequest();
-            comm.SendRequest(request);
-            GetAllDiscountPreconditionsResponse response = await comm.Get<GetAllDiscountPreconditionsResponse>();
-            return response;
-        }
-
         async public Task<GetAvailableRawDiscountsResponse> GetAllCurrentDiscounts()
         {
             GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
             comm.SendRequest(request);
             GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
+            return response;
+        }
+        async public Task<SuccessFailResponse> UpdatePurchasePolicy(int StoreId, string loggedInUser, string policyText)
+        {
+            UpdatePurchasePolicyRequest request = new UpdatePurchasePolicyRequest();
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
             return response;
         }
     }
