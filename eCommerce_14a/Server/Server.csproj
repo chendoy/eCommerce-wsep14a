@@ -84,6 +84,7 @@
     <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetUserPermissionsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\IncreaseProductAmountRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginAsGuestRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Communication\DataObject\Responses\GetStaffOfStoreResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\GetUserPermissionsResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
