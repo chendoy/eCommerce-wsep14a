@@ -99,6 +99,17 @@ namespace eCommerce_14a.Communication
             return new byte[5];
         }
 
+        public string GetUserNameBySocket(WebSocketSession session) 
+        {
+            var username = usersSessions.FirstOrDefault(x => x.Value == session).Key;
+            return username;
+        }
+
+        public void HandleSessionClosed(WebSocketSession session) 
+        {
+            userService.Logout(GetUserNameBySocket(session));
+        }
+
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
             bool isAdmin = false;
