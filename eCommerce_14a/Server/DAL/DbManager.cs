@@ -95,6 +95,13 @@ namespace Server.DAL
             dbConn.Notifies.Remove(msg);
             dbConn.SaveChanges();
         }
+
+        public DbNotifyData GetDbNotification(string username, string context) 
+        {
+            DbNotifyData msg = dbConn.Notifies.Where(m => m.Context == context && m.UserName == username).FirstOrDefault();
+            return msg;
+        }
+
         public void DeleteMessages(List<DbNotifyData> lmessage)
         {
             foreach(DbNotifyData data in lmessage)

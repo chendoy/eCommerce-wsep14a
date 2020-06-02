@@ -458,8 +458,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (Store_options.ContainsKey(store_id))
             {
                 int[] oldp = Store_options[store_id];
+                
+                List<UserStorePermissions> perms = AdapterUser.GetPermissionSetForDelete(Name, store_id, oldp);
                 Store_options.Remove(store_id);
-                List<UserStorePermissions> perms = AdapterUser.CreateNewPermissionSet(Name, store_id, oldp);
                 DbManager.Instance.DeletePermission(perms);
             }
 

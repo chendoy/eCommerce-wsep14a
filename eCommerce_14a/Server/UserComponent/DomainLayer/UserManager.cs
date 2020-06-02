@@ -193,7 +193,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     foreach (NotifyData msg in messages) 
                     {
                         //Remove From DB Message
-                        DbManager.Instance.DeleteSingleMessage(AdapterCommunication.ConvertNotifyData(msg));
+                        DbNotifyData dbMsg = DbManager.Instance.GetDbNotification(username, msg.Context); 
+                        DbManager.Instance.DeleteSingleMessage(dbMsg);
                         //Try to send the message and if not recieved it will be enetred to DB Again inside Notify
                         Publisher.Instance.Notify(tUser.getUserName(), msg);
                         //tUser.RemovePendingMessage(msg);

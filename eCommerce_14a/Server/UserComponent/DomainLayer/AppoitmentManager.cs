@@ -253,8 +253,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             int[] p = {1, 1, 0, 0, 0};
             appointed.setPermmisions(store.GetStoreId(), p);
             //Insert Permissions into DB
-            List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
-            DbManager.Instance.InsertUserStorePermissionSet(permissions);
+            //List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
+            //DbManager.Instance.InsertUserStorePermissionSet(permissions);
             //Version 2 Addition
             Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
             if (!ans.Item1)

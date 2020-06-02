@@ -544,7 +544,7 @@
             users.Add(new DbUser("Liav", false, true, false));
             users.Add(new DbUser("Sundy", false, true, false));
             users.Add(new DbUser("Shmulik", false, true, false));
-            users.Add(new DbUser("Yosi", true, false, false));
+            users.Add(new DbUser("Yosi", false, false, false));
             users.Add(new DbUser("Eitan", false, false, false));
             users.Add(new DbUser("Naor", false, false, false));
             users.Add(new DbUser("Chen", false, false, false));

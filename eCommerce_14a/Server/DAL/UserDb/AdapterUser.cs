@@ -209,6 +209,32 @@ namespace Server.DAL.UserDb
             }
             return results;
         }
+
+        public static List<UserStorePermissions> GetPermissionSetForDelete(string userName, int StoreId, int[] permissionsNumbers)
+        {
+            List<UserStorePermissions> results = new List<UserStorePermissions>();
+            if (permissionsNumbers[0] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Comments));
+            }
+            if (permissionsNumbers[1] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Purchase));
+            }
+            if (permissionsNumbers[2] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.Product));
+            }
+            if (permissionsNumbers[3] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.PurachsePolicy));
+            }
+            if (permissionsNumbers[4] == 1)
+            {
+                results.Add(new UserStorePermissions(userName, StoreId, CommonStr.MangerPermission.DiscountPolicy));
+            }
+            return results;
+        }
         public static StoreManagersAppoint GetManagerNote(string appointer,string appointed,int storeID)
         {
             StoreManagersAppoint s = new StoreManagersAppoint(appointer, appointed, storeID);
