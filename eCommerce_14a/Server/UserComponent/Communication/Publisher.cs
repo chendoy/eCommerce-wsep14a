@@ -119,7 +119,10 @@ namespace Server.UserComponent.Communication
                 {
                     user.AddMessage(notification);
                     //add message to db, thus user can get it later
-                    DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
+                    if(!user.IsGuest)
+                    {
+                       DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
+                    }
                 }
                 else
                 {
@@ -142,7 +145,10 @@ namespace Server.UserComponent.Communication
             {
                 user.AddMessage(notification);
                 //add message to db, thus user can get it later
-                DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
+                if (!user.IsGuest)
+                {
+                   DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
+                }
             }
             else
             {

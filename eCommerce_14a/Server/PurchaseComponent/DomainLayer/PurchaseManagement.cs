@@ -265,13 +265,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
             userHistory.Add(newPurchase);
             // DB Insert New Purchase
-            if (!UserManager.Instance.GetUser(user).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
             {
                DbManager.Instance.InsertPurchase(StoreAdapter.Instance.ToDbPurchase(newPurchase));
             }
             purchasesHistoryByUser[user] = userHistory;
             //DB Updating cart status to purchased
-            if (!UserManager.Instance.GetUser(user).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
             {
                 DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(carts[user].Id), carts[user]);
             }
@@ -433,7 +433,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             Cart newCart = new Cart(userId);
             //DB Insert New Cart
-            if (!UserManager.Instance.GetUser(userId).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(userId).IsGuest)
             {
                 DbManager.Instance.InsertDbCart(StoreAdapter.Instance.ToDbCart(newCart));
             }

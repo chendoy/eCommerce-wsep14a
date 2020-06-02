@@ -67,9 +67,9 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 baskets.Add(store, basket);
 
                 //Inserting new basket To db
-                if(!UserManager.Instance.GetUser(this.user).IsGuest)
+                if(!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
                 {
-                    if (!UserManager.Instance.GetUser(this.user).IsGuest)
+                    if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
                     {
                         DbManager.Instance.InsertPurchaseBasket(StoreAdapter.Instance.ToDbPurchseBasket(basket, this.Id));
                     }
@@ -83,7 +83,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 baskets.Remove(store);
                 //Update DB delete purchase basket
-                if (!UserManager.Instance.GetUser(this.user).IsGuest)
+                if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
                 {
                     DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id));
                 }
@@ -102,7 +102,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 Price += basket.UpdateCartPrice();
             }
             //Update CART PRICE AT DB
-            if (!UserManager.Instance.GetUser(this.user).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
             {
                 DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this);
             }

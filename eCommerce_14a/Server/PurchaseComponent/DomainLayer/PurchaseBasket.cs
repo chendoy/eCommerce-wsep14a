@@ -79,7 +79,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 {
                     products.Remove(productId);
                     //DB Delete Product From Basekt
-                    if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                    if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                     {
                         DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
                     }
@@ -88,7 +88,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 {
                     products[productId] = wantedAmount;
                     //DB Update product amount at basket!
-                    if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                    if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                     {
                        DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount);
                     }
@@ -103,7 +103,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 products.Add(productId, wantedAmount);
                 // DB Insert Product At Basket
-                if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                 {
                     DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
                 }
@@ -113,7 +113,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
-                if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                 {
                    DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
                 }
@@ -123,7 +123,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             Price = Store.GetBasketPriceWithDiscount(this);
 
             // DB Updating basket Price
-            if (!UserManager.Instance.GetUser(this.User).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
                 DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             }
@@ -140,7 +140,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             Price = Store.GetBasketPriceWithDiscount(this);
             // DB update purchase BasketPrice
-            if (!UserManager.Instance.GetUser(this.User).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             }
@@ -152,7 +152,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             PurchaseTime = purchaseTime;
 
             //UPDATING purchase time in db
-            if (!UserManager.Instance.GetUser(this.User).IsGuest)
+            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
                 DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             }

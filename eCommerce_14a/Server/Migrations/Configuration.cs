@@ -292,7 +292,7 @@
 
 
             discountPolicies.Add(new DbDiscountPolicy(storeid: 1,
-                                                      mergetype: null, // if mergetype is null, then it's  not compund discount
+                                                      mergetype: null, // if mergetype is nu9ll, then it's  not compund discount
                                                       parentId: 1,
                                                       preconditionid: 3,
                                                       discountproductid: null,
@@ -404,7 +404,7 @@
         {
             var store_managers = new List<StoreManager>();
             store_managers.Add(new StoreManager(1, "Naor"));
-            store_managers.Add(new StoreManager(2, "Naor"));
+            store_managers.Add(new StoreManager(2, "Guy"));
             store_managers.Add(new StoreManager(2, "Chen"));
 
             store_managers.ForEach(sm => context.StoreManagers.Add(sm));
