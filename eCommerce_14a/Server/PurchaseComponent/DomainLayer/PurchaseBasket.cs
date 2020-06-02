@@ -10,6 +10,7 @@ using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.DAL;
 using Server.DAL.StoreDb;
+using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
@@ -78,13 +79,19 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 {
                     products.Remove(productId);
                     //DB Delete Product From Basekt
-                    DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                    if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                    {
+                        DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                    }
                 }
                 else
                 {
                     products[productId] = wantedAmount;
                     //DB Update product amount at basket!
-                    DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount);
+                    if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                    {
+                       DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount);
+                    }
                 }
             }
             else
@@ -96,21 +103,30 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 products.Add(productId, wantedAmount);
                 // DB Insert Product At Basket
-                DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
+                if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                {
+                    DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
+                }
             }
 
             Tuple<bool, string> isValidBasket = Store.CheckIsValidBasket(this);
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
-                DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                if (!UserManager.Instance.GetUser(this.User).IsGuest)
+                {
+                   DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                }
                 return isValidBasket;
             }
 
             Price = Store.GetBasketPriceWithDiscount(this);
 
             // DB Updating basket Price
-            DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            if (!UserManager.Instance.GetUser(this.User).IsGuest)
+            {
+                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            }
             return new Tuple<bool, string>(true, null);
         }
 
@@ -124,7 +140,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             Price = Store.GetBasketPriceWithDiscount(this);
             // DB update purchase BasketPrice
-            DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            if (!UserManager.Instance.GetUser(this.User).IsGuest)
+            {
+               DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            }
             return Price;
         }
 
@@ -133,7 +152,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             PurchaseTime = purchaseTime;
 
             //UPDATING purchase time in db
-            DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            if (!UserManager.Instance.GetUser(this.User).IsGuest)
+            {
+                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            }
         }
 
         internal void RemoveFromStoreStock()

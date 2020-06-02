@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Server.DAL;
 using Server.DAL.StoreDb;
+using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
@@ -66,7 +67,14 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 baskets.Add(store, basket);
 
                 //Inserting new basket To db
-                DbManager.Instance.InsertPurchaseBasket(StoreAdapter.Instance.ToDbPurchseBasket(basket, this.Id));
+                if(!UserManager.Instance.GetUser(this.user).IsGuest)
+                {
+                    if (!UserManager.Instance.GetUser(this.user).IsGuest)
+                    {
+                        DbManager.Instance.InsertPurchaseBasket(StoreAdapter.Instance.ToDbPurchseBasket(basket, this.Id));
+                    }
+
+                }
             }
 
             Tuple<bool, string> res = basket.AddProduct(productId, wantedAmount, exist);
@@ -75,7 +83,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 baskets.Remove(store);
                 //Update DB delete purchase basket
-                DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id));
+                if (!UserManager.Instance.GetUser(this.user).IsGuest)
+                {
+                    DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id));
+                }
             }
 
             UpdateCartPrice();
@@ -91,7 +102,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 Price += basket.UpdateCartPrice();
             }
             //Update CART PRICE AT DB
-            DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this);
+            if (!UserManager.Instance.GetUser(this.user).IsGuest)
+            {
+                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this);
+            }
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
