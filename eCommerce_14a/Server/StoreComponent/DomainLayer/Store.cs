@@ -479,10 +479,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (owners.Contains(user.Name))
                 return false;
+
             owners.Add(user.Name);
+            //DB add owner
+            DbManager.Instance.InsertOwner(StoreAdapter.Instance.toStoreOwner(user.Name, Id));
             return true;
         }
-
         public bool AddStoreManager(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -490,9 +492,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (managers.Contains(user.Name))
                 return false;
             managers.Add(user.Name);
+            //DB add manager
+            DbManager.Instance.InsertManager(StoreAdapter.Instance.toStoreManager(user.Name, Id));
             return true;
         }
-
         public bool IsStoreOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

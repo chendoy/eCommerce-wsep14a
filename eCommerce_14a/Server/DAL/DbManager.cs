@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Reflection.PortableExecutable;
+using System.Data.Common;
 
 namespace Server.DAL
 {
@@ -170,6 +171,12 @@ namespace Server.DAL
             {
                 DeleteSinglePermission(single);
             }
+        }
+        public List<UserStorePermissions> GetUserStorePermissionSet(int storeId, string username)
+        {
+            List<UserStorePermissions> res = new List<UserStorePermissions>();
+            res = dbConn.UserStorePermissions.Where(pe => pe.StoreId == storeId && pe.UserName == username).ToList();
+            return res;
         }
         public void DeleteSingleApprovalStatus(StoreOwnertshipApprovalStatus msg)
         {
@@ -864,7 +871,7 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        private void InsertManager(StoreManager manager)
+        public void InsertManager(StoreManager manager)
         {
             dbConn.StoreManagers.Add(manager);
             dbConn.SaveChanges();
