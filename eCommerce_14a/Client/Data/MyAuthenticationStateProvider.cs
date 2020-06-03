@@ -15,10 +15,13 @@ namespace Client.Data
     public class MyAuthenticationStateProvider : AuthenticationStateProvider
     {
         private ISessionStorageService _sessionStorageService;
+        private ClaimsIdentity Identity;
+        private bool wasSeller;
 
         public MyAuthenticationStateProvider(ISessionStorageService sessionStorageService)
         {
             _sessionStorageService = sessionStorageService;
+            wasSeller = false;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -37,7 +40,7 @@ namespace Client.Data
             {
                 identity = new ClaimsIdentity();
             }
-            
+
             var userAuth = new ClaimsPrincipal(identity);
             return await Task.FromResult(new AuthenticationState(userAuth));
         }
@@ -57,12 +60,15 @@ namespace Client.Data
             if (permissions.Count > 0)
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Seller"));
+                wasSeller = true;
             }
 
             if (isAdmin)
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
             }
+
+            Identity = identity;
 
 
             var userClaim = new ClaimsPrincipal(identity);
@@ -93,6 +99,17 @@ namespace Client.Data
             var identity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        }
+
+        public void MarkUserAsSeller()
+        {
+            if (!wasSeller)
+            {
+                Identity.AddClaim(new Claim(ClaimTypes.Role, "Seller"));
+            }
+
+            var userClaim = new ClaimsPrincipal(Identity);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(userClaim)));
         }
 
         public async void ChangeRole(string newRole)

@@ -69,6 +69,7 @@
             if (response.Success)
             {
                 successMsg = "Store opened successfully";
+                ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsSeller();
             }
 
             else
@@ -79,7 +80,7 @@
 
         void Cancel()
         {
-           //
+            //
         }
 
 
