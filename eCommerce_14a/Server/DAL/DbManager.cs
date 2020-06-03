@@ -129,6 +129,10 @@ namespace Server.DAL
             dbConn.NeedToApproves.Remove(msg);
             dbConn.SaveChanges();
         }
+        public NeedToApprove GetNeedToApprove(string aprover, string cand, int storeid)
+        {
+            return dbConn.NeedToApproves.Where(o => o.ApproverName == aprover && o.CandiateName == cand && o.StoreId == storeid).FirstOrDefault();
+        }
         public void DeleteAprovals(List<NeedToApprove> list)
         {
             foreach (NeedToApprove single in list)
@@ -152,6 +156,14 @@ namespace Server.DAL
         {
             dbConn.StoreManagersAppoints.Remove(msg);
             dbConn.SaveChanges();
+        }
+        public StoreManagersAppoint GetSingleManagerAppoints(string apr, string apo, int storeId)
+        {
+            return dbConn.StoreManagersAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
+        }
+        public StoreOwnershipAppoint GetSingleOwnesAppoints(string apr, string apo, int storeId)
+        {
+            return dbConn.StoreOwnershipAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
         }
         public void DeleteManagers(List<StoreManagersAppoint> list)
         {

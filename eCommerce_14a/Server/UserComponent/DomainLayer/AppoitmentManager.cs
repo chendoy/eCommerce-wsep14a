@@ -81,7 +81,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 if (appointed.RemoveOtherApprovalRequest(storeID, owner))
                 {
                     //Remove Need to Approve From DB
-                    DbManager.Instance.DeleteSingleApproval(AdapterUser.CreateNewApprovalNote(owner, Appointed, storeID));
+                    NeedToApprove ndap = DbManager.Instance.GetNeedToApprove(owner, Appointed, storeID);
+                    DbManager.Instance.DeleteSingleApproval(ndap);
                 }
             }
             //Set to false if False and the operation will fail.
@@ -305,11 +306,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             store.RemoveManager(manager);
             manager.RemoveStoreManagment(store.GetStoreId());
             //Remove Store Manager Appoint From here
-            DbManager.Instance.DeleteSingleManager(AdapterUser.GetManagerNote(o, m, storeId));
+            StoreManagersAppoint stap = DbManager.Instance.GetSingleManagerAppoints(o, m, storeId);
+            DbManager.Instance.DeleteSingleManager(stap);
             int[] p = manager.Store_options[storeId];
             manager.RemovePermission(store.GetStoreId());
             //Remove Permissions From DB
-            List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(m, storeId, p);
+            List<UserStorePermissions> permissions = DbManager.Instance.GetUserStorePermissionSet(storeId, m);
             DbManager.Instance.DeletePermission(permissions);
             //Version 2 Addition
             Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a StoreID: "+storeId +" StoreName: "+store.GetName() +" Manager any More"));
@@ -372,11 +374,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             ManagersToRemove.Add(DemoteOwner);
             string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
             DemoteOwner.RemoveStoreManagment(store.GetStoreId());
-            DbManager.Instance.DeleteSingleManager(AdapterUser.GetManagerNote(appointer.getUserName(), DemoteOwner.getUserName(), store.Id));
+            StoreManagersAppoint stap = DbManager.Instance.GetSingleManagerAppoints(appointer.getUserName(), DemoteOwner.getUserName(), store.Id);
+            DbManager.Instance.DeleteSingleManager(stap);
             int[] pm = DemoteOwner.Store_options[store.Id];
             DemoteOwner.RemovePermission(store.GetStoreId());
             //Remove Permissions From DB
-            List<UserStorePermissions> perms = AdapterUser.CreateNewPermissionSet(DemoteOwner.getUserName(), store.GetStoreId(), pm);
+            List<UserStorePermissions> perms = DbManager.Instance.GetUserStorePermissionSet(store.Id, DemoteOwner.getUserName());
             DbManager.Instance.DeletePermission(perms);
             Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(Message));
             Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
@@ -399,12 +402,12 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             //store.RemoveOwner(DemoteOwner);
             DemoteOwner.RemoveStoreOwner(store.GetStoreId());
             //Remove Store Ownership from DB here
-            StoreOwnershipAppoint s = AdapterUser.GetOwnerNote(appointer.getUserName(), DemoteOwner.getUserName(), store.Id);
+            StoreOwnershipAppoint s = DbManager.Instance.GetSingleOwnesAppoints(appointer.getUserName(), DemoteOwner.getUserName(), store.Id);
             DbManager.Instance.DeleteSingleOwnership(s);
             int[] p = DemoteOwner.Store_options[store.Id];
             DemoteOwner.RemovePermission(store.GetStoreId());
             //Remove Owners Store Permissions from DB here
-            List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(DemoteOwner.getUserName(), store.Id, p);
+            List<UserStorePermissions> permissions = DbManager.Instance.GetUserStorePermissionSet(store.Id,DemoteOwner.getUserName());
             DbManager.Instance.DeletePermission(permissions);
             Publisher.Instance.Notify(DemoteOwner.getUserName(), new NotifyData(OwnerRemovalMessage));
             Publisher.Instance.Unsubscribe(DemoteOwner.getUserName(), store.GetStoreId());
