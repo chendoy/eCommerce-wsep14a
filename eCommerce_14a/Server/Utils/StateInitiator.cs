@@ -16,7 +16,6 @@ namespace Server.Utils
     {
         CommunicationHandler handler;
         List<string> lines;
-        StoreService storeService;
         
 
         public StateInitiator() 
@@ -27,14 +26,16 @@ namespace Server.Utils
 
         public void CreateScenario() 
         {
-            MakeRegisterLine("Guy", "Guy");
-            MakeLoginLine("Guy", "Guy");
-            MakeRegisterLine("Liav", "Liav");
-            MakeLoginLine("Liav", "Liav");
-            int storeID = MakeOpenStoreLine("Guy");
-            MakeAddProductToStoreLine(storeID, "Guy", 1, "bananot", 1.7, "banana", "fruits", 3);
-            MakeAddProductToCartLine(storeID, "Liav", 1, 2);
-            MakePerformPurchaseLine("Liav", "BeerSheva Gimel", "111223334");
+            MakeRegisterLine("Guy12", "Guy12");
+            MakeLoginLine("Guy12", "Guy12");
+            MakeRegisterLine("Liav12", "Liav12");
+            MakeLoginLine("Liav12", "Liav12");
+            int storeID = MakeOpenStoreLine("Guy12");
+            MakeAddProductToStoreLine(storeID, "Guy12", 1, "bananot", 1.7, "banana", "fruits", 3);
+            MakeAddProductToCartLine(storeID, "Liav12", 1, 2);
+            MakePerformPurchaseLine("Liav12", "BeerSheva Gimel", "111223334");
+            MakeLogoutLine("Guy12");
+            MakeLogoutLine("Liav12");
             WriteScenarioToFile();
         }
         public void WriteScenarioToFile()
@@ -124,7 +125,7 @@ namespace Server.Utils
                     break;
 
                 case Opcode.LOGOUT:
-                    handler.HandleLogout(json);
+                    handler.HandleLogoutToInit(json);
                     break;
 
                 case Opcode.REGISTER:

@@ -148,6 +148,12 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public void HandleLogoutToInit(string json)
+        {
+            LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
+            userService.Logout(res.Username);
+        }
+
         public byte[] HandleRegister(string json)
         {
             RegisterRequest res = JsonConvert.DeserializeObject<RegisterRequest>(json);

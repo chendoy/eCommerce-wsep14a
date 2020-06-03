@@ -355,8 +355,11 @@ namespace eCommerce_14a.Communication
             //RequestMaker req = new RequestMaker();
             //req.GenerateBinReq();
             //CommunicationHandler hand = new CommunicationHandler();
-            WssServer notifier = new WssServer();
-            notifier.InitServer();
+            StateInitiator init = new StateInitiator();
+            WssServer server = new WssServer();
+            init.InitSystemFromFile();
+            server.InitServer();
+            
         }
     }
 }
