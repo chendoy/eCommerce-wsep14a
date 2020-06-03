@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetApprovalListResponse : Message
+    public class GetApprovalListResponse : Message
     {
 
         public GetApprovalListResponse()  : base(Opcode.RESPONSE) { }
