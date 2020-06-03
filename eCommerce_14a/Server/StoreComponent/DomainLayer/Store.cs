@@ -110,13 +110,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
                     (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() <= 10);
 
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.GuestCantBuy,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => UserManager.Instance.GetUser(userName) is null? false: UserManager.Instance.GetUser(userName).isguest());
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.OwnerCantBuy,
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => UserManager.Instance.GetUser(userName) is null? false: !owners.Contains(userName));
 
                 PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.StoreMustBeActive,
                     (PurchaseBasket basket, int productId, string userName, int storeId) => StoreManagment.Instance.getStore(storeId) is null? false : StoreManagment.Instance.getStore(storeId).ActiveStore);
 
-
+                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.AtLeat11ProductPerBasket,
+                    (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() >= 11);
             }
             else
             {
@@ -318,8 +319,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyUserData))
             {
                 int preCondition = ((PurchasePolicyUserData)thinPurchasePolicy).PreCondition;
-                string userName = ((PurchasePolicyUserData)thinPurchasePolicy).UserName;
-                return new UserPurchasePolicy(new PurchasePreCondition(preCondition), userName);
+                return new UserPurchasePolicy(new PurchasePreCondition(preCondition));
             }
 
             else if (thinPurchasePolicy.GetType() == typeof(CompoundPurchasePolicyData))

@@ -248,7 +248,7 @@
 
             <div class="col-md-4">
                 <h2>Available preconditions</h2>
-                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="discountsWithId" Data="@discountsWithId" TextProperty="discountsWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="policiesWithId" Data="@policiesWithId" TextProperty="policiesWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
 
             </div>
             <div class="col-md-4">
@@ -274,9 +274,9 @@
                     <sapn>For example: s:3:41</sapn>
                     <hr>
                     <h4>User Purchase Policy</h4>
-                    <span>User purchase policies are denoted by the term u:[precondition]:[username]</span>
+                    <span>User purchase policies are denoted by the term u:[precondition]</span>
                     <br />
-                    <sapn>For example: s:3:josh</sapn>
+                    <sapn>For example: s:3</sapn>
                     <hr>
                     <h4>Compund Purchase Policy</h4>
                     <span>Compound purchase policies are denoted by the term (Opeator Child_Policy_1 ... Child_Policy_n)</span>
@@ -543,6 +543,7 @@
     public string AppointmentMessage { get; set; }
     private List<Tuple<ProductData, int>> inventory { get; set; }
     private List<KeyValuePair<int, string>> discounts;
+    private List<KeyValuePair<int, string>> policies;
     private int selectedProductId;
     private int delta;
     private string errorMsg { get; set; }
@@ -551,6 +552,7 @@
     private string selectedRole;
     private string selectedOption;
     List<string> discountsWithId = new List<string>();
+    List<string> policiesWithId = new List<string>();
     List<string> products = new List<string>();
     List<string> currentDiscounts = new List<string>();
     private string discountText { get; set; }
@@ -570,6 +572,12 @@
         discounts = sortedDiscounts.ToList();
         foreach (KeyValuePair<int, string> kv in discounts)
             discountsWithId.Add(kv.Key + ": " + kv.Value);
+
+        Dictionary<int, string> purchasePoliciesDict = await service.GetRawPurchasePolcies();
+        SortedDictionary<int, string> sortedPolicies = new SortedDictionary<int, string>(purchasePoliciesDict);
+        policies = purchasePoliciesDict.ToList();
+        foreach (KeyValuePair<int, string> kv in policies)
+            policiesWithId.Add(kv.Key + ": " + kv.Value);
 
         await UpdateInventory();
         ProductsInEdit = new List<Tuple<ProductData, int>>();
@@ -683,7 +691,7 @@
             successMsg = "Expression is well balanced";
         }
     }
-    
+
 
     private void SelectProduct(object productId)
     {

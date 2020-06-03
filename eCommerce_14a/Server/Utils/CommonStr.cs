@@ -75,7 +75,8 @@ namespace eCommerce_14a.Utils
             public static int singleOfProductType = 1;
             public static int Max10ProductPerBasket = 2;
             public static int StoreMustBeActive = 3;
-            public static int GuestCantBuy = 4;
+            public static int OwnerCantBuy = 4;
+            public static int AtLeat11ProductPerBasket = 5;
 
         }
         public static class StoreParams

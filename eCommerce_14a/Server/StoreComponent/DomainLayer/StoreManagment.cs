@@ -82,9 +82,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Dictionary<int, string> avilablePurchasePolicy = new Dictionary<int, string>();
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.allwaysTrue, "No Condition");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.GuestCantBuy, "Guest can't Buy");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.OwnerCantBuy, "Strore Owner Can't buy from the store");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, "Max 10 product per basket!");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.singleOfProductType, "you can buy only single unit of product type");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.AtLeat11ProductPerBasket, "At Leat 11 product per basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.singleOfProductType, "you can buy only single unit of product id");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, "in order to buy store must be active");
             return avilablePurchasePolicy;
         }

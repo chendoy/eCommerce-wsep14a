@@ -214,7 +214,13 @@ namespace Client.Service
             GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
             return response.DiscountPolicies;
         }
-
+        async public Task<Dictionary<int, string>> GetRawPurchasePolcies()
+        {
+            GetAvailableRawPurchaseRequest request = new GetAvailableRawPurchaseRequest();
+            comm.SendRequest(request);
+            GetAvailableRawPurchaseResponse response = await comm.Get<GetAvailableRawPurchaseResponse>();
+            return response.RawPurchases;
+        }
         async public Task<SuccessFailResponse> UpdateDiscountPolicy(int StoreId, string loggedInUser, string discountText)
         {
             UpdateDiscountPolicyRequest request = new UpdateDiscountPolicyRequest(StoreId, loggedInUser, discountText);
@@ -232,7 +238,7 @@ namespace Client.Service
         }
         async public Task<SuccessFailResponse> UpdatePurchasePolicy(int StoreId, string loggedInUser, string policyText)
         {
-            UpdatePurchasePolicyRequest request = new UpdatePurchasePolicyRequest();
+            UpdatePurchasePolicyRequest request = new UpdatePurchasePolicyRequest(StoreId, loggedInUser, policyText);
             comm.SendRequest(request);
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
             return response;
