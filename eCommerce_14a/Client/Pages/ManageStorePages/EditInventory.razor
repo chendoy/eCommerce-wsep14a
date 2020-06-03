@@ -170,6 +170,19 @@
         public string ProductCategory { get; set; }
         public int Amount { get; set; }
         public string ImgUrl { get; set; }
+
+        public Product Clone()
+        {
+            Product clone = new Product();
+            clone.ProductId = this.ProductId;
+            clone.ProductDetails = this.ProductDetails;
+            clone.ProductPrice = this.ProductPrice;
+            clone.ProductName = this.ProductName;
+            clone.ProductCategory = this.ProductCategory;
+            clone.Amount = this.Amount;
+
+            return clone;
+        }
     }
 
     Product product = new Product()
@@ -207,10 +220,10 @@
     public List<Product> Inventory { get; set; }
 
 
-    void EditRow(Product product)
+    public void EditRow(Product product)
     {
         productsGrid.EditRow(product);
-        ProductsInEdit.Add(product);
+        ProductsInEdit.Add(product.Clone());
     }
 
     Product GetProductInEdit(int productId)

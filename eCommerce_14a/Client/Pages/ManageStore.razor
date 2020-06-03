@@ -389,22 +389,23 @@
         foreach (KeyValuePair<int, string> kv in policies)
             policiesWithId.Add(kv.Key + ": " + kv.Value);
 
-        
+
 
         await UpdateManagersPermissions();
         PermissionsInEdit = new List<Tuple<string, Permission>>();
 
+        inventory = (await service.GetStoresInventory(StoreId)).invProducts;
         foreach (Tuple<ProductData, int> tuple in inventory)
             products.Add(tuple.Item1.ProductId + ": " + tuple.Item1.Name);
     }
 
-    
 
-   
 
-    
 
-   
+
+
+
+
 
     async private void ParseDiscountText(object args)
     {
@@ -473,11 +474,11 @@
     }
 
 
-    
 
-    
-        
-    
+
+
+
+
 
 
 
@@ -524,14 +525,14 @@
     }
 
 
-   
+
 
     void Change(object value)
     {
         // nothing for now
     }
 
-    
+
 
     ///////////////////////////////////////////////////////////// Permissions GridView
 

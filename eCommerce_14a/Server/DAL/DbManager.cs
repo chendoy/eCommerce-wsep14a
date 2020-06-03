@@ -570,10 +570,11 @@ namespace Server.DAL
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                 mergetype: null,
                                                                 parentid: parentId,
-                                                                preconditionid: null,
+                                                                preconditionid: dbPreCondition.Id,
                                                                 policyproductid: null,
                                                                 buyerusername: null,
                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.UserPurchasePolicy));
