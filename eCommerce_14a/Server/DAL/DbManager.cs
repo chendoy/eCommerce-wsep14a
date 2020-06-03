@@ -569,14 +569,13 @@ namespace Server.DAL
 
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
-                string username = ((UserPurchasePolicy)policyData).UserName;
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                 mergetype: null,
                                                                 parentid: parentId,
                                                                 preconditionid: null,
                                                                 policyproductid: null,
-                                                                buyerusername: username,
+                                                                buyerusername: null,
                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.UserPurchasePolicy));
                 dbConn.SaveChanges();
             }
@@ -773,12 +772,26 @@ namespace Server.DAL
 
         private int GetDbDiscountPolicyId(DbDiscountPolicy dbDiscountPolicy, int storeId, int? precondition)
         {
-            DbDiscountPolicy dbFromDb = dbConn.DiscountPolicies.Where(dbDiscount => dbDiscountPolicy.Discount == dbDiscount.Discount &
-                                                        dbDiscountPolicy.DiscountProductId == dbDiscount.DiscountProductId &
-                                                        dbDiscountPolicy.MergeType == dbDiscount.MergeType &
-                                                        dbDiscountPolicy.StoreId == storeId &
-                                                        dbDiscountPolicy.ParentId == dbDiscount.ParentId &
-                                                        GetDbPreConditionNumberById((int)dbDiscountPolicy.PreConditionId) == precondition).FirstOrDefault();
+
+            DbDiscountPolicy dbFromDb;
+            if (precondition == null)
+            {
+               dbFromDb = dbConn.DiscountPolicies.Where(dbDiscount => dbDiscountPolicy.Discount == dbDiscount.Discount &
+                                                                        dbDiscountPolicy.DiscountProductId == dbDiscount.DiscountProductId &
+                                                                        dbDiscountPolicy.MergeType == dbDiscount.MergeType &
+                                                                        dbDiscountPolicy.StoreId == storeId &
+                                                                        dbDiscountPolicy.ParentId == dbDiscount.ParentId).FirstOrDefault();
+            }
+            else
+            {
+                dbFromDb = dbConn.DiscountPolicies.Where(dbDiscount => dbDiscountPolicy.Discount == dbDiscount.Discount &
+                                                 dbDiscountPolicy.DiscountProductId == dbDiscount.DiscountProductId &
+                                                 dbDiscountPolicy.MergeType == dbDiscount.MergeType &
+                                                 dbDiscountPolicy.StoreId == storeId &
+                                                 dbDiscountPolicy.ParentId == dbDiscount.ParentId &
+                                                 GetDbPreConditionNumberById((int)dbDiscountPolicy.PreConditionId) == precondition).FirstOrDefault();
+            }
+
             return dbFromDb.Id;
                                                         
         }
@@ -786,13 +799,26 @@ namespace Server.DAL
 
         private int GetDbPurchsePolicyId(DbPurchasePolicy dbPurchasePolicy, int storeId, int? precondition)
         {
-            DbPurchasePolicy dbFromDb = dbConn.PurchasePolicies.Where(dbPurchase => dbPurchasePolicy.BuyerUserName == dbPurchase.BuyerUserName &
-                                                                    dbPurchasePolicy.MergeType == dbPurchase.MergeType&
-                                                                    dbPurchasePolicy.PolicyProductId == dbPurchase.PolicyProductId &
-                                                                    dbPurchasePolicy.StoreId == storeId &
-                                                                    dbPurchasePolicy.ParentId == dbPurchase.ParentId &
-                                                                    GetDbPreConditionNumberById((int)dbPurchasePolicy.PreConditionId) == precondition
-                                                                    ).FirstOrDefault();
+            DbPurchasePolicy dbFromDb;
+            if (precondition == null)
+            {
+                dbFromDb = dbConn.PurchasePolicies.Where(dbPurchase => dbPurchasePolicy.BuyerUserName == dbPurchase.BuyerUserName &
+                                                                 dbPurchasePolicy.MergeType == dbPurchase.MergeType &
+                                                                 dbPurchasePolicy.PolicyProductId == dbPurchase.PolicyProductId &
+                                                                 dbPurchasePolicy.StoreId == storeId &
+                                                                 dbPurchasePolicy.ParentId == dbPurchase.ParentId).FirstOrDefault();
+            }
+            else
+            {
+              dbFromDb = dbConn.PurchasePolicies.Where(dbPurchase => dbPurchasePolicy.BuyerUserName == dbPurchase.BuyerUserName &
+                                                                                dbPurchasePolicy.MergeType == dbPurchase.MergeType &
+                                                                                dbPurchasePolicy.PolicyProductId == dbPurchase.PolicyProductId &
+                                                                                dbPurchasePolicy.StoreId == storeId &
+                                                                                dbPurchasePolicy.ParentId == dbPurchase.ParentId &
+                                                                                GetDbPreConditionNumberById((int)dbPurchasePolicy.PreConditionId) == precondition
+                                                                                ).FirstOrDefault();
+            }
+         
             return dbFromDb.Id;
 
         }

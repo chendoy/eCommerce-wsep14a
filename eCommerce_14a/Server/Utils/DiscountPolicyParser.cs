@@ -113,7 +113,7 @@ namespace eCommerce_14a.Utils
                 foreach (string discount in discounts)
                 {
                     DiscountPolicy discountPolicy = Parse(discount);
-                    if (checkDiscount(discountPolicy) == true) // this indicates an error!
+                    if (checkDiscount(discountPolicy) == false) // this indicates an error!
                         return new RevealdDiscount(-2, -2);
                     else
                         children.Add(discountPolicy);

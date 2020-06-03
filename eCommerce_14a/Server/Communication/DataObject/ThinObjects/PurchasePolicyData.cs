@@ -89,14 +89,13 @@ namespace Server.Communication.DataObject.ThinObjects
 
     public class PurchasePolicyUserData : ThinPurchasePolicy
     {
-        public string UserName { get; set; }
         public PurchasePolicyUserData() : base()
         {
         }
 
-        public PurchasePolicyUserData(int preCondition, string userName) : base(preCondition)
+        public PurchasePolicyUserData(int preCondition) : base(preCondition)
         {
-            UserName = userName;
+
         }
 
     }

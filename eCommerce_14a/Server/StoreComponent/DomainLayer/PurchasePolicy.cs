@@ -176,22 +176,20 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class UserPurchasePolicy : SimplePurchasePolicy
     {
-        public string UserName { get; set; }
-        public UserPurchasePolicy(PreCondition pre, string userName) : base(pre)
+        public UserPurchasePolicy(PreCondition pre) : base(pre)
         {
-            UserName = userName;
         }
 
         public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, UserName, -1, validator);
+            return PreCondition.IsFulfilled(basket, -1, basket.User, -1, validator);
         }
 
         public override string ToString()
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[User Purchase Policy: " + preStr + " on user \"" + UserName + "\"]";
+            return "[User Purchase Policy: " + preStr + "]";
         }
     }
 }

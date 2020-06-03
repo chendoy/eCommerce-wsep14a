@@ -392,10 +392,12 @@
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.ProductPriceAbove100)); //5
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.ProductPriceAbove200)); //6
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.allwaysTrue)); //7
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.GuestCantBuy)); //8
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.OwnerCantBuy)); //8
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.Max10ProductPerBasket)); //9
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.singleOfProductType)); //10
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.StoreMustBeActive)); //11
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.AtLeat11ProductPerBasket)); //12
+
             preconditions.ForEach(pc => context.PreConditions.Add(pc));
             context.SaveChanges();
         }

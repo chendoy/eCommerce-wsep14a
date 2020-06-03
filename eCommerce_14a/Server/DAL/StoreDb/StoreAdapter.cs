@@ -247,7 +247,7 @@ namespace Server.DAL.StoreDb
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.UserPurchasePolicy)
                 {
                     PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new UserPurchasePolicy(preCondition, node.BuyerUserName); 
+                    return new UserPurchasePolicy(preCondition); 
                 }
                 else
                 {

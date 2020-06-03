@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetAvailableRawPurchaseResponse : Message
+    public class GetAvailableRawPurchaseResponse : Message
     {
         public GetAvailableRawPurchaseResponse() : base(Opcode.RESPONSE) { }
 
