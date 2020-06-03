@@ -61,6 +61,8 @@ namespace eCommerce_14a.Utils
         }
         public static class DiscountPreConditions
         {
+            public static int pre_min = 0;
+            public static int pre_max = 5;
             public static int NoDiscount = 0;
             public static int ProductPriceAbove100 = 1;
             public static int ProductPriceAbove200 = 2;
@@ -69,8 +71,18 @@ namespace eCommerce_14a.Utils
             public static int basketPriceAbove1000 = 5;
         }
 
+        public static class PoliciesErrors
+        {
+            public static string PreConditionNumberErr = "Pre Condition Number Is out of Boundries";
+            public static string DiscountValueErr = "Discount value must be between 0 and 100";
+            public static string MergeTypeErr = "Invalid Merge Type";
+
+        }
+
         public static class PurchasePreCondition
         {
+            public static int pre_min = 0;
+            public static int pre_max = 5;
             public static int allwaysTrue = 0;
             public static int singleOfProductType = 1;
             public static int Max10ProductPerBasket = 2;
@@ -124,6 +136,8 @@ namespace eCommerce_14a.Utils
             public static string ManagerNoPermissionErrMsg = "This manager doesn't have permission to perform this action";
             public static string BasketNotAcceptPurchasePolicy = "The baske not accepted the store's purchase policy";
             public static string PurchasePolicyErrMessage = "Purchase policy not updated due to incorrect data";
+            public static string DiscountPolicyErrMessage = "Purchase policy not updated due to incorrect data";
+
         }
 
         public static class InventoryErrorMessage

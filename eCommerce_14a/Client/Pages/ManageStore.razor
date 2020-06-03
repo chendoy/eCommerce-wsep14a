@@ -75,9 +75,7 @@
                 <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
 
                 <br /><br />
-                <div class="login-msg" style="text-align:left; font-weight:bold">
-                    <span>@AppointmentMessage</span>
-                </div>
+                <MyMessage Msg="@AppointmentMessage" IsError="@AppointIsError"/>
 
             </div>
             <br /><br />
@@ -351,6 +349,7 @@
     private string[] options = new string[] { "Promote", "Demote" };
     private string loggedInUser;
     public string AppointmentMessage { get; set; }
+    public bool AppointIsError { get; set; }
     private List<Tuple<ProductData, int>> inventory { get; set; }
     private List<KeyValuePair<int, string>> discounts;
     private List<KeyValuePair<int, string>> policies;
@@ -502,11 +501,16 @@
 
 
         if (successErrorTuple.Item1)
+        {
             AppointmentMessage = "Operation applied successfully";
+            AppointIsError = false;
+        }
 
         else
+        {
             AppointmentMessage = successErrorTuple.Item2; // the error
-
+            AppointIsError = true;
+        }
     }
 
     private void OnSelected1(string selection)

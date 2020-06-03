@@ -55,7 +55,15 @@ namespace Server.DAL.StoreDb
         {
             return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);
         }
+        public StoreOwner toStoreOwner(string name, int sid)
+        {
+            return new StoreOwner(sid, name);
+        }
 
+        public StoreManager toStoreManager(string name, int sid)
+        {
+            return new StoreManager(sid, name);
+        }
         public DbPreCondition ToDbPurchasePreCondition(DiscountPreCondition preCondition)
         {
             return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);

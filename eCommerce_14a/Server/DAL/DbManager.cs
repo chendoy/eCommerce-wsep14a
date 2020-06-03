@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Reflection.PortableExecutable;
+using System.Data.Common;
 
 namespace Server.DAL
 {
@@ -128,6 +129,10 @@ namespace Server.DAL
             dbConn.NeedToApproves.Remove(msg);
             dbConn.SaveChanges();
         }
+        public NeedToApprove GetNeedToApprove(string aprover, string cand, int storeid)
+        {
+            return dbConn.NeedToApproves.Where(o => o.ApproverName == aprover && o.CandiateName == cand && o.StoreId == storeid).FirstOrDefault();
+        }
         public void DeleteAprovals(List<NeedToApprove> list)
         {
             foreach (NeedToApprove single in list)
@@ -152,6 +157,14 @@ namespace Server.DAL
             dbConn.StoreManagersAppoints.Remove(msg);
             dbConn.SaveChanges();
         }
+        public StoreManagersAppoint GetSingleManagerAppoints(string apr, string apo, int storeId)
+        {
+            return dbConn.StoreManagersAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
+        }
+        public StoreOwnershipAppoint GetSingleOwnesAppoints(string apr, string apo, int storeId)
+        {
+            return dbConn.StoreOwnershipAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
+        }
         public void DeleteManagers(List<StoreManagersAppoint> list)
         {
             foreach (StoreManagersAppoint single in list)
@@ -170,6 +183,12 @@ namespace Server.DAL
             {
                 DeleteSinglePermission(single);
             }
+        }
+        public List<UserStorePermissions> GetUserStorePermissionSet(int storeId, string username)
+        {
+            List<UserStorePermissions> res = new List<UserStorePermissions>();
+            res = dbConn.UserStorePermissions.Where(pe => pe.StoreId == storeId && pe.UserName == username).ToList();
+            return res;
         }
         public void DeleteSingleApprovalStatus(StoreOwnertshipApprovalStatus msg)
         {
@@ -251,6 +270,7 @@ namespace Server.DAL
             foreach (string user in usernames)
             {
                 User usr = BuildUser(user);
+                usr.IsLoggedIn = false;
                 if(usr.LoggedStatus())
                 {
                     usr.IsLoggedIn = false;
@@ -844,7 +864,7 @@ namespace Server.DAL
         {
             foreach(string owner in owners)
             {
-                InsertOwner(new StoreOwner(storeId, owner));
+                InsertStoreOwner(new StoreOwner(storeId, owner));
             }
 
         }
@@ -853,18 +873,18 @@ namespace Server.DAL
         {
             foreach (string manager in managers)
             {
-                InsertManager(new StoreManager(storeId, manager));
+                InsertStoreManager(new StoreManager(storeId, manager));
             }
 
         }
 
-        public void InsertOwner(StoreOwner owner)
+        public void InsertStoreOwner(StoreOwner owner)
         {
             dbConn.StoreOwners.Add(owner);
             dbConn.SaveChanges();
         }
 
-        private void InsertManager(StoreManager manager)
+        public void InsertStoreManager(StoreManager manager)
         {
             dbConn.StoreManagers.Add(manager);
             dbConn.SaveChanges();

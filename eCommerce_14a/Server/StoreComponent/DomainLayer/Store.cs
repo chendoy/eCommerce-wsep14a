@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
-using Server.Communication.DataObject.ThinObjects;
+
 using Server.DAL;
 using Server.DAL.StoreDb;
 using Server.StoreComponent.DomainLayer;
@@ -260,6 +260,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
+            Tuple<bool, string> polcycheck = IsValidDiscountPolicy(discountPolicy);
+            if(!polcycheck.Item1)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.DiscountPolicyErrMessage);
+                return polcycheck;
+            }
+
             DiscountPolicy = discountPolicy;
             //DB update Discount Policy
             DbManager.Instance.UpdateDiscountPolicy(DiscountPolicy, this);
@@ -267,6 +274,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             
         }
 
+   
         public Tuple<bool, string> UpdatePurchasePolicy(User user, PurchasePolicy purchasePolicy)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -286,6 +294,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
+            Tuple<bool, string> policycheck = IsValidPurchasePolicy(purchasePolicy);
+            if (!policycheck.Item1)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.DiscountPolicyErrMessage);
+                return policycheck;
+            }
+
             PurchasePolicy = purchasePolicy;
             //DB update Purchase Policy
             DbManager.Instance.UpdatePurchasePolicy(purchasePolicy, this);
@@ -295,83 +310,149 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        private PurchasePolicy ToFatPurchasePolicy(PurchasePolicyData thinPurchasePolicy)
+        private Tuple<bool, string> IsValidPurchasePolicy(PurchasePolicy purchasePolicy)
         {
-            if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyProductData))
+            if (purchasePolicy.GetType() == typeof(ProductPurchasePolicy))
             {
-                int policyProdutId = ((PurchasePolicyProductData)thinPurchasePolicy).ProductId;
-                int preCondition = ((PurchasePolicyProductData)thinPurchasePolicy).PreCondition;
-                return new ProductPurchasePolicy(new PurchasePreCondition(preCondition), policyProdutId);
-            }
-
-            else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyBasketData))
-            {
-                int preCondition = ((PurchasePolicyBasketData)thinPurchasePolicy).PreCondition;
-                return new BasketPurchasePolicy(new PurchasePreCondition(preCondition));
-            }
-
-            else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicySystemData))
-            {
-                int preCondition = ((PurchasePolicySystemData)thinPurchasePolicy).PreCondition;
-                return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), Id);
-            }
-
-            else if (thinPurchasePolicy.GetType() == typeof(PurchasePolicyUserData))
-            {
-                int preCondition = ((PurchasePolicyUserData)thinPurchasePolicy).PreCondition;
-                return new UserPurchasePolicy(new PurchasePreCondition(preCondition));
-            }
-
-            else if (thinPurchasePolicy.GetType() == typeof(CompoundPurchasePolicyData))
-            {
-                int mergetype = ((CompoundPurchasePolicyData)thinPurchasePolicy).MergeType;
-                List<PurchasePolicyData> policies = ((CompoundPurchasePolicyData)thinPurchasePolicy).PurchaseChildren;
-                List<PurchasePolicy> retList = new List<PurchasePolicy>();
-                foreach (PurchasePolicyData policy in policies)
+                int policyProdutId = ((ProductPurchasePolicy)purchasePolicy).policyProductId;
+                if (!Inventory.InvProducts.ContainsKey(policyProdutId))
                 {
-                    PurchasePolicy newPolicyData = ToFatPurchasePolicy(policy);
-                    retList.Add(newPolicyData);
+                    return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
                 }
-                return new CompundPurchasePolicy(mergetype, retList);
+                int preCondition = ((ProductPurchasePolicy)purchasePolicy).PreCondition.PreConditionNumber;
+                if (!(CommonStr.PurchasePreCondition.pre_min <= preCondition && preCondition <= CommonStr.PurchasePreCondition.pre_max))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.PreConditionNumberErr);
+                }
+
+                return new Tuple<bool, string>(true, "");
+            }
+
+            else if (purchasePolicy.GetType() == typeof(BasketPurchasePolicy))
+            {
+                int preCondition = ((BasketPurchasePolicy)purchasePolicy).PreCondition.PreConditionNumber;
+                if (!(CommonStr.PurchasePreCondition.pre_min <= preCondition && preCondition <= CommonStr.PurchasePreCondition.pre_max))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.PreConditionNumberErr);
+                }
+                return new Tuple<bool, string>(true, "");
+            }
+
+            else if (purchasePolicy.GetType() == typeof(SystemPurchasePolicy))
+            {
+                int preCondition = ((SystemPurchasePolicy)purchasePolicy).PreCondition.PreConditionNumber;
+                if (!(CommonStr.PurchasePreCondition.pre_min <= preCondition && preCondition <= CommonStr.PurchasePreCondition.pre_max))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.PreConditionNumberErr);
+                }
+                return new Tuple<bool, string>(true, "");
+            }
+
+            else if (purchasePolicy.GetType() == typeof(UserPurchasePolicy))
+            {
+                int preCondition = ((UserPurchasePolicy)purchasePolicy).PreCondition.PreConditionNumber;
+                if (!(CommonStr.PurchasePreCondition.pre_min <= preCondition && preCondition <= CommonStr.PurchasePreCondition.pre_max))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.PreConditionNumberErr);
+                }
+                return new Tuple<bool, string>(true, "");
+            }
+
+            else if (purchasePolicy.GetType() == typeof(CompundPurchasePolicy))
+            {
+                int mergetype = ((CompundPurchasePolicy)purchasePolicy).mergeType;
+                if(!(0 <= mergetype && mergetype <= 2))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.MergeTypeErr);
+                }
+
+                List<PurchasePolicy> policies = ((CompundPurchasePolicy)purchasePolicy).getChildren();
+                foreach (PurchasePolicy children in policies)
+                {
+                    Tuple<bool, string> isChildrenValid = IsValidPurchasePolicy(children);
+                    if(!isChildrenValid.Item1)
+                    {
+                        return isChildrenValid;
+                    }
+                }
+                return new Tuple<bool, string>(true, "");
             }
             return null; // not reached
         }
 
-        private DiscountPolicy ToFatDiscountPolicy(DiscountPolicyData thinDiscountPolicy)
+        private Tuple<bool, string> IsValidDiscountPolicy(DiscountPolicy discountPolicy)
         {
-            if (thinDiscountPolicy.GetType() == typeof(DiscountConditionalProductData))
+            if (discountPolicy.GetType() == typeof(ConditionalProductDiscount))
             {
-                int discountProdutId = ((DiscountConditionalProductData)thinDiscountPolicy).ProductId;
-                int preCondition = ((DiscountConditionalProductData)thinDiscountPolicy).PreCondition;
-                double discountPrecentage = ((DiscountConditionalProductData)thinDiscountPolicy).DiscountPercent;
-                return new ConditionalProductDiscount(discountProdutId, new DiscountPreCondition(preCondition), discountPrecentage);
-            }
-
-            else if (DiscountPolicy.GetType() == typeof(DiscountConditionalBasketData))
-            {
-                int preCondition = ((DiscountConditionalBasketData)thinDiscountPolicy).PreCondition;
-                double discountPrecentage = ((DiscountConditionalBasketData)thinDiscountPolicy).DiscountPercent;
-                return new ConditionalBasketDiscount(new DiscountPreCondition(preCondition), discountPrecentage);
-            }
-
-            else if (DiscountPolicy.GetType() == typeof(DiscountRevealdData))
-            {
-                int discountProdutId = ((DiscountRevealdData)thinDiscountPolicy).ProductId;
-                double discountPrecentage = ((DiscountRevealdData)thinDiscountPolicy).DiscountPrecent;
-                return new RevealdDiscount(discountProdutId, discountPrecentage);
-            }
-
-            else if (DiscountPolicy.GetType() == typeof(CompoundDiscountPolicyData))
-            {
-                int mergetype = ((CompoundDiscountPolicyData)thinDiscountPolicy).MergeType;
-                List<DiscountPolicyData> policies = ((CompoundDiscountPolicyData)thinDiscountPolicy).DiscountChildren;
-                List<DiscountPolicy> retList = new List<DiscountPolicy>();
-                foreach (DiscountPolicyData policy in policies)
+                int discountProdutId = ((ConditionalProductDiscount)discountPolicy).discountProdutId;
+                if(!Inventory.InvProducts.ContainsKey(discountProdutId))
                 {
-                    DiscountPolicy newPolicy = ToFatDiscountPolicy(policy);
-                    retList.Add(newPolicy);
+                    return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
                 }
-                return new CompundDiscount(mergetype, retList);
+                
+                int preCondition = ((ConditionalProductDiscount)discountPolicy).PreCondition.preCondNumber;
+                if(! (CommonStr.DiscountPreConditions.pre_min <= preCondition && preCondition <= CommonStr.DiscountPreConditions.pre_max))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.PreConditionNumberErr);
+                }
+
+                double discountPrecentage = ((ConditionalProductDiscount)discountPolicy).Discount;
+                if(!( 0 <= discountPrecentage && discountPrecentage <= 100 ))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.DiscountValueErr);
+                }
+               return new Tuple<bool, string>(true, "");
+            }
+
+            else if (discountPolicy.GetType() == typeof(ConditionalBasketDiscount))
+            {
+                int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.preCondNumber;
+                if (!(CommonStr.DiscountPreConditions.pre_min <= preCondition && preCondition <= CommonStr.DiscountPreConditions.pre_max))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.PreConditionNumberErr);
+                }
+                double discountPrecentage = ((ConditionalBasketDiscount)discountPolicy).Discount;
+                if (!(0 <= discountPrecentage && discountPrecentage <= 100))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.DiscountValueErr);
+                }
+                return new Tuple<bool, string>(true, "");
+            }
+
+            else if (discountPolicy.GetType() == typeof(RevealdDiscount))
+            {
+                int discountProdutId = ((RevealdDiscount)discountPolicy).discountProdutId;
+                if (!Inventory.InvProducts.ContainsKey(discountProdutId))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
+                }
+                double discountPrecentage = ((RevealdDiscount)discountPolicy).discount;
+                if (!(0 <= discountPrecentage && discountPrecentage <= 100))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.DiscountValueErr);
+                }
+                return new Tuple<bool, string>(true, "");
+            }
+
+            else if (discountPolicy.GetType() == typeof(CompundDiscount))
+            {
+                int mergetype = ((CompundDiscount)discountPolicy).mergeType;
+                if (!(0 <= mergetype && mergetype <= 2))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.MergeTypeErr);
+                }
+                List<DiscountPolicy> policies = ((CompundDiscount)discountPolicy).getChildren();
+                foreach (DiscountPolicy policy in policies)
+                {
+                    Tuple<bool, string> isvalidChildPolicy = IsValidDiscountPolicy(policy);
+                   if (!isvalidChildPolicy.Item1)
+                    {
+                        return isvalidChildPolicy;
+                    }
+                    
+                }
+
+                return new Tuple<bool, string>(true, "");
             }
             return  null; // not reached
         }
@@ -479,10 +560,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (owners.Contains(user.Name))
                 return false;
+
             owners.Add(user.Name);
+            //DB add owner
+            DbManager.Instance.InsertStoreOwner(StoreAdapter.Instance.toStoreOwner(user.Name, Id));
             return true;
         }
-
         public bool AddStoreManager(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -490,9 +573,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (managers.Contains(user.Name))
                 return false;
             managers.Add(user.Name);
+            //DB add manager
+            DbManager.Instance.InsertStoreManager(StoreAdapter.Instance.toStoreManager(user.Name, Id));
             return true;
         }
-
         public bool IsStoreOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

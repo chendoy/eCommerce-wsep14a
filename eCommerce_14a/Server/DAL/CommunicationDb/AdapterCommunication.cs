@@ -22,7 +22,7 @@ namespace Server.DAL.CommunicationDb
         public static DbNotifyData ConvertNotifyData(NotifyData notification)
         {
             int nextId = DbManager.Instance.GetNotifyWithMaxId();
-            DbNotifyData DBnotification = new DbNotifyData(notification.Context, notification.UserName);
+            DbNotifyData DBnotification = new DbNotifyData(nextId,notification.Context, notification.UserName);
 
             return DBnotification;
 
