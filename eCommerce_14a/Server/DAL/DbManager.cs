@@ -129,6 +129,10 @@ namespace Server.DAL
             dbConn.NeedToApproves.Remove(msg);
             dbConn.SaveChanges();
         }
+        public NeedToApprove GetNeedToApprove(string aprover, string cand, int storeid)
+        {
+            return dbConn.NeedToApproves.Where(o => o.ApproverName == aprover && o.CandiateName == cand && o.StoreId == storeid).FirstOrDefault();
+        }
         public void DeleteAprovals(List<NeedToApprove> list)
         {
             foreach (NeedToApprove single in list)

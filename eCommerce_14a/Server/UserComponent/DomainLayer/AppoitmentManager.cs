@@ -81,7 +81,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 if (appointed.RemoveOtherApprovalRequest(storeID, owner))
                 {
                     //Remove Need to Approve From DB
-                    DbManager.Instance.DeleteSingleApproval(AdapterUser.CreateNewApprovalNote(owner, Appointed, storeID));
+                    NeedToApprove ndap = DbManager.Instance.GetNeedToApprove(owner, Appointed, storeID);
+                    DbManager.Instance.DeleteSingleApproval(ndap);
                 }
             }
             //Set to false if False and the operation will fail.
