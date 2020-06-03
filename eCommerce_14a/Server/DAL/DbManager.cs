@@ -157,6 +157,14 @@ namespace Server.DAL
             dbConn.StoreManagersAppoints.Remove(msg);
             dbConn.SaveChanges();
         }
+        public StoreManagersAppoint GetSingleManagerAppoints(string apr, string apo, int storeId)
+        {
+            return dbConn.StoreManagersAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
+        }
+        public StoreOwnershipAppoint GetSingleOwnesAppoints(string apr, string apo, int storeId)
+        {
+            return dbConn.StoreOwnershipAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
+        }
         public void DeleteManagers(List<StoreManagersAppoint> list)
         {
             foreach (StoreManagersAppoint single in list)

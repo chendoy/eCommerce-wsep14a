@@ -111,7 +111,8 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void RemoveNotifyMessage()
         {
-            DbNotifyData test = new DbNotifyData("Test", "yossi");
+            int nextId = DbManager.Instance.GetNotifyWithMaxId();
+            DbNotifyData test = new DbNotifyData(nextId,"Test", "yossi");
             DbManager.Instance.InsertUserNotification(test);
             DbManager.Instance.DeleteSingleMessage(test);
         }
