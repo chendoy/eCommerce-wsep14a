@@ -124,11 +124,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override string ToString()
         {
-            Inventory inv = new Inventory();
-            string productStr = inv.getProductDetails(policyProductId).Item1.Name;
+            //Inv6entory inv = new Inventory();
+            //string productStr = inv.getProductDetails(policyProductId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[Product Purchase Policy: " + productStr + " - " + preStr + " ]";
+            return "[Product Purchase Policy: " + policyProductId + " - " + preStr + " ]";
         }
     }
 
@@ -170,7 +170,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[SystemPurchasePolicy: " + preStr + " in store #" + StoreId + "]";
+            return "[System Purchase Policy: " + preStr + " in store #" + StoreId + "]";
         }
     }
 

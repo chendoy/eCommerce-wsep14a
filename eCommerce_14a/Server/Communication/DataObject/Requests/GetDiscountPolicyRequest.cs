@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class GetDiscountPolicyRequest : Message
+    public class GetDiscountPolicyRequest : Message
     {
         public GetDiscountPolicyRequest() : base(Opcode.GET_DISCOUNT_POLICY) { }
         public GetDiscountPolicyRequest(int storeID) : base(Opcode.GET_DISCOUNT_POLICY)
