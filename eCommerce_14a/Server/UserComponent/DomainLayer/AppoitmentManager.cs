@@ -95,7 +95,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 string masterNmae = appointed.MasterAppointer[storeID];
                 appointed.RemoveMasterAppointer(storeID);
                 Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " Didn't Approved"));
-                DbManager.Instance.DeleteSingleCandidate(AdapterUser.CreateCandidate(masterNmae, Appointed, storeID));
+                CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed, masterNmae, storeID);
+                DbManager.Instance.DeleteSingleCandidate(cand);
                 return new Tuple<bool, string>(true, "User failed to become an owner");
             }
             if(appointed.CheckSApprovalStatus(storeID))
@@ -114,7 +115,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 store.AddStoreOwner(appointed);
                 string Mappointer = appointed.MasterAppointer[storeID];
                 //Remove Candidation From DB
-                CandidateToOwnership cand = AdapterUser.CreateCandidate(Mappointer, Appointed, storeID);
+                CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed,Mappointer,storeID);
                 DbManager.Instance.DeleteSingleCandidate(cand);
                 appointed.AppointerMasterAppointer(storeID);
                 appointed.addStoreOwnership(storeID, Mappointer);
@@ -174,8 +175,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 store.AddStoreOwner(appointed);
                 appointed.AppointerMasterAppointer(storeId);
                 //Remove Candidtation from DataBase
-                CandidateToOwnership cand = AdapterUser.CreateCandidate(owner, addto, storeId);
-                DbManager.Instance.DeleteSingleCandidate(cand);
+                //CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(addto, owner , storeId);
+                //DbManager.Instance.DeleteSingleCandidate(cand);
                 appointed.addStoreOwnership(storeId, appointer.getUserName());
                 StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(owner, addto, storeId);
                 DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
@@ -188,6 +189,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 Tuple<bool, string> ansSuccess = Publisher.Instance.subscribe(addto, storeId);
                 return ansSuccess;
             }
+            //Test
+            //Add Candidate TO ownership
+            DbManager.Instance.InsertCandidateToOwnerShip(AdapterUser.CreateCandidate(owner, addto, storeId));
             appointed.SetApprovalStatus(storeId, true);
             //Add AptovmentStatus to DB
             DbManager.Instance.InsertStoreOwnerShipApprovalStatus(AdapterUser.CreateNewStoreAppoitmentApprovalStatus(storeId, true, addto));
