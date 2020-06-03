@@ -404,7 +404,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                return new Tuple<bool, string>(true, "");
             }
 
-            else if (DiscountPolicy.GetType() == typeof(ConditionalBasketDiscount))
+            else if (discountPolicy.GetType() == typeof(ConditionalBasketDiscount))
             {
                 int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.preCondNumber;
                 if (!(CommonStr.DiscountPreConditions.pre_min <= preCondition && preCondition <= CommonStr.DiscountPreConditions.pre_max))
@@ -419,7 +419,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(true, "");
             }
 
-            else if (DiscountPolicy.GetType() == typeof(RevealdDiscount))
+            else if (discountPolicy.GetType() == typeof(RevealdDiscount))
             {
                 int discountProdutId = ((RevealdDiscount)discountPolicy).discountProdutId;
                 if (!Inventory.InvProducts.ContainsKey(discountProdutId))
@@ -434,9 +434,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(true, "");
             }
 
-            else if (DiscountPolicy.GetType() == typeof(CompundDiscount))
+            else if (discountPolicy.GetType() == typeof(CompundDiscount))
             {
                 int mergetype = ((CompundDiscount)discountPolicy).mergeType;
+                if (!(0 <= mergetype && mergetype <= 2))
+                {
+                    return new Tuple<bool, string>(false, CommonStr.PoliciesErrors.MergeTypeErr);
+                }
                 List<DiscountPolicy> policies = ((CompundDiscount)discountPolicy).getChildren();
                 foreach (DiscountPolicy policy in policies)
                 {
