@@ -80,6 +80,10 @@ namespace Server.DAL
             dbConn.CandidateToOwnerships.Remove(candidateToOwnership);
             dbConn.SaveChanges();
         }
+        public CandidateToOwnership GetCandidateToOwnership(string cand, string owner, int storeId)
+        {
+            return dbConn.CandidateToOwnerships.Where(o => o.CandidateName == cand && o.AppointerName == owner && o.StoreId == storeId).FirstOrDefault();
+        }
         public void DeleteUser(DbUser user)
         {
             dbConn.Users.Remove(user);
@@ -249,10 +253,11 @@ namespace Server.DAL
                 User usr = BuildUser(user);
                 if(usr.LoggedStatus())
                 {
-                    if (!UserManager.Instance.Active_users.ContainsKey(user))
-                    {
-                        UserManager.Instance.Active_users.Add(user, usr);
-                    }
+                    usr.IsLoggedIn = false;
+                    //if (!UserManager.Instance.Active_users.ContainsKey(user))
+                    //{
+                    //    UserManager.Instance.Active_users.Add(user, usr);
+                    //}
                 }
                 if (!UserManager.Instance.users.ContainsKey(user))
                 {
