@@ -9,6 +9,7 @@ using Server.Communication.DataObject;
 using Server.Communication.DataObject.Requests;
 using Newtonsoft.Json;
 using eCommerce_14a.StoreComponent.ServiceLayer;
+using Server.DAL;
 
 namespace Server.Utils
 {
@@ -26,15 +27,14 @@ namespace Server.Utils
 
         public void CreateScenario() 
         {
-            MakeRegisterLine("Guy12", "Guy12");
-            MakeLoginLine("Guy12", "Guy12");
             MakeRegisterLine("Liav12", "Liav12");
             MakeLoginLine("Liav12", "Liav12");
-            int storeID = MakeOpenStoreLine("Guy12");
-            MakeAddProductToStoreLine(storeID, "Guy12", 1, "bananot", 1.7, "banana", "fruits", 3);
-            MakeAddProductToCartLine(storeID, "Liav12", 1, 2);
+            MakeOpenStoreLine("Liav12");
+            int storeid = DbManager.Instance.GetNextStoreId();
+            MakeAddProductToStoreLine(storeid, "Liav12", "blabla", 1.7, "banana", "fruits", 2);
+            int pID = DbManager.Instance.GetNextProductId();
+            MakeAddProductToCartLine(storeid, "Liav12", pID, 1);
             MakePerformPurchaseLine("Liav12", "BeerSheva Gimel", "111223334");
-            MakeLogoutLine("Guy12");
             MakeLogoutLine("Liav12");
             WriteScenarioToFile();
         }
@@ -72,12 +72,11 @@ namespace Server.Utils
             lines.Add(json);
         }
 
-        public int MakeOpenStoreLine(string username)
+        public void MakeOpenStoreLine(string username)
         {
             OpenStoreRequest req = new OpenStoreRequest(username);
             string json = JsonConvert.SerializeObject(req);
             lines.Add(json);
-            return handler.SpecialHandleOpenStore(username);
         }
 
         public void MakeAddProductToStoreLine(int storeID, string username, string pDetails, double pPrice, string pName, string pCategory, int amount)
@@ -104,13 +103,13 @@ namespace Server.Utils
         public void InitSystemFromFile() 
         {
             string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\State.txt";
-            CreateScenario();
+            //CreateScenario();
             string[] operations = File.ReadAllLines(path);
             foreach (string operation in operations)
             {
                 HandleState(operation);
             }
-            File.WriteAllText(path, String.Empty);
+            //File.WriteAllText(path, String.Empty);
         }
 
         private void HandleState(string json)
@@ -157,7 +156,7 @@ namespace Server.Utils
                     break;
 
                 case Opcode.OPEN_STORE:
-                    //handler.HandleOpenStore(json);
+                    handler.HandleOpenStore(json);
                     break;
 
                 case Opcode.BUYER_HISTORY:

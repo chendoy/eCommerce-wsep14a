@@ -1,0 +1,7 @@
+{"Username":"Liav12","Password":"Liav12","_Opcode":3}
+{"Username":"Liav12","Password":"Liav12","_Opcode":1}
+{"Username":"Liav12","StoreName":"Store","_Opcode":10}
+{"StoreId":11,"UserName":"Liav12","ProductDetails":"blabla","ProductPrice":1.7,"ProductName":"banana","ProductCategory":"fruits","Pamount":2,"ImgUrl":"Image/bana.png","_Opcode":27}
+{"User":"Liav12","Store":11,"Product":18,"Amount":1,"_Opcode":22}
+{"Username":"Liav12","Address":"BeerSheva Gimel","PaymentDetails":"111223334","_Opcode":7}
+{"Username":"Liav12","_Opcode":2}

@@ -508,7 +508,7 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
-        public int SpecialHandleOpenStore(string username) 
+        public int SpecialHandleOpenStore(string username)
         {
             Tuple<int, string> ans = storeService.createStore(username);
             return ans.Item1;
