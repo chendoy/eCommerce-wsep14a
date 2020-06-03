@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Requests
 {
-    class GetApprovalListRequest : Message
+    public class GetApprovalListRequest : Message
     {
         public GetApprovalListRequest() : base(Opcode.GET_APPROVAL_LIST) { }
         public GetApprovalListRequest(int storeID, string username) : base(Opcode.GET_APPROVAL_LIST)
