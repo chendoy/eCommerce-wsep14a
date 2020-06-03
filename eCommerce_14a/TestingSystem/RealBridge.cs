@@ -102,7 +102,7 @@ namespace TestingSystem
 
         public override Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
         {
-            return StoreService.appendProduct(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount, "");
+            return StoreService.appendProduct(storeID, username, productDetails, productPrice, productName, productCategory, amount);
         }
 
         public override Dictionary<string, object> ViewStoreDetails(int storeID)
