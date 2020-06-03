@@ -28,7 +28,7 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---add-product-411- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager--add-product-512- </req
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl = @"Image/bana.png")
+        public Tuple<bool, string> appendProduct(int storeId, string userName, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl = @"Image/bana.png")
         {
             return storeManagment.appendProduct(storeId, userName, productDetails, productPrice, productName, productCategory, amount, imgUrl);
         }

@@ -259,7 +259,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleAddProductToStore(string json)
         {
             AddProductToStoreRequest res = JsonConvert.DeserializeObject<AddProductToStoreRequest>(json);
-            Tuple<bool,string> ans = storeService.appendProduct(res.StoreId, res.UserName, res.ProductId, res.ProductDetails, res.ProductPrice,
+            Tuple<bool,string> ans = storeService.appendProduct(res.StoreId, res.UserName, res.ProductDetails, res.ProductPrice,
                 res.ProductName, res.ProductCategory, res.Pamount, res.ImgUrl);
             string jsonAns = Seralize(new SuccessFailResponse(ans.Item1,ans.Item2));
             return security.Encrypt(jsonAns);

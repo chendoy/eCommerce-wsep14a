@@ -32,7 +32,7 @@ namespace Server.Utils
             MakeRegisterLine("Liav", "Liav");
             MakeLoginLine("Liav", "Liav");
             int storeID = MakeOpenStoreLine("Guy");
-            MakeAddProductToStoreLine(storeID, "Guy", 1, "bananot", 1.7, "banana", "fruits", 3);
+            MakeAddProductToStoreLine(storeID, "Guy", "bananot", 1.7, "banana", "fruits", 3);
             MakeAddProductToCartLine(storeID, "Liav", 1, 2);
             MakePerformPurchaseLine("Liav", "BeerSheva Gimel", "111223334");
             WriteScenarioToFile();
@@ -79,9 +79,9 @@ namespace Server.Utils
             return handler.SpecialHandleOpenStore(username);
         }
 
-        public void MakeAddProductToStoreLine(int storeID, string username, int productID, string pDetails, double pPrice, string pName, string pCategory, int amount)
+        public void MakeAddProductToStoreLine(int storeID, string username, string pDetails, double pPrice, string pName, string pCategory, int amount)
         {
-            AddProductToStoreRequest req = new AddProductToStoreRequest(storeID, username, productID, pDetails, pPrice, pName, pCategory, amount);
+            AddProductToStoreRequest req = new AddProductToStoreRequest(storeID, username, pDetails, pPrice, pName, pCategory, amount);
             string json = JsonConvert.SerializeObject(req);
             lines.Add(json);
         }
