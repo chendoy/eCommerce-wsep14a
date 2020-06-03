@@ -80,9 +80,9 @@ namespace Server.Utils
             return handler.SpecialHandleOpenStore(username);
         }
 
-        public void MakeAddProductToStoreLine(int storeID, string username, int productID, string pDetails, double pPrice, string pName, string pCategory, int amount)
+        public void MakeAddProductToStoreLine(int storeID, string username, string pDetails, double pPrice, string pName, string pCategory, int amount)
         {
-            AddProductToStoreRequest req = new AddProductToStoreRequest(storeID, username, productID, pDetails, pPrice, pName, pCategory, amount);
+            AddProductToStoreRequest req = new AddProductToStoreRequest(storeID, username, pDetails, pPrice, pName, pCategory, amount);
             string json = JsonConvert.SerializeObject(req);
             lines.Add(json);
         }
