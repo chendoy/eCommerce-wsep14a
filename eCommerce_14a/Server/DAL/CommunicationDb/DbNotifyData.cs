@@ -22,8 +22,9 @@ namespace Server.DAL.CommunicationDb
 
         public string Context { get; set; }
 
-        public DbNotifyData (string context, string name)
+        public DbNotifyData (int id,string context, string name)
         {
+            Id = id;
             Context = context;
             UserName = name;
         }

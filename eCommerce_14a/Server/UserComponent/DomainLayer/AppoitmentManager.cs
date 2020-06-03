@@ -167,7 +167,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
 
             appointed.SetMasterAppointer(storeId, appointer);
-            List<string> owners = store.getOwners();
+            List<string> owners = new List<string>();
+            foreach(string ow in store.getOwners())
+            {
+                owners.Add(ow);
+            }
             owners.Remove(owner);
             if(owners.Count == 0)
             {
