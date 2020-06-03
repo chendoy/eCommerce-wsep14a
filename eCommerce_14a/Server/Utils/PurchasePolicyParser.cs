@@ -16,8 +16,8 @@ namespace eCommerce_14a.Utils
         // ProductPurchasePolicy: (p:precondition:productId)
         // BasketPurchasePolicy: (b:precondition)
         // SystemPurchasePolicy: (s:preCondition:storeID)
-        // UserPurchasePolicy: (u:precondition:username)
-        // CompundPurchasePolicy: (AND (XOR (OR b:1 p:2:3) s:1:1) (OR u:3:user1 u:2:user2)) *** NOTICE: prefix operator ***
+        // UserPurchasePolicy: (u:precondition)
+        // CompundPurchasePolicy: (AND (XOR (OR b:1 p:2:3) s:1:1) (OR u:3 u:2)) *** NOTICE: prefix operator ***
 
         // ---------------------- ERROR CODES -----------------------------------------------------
         // ProductPurchasePolicy(-1, -1) -> "parenthesis are not balanced in outer expression"
@@ -30,7 +30,7 @@ namespace eCommerce_14a.Utils
         static Regex productPurchasePolicyRegex = new Regex(@"\bp:\d*:\d*$");
         static Regex basketPurchasePolicyRegex = new Regex(@"\bb:\d*$");
         static Regex systemPurchasePolicyRegex = new Regex(@"s:\d*:\d*$");
-        static Regex userPurchasePolicyRegex = new Regex(@"u:\d*:(.+)");
+        static Regex userPurchasePolicyRegex = new Regex(@"u:\d*");
         static string[] operators = new string[3] { "XOR", "OR", "AND" };
 
         public static PurchasePolicy Parse(string text)
@@ -58,12 +58,12 @@ namespace eCommerce_14a.Utils
                     int storeID = Convert.ToInt32(constructs[2]);
                     return new SystemPurchasePolicy(new PurchasePreCondition(preCondition), storeID);
                 }
-                else if (userPurchasePolicyRegex.IsMatch(text)) // (u:precondition:username)
+                else if (userPurchasePolicyRegex.IsMatch(text)) // (u:precondition)
                 {
                     string[] constructs = text.Split(':');
                     int precondition = Convert.ToInt32(constructs[1]);
-                    string username = constructs[2];
-                    return new UserPurchasePolicy(new PurchasePreCondition(precondition), username);
+                    //string username = constructs[2];
+                    return new UserPurchasePolicy(new PurchasePreCondition(precondition));
                 }
             }
             else // compound purchase policy
@@ -122,7 +122,7 @@ namespace eCommerce_14a.Utils
                 foreach (string policy in policies)
                 {
                     PurchasePolicy purchasePolicy = Parse(policy);
-                    if (CheckPurchasePolicy(purchasePolicy) == true) // this indicates an error!
+                    if (CheckPurchasePolicy(purchasePolicy) == false) // this indicates an error!
                         return new ProductPurchasePolicy(new PurchasePreCondition(- 2), -2);
                     else
                         children.Add(purchasePolicy);
@@ -139,11 +139,11 @@ namespace eCommerce_14a.Utils
             try
             {
                 ProductPurchasePolicy productPurchasePolicy = ((ProductPurchasePolicy)purchasePolicy);
-                return productPurchasePolicy.PreCondition.PreConditionNumber < 0 ? true : false;
+                return productPurchasePolicy.PreCondition.PreConditionNumber < 0 ? false : true;
             }
             catch (Exception)
             {
-                return false;
+                return true;
             }
         }
     }

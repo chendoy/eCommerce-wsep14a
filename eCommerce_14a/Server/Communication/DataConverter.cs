@@ -166,9 +166,8 @@ namespace Server.Communication
 
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
-                string username = ((UserPurchasePolicy)policyData).UserName;
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                return new PurchasePolicyUserData(preCondition, username);
+                return new PurchasePolicyUserData(preCondition);
             }
 
             else if (policyData.GetType() == typeof(CompundPurchasePolicy))

@@ -35,17 +35,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Pendings = await UpdatePendingsList();
         Msg = "";
+        await UpdatePendingsList();
     }
 
 
-    async Task<List<string>> UpdatePendingsList()
+    async Task UpdatePendingsList()
     {
-        List<string> list = new List<string>();
-        list.Add("ApproveMe");
-        list.Add("DenyMe");
-        return list;
+        GetApprovalListRequest req = new GetApprovalListRequest(StoreId, Username);
+        GetApprovalListResponse res = await service.GetResponse<GetApprovalListRequest, GetApprovalListResponse>(req);
+        Pendings = res.UsersToApprove;
     }
 
     async Task Response(string appointed, bool approval)
