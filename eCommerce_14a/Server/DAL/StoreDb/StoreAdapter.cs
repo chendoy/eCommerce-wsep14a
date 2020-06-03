@@ -314,5 +314,15 @@ namespace Server.DAL.StoreDb
 
             return new PurchaseBasket(dbBasket.Id, dbBasket.UserName, store, products, dbBasket.Price, dbBasket.PurchaseTime);
         }
+
+        public StoreOwner toStoreOwner(string name, int sid)
+        {
+            return new StoreOwner(sid, name);
+        }
+
+        public StoreManager toStoreManager(string name, int sid)
+        {
+            return new StoreManager(sid, name);
+        }
     }
 }

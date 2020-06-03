@@ -258,6 +258,7 @@ namespace Server.DAL
             foreach (string user in usernames)
             {
                 User usr = BuildUser(user);
+                usr.IsLoggedIn = false;
                 if(usr.LoggedStatus())
                 {
                     usr.IsLoggedIn = false;
@@ -851,7 +852,7 @@ namespace Server.DAL
         {
             foreach(string owner in owners)
             {
-                InsertOwner(new StoreOwner(storeId, owner));
+                InsertStoreOwner(new StoreOwner(storeId, owner));
             }
 
         }
@@ -860,18 +861,18 @@ namespace Server.DAL
         {
             foreach (string manager in managers)
             {
-                InsertManager(new StoreManager(storeId, manager));
+                InsertStoreManager(new StoreManager(storeId, manager));
             }
 
         }
 
-        public void InsertOwner(StoreOwner owner)
+        public void InsertStoreOwner(StoreOwner owner)
         {
             dbConn.StoreOwners.Add(owner);
             dbConn.SaveChanges();
         }
 
-        public void InsertManager(StoreManager manager)
+        public void InsertStoreManager(StoreManager manager)
         {
             dbConn.StoreManagers.Add(manager);
             dbConn.SaveChanges();
