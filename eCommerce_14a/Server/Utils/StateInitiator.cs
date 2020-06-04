@@ -10,6 +10,8 @@ using Server.Communication.DataObject.Requests;
 using Newtonsoft.Json;
 using eCommerce_14a.StoreComponent.ServiceLayer;
 using Server.DAL;
+using eCommerce_14a.StoreComponent.DomainLayer;
+using Server.UserComponent.DomainLayer;
 
 namespace Server.Utils
 {
@@ -27,15 +29,25 @@ namespace Server.Utils
 
         public void CreateScenario() 
         {
-            MakeRegisterLine("Liav12", "Liav12");
-            MakeLoginLine("Liav12", "Liav12");
-            MakeOpenStoreLine("Liav12");
-            int storeid = DbManager.Instance.GetNextStoreId();
-            MakeAddProductToStoreLine(storeid, "Liav12", "blabla", 1.7, "banana", "fruits", 2);
-            int pID = DbManager.Instance.GetNextProductId();
-            MakeAddProductToCartLine(storeid, "Liav12", pID, 1);
-            MakePerformPurchaseLine("Liav12", "BeerSheva Gimel", "111223334");
-            MakeLogoutLine("Liav12");
+            MakeRegisterLine("u11", "u11");
+            MakeRegisterLine("u22", "u22");
+            MakeRegisterLine("u33", "u33");
+            MakeRegisterLine("u44", "u44");
+            MakeRegisterLine("u55", "u55");
+            MakeAdminLine("u11");
+            MakeLoginLine("u22", "u22");
+            MakeOpenStoreLine("u22");
+            int storeID = DbManager.Instance.GetNextStoreId(); // (s1)
+            MakeAddProductToStoreLine(storeID, "u22", "for age 0 - 2", 30, "diapers", "hygiene", 20);
+            MakeAppointManagerLine("u22", "u33", storeID);
+            MakeChangePermissionsLine("u22", "u33", storeID, new int[5] {1,1,1,0,0});
+            MakeLoginLine("u33", "u33");
+            MakeAppointManagerLine("u33", "u44", storeID);
+            MakeLoginLine("u44", "u44");
+            MakeAppointManagerLine("u44", "u55", storeID);
+            MakeLogoutLine("u22");
+            MakeLogoutLine("u33");
+            MakeLogoutLine("u44");
             WriteScenarioToFile();
         }
         public void WriteScenarioToFile()
@@ -51,6 +63,25 @@ namespace Server.Utils
             lines.Clear();
         }
 
+        public void MakeAppointManagerLine(string appointer, string appointed, int storeID) 
+        {
+            AppointManagerRequest req = new AppointManagerRequest(appointer, appointed, storeID);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+        }
+        public void MakeChangePermissionsLine(string appointer, string appointed, int storeID, int[] permissions)
+        {
+            Permission permission = new Permission(permissions);
+            ChangePermissionsRequest req = new ChangePermissionsRequest(appointer, appointed, storeID, permission);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+        }
+        public void MakeAdminLine(string username)
+        {
+            MakeAdminRequest req = new MakeAdminRequest(username);
+            string json = JsonConvert.SerializeObject(req);
+            lines.Add(json);
+        }
         public void MakeRegisterLine(string username, string password) 
         {
             RegisterRequest req = new RegisterRequest(username, password);
@@ -255,6 +286,14 @@ namespace Server.Utils
 
                 case Opcode.DECREASE_PRODUCT_AMOUNT:
                     handler.HandleDecreaseProductAmount(json);
+                    break;
+
+                case Opcode.MAKE_ADMIN:
+                    handler.HandleMakeAdmin(json);
+                    break;
+
+                case Opcode.CHANGE_PERMISSIONS:
+                    handler.HandleChangePermissions(json);
                     break;
 
                 default:

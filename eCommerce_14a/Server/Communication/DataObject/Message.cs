@@ -55,6 +55,7 @@ namespace Server.Communication.DataObject
         NOTIFICATION,
         GET_ALL_PRECONDITIONS,
         GET_APPROVAL_LIST,
+        MAKE_ADMIN,
         RESPONSE,
         ERROR
     }

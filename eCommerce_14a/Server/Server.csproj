@@ -92,6 +92,7 @@
     <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LogoutRequest.cs" />
     <Compile Include="Communication\DataObject\Message.cs" />
+    <Compile Include="Communication\DataObject\Requests\MakeAdminRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\OpenStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ProductInfoRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
@@ -175,9 +176,9 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006030918506_InitialCreate.cs" />
-    <Compile Include="Migrations\202006030918506_InitialCreate.designer.cs">
-      <DependentUpon>202006030918506_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006040637562_InitialCreate.cs" />
+    <Compile Include="Migrations\202006040637562_InitialCreate.designer.cs">
+      <DependentUpon>202006040637562_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -297,12 +298,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006030918506_InitialCreate.resx">
-      <DependentUpon>202006030918506_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
+    <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utils\State.txt" />
+    <EmbeddedResource Include="Migrations\202006040637562_InitialCreate.resx">
+      <DependentUpon>202006040637562_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
