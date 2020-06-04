@@ -1,2 +1,18 @@
-{"Username":"Guy","Password":"Guy","_Opcode":3}
-{"Username":"Guy","Password":"Guy","_Opcode":1}
+{"Username":"u11","Password":"u11","_Opcode":3}
+{"Username":"u22","Password":"u22","_Opcode":3}
+{"Username":"u33","Password":"u33","_Opcode":3}
+{"Username":"u44","Password":"u44","_Opcode":3}
+{"Username":"u55","Password":"u55","_Opcode":3}
+{"Username":"u11","_Opcode":45}
+{"Username":"u22","Password":"u22","_Opcode":1}
+{"Username":"u22","StoreName":"Store","_Opcode":10}
+{"StoreId":12,"UserName":"u22","ProductDetails":"for age 0 - 2","ProductPrice":30.0,"ProductName":"diapers","ProductCategory":"hygiene","Pamount":20,"ImgUrl":"Image/bana.png","_Opcode":27}
+{"Appointer":"u22","Appointed":"u33","StoreId":12,"_Opcode":12}
+{"Owner":"u22","Appoint":"u33","StoreId":12,"Permissions":{"ViewComments":true,"ViewPuarchseHistory":true,"EditInventory":true,"EditPurachsePolicy":false,"EditDiscountPolicy":false},"_Opcode":38}
+{"Username":"u33","Password":"u33","_Opcode":1}
+{"Appointer":"u33","Appointed":"u44","StoreId":12,"_Opcode":12}
+{"Username":"u44","Password":"u44","_Opcode":1}
+{"Appointer":"u44","Appointed":"u55","StoreId":12,"_Opcode":12}
+{"Username":"u22","_Opcode":2}
+{"Username":"u33","_Opcode":2}
+{"Username":"u44","_Opcode":2}

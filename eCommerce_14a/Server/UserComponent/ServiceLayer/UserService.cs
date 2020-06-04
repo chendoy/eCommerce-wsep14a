@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.UserComponent.DomainLayer;
-
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.ServiceLayer
 {
@@ -16,6 +16,10 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             UM = UserManager.Instance;
         }
 
+        public Tuple<bool, string> MakeAdmin(string username) 
+        {
+            return UM.MakeAdmin(username);
+        }
         public Dictionary<int, int[]> GetUserPermissions(string username) 
         {
             return UM.GetUserPermissions(username);
@@ -49,6 +53,17 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         
         }
 
+        public bool isAdmin(string username) 
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return UM.isAdmin(username);
+        }
+
+        public List<string> GetApprovalListByStoreAndUser(string username, int storeID) 
+        {
+           return UM.GetApprovalListByStoreAndUser(username, storeID);
+        }
+
         public List<User> GetAllRegisteredUsers()
         {
             return UM.GetAllRegisteredUsers();
@@ -60,5 +75,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             UM.cleanup();
         }
+
+        public List<Tuple<string, Permission>> GetStoreManagersPermissions(string appointer, int storeId)
+        {
+            return UM.GetStoreManagersPermissions(appointer, storeId);
+        }
+
+    
     }
 }

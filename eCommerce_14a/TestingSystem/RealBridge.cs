@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using eCommerce_14a;
+
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.PurchaseComponent.ServiceLayer;
 using eCommerce_14a.UserComponent.ServiceLayer;
@@ -105,7 +102,7 @@ namespace TestingSystem
 
         public override Tuple<bool, string> AddProductToStore(int storeID, string username, int productID, string productDetails, double productPrice, string productName, string productCategory, int amount)
         {
-            return StoreService.appendProduct(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount, "");
+            return StoreService.appendProduct(storeID, username, productDetails, productPrice, productName, productCategory, amount);
         }
 
         public override Dictionary<string, object> ViewStoreDetails(int storeID)

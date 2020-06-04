@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.PurchaseComponent.DomainLayer;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.UserComponent.Communication;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -55,10 +58,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public void loaddata()
         {
-            UManagment.LoadUsers();
-            StoreManagment.Instance.LoadStores();
-            AppoitmentManager.Instance.LoadAppointments();
-            
+            DbManager.Instance.LoadAllUsers();
+            StoreManagment.Instance.LoadFromDb();
+            PurchaseManagement.Instance.LoadFromDb();
+            Publisher.Instance.StoreSubscribers = DbManager.Instance.GetAllsubsribers();
+            //AppoitmentManager.Instance.LoadAppointments();
         }
         public bool SetDeliveryConnection(bool conn)
         {

@@ -1,6 +1,5 @@
 ﻿@page "/ManageStore/{storeid:int}"
-@using Server
-@using Microsoft.EntityFrameworkCore
+@using Server.UserComponent.DomainLayer
 
 <h1>Store Dashboard</h1>
 
@@ -76,70 +75,65 @@
                 <button class="col-1 btn btn-primary" @onclick="(()=>ApplyAction())">Apply</button>
 
                 <br /><br />
-                <div class="login-msg" style="text-align:left; font-weight:bold">
-                    <span>@AppointmentMessage</span>
-                </div>
+                <MyMessage Msg="@AppointmentMessage" IsError="@AppointIsError"/>
 
             </div>
+            <br /><br />
+            <ViewAppointRequest Username="@loggedInUser" StoreId="@StoreId" />
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Discounts">
-            <h2>Add New Discount</h2>
-            <h2>Edit </h2>
-        </RadzenTabsItem>
+        <RadzenTabsItem Text="Edit Permissions">
 
-        <RadzenTabsItem Text="Purchases">
-            <StoreHistory Username="@loggedInUser" StoreId="StoreId" />
-        </RadzenTabsItem>
-
-        <RadzenTabsItem Text="Products">
-
-            <RadzenGrid @ref="productsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
-                        Data="@inventory" TItem="Tuple<ProductData, int>">
+            <RadzenGrid @ref="permissionsGrid" AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                        Data="@ManagersPermissions" TItem="Tuple<string, Permission>">
                 <Columns>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.ProductId" Title="Product ID" />
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Name" Title="Product Name">
-                        <EditTemplate Context="product">
-                            <RadzenTextBox @bind-Value="product.Item1.Name" Style="width:100%; display: block" Name="ProductName" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Property="Item1" Title="User Name" />
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="View Puarchse History" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.ViewPuarchseHistory" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.ViewPuarchseHistory" Disabled="false" TValue="bool" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Category" Title="Category" >
-                        <EditTemplate Context="product">
-                            <RadzenTextBox @bind-Value="product.Item1.Category" Style="width:100%; display: block" Name="Category" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Details" Title="Details" >
-                        <EditTemplate Context="product">
-                            <RadzenTextBox @bind-Value="product.Item1.Details" Style="width:100%; display: block" Name="Details" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item1.Price" Title="Price" >
-                        <EditTemplate Context="product">
-                            <RadzenNumeric TValue="double" @bind-Value="product.Item1.Price" Style="width:100%; display: block" Name="Price" />
-                        </EditTemplate>
-                    </RadzenGridColumn>
-                    <RadzenGridColumn Width="100px" TItem="Tuple<ProductData, int>" Property="Item2" Title="Amount" />
 
-                    <RadzenGridColumn TItem="Tuple<ProductData, int>" Context="product" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
-                        <Template Context="product">
-                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(product))">
-                            </RadzenButton>
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Inventory" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditInventory" Disabled="true" TValue="bool" />
                         </Template>
-                        <EditTemplate Context="product">
-                            <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow(product))">
-                            </RadzenButton>
-                            <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(product))">
-                            </RadzenButton>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditInventory" Disabled="false" TValue="bool" />
                         </EditTemplate>
                     </RadzenGridColumn>
-                    <RadzenGridColumn TItem="Tuple<ProductData, int>" Context="product" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
-                        <Template Context="product">
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(product))">
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Discount Policy" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditDiscountPolicy" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditDiscountPolicy" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn Width="100px" TItem="Tuple<string, Permission>" Title="Edit Purachse Policy" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditPurachsePolicy" Disabled="true" TValue="bool" />
+                        </Template>
+                        <EditTemplate Context="permission">
+                            <RadzenCheckBox @bind-Value="@permission.Item2.EditPurachsePolicy" Disabled="false" TValue="bool" />
+                        </EditTemplate>
+                    </RadzenGridColumn>
+
+                    <RadzenGridColumn TItem="Tuple<string, Permission>" Context="permission" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="permission">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow_Permission(permission))">
                             </RadzenButton>
                         </Template>
-                        <EditTemplate Context="product">
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(product))">
+                        <EditTemplate Context="permission">
+                            <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow_Permission(permission))">
+                            </RadzenButton>
+                            <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit_Permission(permission))">
                             </RadzenButton>
                         </EditTemplate>
                     </RadzenGridColumn>
@@ -147,28 +141,6 @@
 
             </RadzenGrid>
 
-            <br /><br />
-
-            <h2>Choose Product</h2>
-            <RadzenDropDown AllowClear="true" TValue="int"
-                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.StartsWith" AllowFiltering="true"
-                            Data="@inventory" TextProperty="Item1.Name" ValueProperty="Item1.ProductId" Style="margin-bottom: 20px" Change="@(args => SelectProduct(args))" />
-            <br />
-
-            @*<RadzenButton Click="@(() => DeleteProduct())" Text="Delete All" Style="margin-bottom: 20px; width: 150px" />
-
-            <br />*@
-
-            <h2>Choose amount to increase/increase</h2>
-            <RadzenNumeric TValue="int" Style="margin-bottom: 20px" Change="@(args => ChangeDelta(args))" />
-
-            <br />
-
-            <RadzenButton Click="@(() => Increase())" Icon="add" Style="margin-bottom: 20px; width: 80px" />
-
-            <RadzenButton Click="@(() => Decrease())" Icon="remove" Style="margin-bottom: 20px; width: 80px" />
-
-
             <div class="error-msg" style="text-align:left; font-weight:bold">
                 <span>@errorMsg</span>
             </div>
@@ -179,117 +151,200 @@
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Add product">
-            
-            <RadzenTemplateForm Data="@product" Submit="@((Product args) => { AddProduct(args); })">
+        @if (service.Permissions[StoreId].EditDiscountPolicy)
+        {
+    <RadzenTabsItem Text="Discount Policy">
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Current discount policiy in your store</h2>
+                <br />
+                <pre>@currentDiscountPolicy</pre>
+                <br />
+                <hr />
+            </div>
+        </div>
+
+        <div class="row col-md-12">
+
+            <div class="col-md-4">
+                <h2>Available preconditions</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))"  FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@discountsWithId" TextProperty="discountsWithId" Style="margin-bottom: 20px; height:200px; width:400px;" />
+
+            </div>
+            <div class="col-md-4">
+                <h2>Available products</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@products" TextProperty="products"  Style="margin-bottom: 20px; height:200px; width:400px;" />
+            </div>
+            <div class="col-md-4">
+                <h2>How formatting works?</h2>
+                <RadzenCard Style="margin-bottom: 20px; height:200px; width:400px; overflow:scroll;">
+                    <h4>Revealed Discount</h4>
+                    <span>Revealed discounts are denoted by the term</span>
+                    <span>r:[discount%]:[product ID]</span>
+                    <br />
+                    <sapn>For example: r:2:20</sapn>
+                    <hr>
+                    <h4>Conditional Basket Discount</h4>
+                    <span>Conditional basket discounts are denoted by the term</span>
+                    <span>cb:[pre condition]:[discount%]</span>
+                    <br />
+                    <sapn>For example: cb:3:20</sapn>
+                    <hr>
+                    <h4>Conditional Product Discount</h4>
+                    <span>Conditional product discounts are denoted by the term</span>
+                    <span>cp:[Produt ID]:[pre condition]:[discount%]</span>
+                    <br />
+                    <sapn>For example: cp:3:2:20</sapn>
+                    <hr>
+                    <h4>Compound Discount</h4>
+                    <span>Compound discount are denoted by the term</span>
+                    <span>(Opeator Child-Discount_1 ... Child-Discount_n)</span>
+                    <br />
+                    <span>i.e there should be parentheses around</span>
+                    <span>Note the prefix operator!</span>
+                    <span>child discoutns can be compund themselves, considier the following compound discount:</span>
+                    <br />
+                    <span>(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))</span>
+
+                </RadzenCard>
+            </div>
+        </div>
+
+        <h2>Your new composite purchase policy goes here </h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenTextArea Placeholder="Enter here..." Cols="70" Rows="3" Change="@(args => ChnageDiscountText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+            </div>
+                
+                <div class="col-md-4">
+                    <div class="row">
+                        <RadzenButton Click="@((args) => ParseDiscountText(args))" Text="Submit" Style="margin-bottom: 20px; width: 150px" />
+                    </div>
+                    <div class="row">
+                        <div class="error-msg" style="text-align:left; font-weight:bold">
+                            <span>@errorMsg</span>
+                        </div>
+
+                        <div class="success-msg" style="text-align:left; font-weight:bold">
+                            <span>@successMsg</span>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+    </RadzenTabsItem>
+        }
+
+        @if (service.Permissions[StoreId].EditPurachsePolicy)
+        {
+    <RadzenTabsItem Text="Purchase Policy">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Current purchase policy in your store</h2>
+                <br />
+                <pre>@currentPurchasePolicy</pre>
+                <br />
+                <hr />
+            </div>
+        </div>
+
+        <div class="row col-md-12">
+
+            <div class="col-md-4">
+                <h2>Available preconditions</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@policiesWithId" TextProperty="policiesWithId" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+
+            </div>
+            <div class="col-md-4">
+                <h2>Available products</h2>
+                <RadzenListBox AllowFiltering="true" Change="@(args => Change(args))" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value="value" Data="@products" TextProperty="products" ValueProperty="" Style="margin-bottom: 20px; height:200px; width:400px;" />
+            </div>
+            <div class="col-md-4">
+                <h2>How formatting works?</h2>
+                <RadzenCard Style="margin-bottom: 20px; height:200px; width:400px; overflow:scroll;">
+                    <h4>Product Purchase Policy</h4>
+                    <span>Product purchase policies are denoted by the term</span>
+                    <span>p:[precondition]:[productId]</span>
+                    <br />
+                    <sapn>For example: p:3:546</sapn>
+                    <hr>
+                    <h4>Basket Purchase Policy</h4>
+                    <span>Basket purchase policies are denoted by the term</span>
+                    <span>b:[pre condition]</span>
+                    <br />
+                    <sapn>For example: b:6</sapn>
+                    <hr>
+                    <h4>System Purchase Policy</h4>
+                    <span>System purchase policies are denoted by the term</span>
+                    <span>s:[precondition]:[storeID]</span>
+                    <br />
+                    <sapn>For example: s:3:41</sapn>
+                    <hr>
+                    <h4>User Purchase Policy</h4>
+                    <span>User purchase policies are denoted by the term</span>
+                    <span>u:[precondition]</span>
+                    <br />
+                    <sapn>For example: s:3</sapn>
+                    <hr>
+                    <h4>Compund Purchase Policy</h4>
+                    <span>Compound purchase policies are denoted by the term</span>
+                    <span>(Opeator Child_Policy_1 ... Child_Policy_n)</span>
+                    <br />
+                    <span>i.e there should be parentheses around</span>
+                    <span>Note the prefix operator!</span>
+                    <span>children polcies can be compund themselves, considier the following compound policy:</span>
+                    <br />
+                    <span>(AND (XOR (OR b:5 p:2:2) s:1:1) (OR u:3 u:2))</span>
+                </RadzenCard>
+            </div>
+        </div>
+
+        <h2>Your new composite purchase policy goes here </h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenTextArea Placeholder="Enter here..." Cols="70" Rows="3" Change="@(args => ChangePolicyText(args))" Style="margin-bottom: 20px; font-size: 20px;" />
+            </div>
+
+            <div class="col-md-4">
                 <div class="row">
-                    <div class="col-md-6">
-                        <RadzenFieldset Text="Product Info">
+                    <RadzenButton Click="@((args) => ParsePolicyText(args))" Text="Submit" Style="margin-bottom: 20px; width: 150px" />
+                </div>
+                <div class="row">
+                    <div class="error-msg" style="text-align:left; font-weight:bold">
+                        <span>@errorMsg</span>
+                    </div>
 
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="ID" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenNumeric @bind-Value="product.ProductId" style="width: 100%;" Name="Name" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Details" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ProductDetails" style="width: 100%;" Name="ProductDetails" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Price" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenNumeric @bind-Value="product.ProductPrice" style="width: 100%;" Name="Name" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Name" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ProductName" style="width: 100%;" Name="ProductName" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Category" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ProductCategory" style="width: 100%;" Name="ProductCategory" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Amount" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenNumeric @bind-Value="product.Pamount" style="width: 100%;" Name="Name" />
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-md-4 align-items-center d-flex">
-                                    <RadzenLabel Text="Image URL" />
-                                </div>
-                                <div class="col-md-8">
-                                    <RadzenTextBox @bind-Value="product.ImgUrl" style="width: 100%;" Name="ImgUrl" />
-                                </div>
-                            </div>
-
-                        </RadzenFieldset>
-
+                    <div class="success-msg" style="text-align:left; font-weight:bold">
+                        <span>@successMsg</span>
                     </div>
                 </div>
-
-
-
-                <div class="row justify-content-center">
-                    <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
-                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Add Product" />
-                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
-                    </div>
-                </div>
-            </RadzenTemplateForm>
-
-            <div class="error-msg" style="text-align:left; font-weight:bold">
-                <span>@errorMsg</span>
             </div>
+        </div>
 
-            <div class="success-msg" style="text-align:left; font-weight:bold">
-                <span>@successMsg</span>
-            </div>
+    </RadzenTabsItem>
+        }
 
+        @if (service.Permissions[StoreId].ViewPuarchseHistory)
+        {
+            <RadzenTabsItem Text="Purchases">
+                <StoreHistory Username="@loggedInUser" StoreId="StoreId" />
+            </RadzenTabsItem>
 
-        </RadzenTabsItem>
+        }
 
+        @if (service.Permissions[StoreId].EditInventory)
+        {
+            <RadzenTabsItem Text="Edit Inventory">
+                <Client.Pages.ManageStorePages.EditInventory Username="@loggedInUser" StoreId="@StoreId"/>
+            </RadzenTabsItem>
+
+        }
 
     </Tabs>
-</RadzenTabs>
+    </RadzenTabs>
 
 
 @code {
@@ -305,7 +360,10 @@
     private string[] options = new string[] { "Promote", "Demote" };
     private string loggedInUser;
     public string AppointmentMessage { get; set; }
+    public bool AppointIsError { get; set; }
     private List<Tuple<ProductData, int>> inventory { get; set; }
+    private List<KeyValuePair<int, string>> discounts;
+    private List<KeyValuePair<int, string>> policies;
     private int selectedProductId;
     private int delta;
     private string errorMsg { get; set; }
@@ -313,7 +371,14 @@
     private string selectedUser;
     private string selectedRole;
     private string selectedOption;
-
+    List<string> discountsWithId = new List<string>();
+    List<string> policiesWithId = new List<string>();
+    List<string> products = new List<string>();
+    string currentDiscountPolicy = "";
+    string currentPurchasePolicy = "";
+    private string discountText { get; set; }
+    private string policyText { get; set; }
+    string value = "";
 
     protected async override Task OnInitializedAsync()
     {
@@ -323,34 +388,57 @@
         loggedInUser = await ((MyAuthenticationStateProvider)AuthenticationStateProvider).GetLoggedInUsername();
         staff = await service.GetStaff(StoreId);
         staffList = staff.ToList();
-        InventoryData invData = await service.GetStoresInventory(StoreId);
-        inventory = invData.invProducts;
+
+        Dictionary<int, string> discountsDict = await service.GetRawDiscounts();
+        SortedDictionary<int, string> sortedDiscounts = new SortedDictionary<int, string>(discountsDict);
+        discounts = sortedDiscounts.ToList();
+        foreach (KeyValuePair<int, string> kv in discounts)
+            discountsWithId.Add(kv.Key + ": " + kv.Value);
+
+        Dictionary<int, string> purchasePoliciesDict = await service.GetRawPurchasePolcies();
+        SortedDictionary<int, string> sortedPolicies = new SortedDictionary<int, string>(purchasePoliciesDict);
+        policies = sortedPolicies.ToList();
+        foreach (KeyValuePair<int, string> kv in policies)
+            policiesWithId.Add(kv.Key + ": " + kv.Value);
+
+        currentDiscountPolicy = await service.GetDiscountPolicy(StoreId);
+        currentPurchasePolicy = await service.GetPurchasePolicy(StoreId);
+
+
+        await UpdateManagersPermissions();
+        PermissionsInEdit = new List<Tuple<string, Permission>>();
+
+        inventory = (await service.GetStoresInventory(StoreId)).invProducts;
+        foreach (Tuple<ProductData, int> tuple in inventory)
+            products.Add(tuple.Item1.ProductId + ": " + tuple.Item1.Name);
     }
 
-    public class Product
-    {
-        public int ProductId { get; set; }
-        public string ProductDetails { get; set; }
-        public double ProductPrice { get; set; }
-        public string ProductName { get; set; }
-        public string ProductCategory { get; set; }
-        public int Pamount { get; set; }
-        public string ImgUrl { get; set; }
-    }
 
-    Product product = new Product()
+    async private void ParseDiscountText(object args)
     {
+        SuccessFailResponse response = await service.UpdateDiscountPolicy(StoreId, loggedInUser, discountText);
 
-    };
-
-    private async void AddProduct(Product p)
-    {
-        SuccessFailResponse response = await service.AddProductToStore(StoreId, loggedInUser, p.ProductId, p.ProductDetails, p.ProductPrice, p.ProductName, p.ProductCategory, p.Pamount, p.ImgUrl);
-        
         if (response.Success)
         {
-            successMsg = "Operation completed successfully";
+            successMsg = "Discount added successfully";
             errorMsg = "";
+            currentDiscountPolicy = await service.GetDiscountPolicy(StoreId);
+        }
+        else
+        {
+            successMsg = "";
+            errorMsg = response.Error;
+        }
+    }
+    async private void ParsePolicyText(object args)
+    {
+        SuccessFailResponse response = await service.UpdatePurchasePolicy(StoreId, loggedInUser, policyText);
+
+        if (response.Success)
+        {
+            successMsg = "Policy added successfully";
+            errorMsg = "";
+            currentPurchasePolicy = await service.GetPurchasePolicy(StoreId);
         }
         else
         {
@@ -359,69 +447,48 @@
         }
     }
 
-    void Cancel()
+
+
+    private void ChnageDiscountText(object discount)
     {
-        //
-    }
-
-
-    private void SelectProduct(object productId)
-    {
-        selectedProductId = (int)productId;
-    }
-
-    private void ChangeDelta(object Delta)
-    {
-        delta = (int)Delta;
-    }
-
-    private async void DeleteProduct()
-    {
-        SuccessFailResponse response =  await service.RemoveProductFromStore(StoreId, loggedInUser, selectedProductId);
-
-        if (response.Success)
+        discountText = (string)discount;
+        bool balancedParen = CheckForBalancedBracketing(discountText);
+        if (!balancedParen)
         {
-            successMsg = "Operation completed successfully";
-            errorMsg = "";
+            errorMsg = "Expression is not balanced";
+            successMsg = "";
         }
+
         else
         {
-            successMsg = "";
-            errorMsg = response.Error;
+            errorMsg = "";
+            successMsg = "Expression is well balanced";
         }
     }
-
-    private async void Increase()
+    private void ChangePolicyText(object policy)
     {
-        SuccessFailResponse response = await service.IncreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
-
-        if (response.Success)
+        policyText = (string)policy;
+        bool balancedParen = CheckForBalancedBracketing(policyText);
+        if (!balancedParen)
         {
-            successMsg = "Operation completed successfully";
-            errorMsg = "";
+            errorMsg = "Expression is not balanced";
+            successMsg = "";
         }
+
         else
         {
-            successMsg = "";
-            errorMsg = response.Error;
-        }
-    }
-
-    private async void Decrease()
-    {
-        SuccessFailResponse response = await service.DecreaseProductAmount(StoreId, loggedInUser, selectedProductId, delta);
-
-        if (response.Success)
-        {
-            successMsg = "Operation completed successfully";
             errorMsg = "";
-        }
-        else
-        {
-            successMsg = "";
-            errorMsg = response.Error;
+            successMsg = "Expression is well balanced";
         }
     }
+
+
+
+
+
+
+
+
 
 
     private async void ApplyAction()
@@ -432,7 +499,6 @@
         if (selectedOption == "Promote" && selectedRole == "Owner")
             successErrorTuple = await service.AppointOwner(loggedInUser, selectedUser, StoreId);
 
-
         if (selectedOption == "Promote" && selectedRole == "Manager")
             successErrorTuple = await service.AppointManager(loggedInUser, selectedUser, StoreId);
 
@@ -440,15 +506,20 @@
             successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
 
         if (selectedOption == "Demote" && selectedRole == "Manager")
-            successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
+            successErrorTuple = await service.DemoteManager(loggedInUser, selectedUser, StoreId);
 
 
         if (successErrorTuple.Item1)
+        {
             AppointmentMessage = "Operation applied successfully";
+            AppointIsError = false;
+        }
 
         else
+        {
             AppointmentMessage = successErrorTuple.Item2; // the error
-
+            AppointIsError = true;
+        }
     }
 
     private void OnSelected1(string selection)
@@ -466,24 +537,39 @@
         selectedRole = selection;
     }
 
-    public RadzenGrid<Tuple<ProductData, int>> productsGrid { get; set; }
 
 
-    void EditRow(Tuple<ProductData, int> product)
+
+    void Change(object value)
     {
-        productsGrid.EditRow(product);
+        StateHasChanged();
     }
 
-    async void SaveRow(Tuple<ProductData, int> product)
+
+
+    ///////////////////////////////////////////////////////////// Permissions GridView
+
+    public RadzenGrid<Tuple<string, Permission>> permissionsGrid { get; set; }
+    public List<Tuple<string, Permission>> PermissionsInEdit { get; set; }
+    public List<Tuple<string, Permission>> ManagersPermissions { get; set; }
+
+
+
+    void EditRow_Permission(Tuple<string, Permission> permission)
     {
-        UpdateProductOfStoreRequest request = new UpdateProductOfStoreRequest(loggedInUser, StoreId, product.Item1.ProductId, product.Item1.Details,
-            product.Item1.Price, product.Item1.Name, product.Item1.Category, "");
-        SuccessFailResponse response = await service.GetResponse<UpdateProductOfStoreRequest, SuccessFailResponse>(request);
+        permissionsGrid.EditRow(permission);
+        PermissionsInEdit.Add(permission);
+    }
+
+    async void SaveRow_Permission(Tuple<string, Permission> permission)
+    {
+        ChangePermissionsRequest req = new ChangePermissionsRequest(loggedInUser, permission.Item1, StoreId, permission.Item2);
+        SuccessFailResponse response = await service.GetResponse<ChangePermissionsRequest, SuccessFailResponse>(req);
         if (response.Success)
         {
             successMsg = "Operation completed successfully";
             errorMsg = "";
-            await productsGrid.UpdateRow(product);
+            await permissionsGrid.UpdateRow(permission);
         }
         else
         {
@@ -493,27 +579,59 @@
 
     }
 
-    void CancelEdit(Tuple<ProductData, int> product)
+    async void CancelEdit_Permission(Tuple<string, Permission> permission)
     {
-        productsGrid.CancelEditRow(product);
-
+        permissionsGrid.CancelEditRow(permission);
+        await UpdateManagersPermissions();
     }
 
-    async void DeleteRow(Tuple<ProductData, int> product)
+    async Task UpdateManagersPermissions()
     {
-        SuccessFailResponse response = await service.RemoveProductFromStore(StoreId, loggedInUser, product.Item1.ProductId);
-
-        if (response.Success)
-        {
-            successMsg = "Operation completed successfully";
-            errorMsg = "";
-            inventory.Remove(product);
-            productsGrid.Reload();
-        }
-        else
-        {
-            successMsg = "";
-            errorMsg = response.Error;
-        }
+        GetManagersPermissionRequest req = new GetManagersPermissionRequest(StoreId, loggedInUser);
+        GetManagerPermissionResponse response = await service.GetResponse<GetManagersPermissionRequest, GetManagerPermissionResponse>(req);
+        ManagersPermissions = response.ManagerPermissions;
     }
+
+    private bool CheckForBalancedBracketing(string IncomingString)
+    {
+        const char LeftParenthesis = '(';
+        const char RightParenthesis = ')';
+        uint BracketCount = 0;
+
+        try
+        {
+            checked  // Turns on overflow checking.
+            {
+                for (int Index = 0; Index < IncomingString.Length; Index++)
+                {
+                    switch (IncomingString[Index])
+                    {
+                        case LeftParenthesis:
+                            BracketCount++;
+                            continue;
+                        case RightParenthesis:
+                            BracketCount--;
+                            continue;
+                        default:
+                            continue;
+                    }  // end of switch()
+
+                }
+            }
+        }
+
+        catch (OverflowException)
+        {
+            return false;
+        }
+
+        if (BracketCount == 0)
+        {
+            return true;
+        }
+
+        return false;
+
+    }  // end of CheckForBalancedBracketing()
+
 }

@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.Communication;
 using eCommerce_14a.UserComponent.DomainLayer;
+using Server.DAL;
+using Server.DAL.CommunicationDb;
 
 namespace Server.UserComponent.Communication
 {
     public class Publisher
     {
-        private Dictionary<int, LinkedList<string>> StoreSubscribers;
+        public Dictionary<int, LinkedList<string>> StoreSubscribers { get; set; }
         private UserManager UM;
         private WssServer ws;
         Publisher()
@@ -111,23 +113,49 @@ namespace Server.UserComponent.Communication
             foreach(string username in users)
             {
                 User user = UM.GetUser(username);
+                //add notification's user
+                notification.UserName = username;
                 if (!user.LoggedStatus())
+                {
                     user.AddMessage(notification);
+                    //add message to db, thus user can get it later
+                    if(!user.IsGuest)
+                    {
+                       DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
+                    }
+                }
                 else
+                {
                     ws.notify(username, notification);
+                }
             }
             return new Tuple<bool, string>(true, "");
         }
 
         public Tuple<bool, string> Notify(string username, NotifyData notification)
         {
-           User user = UM.GetUser(username);
-           if (!user.LoggedStatus())
+            if (ws is null)
+            {
+                return new Tuple<bool, string>(true, "ws undefiened");
+            }
+            User user = UM.GetUser(username);
+            //add notification's user
+            notification.UserName = username;
+            if (!user.LoggedStatus())
+            {
                 user.AddMessage(notification);
-           else
+                //add message to db, thus user can get it later
+                if (!user.IsGuest)
+                {
+                   DbManager.Instance.InsertUserNotification(AdapterCommunication.ConvertNotifyData(notification));
+                }
+            }
+            else
+            {
                 ws.notify(username, notification);
-            
-           return new Tuple<bool, string>(true, "");
+            }
+
+            return new Tuple<bool, string>(true, "");
         }
         public void cleanup()
         {

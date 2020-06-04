@@ -16,32 +16,40 @@ namespace TestingSystem.UnitTests
     [TestClass]
     public class PurchasePolicyTest
     {
-        Validator validator;
+
+        PolicyValidator validator;
         Cart cart;
         Store store;
         Dictionary<int, PreCondition> preConditionsDict;
+        Dictionary<string, User> users;
+        Dictionary<int, Store> stores;
 
         [TestInitialize]
         public void TestInitialize()
         {
-
-            validator = new Validator(null, null);
+            users = new Dictionary<string, User>();
+            users.Add("liav", new User(1, "liav", false, false));
+            users.Add("shay", new User(2, "shay", true, false));
+            store = StoreTest.StoreTest.initValidStore();
+            stores = new Dictionary<int, Store>();
+            stores.Add(1, store);
+            validator = new PolicyValidator(null, null);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
-                (PurchaseBasket basket, int productId, User user, Store store) => basket.Products.ContainsKey(productId) ? basket.Products[productId] <= 1 : false);
+                (PurchaseBasket basket, int productId, string userName, int storeId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] <= 1 : false);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
-                (PurchaseBasket basket, int productId, User user, Store store) => basket.GetNumProductsAtBasket() <= 10);
+                (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() <= 10);
 
-            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.GuestCantBuy,
-                (PurchaseBasket basket, int productId, User user, Store store) => !user.isguest());
+            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.OwnerCantBuy,
+                (PurchaseBasket basket, int productId, string userName, int storeId) => !users[userName].isguest());
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.StoreMustBeActive,
-                (PurchaseBasket basket, int productId, User user, Store store) => store.ActiveStore);
+                (PurchaseBasket basket, int productId, string userName, int storeId) => stores[storeId].ActiveStore);
 
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                (PurchaseBasket basket, int productId, User user, Store store) => true);
+                (PurchaseBasket basket, int productId, string userName, int storeId) => true);
 
 
 
@@ -49,7 +57,7 @@ namespace TestingSystem.UnitTests
             preConditionsDict.Add(CommonStr.PurchasePreCondition.singleOfProductType, new PurchasePreCondition(CommonStr.PurchasePreCondition.singleOfProductType));
             preConditionsDict.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, new PurchasePreCondition(CommonStr.PurchasePreCondition.Max10ProductPerBasket));
             preConditionsDict.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, new PurchasePreCondition(CommonStr.PurchasePreCondition.StoreMustBeActive));
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.GuestCantBuy, new PurchasePreCondition(CommonStr.PurchasePreCondition.GuestCantBuy));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.OwnerCantBuy, new PurchasePreCondition(CommonStr.PurchasePreCondition.OwnerCantBuy));
 
             store = StoreTest.StoreTest.initValidStore();
             cart = new Cart("liav");
@@ -116,7 +124,7 @@ namespace TestingSystem.UnitTests
         {
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc = new UserPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.GuestCantBuy], new User(1, "liav", false, false));
+            PurchasePolicy purchaseplc = new UserPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.OwnerCantBuy]);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
@@ -126,7 +134,7 @@ namespace TestingSystem.UnitTests
         {
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc = new UserPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.GuestCantBuy], new User(1, "liav", true, false));
+            PurchasePolicy purchaseplc = new UserPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.OwnerCantBuy]);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
@@ -135,10 +143,9 @@ namespace TestingSystem.UnitTests
         public void TestSimpleBySystem1_Valid()
         {
             cart = new Cart("liav");
-            store = StoreTest.StoreTest.initValidStore();
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], store);
+            PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], 1);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
@@ -149,7 +156,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 1, 7, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], store);
+            PurchasePolicy purchaseplc = new SystemPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.StoreMustBeActive], 1);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }

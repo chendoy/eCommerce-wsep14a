@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
@@ -17,6 +18,7 @@ using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
 using Server.Communication.DataObject.ThinObjects;
 using Server.UserComponent.Communication;
+using Server.UserComponent.DomainLayer;
 using SuperWebSocket;
 
 
@@ -46,13 +48,13 @@ namespace eCommerce_14a.Communication
         public void loaddata()
         {
             sysService.loaddata();
-            userService.Login("user6", "Test6");
-            purchService.AddProductToShoppingCart("user6", 1, 1, 3);
-            purchService.AddProductToShoppingCart("user6", 2, 1, 1);
-            purchService.AddProductToShoppingCart("user6", 2, 3, 2);
-            userService.Logout("user6");
-            userService.Logout("user4");
-            userService.Logout("user5");
+            //userService.Login("user6", "Test6");
+            //purchService.AddProductToShoppingCart("user6", 1, 1, 3);
+            //purchService.AddProductToShoppingCart("user6", 2, 1, 1);
+            //purchService.AddProductToShoppingCart("user6", 2, 3, 2);
+            //userService.Logout("user6");
+            //userService.Logout("user4");
+            //userService.Logout("user5");
         }
 
         public string Seralize(object obj)
@@ -97,6 +99,17 @@ namespace eCommerce_14a.Communication
             return new byte[5];
         }
 
+        public string GetUserNameBySocket(WebSocketSession session) 
+        {
+            var username = usersSessions.FirstOrDefault(x => x.Value == session).Key;
+            return username;
+        }
+
+        public void HandleSessionClosed(WebSocketSession session) 
+        {
+            userService.Logout(GetUserNameBySocket(session));
+        }
+
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
             bool isAdmin = false;
@@ -111,7 +124,7 @@ namespace eCommerce_14a.Communication
             {
                 usersSessions.Add(res.Username, session);
             }
-            if (res.Username == "Admin")
+            if (userService.isAdmin(res.Username))
                 isAdmin = true;
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (!ans.Item1 && usersSessions.ContainsKey(res.Username))
@@ -133,6 +146,12 @@ namespace eCommerce_14a.Communication
             string jsonAns = Seralize(new LogoutResponse(ans.Item1, ans.Item2));
             usersSessions.Remove(res.Username);
             return security.Encrypt(jsonAns);
+        }
+
+        public void HandleLogoutToInit(string json)
+        {
+            LogoutRequest res = JsonConvert.DeserializeObject<LogoutRequest>(json);
+            userService.Logout(res.Username);
         }
 
         public byte[] HandleRegister(string json)
@@ -178,7 +197,7 @@ namespace eCommerce_14a.Communication
             List<Product> prodList = ans[res.StoreId];
             foreach (Product product in prodList) 
             {
-                if (product.ProductID == res.ProductId)
+                if (product.Id == res.ProductId)
                 {
                     prod = product;
                     break;
@@ -219,6 +238,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleGetAvailablePurchases(string json)
+        {
+            GetAvailableRawPurchaseRequest res = JsonConvert.DeserializeObject<GetAvailableRawPurchaseRequest>(json);
+            Dictionary<int, string> ans = storeService.GetAvailableRawPurchasePolicy();
+            string jsonAns = Seralize(new GetAvailableRawPurchaseResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
         public byte[] HandleGetAvailableDiscounts(string json)
         {
             GetAvailableRawDiscountsRequest res = JsonConvert.DeserializeObject<GetAvailableRawDiscountsRequest>(json);
@@ -238,7 +265,7 @@ namespace eCommerce_14a.Communication
         public byte[] HandleAddProductToStore(string json)
         {
             AddProductToStoreRequest res = JsonConvert.DeserializeObject<AddProductToStoreRequest>(json);
-            Tuple<bool,string> ans = storeService.appendProduct(res.StoreId, res.UserName, res.ProductId, res.ProductDetails, res.ProductPrice,
+            Tuple<bool,string> ans = storeService.appendProduct(res.StoreId, res.UserName, res.ProductDetails, res.ProductPrice,
                 res.ProductName, res.ProductCategory, res.Pamount, res.ImgUrl);
             string jsonAns = Seralize(new SuccessFailResponse(ans.Item1,ans.Item2));
             return security.Encrypt(jsonAns);
@@ -248,6 +275,71 @@ namespace eCommerce_14a.Communication
         {
             DecreaseProductAmountRequest res = JsonConvert.DeserializeObject<DecreaseProductAmountRequest>(json);
             Tuple<bool, string> ans = storeService.decraseProduct(res.StoreId, res.Username, res.ProductId, res.Amount);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleGetManagersPermission(string json)
+        {
+            GetManagersPermissionRequest res = JsonConvert.DeserializeObject<GetManagersPermissionRequest>(json);
+            List<Tuple<string, Permission>> ans = userService.GetStoreManagersPermissions(res.username, res.StoreID);
+            string jsonAns = Seralize(new GetManagerPermissionResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleApproveAppointment(string json)
+        {
+            ApproveAppointmentRequest res = JsonConvert.DeserializeObject<ApproveAppointmentRequest>(json);
+            Tuple<bool, string> ans = appointService.ApproveAppointment(res.Owner, res.Appointed, res.StoreID, res.Approval);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleMakeAdmin(string json)
+        {
+            MakeAdminRequest res = JsonConvert.DeserializeObject<MakeAdminRequest>(json);
+            Tuple<bool,string> ans = userService.MakeAdmin(res.Username);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleApprovalList(string json)
+        {
+            GetApprovalListRequest res = JsonConvert.DeserializeObject<GetApprovalListRequest>(json);
+            List<string> ans = userService.GetApprovalListByStoreAndUser(res.Username, res.StoreID);
+            string jsonAns = Seralize(new GetApprovalListResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleDiscountPolicy(string json)
+        {
+            GetDiscountPolicyRequest res = JsonConvert.DeserializeObject<GetDiscountPolicyRequest>(json);
+            string ans = storeService.GetDiscountPolicy(res.StoreID);
+            string jsonAns = Seralize(new GetDiscountPolicyResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandlePurchasePolicy(string json)
+        {
+            GetPurchasePolicyRequest res = JsonConvert.DeserializeObject<GetPurchasePolicyRequest>(json);
+            string ans = storeService.GetPurchasePolicy(res.StoreID);
+            string jsonAns = Seralize(new GetPurchasePolicyResponse(ans));
+            return security.Encrypt(jsonAns);
+        }
+
+        internal byte[] HandleUserPermissions(string json)
+        {
+            Dictionary<int, int[]> permissions;
+            GetUserPermissionsRequest res = JsonConvert.DeserializeObject<GetUserPermissionsRequest>(json);
+            permissions = userService.GetUserPermissions(res.Username);
+            string jsonAns = Seralize(new GetUserPermissionsResponse(permissions));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleChangePermissions(string json)
+        {
+            ChangePermissionsRequest res = JsonConvert.DeserializeObject<ChangePermissionsRequest>(json);
+            Tuple<bool, string> ans = appointService.ChangePermissions(res.Owner, res.Appoint, res.StoreId, res.Permissions.ToArray());
             string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
@@ -419,9 +511,15 @@ namespace eCommerce_14a.Communication
         public byte[] HandleDemoteOwner(string json)
         {
             DemoteOwnerRequest res = JsonConvert.DeserializeObject<DemoteOwnerRequest>(json);
-            Tuple<bool, string> ans = appointService.RemoveStoreManager(res.Appointer, res.Appointed, res.StoreId);
-            string jsonAns = Seralize(new DemoteManagerResponse(ans.Item1, ans.Item2));
+            Tuple<bool, string> ans = appointService.RemoveStoreOwner(res.Appointer, res.Appointed, res.StoreId);
+            string jsonAns = Seralize(new DemoteOwnerResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
+        }
+
+        public int SpecialHandleOpenStore(string username)
+        {
+            Tuple<int, string> ans = storeService.createStore(username);
+            return ans.Item1;
         }
     }
 }

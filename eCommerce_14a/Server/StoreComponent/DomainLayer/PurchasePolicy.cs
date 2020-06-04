@@ -4,15 +4,19 @@ using eCommerce_14a.Utils;
 using Server.StoreComponent.DomainLayer;
 using System.Collections.Generic;
 
+
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {  
     public interface PurchasePolicy
     {
-        bool IsEligiblePurchase(PurchaseBasket basket, Validator validator);
+        bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
+        string Describe(int depth);
     }
     public class CompundPurchasePolicy : PurchasePolicy
     {
+
         private List<PurchasePolicy> children;
+
         public int mergeType { get; set; }
 
         public CompundPurchasePolicy(int mergeType, List<PurchasePolicy> children)
@@ -24,7 +28,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
             if (mergeType == CommonStr.PurchaseMergeTypes.AND)
             {
@@ -75,6 +79,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return children;
         }
+
+        public string Describe(int depth)
+        {
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            string ret = pad + "(";
+            ret += "    ";
+            ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
+            foreach (PurchasePolicy policy in children)
+                ret += "\n" + policy.Describe(depth + 1) + ",";
+            ret += "\n" + pad + ")";
+            return ret;
+        }
     }
 
     abstract 
@@ -87,7 +104,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
         abstract
-        public bool IsEligiblePurchase(PurchaseBasket basket, Validator validator);
+        public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
+        public abstract string Describe(int depth);
 
         public PreCondition PreCondition
         {
@@ -103,9 +121,20 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.policyProductId = policyProductId;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, policyProductId, null, null, validator);
+            return PreCondition.IsFulfilled(basket, policyProductId, null, -1, validator);
+        }
+
+        public override string Describe(int depth)
+        {
+            //Inv6entory inv = new Inventory();
+            //string productStr = inv.getProductDetails(policyProductId).Item1.Name;
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Product Purchase Policy: " + policyProductId + " - " + preStr + " ]";
         }
     }
 
@@ -117,37 +146,62 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, null, null, validator);
+            return PreCondition.IsFulfilled(basket, -1, null, -1, validator);
+        }
+
+        public override string Describe(int depth)
+        {
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Basket Purchase Policy: " + preStr + "]";
         }
     }
 
     public class SystemPurchasePolicy : SimplePurchasePolicy
     {
-        public  Store store { get; set; }
-        public SystemPurchasePolicy(PreCondition pre,Store store) : base(pre)
+        public  int  StoreId { get; set; }
+        public SystemPurchasePolicy(PreCondition pre,int storeId) : base(pre)
         {
-            this.store = store;
+            StoreId = storeId;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, null, store, validator);
+            return PreCondition.IsFulfilled(basket, -1, null, StoreId, validator);
+        }
+
+        public override string Describe(int depth)
+        {
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[System Purchase Policy: " + preStr + " in store #" + StoreId + "]";
         }
     }
 
     public class UserPurchasePolicy : SimplePurchasePolicy
     {
-        public User user { get; set; }
-        public UserPurchasePolicy(PreCondition pre, User user) : base(pre)
+        public UserPurchasePolicy(PreCondition pre) : base(pre)
         {
-            this.user = user;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, Validator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
         {
-            return PreCondition.IsFulfilled(basket, -1, user, null, validator);
+            return PreCondition.IsFulfilled(basket, -1, basket.User, -1, validator);
+        }
+
+        public override string Describe(int depth)
+        {
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[User Purchase Policy: " + preStr + "]";
         }
     }
 }

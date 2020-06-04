@@ -23,8 +23,8 @@ namespace TestingSystem.UnitTests.StoreTest
     public class StoreTest
     {
         private Store validStore;
-        private List<User> owners;
-        private List<User> managers;
+        private List<string> owners;
+        private List<string> managers;
         [TestInitialize]
         public void TestInitialize()
         {
@@ -50,7 +50,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         public void TestAddProductAmount_ValidOwner()
         {
-            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: owners[0], produtId: 1, amount: 100);
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: new User(1,owners[0],false, false), produtId: 1, amount: 100);
             Assert.IsTrue(addProdRes.Item1);
 
         }
@@ -59,7 +59,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         public void TestAddProductAmount_ManagerWithPermission()
         {
-            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: managers[0], produtId: 1, amount: 100);
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: new User(1, managers[0], false, false), produtId: 1, amount: 100);
             Assert.IsTrue(addProdRes.Item1);
         }
 
@@ -67,7 +67,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.addProductAmount(int, Product, int)"/>
         public void TestAddProductAmount_ValidManagerWithOutPermission()
         {
-            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: managers[1], produtId: 1, amount: 100);
+            Tuple<bool, string> addProdRes = addProductAmountDriver(validStore, user: new User(1, managers[1], false, false), produtId: 1, amount: 100);
             if (addProdRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, addProdRes.Item2);
@@ -100,7 +100,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.decrasePrdouct(int, User, int, int)
         public void TestDecraseProductAmount_ValidOwner()
         {
-            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: owners[0], productId: 1, amount: 100);
+            Tuple<bool, string> decraseProdRes = decraseProductDriver(validStore, user: new User(1, owners[0], false, false), productId: 1, amount: 100);
             Assert.IsTrue(decraseProdRes.Item1);
         }
 
@@ -108,7 +108,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
         public void TestDecraseProductAmount_ManagerWithPermission()
         {
-            Tuple<bool, string> addProdRes = decraseProductDriver(validStore, user: managers[0], productId: 1, amount: 5);
+            Tuple<bool, string> addProdRes = decraseProductDriver(validStore, user: new User(1, managers[0], false, false), productId: 1, amount: 5);
             Assert.IsTrue(addProdRes.Item1);
         }
 
@@ -116,7 +116,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.decrasePrdouct(int, Product, int)
         public void TestDecraseProductAmount_ValidManagerWithOutPermission()
         {
-            Tuple<bool, string> addProdRes = decraseProductDriver(validStore, user: managers[1], productId: 1, amount: 100);
+            Tuple<bool, string> addProdRes = decraseProductDriver(validStore, user: new User(1, managers[1], false, false), productId: 1, amount: 100);
             if (addProdRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, addProdRes.Item2);
@@ -149,7 +149,7 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestChangeStoreStatus_notActiveStatus()
         {
             bool isActive = false;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, owners[0], newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, user: new User(1, owners[0], false, false), newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -159,7 +159,7 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestChangeStoreStatus_ActiveValid()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, owners[0], newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, user: new User(1, owners[0], false, false), newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsTrue(statusChanged);
         }
@@ -169,7 +169,7 @@ namespace TestingSystem.UnitTests.StoreTest
         public void TestChangeStoreStatus_ActiveNoOwner()
         {
             bool isActive = true;
-            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, managers[0], newStatus: isActive);
+            Tuple<bool, string> changeStatusRes = changeStoreStatusDriver(validStore, user: new User(1, managers[0], false, false), newStatus: isActive);
             bool statusChanged = changeStatusRes.Item1;
             Assert.IsFalse(statusChanged);
         }
@@ -195,7 +195,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.removeProduct(User, int)
         public void TestRemoveProduct_Owner()
         {
-            Tuple<bool, string> res = removeProductDriver(validStore, owners[0], 1);
+            Tuple<bool, string> res = removeProductDriver(validStore, user: new User(1, owners[0], false, false), 1);
             Assert.IsTrue(res.Item1);
         }
 
@@ -203,14 +203,14 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.removeProduct(User, int)
         public void TestRemoveProduct_ManagerWithPermission()
         {
-            Assert.IsTrue(removeProductDriver(validStore, managers[0], 1).Item1);
+            Assert.IsTrue(removeProductDriver(validStore, user: new User(1, managers[0], false, false), 1).Item1);
         }
 
         [TestMethod]
         /// <function cref ="eCommerce_14a.Store.removeProduct(User, int)
         public void TestRemoveProduct_ManagerWithOutPermission()
         {
-            Tuple<bool, string> res = removeProductDriver(validStore, managers[1], 1);
+            Tuple<bool, string> res = removeProductDriver(validStore, user: new User(1, managers[1], false, false), 1);
             if (res.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, res.Item2);
@@ -244,7 +244,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
             validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
-            Tuple<bool, string> res = appendProductDriver(validStore, managers[0], validParamDetails, 1);
+            Tuple<bool, string> res = appendProductDriver(validStore, user: new User(1, managers[0], false, false), validParamDetails, 1);
             Assert.IsTrue(res.Item1);
         }
 
@@ -259,7 +259,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
 
-            Tuple<bool, string> res = appendProductDriver(validStore, managers[1], validParamDetails, 1);
+            Tuple<bool, string> res = appendProductDriver(validStore, user: new User(1, managers[1], false, false), validParamDetails, 1);
             if (res.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, res.Item2);
@@ -278,7 +278,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
 
-            Tuple<bool, string> res = appendProductDriver(validStore, owners[0], validParamDetails, 1);
+            Tuple<bool, string> res = appendProductDriver(validStore, user: new User(1, owners[0], false, false), validParamDetails, 1);
             Assert.IsTrue(res.Item1);
         }
 
@@ -311,7 +311,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
 
-            Tuple<bool, string> res = UpdateProductDriver(validStore, managers[0], validParamDetails);
+            Tuple<bool, string> res = UpdateProductDriver(validStore, user: new User(1, managers[0], false, false), validParamDetails);
             Assert.IsTrue(res.Item1);
         }
 
@@ -326,7 +326,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductCategory, CommonStr.ProductCategoty.Consola);
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
 
-            Tuple<bool, string> res = UpdateProductDriver(validStore, managers[1], validParamDetails);
+            Tuple<bool, string> res = UpdateProductDriver(validStore, user: new User(1, managers[1], false, false), validParamDetails);
             if (res.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreErrorMessage.ManagerNoPermissionErrMsg, res.Item2);
@@ -345,7 +345,7 @@ namespace TestingSystem.UnitTests.StoreTest
             validParamDetails.Add(CommonStr.ProductParams.ProductPrice, 992.0);
             validParamDetails.Add(CommonStr.ProductParams.ProductImgUrl, "");
 
-            Tuple<bool, string> res = UpdateProductDriver(validStore, owners[0], validParamDetails);
+            Tuple<bool, string> res = UpdateProductDriver(validStore, user: new User(1, owners[0], false, false), validParamDetails);
             Assert.IsTrue(res.Item1);
         }
 
@@ -364,7 +364,7 @@ namespace TestingSystem.UnitTests.StoreTest
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreId], validStore.Id);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.mainOwner], owners[0]);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreInventory], validStore.Inventory);
-            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolices);
+            Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreDiscountPolicy], validStore.DiscountPolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StorePuarchsePolicy], validStore.PurchasePolicy);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.IsActiveStore], validStore.ActiveStore);
             Assert.AreEqual(validStoreInfo[CommonStr.StoreParams.StoreRank], validStore.Rank);
@@ -379,7 +379,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.AddStoreOwner(User)
         public void TestAddStoreOwner_AlreadyExistOwner()
         {
-            Assert.IsFalse(AddStoreOwnerDriver(validStore, owners[0]));
+            Assert.IsFalse(AddStoreOwnerDriver(validStore, user: new User(1, owners[0], false, false)));
         }
 
         [TestMethod]
@@ -399,7 +399,7 @@ namespace TestingSystem.UnitTests.StoreTest
         /// <function cref ="eCommerce_14a.Store.AddStoreManager(User)
         public void TestAddStoreManager_AlreadyExistManager()
         {
-            Assert.IsFalse(AddStoreMangerDriver(validStore, managers[0]));
+            Assert.IsFalse(AddStoreMangerDriver(validStore, user: new User(1, managers[0], false, false)));
         }
 
         [TestMethod]
@@ -433,7 +433,7 @@ namespace TestingSystem.UnitTests.StoreTest
             return s;
         }
 
-        public static Store initValidStore(Validator validator=null)
+        public static Store initValidStore(PolicyValidator validator=null)
         {
             StoreManagment sm = StoreManagment.Instance;
             UserManager userManager = UserManager.Instance;
@@ -455,7 +455,7 @@ namespace TestingSystem.UnitTests.StoreTest
             {
                 validStore.PolicyValidator = validator;
             }
-            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList(validStore.Id));
             return validStore;
         }
         

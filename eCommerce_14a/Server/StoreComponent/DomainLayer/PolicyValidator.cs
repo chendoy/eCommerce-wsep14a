@@ -9,13 +9,13 @@ using System.Collections.Generic;
 namespace Server.StoreComponent.DomainLayer
 
 {
-    public class Validator
+    public class PolicyValidator
     {
 
         private Dictionary<int, Func<PurchaseBasket,int, bool>> discountValidatorFunctions;
-        private Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>> purchaseValidatorFunctions;
+        private Dictionary<int, Func<PurchaseBasket, int, string, int, bool>> purchaseValidatorFunctions;
 
-        public Validator(Dictionary<int, Func<PurchaseBasket, int, bool>> discountFunctions, Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>> purchaseValidatorFunctions)
+        public PolicyValidator(Dictionary<int, Func<PurchaseBasket, int, bool>> discountFunctions, Dictionary<int, Func<PurchaseBasket, int, string, int, bool>> purchaseValidatorFunctions)
         {
             if (discountFunctions != null)
                 this.discountValidatorFunctions = discountFunctions;
@@ -25,7 +25,7 @@ namespace Server.StoreComponent.DomainLayer
             if (purchaseValidatorFunctions != null)
                 this.purchaseValidatorFunctions = purchaseValidatorFunctions;
             else
-                this.purchaseValidatorFunctions = new Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>>();
+                this.purchaseValidatorFunctions = new Dictionary<int, Func<PurchaseBasket, int, string, int, bool>>();
         }
 
   
@@ -34,7 +34,7 @@ namespace Server.StoreComponent.DomainLayer
             if (!discountValidatorFunctions.ContainsKey(preConditionNumber))
                 discountValidatorFunctions.Add(preConditionNumber, func);
         }
-        public void AddPurachseFunction(int preConditionNumber, Func<PurchaseBasket, int, User, Store, bool> func)
+        public void AddPurachseFunction(int preConditionNumber, Func<PurchaseBasket, int, string, int, bool> func)
         {
             if (!purchaseValidatorFunctions.ContainsKey(preConditionNumber))
                 purchaseValidatorFunctions.Add(preConditionNumber, func);
@@ -57,7 +57,7 @@ namespace Server.StoreComponent.DomainLayer
             get { return discountValidatorFunctions; }
         }
 
-        public Dictionary<int, Func<PurchaseBasket, int, User, Store, bool>> PurchaseValidatorFuncs
+        public Dictionary<int, Func<PurchaseBasket, int, string, int, bool>> PurchaseValidatorFuncs
         {
             get { return purchaseValidatorFunctions; }
         }

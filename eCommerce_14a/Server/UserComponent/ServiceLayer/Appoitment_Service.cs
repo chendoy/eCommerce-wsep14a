@@ -30,10 +30,10 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             return AppoitmentManager.Instance.AppointStoreManager(owner, appoint, storeId);
         }
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-demote-store-manager-47 </req>
-        public Tuple<bool, string> RemoveStoreManager(string owner, string appoint, int storeId)
+        public Tuple<bool, string> RemoveStoreManager(string appointer, string appointed, int storeId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return AppoitmentManager.Instance.RemoveAppStoreManager(owner, appoint, storeId);
+            return AppoitmentManager.Instance.RemoveAppStoreManager(appointer, appointed, storeId);
         }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-change-store-managers-permissions-46- </req>
         public Tuple<bool, string> ChangePermissions(string owner, string appoint, int storeId, int[] permissions)
@@ -42,6 +42,17 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             if (permissions.Length == 0)
                 return new Tuple<bool, string>(false, "Empty Permission");
             return AppoitmentManager.Instance.ChangePermissions(owner, appoint, storeId, permissions);
+        }
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-change-store-managers-permissions-46- </req>
+        public Tuple<bool, string> RemoveStoreOwner(string owner, string PrevOwner, int storeId)
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return AppoitmentManager.Instance.RemoveStoreOwner(owner, PrevOwner, storeId);
+        }
+
+        internal Tuple<bool, string> ApproveAppointment(string owner, string appointed, int storeID, bool approval)
+        {
+            return AppoitmentManager.Instance.ApproveAppoitment(owner, appointed, storeID, approval);
         }
         //For Adim Uses
     }

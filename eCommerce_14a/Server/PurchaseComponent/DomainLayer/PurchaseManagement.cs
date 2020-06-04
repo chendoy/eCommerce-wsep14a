@@ -1,6 +1,8 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.DAL.StoreDb;
 using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
@@ -53,6 +55,47 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             return this.deliveryHandler;
         }
+
+        public void LoadFromDb()
+        {
+            List<Cart> notPurchasedCarts = DbManager.Instance.LoadNotPurchasedCarts();
+            foreach(Cart cart in notPurchasedCarts)
+            {
+                carts.Add(cart.user, cart);
+            }
+
+            List<Purchase> purchases = DbManager.Instance.LoadPurchases();
+            List<Cart> purchasedCarts = new List<Cart>();
+            foreach(Purchase purchase in purchases)
+            {
+                purchasedCarts.Add(purchase.UserCart);
+                if (!purchasesHistoryByUser.ContainsKey(purchase.User))
+                {
+                    purchasesHistoryByUser.Add(purchase.User, new List<Purchase> { purchase });
+                }
+                else
+                {
+                    purchasesHistoryByUser[purchase.User].Add(purchase);
+                }
+            }
+
+            foreach(Cart cart in purchasedCarts)
+            {
+                foreach(KeyValuePair<Store, PurchaseBasket> entry in cart.baskets)
+                {
+                    if(!purchasesHistoryByStore.ContainsKey(entry.Key))
+                    {
+                        purchasesHistoryByStore.Add(entry.Key, new List<PurchaseBasket> { entry.Value });
+                    }
+                    else
+                    {
+                        purchasesHistoryByStore[entry.Key].Add(entry.Value);
+                    }
+                }
+            }
+
+        }
+
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         /// Get the user ,store and product to add to the shopping cart
@@ -60,6 +103,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <param name="exist">  means this product meant to be already in the cart (in case of change/remove existing product </param>
         public Tuple<bool, string> AddProductToShoppingCart(string userId, int storeId, int productId, int wantedAmount, bool exist)
         {
+
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (String.IsNullOrWhiteSpace(userId))
             {
@@ -81,7 +125,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            if (!store.productExist(productId))
+            if (!store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
@@ -96,21 +140,24 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ZeroProductAmountErrMsg);
             }
 
-            int amount = store.getProductDetails(productId).Item2;
+            int amount = store.GetProductDetails(productId).Item2;
 
             if (amount < wantedAmount)
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductShortageErrMsg);
             }
 
-            if (!this.carts.TryGetValue(userId, out Cart cart))
+            Cart cart;
+            if (!carts.TryGetValue(userId, out cart))
             {
-                cart = new Cart(userId);
+                cart = CreateNewCart(userId);
                 carts.Add(userId, cart);
             }
 
             return cart.AddProduct(store, productId, wantedAmount, exist);
         }
+
+      
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-view-and-edit-shopping-cart-27 </req>
         public Tuple<Cart, string> GetCartDetails(string userName)
@@ -129,8 +176,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
             if (!carts.TryGetValue(userName, out Cart cart))
             {
-                cart = new Cart(userName);
-                carts.Add(userName, cart);
+                carts.Add(userName, CreateNewCart(userName));
             }
 
             return new Tuple<Cart, string>(cart, "");
@@ -206,8 +252,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 currHistory.Add(userCart.GetBaskets()[store]);
                 purchasesHistoryByStore[store] = currHistory;
                 //Version 2 Addition
-                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.getStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
-                Tuple<bool, string> ans = Publisher.Instance.Notify(store.getStoreId(), new NotifyData(message_data));
+                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.GetStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.GetStoreId(), new NotifyData(message_data));
                 if (!ans.Item1)
                     return ans;
             }
@@ -218,9 +264,21 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
 
             userHistory.Add(newPurchase);
+            // DB Insert New Purchase
+            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
+            {
+               DbManager.Instance.InsertPurchase(StoreAdapter.Instance.ToDbPurchase(newPurchase));
+            }
             purchasesHistoryByUser[user] = userHistory;
+            //DB Updating cart status to purchased
+            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
+            {
+                
+                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(carts[user].Id), carts[user], true);
+            }
 
-            carts[user] = new Cart(user);
+            carts[user] = CreateNewCart(user);
+
             return new Tuple<bool, string>(true, "");
         }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
@@ -298,7 +356,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return true;
             }
 
-            return manager.getUserPermission(storeID, CommonStr.MangerPermission.Puarchse);
+            return manager.getUserPermission(storeID, CommonStr.MangerPermission.Purchase);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-history-64 </req>
@@ -370,6 +428,17 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             this.userManager = userManager;
             this.paymentHandler = paymentHandler;
             this.deliveryHandler = deliveryHandler;
+        }
+        
+        private Cart CreateNewCart(string userId)
+        {
+            Cart newCart = new Cart(userId);
+            //DB Insert New Cart
+            if (!UserManager.Instance.GetAtiveUser(userId).IsGuest)
+            {
+                DbManager.Instance.InsertDbCart(StoreAdapter.Instance.ToDbCart(newCart));
+            }
+            return newCart;
         }
     }
 }

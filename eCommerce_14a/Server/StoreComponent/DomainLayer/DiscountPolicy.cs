@@ -12,7 +12,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public interface DiscountPolicy
     {
-        double CalcDiscount(PurchaseBasket basket, Validator validator);
+        double CalcDiscount(PurchaseBasket basket, PolicyValidator validator);
+        string Describe(int depth);
     }
 
     public class CompundDiscount : DiscountPolicy
@@ -28,7 +29,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             if (mergeType == CommonStr.DiscountMergeTypes.OR)
             {
@@ -76,7 +77,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return mergeType;
         }
-
+        public string Describe(int depth)
+        {
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            string ret = pad + "(";
+            ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
+            foreach (DiscountPolicy discount in children)
+                ret += "\n" + discount.Describe(depth + 1) + ",";
+            ret += "\n" + pad + ")";
+            return ret;
+        }
     }
 
     abstract
@@ -103,11 +114,12 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
        
         virtual
-        public double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             return 0;
         }
 
+        public abstract string Describe(int depth);
     }
 
  
@@ -119,16 +131,26 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discountProdutId = discountProdutId;
         }
 
-        public override double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public override double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             double reduction = 0;
             if (PreCondition.IsFulfilled(basket, discountProdutId, validator))
             {
                 int numProducts = basket.Products[discountProdutId];
-                double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
+                double price = basket.Store.GetProductDetails(discountProdutId).Item1.Price;
                 reduction = numProducts * ((Discount / 100) * price);
             }
             return reduction;
+        }
+        public override string Describe(int depth)
+        {
+            //Inventory inv = new Inventory();
+            //string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Conditional Product Discount: buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
         }
     }
 
@@ -138,11 +160,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
         }
 
-        public override double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public override double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             if (PreCondition.IsFulfilled(basket, -1, validator))
                 return (Discount / 100) * basket.GetBasketOrigPrice();
             return 0;
+        }
+        public override string Describe(int depth)
+        {
+            Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
+            string preStr = dic[PreCondition.PreConditionNumber];
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Conditional Basket Discount:" + preStr + " and get " + Discount + "% off]";
         }
 
     }
@@ -159,17 +189,22 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discount = discount;
         }
 
-        public double CalcDiscount(PurchaseBasket basket, Validator validator)
+        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
         {
             double reduction = 0;
             if (basket.Products.ContainsKey(discountProdutId))
             {
                 int numProducts = basket.Products[discountProdutId];
-                double price = basket.Store.getProductDetails(discountProdutId).Item1.Price;
+                double price = basket.Store.GetProductDetails(discountProdutId).Item1.Price;
                 reduction = numProducts * ((discount/100) * price);
             }
             return reduction; ;
         }
-
+        public string Describe(int depth)
+        {
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Reveald Discount: buy product #" + discountProdutId + " and get " + discount + "% off]";
+        }
     }
 }

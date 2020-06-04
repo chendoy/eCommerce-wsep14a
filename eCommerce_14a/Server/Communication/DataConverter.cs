@@ -13,7 +13,7 @@ namespace Server.Communication
         public DataConverter() { }
         public ProductData ToProductData(Product prod) 
         {
-            return new ProductData(prod.ProductID, prod.Name,prod.Category,prod.Details,prod.Price,prod.ImgUrl);
+            return new ProductData(prod.Id, prod.Name,prod.Category,prod.Details,prod.Price,prod.ImgUrl);
         }
 
         public CartData ToCartData(Cart cart) 
@@ -28,7 +28,7 @@ namespace Server.Communication
 
         public StoreData ToStoreData(Store store) 
         {
-            return new StoreData(store.Id, ToUserNameList(store.owners), ToUserNameList(store.managers), ToInventoryData(store.Inventory), store.GetName());
+            return new StoreData(store.Id, store.owners, store.managers, ToInventoryData(store.Inventory), store.GetName());
         }
 
         public UserData ToUserData(User user)
@@ -38,7 +38,7 @@ namespace Server.Communication
 
         public PurchaseBasketData ToPurchaseBasketData(PurchaseBasket pBasket)
         {
-            return new PurchaseBasketData(ToStoreData(pBasket.Store), pBasket.user, pBasket.Price, pBasket.PurchaseTime, pBasket.Products);
+            return new PurchaseBasketData(ToStoreData(pBasket.Store), pBasket.User, pBasket.Price, pBasket.PurchaseTime, pBasket.Products);
         }
 
         public InventoryData ToInventoryData(Inventory inv)
@@ -158,17 +158,16 @@ namespace Server.Communication
             }
 
             else if (policyData.GetType() == typeof(SystemPurchasePolicy))
-            { 
-                int storeId = ((SystemPurchasePolicy)policyData).store.Id;
+            {
+                int storeId = ((SystemPurchasePolicy)policyData).StoreId;
                 int preCondition = ((SystemPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 return new PurchasePolicySystemData(preCondition, storeId);
             }
 
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
-                string username = ((UserPurchasePolicy)policyData).user.getUserName();
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                return new PurchasePolicyUserData(preCondition, username);
+                return new PurchasePolicyUserData(preCondition);
             }
 
             else if (policyData.GetType() == typeof(CompundPurchasePolicy))

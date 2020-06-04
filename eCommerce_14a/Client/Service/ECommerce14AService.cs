@@ -9,6 +9,7 @@ using Server.Communication.DataObject;
 using Server.Communication.DataObject.ThinObjects;
 using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
+using Server.UserComponent.DomainLayer;
 
 namespace Client.Service
 {
@@ -19,15 +20,25 @@ namespace Client.Service
         {
             comm = new Communication();
             Time = DateTime.Now;
+            Permissions = new Dictionary<int, Permission>();
         }
 
         public DateTime Time { get; private set; }
-        
+        public Dictionary<int, Permission> Permissions { get; set; }
+
         public NotifierService NotifierService
         {
             get { return comm.NotifierService; }
         }
 
+        public void SetPermissions(Dictionary<int, int[]> permissions)
+        {
+            Permissions = new Dictionary<int, Permission>();
+            foreach (var item in permissions)
+            {
+                Permissions.Add(item.Key, new Permission(item.Value));
+            }
+        }
 
         async public Task<List<StoreData>> GetAllActiveStores()
         {
@@ -72,12 +83,12 @@ namespace Client.Service
 
         }
 
-        async public Task<bool> Register(UserData _user)
+        async public Task<RegisterResponse> Register(UserData _user)
         {
             RegisterRequest registerRequest = new RegisterRequest(_user.Username, _user.Password);
             comm.SendRequest(registerRequest);
             RegisterResponse response = await comm.Get<RegisterResponse>();
-            return response.Success;
+            return response;
         }
 
         async public Task<LogoutResponse> Logout(string username)
@@ -85,6 +96,10 @@ namespace Client.Service
             LogoutRequest request = new LogoutRequest(username);
             comm.SendRequest(request);
             LogoutResponse response = await comm.Get<LogoutResponse>();
+            if (response.Success)
+            {
+                Permissions = new Dictionary<int, Permission>();
+            }
             return response;
         }
 
@@ -132,7 +147,7 @@ namespace Client.Service
         {
             DemoteOwnerRequest request = new DemoteOwnerRequest(appointer, appointed, storeId);
             comm.SendRequest(request);
-            DemoteManagerResponse response = await comm.Get<DemoteManagerResponse>();
+            DemoteOwnerResponse response = await comm.Get<DemoteOwnerResponse>();
             return new Tuple<bool, string>(response.Success, response.Error);
         }
 
@@ -184,12 +199,65 @@ namespace Client.Service
             return response;
         }
 
-        async public Task<SuccessFailResponse> AddProductToStore(int StoreId, string UserName, int ProductId, string ProductDetails, double ProductPrice, string ProductName, string ProductCategory, int Pamount, string ImgUrl)
+        async public Task<SuccessFailResponse> AddProductToStore(int StoreId, string UserName, string ProductDetails, double ProductPrice, string ProductName, string ProductCategory, int Pamount, string ImgUrl)
         {
-            AddProductToStoreRequest request = new AddProductToStoreRequest(StoreId, UserName, ProductId, ProductDetails, ProductPrice, ProductName, ProductCategory, Pamount, ImgUrl);
+            AddProductToStoreRequest request = new AddProductToStoreRequest(StoreId, UserName, ProductDetails, ProductPrice, ProductName, ProductCategory, Pamount, ImgUrl);
             comm.SendRequest(request);
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
             return response;
+        }
+
+        async public Task<Dictionary<int, string>> GetRawDiscounts()
+        {
+            GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
+            comm.SendRequest(request);
+            GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
+            return response.DiscountPolicies;
+        }
+        async public Task<Dictionary<int, string>> GetRawPurchasePolcies()
+        {
+            GetAvailableRawPurchaseRequest request = new GetAvailableRawPurchaseRequest();
+            comm.SendRequest(request);
+            GetAvailableRawPurchaseResponse response = await comm.Get<GetAvailableRawPurchaseResponse>();
+            return response.RawPurchases;
+        }
+        async public Task<SuccessFailResponse> UpdateDiscountPolicy(int StoreId, string loggedInUser, string discountText)
+        {
+            UpdateDiscountPolicyRequest request = new UpdateDiscountPolicyRequest(StoreId, loggedInUser, discountText);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<GetAvailableRawDiscountsResponse> GetAllCurrentDiscounts()
+        {
+            GetAvailableRawDiscountsRequest request = new GetAvailableRawDiscountsRequest();
+            comm.SendRequest(request);
+            GetAvailableRawDiscountsResponse response = await comm.Get<GetAvailableRawDiscountsResponse>();
+            return response;
+        }
+        async public Task<SuccessFailResponse> UpdatePurchasePolicy(int StoreId, string loggedInUser, string policyText)
+        {
+            UpdatePurchasePolicyRequest request = new UpdatePurchasePolicyRequest(StoreId, loggedInUser, policyText);
+            comm.SendRequest(request);
+            SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
+            return response;
+        }
+
+        async public Task<string> GetPurchasePolicy(int StoreId)
+        {
+            GetPurchasePolicyRequest request = new GetPurchasePolicyRequest(StoreId);
+            comm.SendRequest(request);
+            GetPurchasePolicyResponse response = await comm.Get<GetPurchasePolicyResponse>();
+            return response.PurchasePolicy;
+        }
+
+        async public Task<string> GetDiscountPolicy(int StoreId)
+        {
+            GetDiscountPolicyRequest request = new GetDiscountPolicyRequest(StoreId);
+            comm.SendRequest(request);
+            GetDiscountPolicyResponse response = await comm.Get<GetDiscountPolicyResponse>();
+            return response.DiscountPolicy;
         }
     }
 }

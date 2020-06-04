@@ -14,6 +14,10 @@ using System.Collections.Generic;
 using Server.Communication.DataObject.ThinObjects;
 using System.Linq;
 using Server.Utils;
+using System.Reflection;
+using log4net;
+using log4net.Config;
+using eCommerce_14a.StoreComponent.DomainLayer;
 
 namespace eCommerce_14a.Communication
 {
@@ -44,6 +48,10 @@ namespace eCommerce_14a.Communication
             config1.Port = port;
             config1.MaxConnectionNumber = 1000;
             config1.Security = "Tls";
+            config1.LogAllSocketException = false;
+            config1.LogBasicSessionActivity = false;
+            config1.LogCommand = false;
+            
             config1.Certificate = new CertificateConfig
             {
                 FilePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Communication\cert.pfx",
@@ -63,6 +71,7 @@ namespace eCommerce_14a.Communication
 
         private void EndSession(WebSocketSession session, CloseReason value)
         {
+            handler.HandleSessionClosed(session);
             Console.WriteLine("SessionClosed");
         }
 
@@ -229,6 +238,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_AVAILABLE_PURCHASES:
+                    response = handler.HandleGetAvailablePurchases(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 case Opcode.ADD_PRODUCT_TO_STORE:
                     response = handler.HandleAddProductToStore(json);
                     session.Send(response, 0, response.Length);
@@ -276,10 +290,51 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_MANAGER_PERMISSION:
+                    response = handler.HandleGetManagersPermission(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.CHANGE_PERMISSIONS:
+                    response = handler.HandleChangePermissions(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.APPROVE_APPOINTMENT:
+                    response = handler.HandleApproveAppointment(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_APPROVAL_LIST:
+                    response = handler.HandleApprovalList(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_USER_PERMISSIONS:
+                    response = handler.HandleUserPermissions(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_DISCOUNT_POLICY:
+                    response = handler.HandleDiscountPolicy(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_PURCHASE_POLICY:
+                    response = handler.HandlePurchasePolicy(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.MAKE_ADMIN:
+                    response = handler.HandleMakeAdmin(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }
         }
+
 
         public void checkFunc() 
         {
@@ -294,6 +349,8 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
+
+
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());
             //string json = JsonConvert.SerializeObject(res);
@@ -302,9 +359,12 @@ namespace eCommerce_14a.Communication
             //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
             //RequestMaker req = new RequestMaker();
             //req.GenerateBinReq();
-            CommunicationHandler hand = new CommunicationHandler();
-            WssServer notifier = new WssServer();
-            notifier.InitServer();
+            //CommunicationHandler hand = new CommunicationHandler();
+            StateInitiator init = new StateInitiator();
+            WssServer server = new WssServer();
+            init.InitSystemFromFile();
+            server.InitServer();
+            
         }
     }
 }

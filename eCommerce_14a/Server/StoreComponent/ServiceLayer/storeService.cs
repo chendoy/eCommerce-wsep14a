@@ -28,9 +28,9 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-inventory-management---add-product-411- </req>
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-manager--add-product-512- </req
-        public Tuple<bool, string> appendProduct(int storeId, string userName, int productId, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl = @"Image/bana.png")
+        public Tuple<bool, string> appendProduct(int storeId, string userName, string productDetails, double productPrice, string productName, string productCategory, int amount, string imgUrl = @"Image/bana.png")
         {
-            return storeManagment.appendProduct(storeId, userName, productId, productDetails, productPrice, productName, productCategory, amount, imgUrl);
+            return storeManagment.appendProduct(storeId, userName, productDetails, productPrice, productName, productCategory, amount, imgUrl);
         }
 
 
@@ -68,12 +68,12 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.createStore(userName,storename);
         }
 
-        public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , PurchasePolicyData purchasePolicy)
+        public Tuple<bool, string> updatePurchasePolicy(int storeId, string userName , string purchasePolicy)
         {
             return storeManagment.UpdatePurchasePolicy(storeId, userName, purchasePolicy);
         }
 
-        public Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, DiscountPolicyData discountPolicy)
+        public Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, string discountPolicy)
         {
             return storeManagment.UpdateDiscountPolicy(storeId, userName, discountPolicy);
         }
@@ -126,7 +126,6 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
             return storeManagment.GetAvilableRawDiscount();
         }
 
-
         public Dictionary<int, string> GetAvailableRawPurchasePolicy()
         {
             return storeManagment.GetAvilableRawPurchasePolicy();
@@ -135,6 +134,16 @@ namespace eCommerce_14a.StoreComponent.ServiceLayer
         public Store GetStoreById(int storeID) 
         {
             return storeManagment.getStore(storeID);
+        }
+
+        public string GetPurchasePolicy(int storeID) 
+        {
+            return storeManagment.GetPurchasePolicy(storeID);
+        }
+
+        public string GetDiscountPolicy(int storeID)
+        {
+            return storeManagment.GetDiscountPolicy(storeID);
         }
 
 

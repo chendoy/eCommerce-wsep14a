@@ -2,20 +2,39 @@
 using eCommerce_14a.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Server.DAL;
+using Server.DAL.StoreDb;
+using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
+
     public class Cart
     {
+
+        public int Id { get; set; }
         public string user { get; set; }
         public Dictionary<Store, PurchaseBasket> baskets { get; set; }
         public double Price { get; private set; }
 
+        public bool IsPurchased { get; set; }
+
         public Cart(string user)
         {
+            Id = DbManager.Instance.GetnextCartId();
             this.user = user;
             this.baskets = new Dictionary<Store, PurchaseBasket>();
             Price = 0;
+            IsPurchased = false;
+        }
+        public Cart(int id, string username, double price, Dictionary<Store, PurchaseBasket> purchasebaskets, bool ispurchased)
+        {
+            user = username;
+            Id = id;
+            Price = price;
+            baskets = purchasebaskets;
+            IsPurchased = ispurchased;
         }
 
         internal Dictionary<Store, PurchaseBasket> GetBaskets()
@@ -32,7 +51,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            if (!store.productExist(productId))
+            if (!store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
@@ -46,13 +65,30 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 basket = new PurchaseBasket(this.user, store);
                 baskets.Add(store, basket);
+
+                //Inserting new basket To db
+                if(!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
+                {
+                    if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
+                    {
+                        DbManager.Instance.InsertPurchaseBasket(StoreAdapter.Instance.ToDbPurchseBasket(basket, this.Id));
+                    }
+
+                }
             }
 
             Tuple<bool, string> res = basket.AddProduct(productId, wantedAmount, exist);
+
             if (basket.IsEmpty())
             {
                 baskets.Remove(store);
+                //Update DB delete purchase basket
+                if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
+                {
+                    DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id));
+                }
             }
+
             UpdateCartPrice();
             return res;
         }
@@ -64,6 +100,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             foreach (var basket in baskets.Values)
             {
                 Price += basket.UpdateCartPrice();
+            }
+            //Update CART PRICE AT DB
+            if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
+            {
+                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this, IsPurchased);
             }
         }
 

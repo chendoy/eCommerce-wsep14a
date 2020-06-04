@@ -1,17 +1,13 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace Server.StoreComponent.DomainLayer
 {
-    public  class PreCondition
+    public class PreCondition
     {
-        int preCondNumber;
+        public int preCondNumber {set; get;}
         public PreCondition(int num)
         {
             this.preCondNumber = num;
@@ -24,13 +20,13 @@ namespace Server.StoreComponent.DomainLayer
         }
 
         virtual
-        public bool IsFulfilled(PurchaseBasket basket, int productId, Validator validator)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, PolicyValidator validator)
         {
             return false;
         }
 
         virtual
-        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, Validator validator)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, string userName, int storeId, PolicyValidator validator)
         {
             return false;
         }
@@ -45,7 +41,7 @@ namespace Server.StoreComponent.DomainLayer
         }
 
         override
-        public bool IsFulfilled(PurchaseBasket basket, int productId, Validator validator)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, PolicyValidator validator)
         {
             return validator.DiscountValidatorFuncs[PreConditionNumber].Invoke(basket, productId);
         }
@@ -60,10 +56,10 @@ namespace Server.StoreComponent.DomainLayer
         }
 
         override
-        public bool IsFulfilled(PurchaseBasket basket, int productId, User user, Store store, Validator validator)
+        public bool IsFulfilled(PurchaseBasket basket, int productId, string userName, int storeId, PolicyValidator validator)
         {
 
-            return validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, user, store);
+            return validator.PurchaseValidatorFuncs[PreConditionNumber].Invoke(basket, productId, userName, storeId);
         }
     }
 

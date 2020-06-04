@@ -1,4 +1,6 @@
-﻿namespace eCommerce_14a.Utils
+﻿using eCommerce_14a.StoreComponent.DomainLayer;
+
+namespace eCommerce_14a.Utils
 {
     public static class CommonStr
     {
@@ -7,7 +9,7 @@
         {
             public static string UnKnownErr = "UnKnown Error Occured";
         }
-
+        
         public static class StoreRoles
         {
             public static string Owner = "owner";
@@ -25,6 +27,25 @@
             public static string StoreId = "SearchByStioreId";
         }
 
+        public static class DiscountPolicyTypes
+        {
+            public static int CompundDiscount = 1;
+            public static int ConditionalProductDiscount = 1;
+            public static int ConditionalBasketDiscount = 2;
+            public static int RevealdDiscount = 3;
+        }
+
+        public static class PurchasePolicyTypes
+        {
+            public static int CompundPurchasePolicy = 1;
+            public static int ProductPurchasePolicy = 2;
+            public static int BasketPurchasePolicy = 3;
+            public static int SystemPurchasePolicy = 4;
+            public static int UserPurchasePolicy = 5;
+
+        }
+
+
         public static class DiscountMergeTypes
         {
             public static int XOR = 0;
@@ -40,6 +61,8 @@
         }
         public static class DiscountPreConditions
         {
+            public static int pre_min = 0;
+            public static int pre_max = 5;
             public static int NoDiscount = 0;
             public static int ProductPriceAbove100 = 1;
             public static int ProductPriceAbove200 = 2;
@@ -48,13 +71,24 @@
             public static int basketPriceAbove1000 = 5;
         }
 
+        public static class PoliciesErrors
+        {
+            public static string PreConditionNumberErr = "Pre Condition Number Is out of Boundries";
+            public static string DiscountValueErr = "Discount value must be between 0 and 100";
+            public static string MergeTypeErr = "Invalid Merge Type";
+
+        }
+
         public static class PurchasePreCondition
         {
+            public static int pre_min = 0;
+            public static int pre_max = 5;
             public static int allwaysTrue = 0;
             public static int singleOfProductType = 1;
             public static int Max10ProductPerBasket = 2;
             public static int StoreMustBeActive = 3;
-            public static int GuestCantBuy = 4;
+            public static int OwnerCantBuy = 4;
+            public static int AtLeat11ProductPerBasket = 5;
 
         }
         public static class StoreParams
@@ -68,6 +102,8 @@
             public static string StoreRank = "StoreRank";
             public static string IsActiveStore = "isActive";
             public static string Validator = "Validator";
+            public static string Owners = "Owners";
+            public static string Managers = "Managers";
         }
 
         public static class ProductParams
@@ -88,6 +124,8 @@
             public static string Health = "Health";
             public static string CoffeMachine = "Coffe Machines";
             public static string Beauty = "Beauty";
+            public static string Cleaning = "Cleaning";
+
 
         }
 
@@ -98,6 +136,8 @@
             public static string ManagerNoPermissionErrMsg = "This manager doesn't have permission to perform this action";
             public static string BasketNotAcceptPurchasePolicy = "The baske not accepted the store's purchase policy";
             public static string PurchasePolicyErrMessage = "Purchase policy not updated due to incorrect data";
+            public static string DiscountPolicyErrMessage = "Purchase policy not updated due to incorrect data";
+
         }
 
         public static class InventoryErrorMessage
@@ -121,14 +161,28 @@
             public static string notStoreOwnerErrMessage = "This Action can't  be performed because the user is not a store Owner";
             public static string userNotFoundErrMsg = "Null User Supplied";
             public static string illegalStoreName = "Store name iilegal";
+            public static string DiscountPolicyParsedFailed = "There was error parsing the discount policy";
+            public static string PurchasePolicyParsedFailed = "There was error parsing the purchase policy";
+
+
         }
         public static class MangerPermission
         {
             public static string Comments = "CommentsPermission";
-            public static string Puarchse = "ViewPuarchseHistory";
+            public static string Purchase = "ViewPuarchseHistory";
             public static string Product = "ProductPermission";
             public static string PurachsePolicy = "PurachsePolicy";
             public static string DiscountPolicy = "DiscountPolicy";
+        }
+        public static class UserListsOptions
+        {
+            public static string MasterAppointers = "MasterAppointer";
+            public static string IsNeedToApprove = "IsNeedToApproveSomeone";
+            public static string OwnStores = "IsOwnsStores";
+            public static string ManageStores = "IsManagesStores";
+            public static string StoreApprovalStatus = "StoreApprovalStatus";
+            public static string TheyNeedApprove = "TheyNeedToApproveUser";
+            public static string Permmisions = "PermissionSets";
         }
         public static class ArgsTypes
         {
@@ -154,6 +208,14 @@
             public static int[] FullPermissions = { 1, 1, 1, 1, 1};
             public static int[] BlankPermisions = { 0, 0, 0, 0, 0 };
             public static int[] RegularAndProduct = { 1, 1, 1, 0, 0 };
+        }
+
+        public static class PreConditionType
+        {
+            public static int DiscountPreCondition = 0;
+            public static int PurchasePreCondition = 1;
+
+
         }
     }
 }

@@ -64,12 +64,13 @@
         if (response.Success)
         {
             await ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticateUser(user, response.Permissions, response.IsAdmin);
+            service.SetPermissions(response.Permissions);
             NavigationManager.NavigateTo("/index");
 
         }
         else
         {
-            LoginMesssage = "Invalid username and/or password";
+            LoginMesssage = response.Error;
         }
     }
 

@@ -17,7 +17,8 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
     [TestClass]
     public class DiscountPolicyTest
     {
-        Validator validator;
+
+        PolicyValidator validator;
         Cart cart;
         Store store;
         Dictionary<int, PreCondition> preConditionsDict;
@@ -26,7 +27,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
         public void TestInitialize()
         {
 
-            validator = new Validator(null, null);
+            validator = new PolicyValidator(null, null);
             
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000, 
                 (PurchaseBasket basket, int productId) => basket.GetBasketPriceWithDiscount() > 1000);
@@ -38,13 +39,13 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId)? basket.Products[productId] > 2 : false);
 
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove100,
-                (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 100 : false);
+                (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 100 : false);
 
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove200,
-                (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.getProductDetails(productId).Item1.Price > 200 : false);
+                (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 200 : false);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                (PurchaseBasket basket, int productId, User user, Store store) => true);
+                (PurchaseBasket basket, int productId,  string userName, int storeId) => true);
 
             preConditionsDict = new Dictionary<int, PreCondition>();
             preConditionsDict.Add(CommonStr.DiscountPreConditions.Above1Unit, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above1Unit));

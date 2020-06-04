@@ -4,26 +4,45 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.DAL;
+using Server.DAL.StoreDb;
+using eCommerce_14a.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.PurchaseComponent.DomainLayer
 {
     public class PurchaseBasket
     {
-        public string user { get; set; }
+
+        public int Id { get; set; }
+        public string User { get; set; }
+
         public  Store store { get; set; }
         public Dictionary<int, int> products { get; set; }
         public double Price { get; set; }
-        public DateTime PurchaseTime { get; private set; }
+        public DateTime? PurchaseTime { get; private set; }
 
         public PurchaseBasket(string user, Store store)
         {
-            this.user = user;
+            Id = DbManager.Instance.GetNextPurchBasketId();
+            this.User = user;
             this.store = store;
             this.products = new Dictionary<int, int>();
             Price = 0;
+            PurchaseTime = null;
+        }
+
+        public PurchaseBasket(int id, string user, Store store, Dictionary<int, int> products, double price, DateTime? purchaseTime)
+        {
+            Id = id;
+            User = user;
+            this.store = store;
+            this.products = products;
+            Price = price;
+            PurchaseTime = purchaseTime;
         }
 
         public override string ToString()
@@ -43,7 +62,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         public Tuple<bool, string> AddProduct(int productId, int wantedAmount, bool exist)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            if (!this.store.productExist(productId))
+            if (!this.Store.ProductExist(productId))
             {
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
@@ -59,10 +78,20 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 if (wantedAmount == 0)
                 {
                     products.Remove(productId);
+                    //DB Delete Product From Basekt
+                    if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+                    {
+                        DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                    }
                 }
                 else
                 {
                     products[productId] = wantedAmount;
+                    //DB Update product amount at basket!
+                    if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+                    {
+                       DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount);
+                    }
                 }
             }
             else
@@ -73,17 +102,31 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 }
 
                 products.Add(productId, wantedAmount);
+                // DB Insert Product At Basket
+                if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+                {
+                    DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
+                }
             }
 
-            Tuple<bool, string> isValidBasket = store.checkIsValidBasket(this);
+            Tuple<bool, string> isValidBasket = Store.CheckIsValidBasket(this);
             if (!isValidBasket.Item1)
             {
                 products = existingProducts;
+                if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+                {
+                   DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                }
                 return isValidBasket;
             }
 
-            Price = store.getBasketPriceWithDiscount(this);
+            Price = Store.GetBasketPriceWithDiscount(this);
 
+            // DB Updating basket Price
+            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+            {
+                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            }
             return new Tuple<bool, string>(true, null);
         }
 
@@ -95,20 +138,31 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
         internal double UpdateCartPrice()
         {
-            Price = store.getBasketPriceWithDiscount(this);
+            Price = Store.GetBasketPriceWithDiscount(this);
+            // DB update purchase BasketPrice
+            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+            {
+               DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            }
             return Price;
         }
 
         internal void SetPurchaseTime(DateTime purchaseTime)
         {
             PurchaseTime = purchaseTime;
+
+            //UPDATING purchase time in db
+            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+            {
+                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+            }
         }
 
         internal void RemoveFromStoreStock()
         {
             foreach (var product in products.Keys)
             {
-                store.DecraseProductAmountAfterPuarchse(product, products[product]);
+                Store.DecraseProductAmountAfterPuarchse(product, products[product]);
             }
         }
 
@@ -116,12 +170,12 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-buying-policy-282</req>
         internal Tuple<bool, string> CheckProductsValidity()
         {
-            if (store == null || !store.ActiveStore)
+            if (Store == null || !Store.ActiveStore)
             {
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return store.checkIsValidBasket(this);
+            return Store.CheckIsValidBasket(this);
         }
 
         // For tests
@@ -136,11 +190,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
         public double GetBasketPriceWithDiscount()
         {
-            return store.getBasketPriceWithDiscount(this);
+            return Store.GetBasketPriceWithDiscount(this);
         }
         public double GetBasketOrigPrice()
         {
-            return store.getBasketOrigPrice(this);
+            return Store.GetBasketOrigPrice(this);
         }
 
         public double getBasketDiscount()
@@ -165,7 +219,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             foreach (var product in products.Keys)
             {
-                store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
+                Store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
             }
         }
     }

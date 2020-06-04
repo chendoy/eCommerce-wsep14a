@@ -35,8 +35,9 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             UM.Login("Appointed", "Test1");
             UM.Login("", "G", true);
             SM.createStore("owner","Store");
-            UM.Register("NotLogged", "Test1");
-            
+            UM.Register("user1", "Test1");
+            UM.Register("user2", "Test1");
+            UM.Register("user3", "Test1");
             Assert.IsNotNull(UM.GetAtiveUser("owner"));
             Assert.IsNotNull(UM.GetAtiveUser("Appointed"));
             Assert.IsNotNull(UM.GetAtiveUser("Guest3"));
@@ -85,6 +86,15 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsFalse(AP.AppointStoreOwner("Appointed", "owner", 1).Item1);
         }
         [TestMethod]
+        public void AddNewStoreOwnerWaitingList()
+        {
+            Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 1).Item1);
+            AP.AppointStoreOwner("owner", "user1", 1);
+            Assert.IsFalse(SM.getStore(1).IsStoreOwner(UM.GetUser("user1")));
+            Assert.IsFalse(UM.GetUser("user1").isAppointedByOwner("owner", 1));
+            Assert.IsFalse(UM.GetUser("user1").isStoreOwner(1));
+        }
+        [TestMethod]
         public void AddNewStoreOwner()
         {
             Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 1).Item1);
@@ -92,11 +102,11 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(UM.GetUser("Appointed").isStoreOwner(1));
             Assert.IsTrue(SM.getStore(1).IsStoreOwner(UM.GetUser("Appointed")));
             //Check if appoitment is created from owner to new owner - hence appointed
-            Assert.IsTrue(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 1));
+            Assert.IsTrue(UM.GetUser("Appointed").isAppointedByOwner("owner", 1));
             //Same but false because changing the order
-            Assert.IsFalse(UM.GetUser("owner").isAppointedBy(UM.GetUser("Appointed"), 1));
+            Assert.IsFalse(UM.GetUser("owner").isAppointedByOwner("Appointed", 1));
             //CHanging the store Number
-            Assert.IsFalse(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 27));
+            Assert.IsFalse(UM.GetUser("Appointed").isAppointedByOwner("owner", 27));
         }
         [TestMethod]
         
@@ -150,11 +160,11 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(UM.GetUser("Appointed").isStorManager(1));
             Assert.IsTrue(SM.getStore(1).IsStoreManager(UM.GetUser("Appointed")));
             //Check if appoitment is created from owner to new owner - hence appointed
-            Assert.IsTrue(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 1));
+            Assert.IsTrue(UM.GetUser("Appointed").isAppointedByManager(UM.GetUser("owner"), 1));
             //Same but false because changing the order
-            Assert.IsFalse(UM.GetUser("owner").isAppointedBy(UM.GetUser("Appointed"), 1));
+            Assert.IsFalse(UM.GetUser("owner").isAppointedByManager(UM.GetUser("Appointed"), 1));
             //CHanging the store Number
-            Assert.IsFalse(UM.GetUser("Appointed").isAppointedBy(UM.GetUser("owner"), 27));
+            Assert.IsFalse(UM.GetUser("Appointed").isAppointedByManager(UM.GetUser("owner"), 27));
         }
         [TestMethod]
 
@@ -277,6 +287,45 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsFalse(appointed.getUserPermission(1, "CommentsPermission"));
             Assert.IsFalse(appointed.getUserPermission(1, "ViewPuarchseHistory"));
             Assert.IsFalse(appointed.getUserPermission(1, "ProductPermission"));
+        }
+        [TestMethod]
+        public void RemoveOwnerLoop()
+        {
+            UM.Register("user1", "Test1");
+            UM.Register("user2", "Test1");
+            UM.Register("user3", "Test1");
+            UM.Register("user4", "Test1");
+            UM.Register("user5", "Test1");
+            UM.Register("user6", "Test1");
+            UM.Register("user7", "Test1");
+            UM.Register("user8", "Test1");
+            UM.Login("user1", "Test1");
+            SM.createStore("user1", "Store7");
+            //User1 Store Owner
+            //User1 Appoint User2 -> User2 Appoint user3 -> user3 appoint user4
+            //user2 appoint user5 manager -> user4 appoint user6 manager
+            //user1 appoint user7 owner
+            //user1 appoint user8 managers
+            //Should stay user1 user7 user8
+            Assert.IsTrue(AP.AppointStoreOwner("user1", "user2", 2).Item1);
+            UM.Login("user2", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("user1", "user7", 2).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user2", "user7", 2, true).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("user1", "user8", 2).Item1);
+            UM.Login("user7", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("user2", "user3", 2).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user7", "user3", 2,true).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user1", "user3", 2, true).Item1);
+            UM.Login("user3", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("user3", "user4", 2).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user1", "user4", 2, true).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user7", "user4", 2, true).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("user2", "user4", 2, true).Item1);
+            UM.Login("user4", "Test1");
+            Assert.IsTrue(AP.AppointStoreManager("user4", "user6", 2).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("user2", "user5", 2).Item1);
+            AP.RemoveStoreOwner("user2", "user7", 2);
+            AP.RemoveStoreOwner("user1", "user2", 2);
         }
     }
 }
