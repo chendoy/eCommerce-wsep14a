@@ -659,6 +659,16 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
+        public StoreManager getStoreManager(string name)
+        {
+            return dbConn.StoreManagers.Where(m => m.ManagerName.Equals(name)).FirstOrDefault();
+        }
+
+        public StoreOwner getStoreOwner(string name)
+        {
+            return dbConn.StoreOwners.Where(o => o.OwnerName.Equals(name)).FirstOrDefault();
+        }
+
         public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s)
         {
             DeleteAllStoreDiscountPolicy(s);

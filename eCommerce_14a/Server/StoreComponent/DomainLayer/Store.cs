@@ -594,15 +594,27 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public bool RemoveManager(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            bool removed = managers.Remove(user.Name);
 
-            return managers.Remove(user.Name);
+            if(removed)
+            {
+                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManager(user.Name));
+            }
+            return removed;
         }
 
         public bool RemoveOwner(User user)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
-            return owners.Remove(user.Name);
+            bool removed = owners.Remove(user.Name);
+
+            if (removed)
+            {
+                DbManager.Instance.DeleteStoreOwner(DbManager.Instance.getStoreOwner(user.Name));
+            }
+
+            return removed;
         }
 
 
