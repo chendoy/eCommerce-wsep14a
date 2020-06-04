@@ -79,11 +79,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public override string ToString()
         {
-            string ret = "(";
+            string ret = "(\n";
             ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
             foreach (DiscountPolicy discount in children)
-                ret += discount.ToString() + " ";
-            ret += ")";
+                ret += "\t\n" + discount.ToString() + ",";
+            ret += "\n)";
             return ret;
         }
     }
@@ -141,11 +141,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public override string ToString()
         {
-            Inventory inv = new Inventory();
-            string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
+            //Inventory inv = new Inventory();
+            //string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[Conditional Product Discount: buy" + productStr + " ," + preStr + "get "+ Discount + "% off]";
+            return "[Conditional Product Discount: buy " + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
         }
     }
 
@@ -166,7 +166,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
 
-            return "[Conditional Basket Discount:" + preStr + "get " + Discount + "% off]";
+            return "[Conditional Basket Discount:" + preStr + " and get " + Discount + "% off]";
         }
 
     }
@@ -196,9 +196,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public override string ToString()
         {
-            Inventory inv = new Inventory();
-            string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
-            return "[Reveald Discount: buy " + productStr + " and get" + discount + "% off]";
+            return "[Reveald Discount: buy " + discountProdutId + " and get " + discount + "% off]";
         }
     }
 }

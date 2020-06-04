@@ -243,5 +243,21 @@ namespace Client.Service
             SuccessFailResponse response = await comm.Get<SuccessFailResponse>();
             return response;
         }
+
+        async public Task<string> GetPurchasePolicy(int StoreId)
+        {
+            GetPurchasePolicyRequest request = new GetPurchasePolicyRequest(StoreId);
+            comm.SendRequest(request);
+            GetPurchasePolicyResponse response = await comm.Get<GetPurchasePolicyResponse>();
+            return response.PurchasePolicy;
+        }
+
+        async public Task<string> GetDiscountPolicy(int StoreId)
+        {
+            GetDiscountPolicyRequest request = new GetDiscountPolicyRequest(StoreId);
+            comm.SendRequest(request);
+            GetDiscountPolicyResponse response = await comm.Get<GetDiscountPolicyResponse>();
+            return response.DiscountPolicy;
+        }
     }
 }

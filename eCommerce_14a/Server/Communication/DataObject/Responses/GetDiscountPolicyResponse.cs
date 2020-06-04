@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Communication.DataObject.Responses
 {
-    class GetDiscountPolicyResponse : Message
+    public class GetDiscountPolicyResponse : Message
     {
         public GetDiscountPolicyResponse() : base(Opcode.RESPONSE) { }
         public GetDiscountPolicyResponse(string discountPolicy) : base(Opcode.RESPONSE)
