@@ -360,9 +360,9 @@ namespace eCommerce_14a.Communication
             //RequestMaker req = new RequestMaker();
             //req.GenerateBinReq();
             //CommunicationHandler hand = new CommunicationHandler();
-            //StateInitiator init = new StateInitiator();
+            StateInitiator init = new StateInitiator();
             WssServer server = new WssServer();
-            //init.InitSystemFromFile();
+            init.InitSystemFromFile();
             server.InitServer();
             
         }

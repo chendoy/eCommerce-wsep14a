@@ -124,7 +124,7 @@ namespace eCommerce_14a.Communication
             {
                 usersSessions.Add(res.Username, session);
             }
-            if (res.Username == "Admin")
+            if (userService.isAdmin(res.Username))
                 isAdmin = true;
             Tuple<bool, string> ans = userService.Login(res.Username, res.Password);
             if (!ans.Item1 && usersSessions.ContainsKey(res.Username))

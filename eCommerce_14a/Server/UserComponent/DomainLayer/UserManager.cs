@@ -67,6 +67,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return new Tuple<bool, string>(true, "Appoint to admin succeed!");
         }
 
+        internal bool isAdmin(string username)
+        {
+            User user;
+            if (!users.TryGetValue(username, out user))
+                return false;
+            return user.IsAdmin == true;
+        }
+
         public List<User> GetAllRegisteredUsers() 
         {
             return users.Values.ToList();
