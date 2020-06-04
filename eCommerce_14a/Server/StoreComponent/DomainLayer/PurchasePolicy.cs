@@ -10,7 +10,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public interface PurchasePolicy
     {
         bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
-        string ToString();
+        string Describe(int depth);
     }
     public class CompundPurchasePolicy : PurchasePolicy
     {
@@ -80,14 +80,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return children;
         }
 
-        public override string ToString()
+        public string Describe(int depth)
         {
-            string ret = "(\n";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            string ret = pad + "(";
             ret += "    ";
             ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
             foreach (PurchasePolicy policy in children)
-                ret += "\n    " + policy.ToString() + ",";
-            ret += "\n)";
+                ret += "\n" + policy.Describe(depth + 1) + ",";
+            ret += "\n" + pad + ")";
             return ret;
         }
     }
@@ -103,6 +105,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         abstract
         public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
+        public abstract string Describe(int depth);
 
         public PreCondition PreCondition
         {
@@ -123,13 +126,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return PreCondition.IsFulfilled(basket, policyProductId, null, -1, validator);
         }
 
-        public override string ToString()
+        public override string Describe(int depth)
         {
             //Inv6entory inv = new Inventory();
             //string productStr = inv.getProductDetails(policyProductId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[Product Purchase Policy: " + policyProductId + " - " + preStr + " ]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Product Purchase Policy: " + policyProductId + " - " + preStr + " ]";
         }
     }
 
@@ -146,11 +151,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return PreCondition.IsFulfilled(basket, -1, null, -1, validator);
         }
 
-        public override string ToString()
+        public override string Describe(int depth)
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[Basket Purchase Policy: " + preStr + "]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Basket Purchase Policy: " + preStr + "]";
         }
     }
 
@@ -167,11 +174,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return PreCondition.IsFulfilled(basket, -1, null, StoreId, validator);
         }
 
-        public override string ToString()
+        public override string Describe(int depth)
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[System Purchase Policy: " + preStr + " in store #" + StoreId + "]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[System Purchase Policy: " + preStr + " in store #" + StoreId + "]";
         }
     }
 
@@ -186,11 +195,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return PreCondition.IsFulfilled(basket, -1, basket.User, -1, validator);
         }
 
-        public override string ToString()
+        public override string Describe(int depth)
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[User Purchase Policy: " + preStr + "]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[User Purchase Policy: " + preStr + "]";
         }
     }
 }
