@@ -296,7 +296,7 @@
                     <span>Note the prefix operator!</span>
                     <span>children polcies can be compund themselves, considier the following compound policy:</span>
                     <br />
-                    <span>(AND (XOR (OR b:1 p:2:3) s:1:1) (OR u:3 u:2))</span>
+                    <span>(AND (XOR (OR b:5 p:2:2) s:1:1) (OR u:3 u:2))</span>
                 </RadzenCard>
             </div>
         </div>
@@ -414,13 +414,6 @@
     }
 
 
-
-
-
-
-
-
-
     async private void ParseDiscountText(object args)
     {
         SuccessFailResponse response = await service.UpdateDiscountPolicy(StoreId, loggedInUser, discountText);
@@ -514,7 +507,7 @@
             successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
 
         if (selectedOption == "Demote" && selectedRole == "Manager")
-            successErrorTuple = await service.DemoteOwner(loggedInUser, selectedUser, StoreId);
+            successErrorTuple = await service.DemoteManager(loggedInUser, selectedUser, StoreId);
 
 
         if (successErrorTuple.Item1)

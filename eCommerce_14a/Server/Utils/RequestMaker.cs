@@ -16,30 +16,30 @@ namespace Server.Utils
         public NetworkSecurity sec;
         public string[] usernames;
         public string[] passwords;
-        public const int ARR_SIZE = 500;
+        public const int REQ_NUM = 500;
 
         public RequestMaker() 
         {
             sec = new NetworkSecurity();
-            usernames = new string[ARR_SIZE];
-            passwords = new string[ARR_SIZE];
+            usernames = new string[REQ_NUM];
+            passwords = new string[REQ_NUM];
             InitUsers();
         }
 
         public void GenerateBinReq()
         {
             //generate register requests
-            for (int i = 0; i < ARR_SIZE; i++)
+            for (int i = 0; i < REQ_NUM; i++)
             {
                 SaveData(MakeRegisterRequest(usernames[i], passwords[i]),"register" + i);
             }
             //generate login requests
-            for (int i = 0; i < ARR_SIZE; i++)
+            for (int i = 0; i < REQ_NUM; i++)
             {
                 SaveData(MakeLoginRequest(usernames[i], passwords[i]), "login" + i);
             }
             //generate logout requests
-            for (int i = 0; i < ARR_SIZE; i++)
+            for (int i = 0; i < REQ_NUM; i++)
             {
                 SaveData(MakeLogoutRequest(usernames[i]), "logout" + i);
             }
@@ -47,7 +47,7 @@ namespace Server.Utils
 
         public void InitUsers() 
         {
-            for (int i = 0; i < ARR_SIZE; i++) 
+            for (int i = 0; i < REQ_NUM; i++) 
             {
                 usernames[i] = "Guy" + i;
                 passwords[i] = "Guy" + i;

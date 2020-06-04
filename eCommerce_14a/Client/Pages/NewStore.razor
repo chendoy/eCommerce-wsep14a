@@ -33,22 +33,16 @@
             <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="cancel" style="display: inline-block; margin-left: 10px;" Text="Cancel" Click="@Cancel" />
         </div>
     </div>
-
-    <div class="error-msg" style="text-align:left; font-weight:bold">
-        <span>@errorMsg</span>
-    </div>
-
-    <div class="success-msg" style="text-align:left; font-weight:bold">
-        <span>@successMsg</span>
-    </div>
+    <br/><br/>
+    <MyMessage Msg="@Msg" IsError="@IsError"/>
 
 
 </RadzenTemplateForm>
 
     @code {
 
-        private string errorMsg { get; set; }
-        private string successMsg { get; set; }
+        public string Msg { get; set; }
+        public bool IsError { get; set; }
         private string loggedInUser { get; set; }
 
         public class Store
@@ -68,19 +62,23 @@
 
             if (response.Success)
             {
-                successMsg = "Store opened successfully";
+                Msg = "Store opened successfully";
+                IsError = false;
                 ((MyAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsSeller();
             }
 
             else
-                errorMsg = response.Error;
+            {
+                Msg = response.Error;
+                IsError = true;
+            }
 
-
+            StateHasChanged();
         }
 
         void Cancel()
         {
-            //
+            store.storeName = ""; 
         }
 
 

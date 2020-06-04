@@ -16,6 +16,10 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             UM = UserManager.Instance;
         }
 
+        public Tuple<bool, string> MakeAdmin(string username) 
+        {
+            return UM.MakeAdmin(username);
+        }
         public Dictionary<int, int[]> GetUserPermissions(string username) 
         {
             return UM.GetUserPermissions(username);
