@@ -41,7 +41,7 @@
             //AddInventories(context);
             //AddStoreOwner(context);
             //AddStoreManagers(context);
-            //AddPreConditions(context);
+            AddPreConditions(context);
             //AddDiscountPolicies(context);
             //AddPurchasePolicies(context);
             //AddCarts(context);
