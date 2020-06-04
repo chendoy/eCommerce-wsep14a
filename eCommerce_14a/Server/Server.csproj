@@ -301,9 +301,6 @@
     <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utils\State.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\202006041213175_InitialCreate.resx">
       <DependentUpon>202006041213175_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>

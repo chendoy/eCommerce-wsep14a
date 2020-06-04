@@ -53,6 +53,12 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         
         }
 
+        public bool isAdmin(string username) 
+        {
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return UM.isAdmin(username);
+        }
+
         public List<string> GetApprovalListByStoreAndUser(string username, int storeID) 
         {
            return UM.GetApprovalListByStoreAndUser(username, storeID);
