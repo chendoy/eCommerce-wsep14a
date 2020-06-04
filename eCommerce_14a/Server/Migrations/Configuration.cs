@@ -28,26 +28,26 @@
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
-            Addusers(context);
-            AddusersPwds(context);
-            AddStores(context);
-            List<StoreOwnershipAppoint> owners_appointments = AddOwnerAppointments(context);
-            List<StoreManagersAppoint> managers_appointments = AddManagersAppointmets(context);
-            AddUsersPermissions(context, owners_appointments, managers_appointments);
-            AddCandidateOwnerships(context);
-            AddNeedApprovae(context);
-            AddApprovalStatus(context);
-            AddProducts(context);
-            AddInventories(context);
-            AddStoreOwner(context);
-            AddStoreManagers(context);
-            AddPreConditions(context);
-            AddDiscountPolicies(context);
-            AddPurchasePolicies(context);
-            AddCarts(context);
-            AddBaskets(context);
-            AddProductAtBasket(context);
-            AddPurchases(context);
+            //Addusers(context);
+            //AddusersPwds(context);
+            //AddStores(context);
+            //List<StoreOwnershipAppoint> owners_appointments = AddOwnerAppointments(context);
+            //List<StoreManagersAppoint> managers_appointments = AddManagersAppointmets(context);
+            //AddUsersPermissions(context, owners_appointments, managers_appointments);
+            //AddCandidateOwnerships(context);
+            //AddNeedApprovae(context);
+            //AddApprovalStatus(context);
+            //AddProducts(context);
+            //AddInventories(context);
+            //AddStoreOwner(context);
+            //AddStoreManagers(context);
+            //AddPreConditions(context);
+            //AddDiscountPolicies(context);
+            //AddPurchasePolicies(context);
+            //AddCarts(context);
+            //AddBaskets(context);
+            //AddProductAtBasket(context);
+            //AddPurchases(context);
 
         }
 
