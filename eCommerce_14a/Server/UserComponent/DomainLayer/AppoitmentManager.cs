@@ -252,7 +252,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (store.IsStoreOwner(appointed) || store.IsStoreManager(appointed))
                 return new Tuple<bool, string>(false, addto + " Is already Store Owner or Manager\n");
             if (!store.IsStoreOwner(appointer) && !store.IsStoreManager(appointer))
-                return new Tuple<bool, string>(false, owner + "Is not a store Owner\n");
+                return new Tuple<bool, string>(false, owner + "Is not a store Owner or Manager\n");
             //Liav Will Insert In the correct Table in the DB here
             store.AddStoreManager(appointed);
             //appointed.addManagerAppointment(appointer, store.GetStoreId());
@@ -271,7 +271,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return res;
         }
         //Remove appoitment only if owner gave the permissions to the Appointed user
-        public Tuple<bool, string> RemoveAppStoreManager(string o, string m, int storeId)
+        public Tuple<bool, string> RemoveAppStoreManager(string appointer, string appointed, int storeId)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             Store store = storeManagment.getStore(storeId);
@@ -279,45 +279,41 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 return new Tuple<bool, string>(false, "Store Does not Exist");
             }
-            if (o == null || m == null)
+            if (appointer == null || appointed == null)
             {
                 Logger.logError(CommonStr.ArgsTypes.None, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Null Arguments");
             }
 
-            if (o == "" || m == "")
+            if (appointer == "" || appointed == "")
             {
                 Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Blank Arguemtns\n");
             }
-            User owner = UM.GetAtiveUser(o);
-            User manager = UM.GetUser(m);
-            if (owner is null || manager is null)
+            User userAppointer = UM.GetAtiveUser(appointer);
+            User userAppointed = UM.GetUser(appointed);
+            if (userAppointer is null || userAppointed is null)
                 return new Tuple<bool, string>(false, "One of the users is not logged Exist\n");
-            if (owner.isguest() || manager.isguest())
+            if (userAppointer.isguest() || userAppointed.isguest())
                 return new Tuple<bool, string>(false, "One of the users is a Guest\n");
-            if (store.IsStoreOwner(manager))
-                return new Tuple<bool, string>(false, m + " Is already Store Owner\n");
-            if (!store.IsStoreOwner(owner))
-                return new Tuple<bool, string>(false, o + "Is not a store Owner\n");
-            if (!manager.isAppointedByManager(owner, store.GetStoreId()) && !(manager.isAppointedByOwner(o, store.GetStoreId())))
-                return new Tuple<bool, string>(false, m + "Is not appointed by " + o + "to be store manager\n");
+            if (!userAppointed.isAppointedByManager(userAppointer, store.GetStoreId()) && !(userAppointed.isAppointedByOwner(appointer, store.GetStoreId())))
+                return new Tuple<bool, string>(false, appointed + "Is not appointed by " + appointer + "to be store manager\n");
             //Liav will delete from DB Here
-            store.RemoveManager(manager);
-            manager.RemoveStoreManagment(store.GetStoreId());
+            store.RemoveManager(userAppointed);
+            userAppointed.RemoveStoreManagment(store.GetStoreId());
             //Remove Store Manager Appoint From here
-            StoreManagersAppoint stap = DbManager.Instance.GetSingleManagerAppoints(o, m, storeId);
+            StoreManagersAppoint stap = DbManager.Instance.GetSingleManagerAppoints(appointer, appointed, storeId);
             DbManager.Instance.DeleteSingleManager(stap);
-            int[] p = manager.Store_options[storeId];
-            manager.RemovePermission(store.GetStoreId());
+            int[] p = userAppointed.Store_options[storeId];
+            userAppointed.RemovePermission(store.GetStoreId());
             //Remove Permissions From DB
-            List<UserStorePermissions> permissions = DbManager.Instance.GetUserStorePermissionSet(storeId, m);
+            List<UserStorePermissions> permissions = DbManager.Instance.GetUserStorePermissionSet(storeId, appointed);
             DbManager.Instance.DeletePermission(permissions);
             //Version 2 Addition
-            Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(m + "is not a StoreID: "+storeId +" StoreName: "+store.GetName() +" Manager any More"));
+            Tuple<bool, string> message = Publisher.Instance.Notify(storeId, new NotifyData(appointed + "is not a StoreID: "+storeId +" StoreName: "+store.GetName() +" Manager any More"));
             if (!message.Item1)
                 return message;
-            Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(m, storeId);
+            Tuple<bool, string> ans = Publisher.Instance.Unsubscribe(appointed, storeId);
             return ans;
         }
 

@@ -56,7 +56,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             SB = new Security();
             Available_ID = 1;
         }
- 
+
+
+        internal Tuple<bool, string> MakeAdmin(string username)
+        {
+            User user;
+            if (!users.TryGetValue(username, out user))
+                return new Tuple<bool, string>(false, "user not found in register users!");
+            user.IsAdmin = true;
+            return new Tuple<bool, string>(true, "Appoint to admin succeed!");
+        }
 
         public List<User> GetAllRegisteredUsers() 
         {

@@ -325,6 +325,11 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.MAKE_ADMIN:
+                    response = handler.HandleMakeAdmin(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
                 default:
                     break;
             }

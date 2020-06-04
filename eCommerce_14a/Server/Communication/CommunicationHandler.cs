@@ -295,6 +295,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        internal byte[] HandleMakeAdmin(string json)
+        {
+            MakeAdminRequest res = JsonConvert.DeserializeObject<MakeAdminRequest>(json);
+            Tuple<bool,string> ans = userService.MakeAdmin(res.Username);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         internal byte[] HandleApprovalList(string json)
         {
             GetApprovalListRequest res = JsonConvert.DeserializeObject<GetApprovalListRequest>(json);

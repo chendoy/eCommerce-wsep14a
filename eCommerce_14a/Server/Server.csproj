@@ -92,6 +92,7 @@
     <Compile Include="Communication\DataObject\Requests\LoginRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\LogoutRequest.cs" />
     <Compile Include="Communication\DataObject\Message.cs" />
+    <Compile Include="Communication\DataObject\Requests\MakeAdminRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\OpenStoreRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ProductInfoRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
@@ -175,10 +176,6 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006030918506_InitialCreate.cs" />
-    <Compile Include="Migrations\202006030918506_InitialCreate.designer.cs">
-      <DependentUpon>202006030918506_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
@@ -295,11 +292,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006030918506_InitialCreate.resx">
-      <DependentUpon>202006030918506_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Utils\State.txt" />
