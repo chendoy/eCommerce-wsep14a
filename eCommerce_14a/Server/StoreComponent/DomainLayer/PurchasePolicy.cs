@@ -84,8 +84,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             string ret = "(";
             ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
-            foreach (DiscountPolicy discount in children)
-                ret += discount.ToString() + " ";
+            foreach (PurchasePolicy policy in children)
+                ret += policy.ToString() + " ";
             ret += ")";
             return ret;
         }
