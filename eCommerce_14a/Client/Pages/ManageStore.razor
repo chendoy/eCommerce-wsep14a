@@ -499,7 +499,6 @@
         if (selectedOption == "Promote" && selectedRole == "Owner")
             successErrorTuple = await service.AppointOwner(loggedInUser, selectedUser, StoreId);
 
-
         if (selectedOption == "Promote" && selectedRole == "Manager")
             successErrorTuple = await service.AppointManager(loggedInUser, selectedUser, StoreId);
 

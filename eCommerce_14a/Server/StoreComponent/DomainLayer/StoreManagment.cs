@@ -155,7 +155,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Store store;
             if (!stores.TryGetValue(storeID, out store))
                 return "";
-            return store.DiscountPolicy.ToString();
+            return store.DiscountPolicy.Describe(0);
         }
 
         internal string GetPurchasePolicy(int storeID)
@@ -163,7 +163,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Store store;
             if (!stores.TryGetValue(storeID, out store))
                 return "";
-            return store.PurchasePolicy.ToString();
+            return store.PurchasePolicy.Describe(0);
         }
 
         public Tuple<bool, string> UpdateProduct(string userName, int storeId, int productId, string pDetails, double pPrice, string pName, string pCategory, string imgUrl)

@@ -13,7 +13,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public interface DiscountPolicy
     {
         double CalcDiscount(PurchaseBasket basket, PolicyValidator validator);
-        string ToString();
+        string Describe(int depth);
     }
 
     public class CompundDiscount : DiscountPolicy
@@ -77,14 +77,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             return mergeType;
         }
-        public override string ToString()
+        public string Describe(int depth)
         {
-            string ret = "(\n";
-            ret += "    ";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            string ret = pad + "(";
             ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
             foreach (DiscountPolicy discount in children)
-                ret += "\n    " + discount.ToString() + ",";
-            ret += "\n)";
+                ret += "\n" + discount.Describe(depth + 1) + ",";
+            ret += "\n" + pad + ")";
             return ret;
         }
     }
@@ -118,6 +119,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return 0;
         }
 
+        public abstract string Describe(int depth);
     }
 
  
@@ -140,13 +142,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             return reduction;
         }
-        public override string ToString()
+        public override string Describe(int depth)
         {
             //Inventory inv = new Inventory();
             //string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[Conditional Product Discount: buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Conditional Product Discount: buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
         }
     }
 
@@ -162,12 +166,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return (Discount / 100) * basket.GetBasketOrigPrice();
             return 0;
         }
-        public override string ToString()
+        public override string Describe(int depth)
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-
-            return "[Conditional Basket Discount:" + preStr + " and get " + Discount + "% off]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Conditional Basket Discount:" + preStr + " and get " + Discount + "% off]";
         }
 
     }
@@ -195,9 +200,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             return reduction; ;
         }
-        public override string ToString()
+        public string Describe(int depth)
         {
-            return "[Reveald Discount: buy product #" + discountProdutId + " and get " + discount + "% off]";
+            string pad = "";
+            for (int i = 0; i < depth; i++) { pad += "    "; }
+            return pad + "[Reveald Discount: buy product #" + discountProdutId + " and get " + discount + "% off]";
         }
     }
 }
