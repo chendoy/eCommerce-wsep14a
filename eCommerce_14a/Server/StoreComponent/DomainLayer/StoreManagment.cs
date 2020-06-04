@@ -61,7 +61,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             foreach(Store store in allstores)
             {
                 stores.Add(store.Id, store);
-                Publisher.Instance.subscribe(store.owners[0], store.Id);
+                if(store.owners.Count > 0)
+                {
+                    Publisher.Instance.subscribe(store.owners[0], store.Id);
+                }
             }
           
         }
