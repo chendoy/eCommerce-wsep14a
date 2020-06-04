@@ -80,9 +80,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public override string ToString()
         {
             string ret = "(\n";
+            ret += "    ";
             ret += mergeType == 0 ? "XOR " : mergeType == 1 ? "OR " : mergeType == 2 ? "AND " : "UNKNOWN ";
             foreach (DiscountPolicy discount in children)
-                ret += "\t\n" + discount.ToString() + ",";
+                ret += "\n    " + discount.ToString() + ",";
             ret += "\n)";
             return ret;
         }
@@ -145,7 +146,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             //string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
-            return "[Conditional Product Discount: buy " + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
+            return "[Conditional Product Discount: buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
         }
     }
 
@@ -196,7 +197,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
         public override string ToString()
         {
-            return "[Reveald Discount: buy " + discountProdutId + " and get " + discount + "% off]";
+            return "[Reveald Discount: buy product #" + discountProdutId + " and get " + discount + "% off]";
         }
     }
 }
