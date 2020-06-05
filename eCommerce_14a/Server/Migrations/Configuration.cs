@@ -28,26 +28,26 @@
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
-            //Addusers(context);
-            //AddusersPwds(context);
-            //AddStores(context);
-            //List<StoreOwnershipAppoint> owners_appointments = AddOwnerAppointments(context);
-            //List<StoreManagersAppoint> managers_appointments = AddManagersAppointmets(context);
-            //AddUsersPermissions(context, owners_appointments, managers_appointments);
-            //AddCandidateOwnerships(context);
-            //AddNeedApprovae(context);
-            //AddApprovalStatus(context);
-            //AddProducts(context);
-            //AddInventories(context);
-            //AddStoreOwner(context);
-            //AddStoreManagers(context);
+            Addusers(context);
+            AddusersPwds(context);
+            AddStores(context);
+            List<StoreOwnershipAppoint> owners_appointments = AddOwnerAppointments(context);
+            List<StoreManagersAppoint> managers_appointments = AddManagersAppointmets(context);
+            AddUsersPermissions(context, owners_appointments, managers_appointments);
+            AddCandidateOwnerships(context);
+            AddNeedApprovae(context);
+            AddApprovalStatus(context);
+            AddProducts(context);
+            AddInventories(context);
+            AddStoreOwner(context);
+            AddStoreManagers(context);
             AddPreConditions(context);
-            //AddDiscountPolicies(context);
-            //AddPurchasePolicies(context);
-            //AddCarts(context);
-            //AddBaskets(context);
-            //AddProductAtBasket(context);
-            //AddPurchases(context);
+            AddDiscountPolicies(context);
+            AddPurchasePolicies(context);
+            AddCarts(context);
+            AddBaskets(context);
+            AddProductAtBasket(context);
+            AddPurchases(context);
 
         }
 
@@ -385,18 +385,18 @@
 
 
             var preconditions = new List<DbPreCondition>();
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.Above1Unit)); //1
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.BasketPriceAboveX)); //1
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.Above2Units)); //2
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.basketPriceAbove1000)); //3
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.NoDiscount)); //4
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.ProductPriceAbove100)); //5
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.ProductPriceAbove200)); //6
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.ProductPriceAboveX)); //5
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX)); //6
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.allwaysTrue)); //7
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.OwnerCantBuy)); //8
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.Max10ProductPerBasket)); //9
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.singleOfProductType)); //10
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MaxItemsAtBasket)); //9
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MaxUnitsOfProductType)); //10
             preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.StoreMustBeActive)); //11
-            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.AtLeat11ProductPerBasket)); //12
+            preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MinItemsAtBasket)); //12
 
             preconditions.ForEach(pc => context.PreConditions.Add(pc));
             context.SaveChanges();

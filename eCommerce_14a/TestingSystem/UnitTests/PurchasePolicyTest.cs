@@ -35,10 +35,10 @@ namespace TestingSystem.UnitTests
             stores.Add(1, store);
             validator = new PolicyValidator(null, null);
 
-            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.singleOfProductType,
+            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.MaxUnitsOfProductType,
                 (PurchaseBasket basket, int productId, string userName, int storeId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] <= 1 : false);
 
-            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.Max10ProductPerBasket,
+            validator.AddPurachseFunction(CommonStr.PurchasePreCondition.MaxItemsAtBasket,
                 (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() <= 10);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.OwnerCantBuy,
@@ -54,8 +54,8 @@ namespace TestingSystem.UnitTests
 
 
             preConditionsDict = new Dictionary<int, PreCondition>();
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.singleOfProductType, new PurchasePreCondition(CommonStr.PurchasePreCondition.singleOfProductType));
-            preConditionsDict.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, new PurchasePreCondition(CommonStr.PurchasePreCondition.Max10ProductPerBasket));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.MaxUnitsOfProductType, new PurchasePreCondition(CommonStr.PurchasePreCondition.MaxUnitsOfProductType));
+            preConditionsDict.Add(CommonStr.PurchasePreCondition.MaxItemsAtBasket, new PurchasePreCondition(CommonStr.PurchasePreCondition.MaxItemsAtBasket));
             preConditionsDict.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, new PurchasePreCondition(CommonStr.PurchasePreCondition.StoreMustBeActive));
             preConditionsDict.Add(CommonStr.PurchasePreCondition.OwnerCantBuy, new PurchasePreCondition(CommonStr.PurchasePreCondition.OwnerCantBuy));
 
@@ -78,7 +78,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 1, false);
             cart.AddProduct(store, 3, 3, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc= new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplc= new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
@@ -90,7 +90,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             cart.AddProduct(store, 3, 3, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplc = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
@@ -102,7 +102,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             cart.AddProduct(store, 3, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+            PurchasePolicy purchaseplc = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(true, eligiblePurchase);
         }
@@ -114,7 +114,7 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             cart.AddProduct(store, 3, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
-            PurchasePolicy purchaseplc = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
+            PurchasePolicy purchaseplc = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
             bool eligiblePurchase = purchaseplc.IsEligiblePurchase(basket, validator);
             Assert.AreEqual(false, eligiblePurchase);
         }
@@ -169,8 +169,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -186,8 +186,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.AND, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -203,8 +203,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -220,8 +220,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.OR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -238,8 +238,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -255,8 +255,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -272,8 +272,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 2, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);
@@ -289,8 +289,8 @@ namespace TestingSystem.UnitTests
             cart.AddProduct(store, 2, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
             store.ActiveStore = false;
-            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.Max10ProductPerBasket]);
-            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.singleOfProductType], 2);
+            PurchasePolicy purchaseplcMaxPerBasket = new BasketPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxItemsAtBasket]);
+            PurchasePolicy purchaseplcMaxPerProduct = new ProductPurchasePolicy(preConditionsDict[CommonStr.PurchasePreCondition.MaxUnitsOfProductType], 2);
             CompundPurchasePolicy compund = new CompundPurchasePolicy(CommonStr.PurchaseMergeTypes.XOR, null);
             compund.add(purchaseplcMaxPerBasket);
             compund.add(purchaseplcMaxPerProduct);

@@ -62,13 +62,12 @@ namespace eCommerce_14a.Utils
         public static class DiscountPreConditions
         {
             public static int pre_min = 0;
-            public static int pre_max = 5;
+            public static int pre_max = 4;
             public static int NoDiscount = 0;
-            public static int ProductPriceAbove100 = 1;
-            public static int ProductPriceAbove200 = 2;
-            public static int Above1Unit = 3;
-            public static int Above2Units = 4;
-            public static int basketPriceAbove1000 = 5;
+            public static int ProductPriceAboveX = 1;
+            public static int NumUnitsOfProductAboveX = 2;
+            public static int BasketPriceAboveX = 3;
+            public static int NumUnitsInBasketAboveX = 4;
         }
 
         public static class PoliciesErrors
@@ -82,13 +81,16 @@ namespace eCommerce_14a.Utils
         public static class PurchasePreCondition
         {
             public static int pre_min = 0;
-            public static int pre_max = 5;
+            public static int pre_max = 8;
             public static int allwaysTrue = 0;
-            public static int singleOfProductType = 1;
-            public static int Max10ProductPerBasket = 2;
-            public static int StoreMustBeActive = 3;
-            public static int OwnerCantBuy = 4;
-            public static int AtLeat11ProductPerBasket = 5;
+            public static int MaxUnitsOfProductType = 1;
+            public static int MinUnitsOfProductType = 2;
+            public static int MaxItemsAtBasket = 3;
+            public static int MinItemsAtBasket = 4;
+            public static int StoreMustBeActive = 5;
+            public static int OwnerCantBuy = 6;
+            public static int MinBasketPrice = 7;
+            public static int MaxBasketPrice = 8;
 
         }
         public static class StoreParams

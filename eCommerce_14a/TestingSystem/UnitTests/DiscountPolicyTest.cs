@@ -32,27 +32,27 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.basketPriceAbove1000, 
                 (PurchaseBasket basket, int productId) => basket.GetBasketPriceWithDiscount() > 1000);
 
-            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above1Unit, 
+            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.BasketPriceAboveX, 
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId)? basket.Products[productId] > 1 : false);
 
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above2Units,
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId)? basket.Products[productId] > 2 : false);
 
-            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove100,
+            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAboveX,
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 100 : false);
 
-            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAbove200,
+            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX,
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 200 : false);
 
             validator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
                 (PurchaseBasket basket, int productId,  string userName, int storeId) => true);
 
             preConditionsDict = new Dictionary<int, PreCondition>();
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.Above1Unit, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above1Unit));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.BasketPriceAboveX));
             preConditionsDict.Add(CommonStr.DiscountPreConditions.Above2Units, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above2Units));
             preConditionsDict.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, new DiscountPreCondition(CommonStr.DiscountPreConditions.basketPriceAbove1000));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAbove100, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAbove100));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAbove200, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAbove200));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAboveX));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX));
            
             store = StoreTest.StoreTest.initValidStore();
             cart = new Cart("liav");
@@ -120,7 +120,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 3, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
             // 35% prectentge on each product (pid) if bought more than 1 unit XOR 20% on whole basket if price > 1000 but not both! should return maxPrice
-            DiscountPolicy contitionalAboveSingleUnit = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above1Unit], 35);
+            DiscountPolicy contitionalAboveSingleUnit = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 35);
             DiscountPolicy conditionalWholeBasket = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
             List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
             policies_lst.Add(contitionalAboveSingleUnit);
@@ -138,7 +138,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             cart.AddProduct(store, 3, 1, false);
             PurchaseBasket basket = cart.GetBasket(store);
             // 35% prectentge on each product (pid) if bought more than 1 unit XOR 20% on whole basket if price > 1000 but not both! should return maxPrice
-            DiscountPolicy contitionalAboveSingleUnit = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above1Unit], 35);
+            DiscountPolicy contitionalAboveSingleUnit = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 35);
             DiscountPolicy conditionalWholeBasket = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
             List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
             policies_lst.Add(contitionalAboveSingleUnit);
@@ -157,8 +157,8 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             PurchaseBasket basket = cart.GetBasket(store);
             // 35% prectentge on each product (pid) if bought more than 1 unit XOR 20% on whole basket if price > 1000 but not both! should return maxPrice
             DiscountPolicy contitionalAboveTwoUnitp2 = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above2Units], 30);
-            DiscountPolicy contitionalAboveSingleUnitp2 = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above1Unit], 20);
-            DiscountPolicy contitionalAboveSingleUnitp3 = new ConditionalProductDiscount(3,preConditionsDict[CommonStr.DiscountPreConditions.Above1Unit], 20);
+            DiscountPolicy contitionalAboveSingleUnitp2 = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 20);
+            DiscountPolicy contitionalAboveSingleUnitp3 = new ConditionalProductDiscount(3,preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 20);
             
             List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
             policies_lst.Add(contitionalAboveSingleUnitp2);

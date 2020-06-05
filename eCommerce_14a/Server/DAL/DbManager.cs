@@ -550,7 +550,7 @@ namespace Server.DAL
         {
             if (policyData.GetType() == typeof(ProductPurchasePolicy))
             {
-                int policyProdutId = ((ProductPurchasePolicy)policyData).policyProductId;
+                int policyProdutId = ((ProductPurchasePolicy)policyData).ProductId;
                 int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
