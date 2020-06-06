@@ -163,7 +163,6 @@
     <Compile Include="DAL\StoreDb\DbProduct.cs" />
     <Compile Include="DAL\StoreDb\DbPurchasePolicy.cs" />
     <Compile Include="DAL\StoreDb\DbStore.cs" />
-    <Compile Include="DAL\StoreDb\DbPreCondition.cs" />
     <Compile Include="DAL\StoreDb\StoreAdapter.cs" />
     <Compile Include="DAL\StoreDb\StoreManager.cs" />
     <Compile Include="DAL\StoreDb\StoreOwner.cs" />
@@ -183,7 +182,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
-    <Compile Include="StoreComponent\DomainLayer\PolicyValidator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />

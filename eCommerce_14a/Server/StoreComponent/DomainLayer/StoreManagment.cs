@@ -73,11 +73,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Dictionary<int, string> avilableDiscount = new Dictionary<int, string>();
             avilableDiscount.Add(CommonStr.DiscountPreConditions.NoDiscount, "no discount at all");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, "buy more Than 1 unit and get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above2Units, "buy more than 2 units and get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAboveX, "if product price above 100, get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX, "if product price above 200, get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, "if basket price above 1000, get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, "Basket Price Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX, "Num Of Items At Basket Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveX, "Discount 'X' On All Products Their Price Above 'Y'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX, "Discount 'X' On Product 'Y' If Num Units Of Product 'Y' Bigger Than 'Z'");
             return avilableDiscount;
         }
 
@@ -86,10 +85,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> avilablePurchasePolicy = new Dictionary<int, string>();
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.allwaysTrue, "No Condition");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.OwnerCantBuy, "Strore Owner Can't buy from the store");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxItemsAtBasket, "Max 10 product per basket!");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinItemsAtBasket, "At Leat 11 product per basket");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxUnitsOfProductType, "you can buy only single unit of product id");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, "in order to buy store must be active");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxItemsAtBasket, "Max 'X' Items Per Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinItemsAtBasket, "Min 'X' Items Per Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxUnitsOfProductType, "Max 'X' Units Of Product 'Y' In Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinUnitsOfProductType, "Min 'X' Units Of Product 'Y' In Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxBasketPrice, "Basket Price Is 'X' At Most");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinBasketPrice, "Basket Price Is 'X' At Least");
             return avilablePurchasePolicy;
         }
 

@@ -21,10 +21,7 @@ namespace Server.DAL.StoreDb
         
         public int? ParentId { set; get; }
 
-
-        [ForeignKey("PreCondition")]
         public int? PreConditionId { set; get; }
-        public DbPreCondition PreCondition { set; get; }
 
         [ForeignKey("Product")]
         public int? DiscountProductId { set; get; }
@@ -34,8 +31,17 @@ namespace Server.DAL.StoreDb
 
         public int DiscountType { set; get; }
 
+        public int? MinProductUnits { set; get; }
 
-        public DbDiscountPolicy (int storeid, int? mergetype, int? parentId, int? preconditionid, int? discountproductid, double? discount, int discounttype)
+        public double? MinBasketPrice { set; get; }
+
+        public double? MinProductPrice { set; get; }
+
+        public int? MinUnitsAtBasket { set; get; }
+
+
+
+        public DbDiscountPolicy (int storeid, int? mergetype, int? parentId, int? preconditionid, int? discountproductid, double? discount, int discounttype, int? minproductunits, double? minbaskeptice, double? minproductprice, int? minunitsatbasket)
         {
             StoreId = storeid;
             MergeType = mergetype;
@@ -44,6 +50,10 @@ namespace Server.DAL.StoreDb
             DiscountProductId = discountproductid;
             Discount = discount;
             DiscountType = discounttype;
+            MinProductUnits = minproductunits;
+            MinBasketPrice = minbaskeptice;
+            MinProductPrice = minproductprice;
+            MinUnitsAtBasket = minunitsatbasket;
         }
 
         public DbDiscountPolicy()

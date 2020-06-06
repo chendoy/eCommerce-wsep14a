@@ -38,7 +38,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above2Units,
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId)? basket.Products[productId] > 2 : false);
 
-            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAboveX,
+            validator.AddDiscountFunction(CommonStr.DiscountPreConditions.BasketProductPriceAboveX,
                 (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 100 : false);
 
             validator.AddDiscountFunction(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX,
@@ -51,7 +51,7 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             preConditionsDict.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.BasketPriceAboveX));
             preConditionsDict.Add(CommonStr.DiscountPreConditions.Above2Units, new DiscountPreCondition(CommonStr.DiscountPreConditions.Above2Units));
             preConditionsDict.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, new DiscountPreCondition(CommonStr.DiscountPreConditions.basketPriceAbove1000));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.ProductPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.ProductPriceAboveX));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.BasketProductPriceAboveX));
             preConditionsDict.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX));
            
             store = StoreTest.StoreTest.initValidStore();

@@ -51,7 +51,7 @@ namespace Server.DAL
 
         public virtual DbSet<DbPurchasePolicy> PurchasePolicies { get; set; }
 
-        public virtual DbSet<DbPreCondition> PreConditions { get; set; }
+        //public virtual DbSet<DbPreCondition> PreConditions { get; set; }
 
 
         public virtual DbSet<StoreOwner> StoreOwners { get; set; }

@@ -552,7 +552,7 @@ namespace Server.DAL
             {
                 int policyProdutId = ((ProductPurchasePolicy)policyData).ProductId;
                 int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
+                //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                  mergetype: null,
                                                                  parentid: parentId,
@@ -566,7 +566,7 @@ namespace Server.DAL
             else if (policyData.GetType() == typeof(BasketPurchasePolicy))
             {
                 int preCondition = ((BasketPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
+                //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                  mergetype: null,
                                                                  parentid: parentId,
@@ -581,7 +581,7 @@ namespace Server.DAL
             {
 
                 int preCondition = ((SystemPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
+                //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                  mergetype: null,
                                                                  parentid: parentId,
@@ -595,7 +595,7 @@ namespace Server.DAL
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
             {
                 int preCondition = ((UserPurchasePolicy)policyData).PreCondition.PreConditionNumber;
-                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
+                //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                 mergetype: null,
                                                                 parentid: parentId,
@@ -737,7 +737,7 @@ namespace Server.DAL
                 int discountProdutId = ((ConditionalProductDiscount)discountPolicy).discountProdutId;
                 int preCondition_num = ((ConditionalProductDiscount)discountPolicy).PreCondition.PreConditionNumber;
                 double discountPrecentage = ((ConditionalProductDiscount)discountPolicy).Discount;
-                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition_num, CommonStr.PreConditionType.DiscountPreCondition);
+                //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition_num, CommonStr.PreConditionType.DiscountPreCondition);
                 dbConn.DiscountPolicies.Add(new DbDiscountPolicy(storeid: storeId,
                                                                  mergetype: null,
                                                                  parentId: parentId,
@@ -752,7 +752,7 @@ namespace Server.DAL
             {
                 int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.PreConditionNumber;
                 double discountPrecentage = ((ConditionalBasketDiscount)discountPolicy).Discount;
-                DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.DiscountPreCondition);
+                //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.DiscountPreCondition);
                 DbDiscountPolicy dbDiscount = new DbDiscountPolicy(storeid: storeId,
                                                                  mergetype: null,
                                                                  parentId: parentId,
@@ -859,15 +859,15 @@ namespace Server.DAL
 
         }
 
-        private int GetDbPreConditionNumberById(int Id)
-        {
-            return dbConn.PreConditions.Where(pre => pre.Id == Id).FirstOrDefault().PreConditionNum;
-        }
+        //private int GetDbPreConditionNumberById(int Id)
+        //{
+        //    return dbConn.PreConditions.Where(pre => pre.Id == Id).FirstOrDefault().PreConditionNum;
+        //}
 
-        private DbPreCondition GetDbPreCondition(int preCondition_num, int preType)
-        {
-            return dbConn.PreConditions.Where(pre => pre.PreConditionNum == preCondition_num && pre.PreConditionType == preType).FirstOrDefault();
-        }
+        //private DbPreCondition GetDbPreCondition(int preCondition_num, int preType)
+        //{
+        //    return dbConn.PreConditions.Where(pre => pre.PreConditionNum == preCondition_num && pre.PreConditionType == preType).FirstOrDefault();
+        //}
 
 
         private void InsertOwners(List<string> owners, int storeId)
@@ -907,11 +907,11 @@ namespace Server.DAL
         }
 
 
-        public void InsertPreCondition(DbPreCondition preCoondition)
-        {
-            dbConn.PreConditions.Add(preCoondition);
-            dbConn.SaveChanges();
-        }
+        //public void InsertPreCondition(DbPreCondition preCoondition)
+        //{
+        //    dbConn.PreConditions.Add(preCoondition);
+        //    dbConn.SaveChanges();
+        //}
 
         public void InsertProduct(DbProduct product)
         {
@@ -1052,18 +1052,18 @@ namespace Server.DAL
      
         }
 
-        public PreCondition GetPreCondition(int PreConditionId)
-        {
-            DbPreCondition pre = dbConn.PreConditions.Where(precon => precon.Id == PreConditionId).FirstOrDefault();
-            if(pre.PreConditionType == CommonStr.PreConditionType.DiscountPreCondition)
-            {
-                return new DiscountPreCondition(pre.PreConditionNum);
-            }
-            else
-            {
-                return new PurchasePreCondition(pre.PreConditionNum);
-            }
-        }
+        //public PreCondition GetPreCondition(int PreConditionId)
+        //{
+        //    DbPreCondition pre = dbConn.PreConditions.Where(precon => precon.Id == PreConditionId).FirstOrDefault();
+        //    if(pre.PreConditionType == CommonStr.PreConditionType.DiscountPreCondition)
+        //    {
+        //        return new DiscountPreCondition(pre.PreConditionNum);
+        //    }
+        //    else
+        //    {
+        //        return new PurchasePreCondition(pre.PreConditionNum);
+        //    }
+        //}
 
         private PurchasePolicy LoadPurchasePolicy(int storeId)
         {

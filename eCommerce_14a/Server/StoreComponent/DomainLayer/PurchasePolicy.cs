@@ -198,10 +198,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             MinBasketPrice = int.MaxValue;
             MaxBasketPrice = maxBasketPrice;
         }
+        public BasketPurchasePolicy(PreCondition pre) : base(pre)
+        {
+            MinItems = int.MaxValue;
+            MaxItems = int.MinValue;
+            MinBasketPrice = int.MaxValue;
+            MaxBasketPrice = int.MinValue;
+        }
 
         public override bool IsEligiblePurchase(PurchaseBasket basket)
         {
-            if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.MaxItemsAtBasket)
+            if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.allwaysTrue)
+            {
+                return true;
+            }
+            else if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.MaxItemsAtBasket)
             {
                 return PreCondition.IsFulfilledMaxItemAtBasketPurchase(basket, MaxItems);
             }

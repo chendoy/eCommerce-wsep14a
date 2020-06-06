@@ -64,7 +64,7 @@ namespace eCommerce_14a.Utils
             public static int pre_min = 0;
             public static int pre_max = 4;
             public static int NoDiscount = 0;
-            public static int ProductPriceAboveX = 1;
+            public static int BasketProductPriceAboveX = 1;
             public static int NumUnitsOfProductAboveX = 2;
             public static int BasketPriceAboveX = 3;
             public static int NumUnitsInBasketAboveX = 4;

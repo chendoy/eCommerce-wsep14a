@@ -20,8 +20,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public DiscountPolicy DiscountPolicy { set; get; }
         public PurchasePolicy PurchasePolicy { set; get; }
 
-        public PolicyValidator PolicyValidator { set; get; }
-
         public Inventory Inventory { set; get; }
 
         public int Rank { set; get; }
@@ -74,55 +72,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 Inventory = (Inventory)store_params[CommonStr.StoreParams.StoreInventory];
             }
 
-
-            if (!store_params.ContainsKey(CommonStr.StoreParams.Validator) || store_params[CommonStr.StoreParams.Validator] == null)
-            {
-                PolicyValidator = new PolicyValidator(null, null);
-
-                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.BasketPriceAboveX,
-                  (PurchaseBasket basket, int productId) => basket.GetBasketOrigPrice() > 1000);
-
-                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.BasketPriceAboveX,
-                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 1 : false);
-
-                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.Above2Units,
-                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Products[productId] > 2 : false);
-
-                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.ProductPriceAboveX,
-                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 100 : false);
-
-                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX,
-                    (PurchaseBasket basket, int productId) => basket.Products.ContainsKey(productId) ? basket.Store.GetProductDetails(productId).Item1.Price > 200 : false);
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => true);
-
-                PolicyValidator.AddDiscountFunction(CommonStr.DiscountPreConditions.NoDiscount,
-                    (PurchaseBasket basket, int productId) => true);
-
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.allwaysTrue,
-                     (PurchaseBasket basket, int productId, string userName, int storeId) => true);
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.MaxUnitsOfProductType,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => !basket.Products.ContainsKey(productId) ? true : basket.Products[productId] <= 1);
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.MaxItemsAtBasket,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() <= 10);
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.OwnerCantBuy,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => UserManager.Instance.GetUser(userName) is null? false: !owners.Contains(userName));
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.StoreMustBeActive,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => StoreManagment.Instance.getStore(storeId) is null? false : StoreManagment.Instance.getStore(storeId).ActiveStore);
-
-                PolicyValidator.AddPurachseFunction(CommonStr.PurchasePreCondition.MinItemsAtBasket,
-                    (PurchaseBasket basket, int productId, string userName, int storeId) => basket.GetNumProductsAtBasket() >= 11);
-            }
-            else
-            {
-                PolicyValidator = (PolicyValidator)store_params[CommonStr.StoreParams.Validator];
-            }
             
             if(!store_params.ContainsKey(CommonStr.StoreParams.StoreDiscountPolicy) || store_params[CommonStr.StoreParams.StoreDiscountPolicy] == null)
             {
@@ -654,7 +603,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
             double basketPrice = GetBasketOrigPrice(basket);
-            double overallDiscount = DiscountPolicy.CalcDiscount(basket, PolicyValidator);
+            double overallDiscount = DiscountPolicy.CalcDiscount(basket);
             double priceAfterDiscount = basketPrice - overallDiscount;
 
             return priceAfterDiscount;
@@ -665,7 +614,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
             //checks if the basket accomodate the store's purchase policy
-            if (!PurchasePolicy.IsEligiblePurchase(basket, PolicyValidator))
+            if (!PurchasePolicy.IsEligiblePurchase(basket))
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreErrorMessage.BasketNotAcceptPurchasePolicy);
                 return new Tuple<bool, string>(false, CommonStr.StoreErrorMessage.BasketNotAcceptPurchasePolicy);

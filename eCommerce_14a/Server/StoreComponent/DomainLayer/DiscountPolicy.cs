@@ -128,32 +128,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     {
         public int discountProdutId { get; set; }
         public int MinUnits { get; set; }
-        public ConditionalProductDiscount(int discountProdutId, PreCondition preCondition, double discount) : base(preCondition, discount)
+
+        public ConditionalProductDiscount(PreCondition preCondition, double discount, int minUnits, int productId) : base(preCondition, discount)
         {
-            this.discountProdutId = discountProdutId;
-            MinUnits = int.MaxValue;
-        }
-        public ConditionalProductDiscount(PreCondition preCondition, double discount, int minUnits) : base(preCondition, discount)
-        {
-            this.discountProdutId = -1;
+            this.discountProdutId = productId;
             MinUnits = minUnits;
         }
 
         public override double CalcDiscount(PurchaseBasket basket)
         {
-            if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.ProductPriceAboveX)
-            {
-                double reduction = 0;
-                foreach(int pid in basket.Products.Keys)
-                {
-                    if(PreCondition.IsFulfilledProductPriceAboveXDiscount(basket, pid, MinUnits))
-                    {
-                        reduction += (Discount/100) *  basket.Store.GetProductDetails(pid).Item1.Price;
-                    }
-                }
-                return reduction;
-            }
-            else if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX)
+            if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX)
             {
                 double reduction = 0;
                 if(PreCondition.IsFufillledMinProductUnitDiscount(basket, discountProdutId, MinUnits))
@@ -183,25 +167,55 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class ConditionalBasketDiscount : ConditionalDiscount
     {
-        public double MinPrice { set; get; }
-        public int MinUnits { set; get; }
-        public ConditionalBasketDiscount(PreCondition preCondition, double discount, double minPrice) : base(preCondition, discount)
+        public double MinBasketPrice { set; get; }
+        public double MinProductPrice { set; get; }
+        public int MinUnitsAtBasket { set; get; }
+
+        public ConditionalBasketDiscount(double minProductPrice, double discount, PreCondition preCondition) : base(preCondition, discount)
         {
-            MinPrice = minPrice;
-            MinUnits= int.MaxValue;
+            MinProductPrice = minProductPrice;
+            MinUnitsAtBasket = int.MaxValue;
         }
 
-        public ConditionalBasketDiscount(PreCondition preCondition, double discount, int minUnits): base(preCondition, discount)
+        public ConditionalBasketDiscount(PreCondition preCondition, double discount, double minBasketPrice) : base(preCondition, discount)
         {
-            MinUnits = minUnits;
-            MinPrice = int.MaxValue;
+            MinBasketPrice = minBasketPrice;
+            MinUnitsAtBasket= int.MaxValue;
+        }
+
+        public ConditionalBasketDiscount(PreCondition preCondition, double discount, int minUnitsAtBasket): base(preCondition, discount)
+        {
+            MinUnitsAtBasket = minUnitsAtBasket;
+            MinBasketPrice = int.MaxValue;
+        }
+        public ConditionalBasketDiscount(double discount, PreCondition preCondition) : base(preCondition, discount)
+        {
+            MinUnitsAtBasket = int.MaxValue;
+            MinBasketPrice = int.MaxValue;
         }
 
         public override double CalcDiscount(PurchaseBasket basket)
         {
-            if (PreCondition.PreConditionNumber == CommonStr.DiscountPreConditions.BasketPriceAboveX)
+
+            if (PreCondition.preCondNumber == CommonStr.DiscountPreConditions.BasketProductPriceAboveX)
             {
-                if (PreCondition.IsFulfilledMinBasketPriceDiscount(basket, MinPrice))
+                double reduction = 0;
+                foreach (int pid in basket.Products.Keys)
+                {
+                    if (PreCondition.IsFulfilledProductPriceAboveXDiscount(basket, pid, MinProductPrice))
+                    {
+                        reduction += (Discount / 100) * basket.Store.GetProductDetails(pid).Item1.Price;
+                    }
+                }
+                return reduction;
+            }
+            else if(PreCondition.PreConditionNumber == CommonStr.DiscountPreConditions.NoDiscount)
+            {
+                return 0;
+            }
+            else if (PreCondition.PreConditionNumber == CommonStr.DiscountPreConditions.BasketPriceAboveX)
+            {
+                if (PreCondition.IsFulfilledMinBasketPriceDiscount(basket, MinBasketPrice))
                 {
                     return (Discount / 100) * basket.GetBasketOrigPrice();
                 }
@@ -212,7 +226,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             else if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX)
             {
-                if(PreCondition.IsFulfilledMinUnitsAtBasketDiscount(basket, MinUnits))
+                if(PreCondition.IsFulfilledMinUnitsAtBasketDiscount(basket, MinUnitsAtBasket))
                 {
                     return (Discount / 100) * basket.GetBasketOrigPrice();
 
