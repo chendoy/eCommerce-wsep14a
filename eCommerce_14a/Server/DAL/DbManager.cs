@@ -549,31 +549,45 @@ namespace Server.DAL
         public void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId)
         {
             if (policyData.GetType() == typeof(ProductPurchasePolicy))
-            {
+            {  
                 int policyProdutId = ((ProductPurchasePolicy)policyData).ProductId;
                 int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
+                ProductPurchasePolicy policy = ((ProductPurchasePolicy)policyData);
                 //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                  mergetype: null,
                                                                  parentid: parentId,
-                                                                 preconditionid: dbPreCondition.Id,
+                                                                 preconditionnumber: preCondition,
                                                                  policyproductid: policyProdutId,
                                                                  buyerusername: null,
-                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy));
+                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy,
+                                                                 maxproductsunits: policy.MaxAmount,
+                                                                 minproductsunits: policy.MinAmount,
+                                                                 maxitemsatbasket: null,
+                                                                 minitemsatbasket: null,
+                                                                 minbasketprice: null,
+                                                                 maxbaskeptrice: null));
                 dbConn.SaveChanges();
             }
 
             else if (policyData.GetType() == typeof(BasketPurchasePolicy))
             {
+                BasketPurchasePolicy policy = ((BasketPurchasePolicy)policyData);
                 int preCondition = ((BasketPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.PurchasePreCondition);
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                  mergetype: null,
                                                                  parentid: parentId,
-                                                                 preconditionid: dbPreCondition.Id,
+                                                                 preconditionnumber: preCondition,
                                                                  policyproductid: null,
                                                                  buyerusername: null,
-                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy));
+                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                                 maxproductsunits:null,
+                                                                 minproductsunits:null,
+                                                                 maxitemsatbasket: policy.MaxItems,
+                                                                 minitemsatbasket: policy.MinItems,
+                                                                 minbasketprice:   policy.MinBasketPrice,
+                                                                 maxbaskeptrice:   policy.MaxBasketPrice));;
                 dbConn.SaveChanges();
             }
 
@@ -585,10 +599,16 @@ namespace Server.DAL
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                  mergetype: null,
                                                                  parentid: parentId,
-                                                                 preconditionid: dbPreCondition.Id,
+                                                                 preconditionnumber: preCondition,
                                                                  policyproductid: null,
                                                                  buyerusername: null,
-                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.SystemPurchasePolicy));
+                                                                 purchasepolictype: CommonStr.PurchasePolicyTypes.SystemPurchasePolicy,
+                                                                 maxproductsunits:null,
+                                                                 minproductsunits:null,
+                                                                 maxitemsatbasket:null,
+                                                                 minitemsatbasket:null,
+                                                                 minbasketprice:null,
+                                                                 maxbaskeptrice:null));
                 dbConn.SaveChanges();
             }
 
@@ -599,10 +619,16 @@ namespace Server.DAL
                 dbConn.PurchasePolicies.Add(new DbPurchasePolicy(storeId: storeId,
                                                                 mergetype: null,
                                                                 parentid: parentId,
-                                                                preconditionid: dbPreCondition.Id,
+                                                                preconditionnumber: preCondition,
                                                                 policyproductid: null,
                                                                 buyerusername: null,
-                                                                purchasepolictype: CommonStr.PurchasePolicyTypes.UserPurchasePolicy));
+                                                                purchasepolictype: CommonStr.PurchasePolicyTypes.UserPurchasePolicy,
+                                                                maxproductsunits:null,
+                                                                minproductsunits:null,
+                                                                maxitemsatbasket:null,
+                                                                minitemsatbasket:null,
+                                                                minbasketprice:null,
+                                                                maxbaskeptrice:null));
                 dbConn.SaveChanges();
             }
 
@@ -612,10 +638,16 @@ namespace Server.DAL
                 DbPurchasePolicy dbPurchase = new DbPurchasePolicy(storeId: storeId,
                                                                    mergetype: mergetype,
                                                                    parentid: parentId,
-                                                                   preconditionid: null,
+                                                                   preconditionnumber: null,
                                                                    policyproductid: null,
                                                                    buyerusername: null,
-                                                                   purchasepolictype: CommonStr.PurchasePolicyTypes.CompundPurchasePolicy);
+                                                                   purchasepolictype: CommonStr.PurchasePolicyTypes.CompundPurchasePolicy,
+                                                                   maxproductsunits:null,
+                                                                   minproductsunits:null,
+                                                                   maxitemsatbasket:null,
+                                                                   minitemsatbasket:null,
+                                                                   minbasketprice:null,
+                                                                   maxbaskeptrice:null);
                 dbConn.PurchasePolicies.Add(dbPurchase);
                 dbConn.SaveChanges();
 
@@ -737,14 +769,19 @@ namespace Server.DAL
                 int discountProdutId = ((ConditionalProductDiscount)discountPolicy).discountProdutId;
                 int preCondition_num = ((ConditionalProductDiscount)discountPolicy).PreCondition.PreConditionNumber;
                 double discountPrecentage = ((ConditionalProductDiscount)discountPolicy).Discount;
+                ConditionalProductDiscount policy = ((ConditionalProductDiscount)discountPolicy);
                 //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition_num, CommonStr.PreConditionType.DiscountPreCondition);
                 dbConn.DiscountPolicies.Add(new DbDiscountPolicy(storeid: storeId,
                                                                  mergetype: null,
                                                                  parentId: parentId,
-                                                                 preconditionid: dbPreCondition.Id,
+                                                                 preConditionnumber: preCondition_num,
                                                                  discountproductid: discountProdutId,
                                                                  discount: discountPrecentage,
-                                                                 discounttype: CommonStr.DiscountPolicyTypes.ConditionalProductDiscount));
+                                                                 discounttype: CommonStr.DiscountPolicyTypes.ConditionalProductDiscount,
+                                                                 minproductunits: policy.MinUnits,
+                                                                 minbaskeptice: null,
+                                                                 minproductprice: null,
+                                                                 minunitsatbasket: null));
                 dbConn.SaveChanges();
             }
 
@@ -752,29 +789,40 @@ namespace Server.DAL
             {
                 int preCondition = ((ConditionalBasketDiscount)discountPolicy).PreCondition.PreConditionNumber;
                 double discountPrecentage = ((ConditionalBasketDiscount)discountPolicy).Discount;
+                ConditionalBasketDiscount policy = ((ConditionalBasketDiscount)discountPolicy);
                 //DbPreCondition dbPreCondition = GetDbPreCondition(preCondition, CommonStr.PreConditionType.DiscountPreCondition);
                 DbDiscountPolicy dbDiscount = new DbDiscountPolicy(storeid: storeId,
                                                                  mergetype: null,
                                                                  parentId: parentId,
-                                                                 preconditionid: dbPreCondition.Id,
+                                                                 preConditionnumber: preCondition,
                                                                  discountproductid: null,
                                                                  discount: discountPrecentage,
-                                                                 discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount);
+                                                                 discounttype: CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount,
+                                                                 minproductunits: null,
+                                                                 minbaskeptice: policy.MinBasketPrice,
+                                                                 minproductprice: policy.MinProductPrice,
+                                                                 minunitsatbasket: policy.MinUnitsAtBasket);
                 dbConn.DiscountPolicies.Add(dbDiscount);
                 dbConn.SaveChanges();
             }
 
             else if (discountPolicy.GetType() == typeof(RevealdDiscount))
             {
+
+
                 int discountProdutId = ((RevealdDiscount)discountPolicy).discountProdutId;
                 double discountPrecentage = ((RevealdDiscount)discountPolicy).discount;
                 dbConn.DiscountPolicies.Add(new DbDiscountPolicy(storeid: storeId,
                                                                  mergetype: null,
                                                                  parentId: parentId,
-                                                                 preconditionid: null,
+                                                                 preConditionnumber: null,
                                                                  discountproductid: discountProdutId,
                                                                  discount: discountPrecentage,
-                                                                 discounttype: CommonStr.DiscountPolicyTypes.RevealdDiscount));
+                                                                 discounttype: CommonStr.DiscountPolicyTypes.RevealdDiscount,
+                                                                 minproductunits:null,
+                                                                 minbaskeptice:null,
+                                                                 minproductprice:null,
+                                                                 minunitsatbasket:null));
                 dbConn.SaveChanges();
             }
 
@@ -784,10 +832,14 @@ namespace Server.DAL
                 DbDiscountPolicy dbDiscount = new DbDiscountPolicy(storeid: storeId,
                                                               mergetype: mergetype,
                                                               parentId: parentId,
-                                                              preconditionid: null,
+                                                              preConditionnumber: null,
                                                               discountproductid: null,
                                                               discount: null,
-                                                              discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount);
+                                                              discounttype: CommonStr.DiscountPolicyTypes.CompundDiscount,
+                                                              minproductunits:null,
+                                                              minbaskeptice:null,
+                                                              minproductprice:null,
+                                                              minunitsatbasket:null);
                 dbConn.DiscountPolicies.Add(dbDiscount);
                 dbConn.SaveChanges();
                 int dbPolicyId = GetDbDiscountPolicyId(dbDiscount, storeId, null);
@@ -825,7 +877,7 @@ namespace Server.DAL
                                                  dbDiscountPolicy.MergeType == dbDiscount.MergeType &
                                                  dbDiscountPolicy.StoreId == storeId &
                                                  dbDiscountPolicy.ParentId == dbDiscount.ParentId &
-                                                 GetDbPreConditionNumberById((int)dbDiscountPolicy.PreConditionId) == precondition).FirstOrDefault();
+                                                 dbDiscountPolicy.PreConditionNumber == precondition).FirstOrDefault();
             }
 
             return dbFromDb.Id;
@@ -851,8 +903,7 @@ namespace Server.DAL
                                                                                 dbPurchasePolicy.PolicyProductId == dbPurchase.PolicyProductId &
                                                                                 dbPurchasePolicy.StoreId == storeId &
                                                                                 dbPurchasePolicy.ParentId == dbPurchase.ParentId &
-                                                                                GetDbPreConditionNumberById((int)dbPurchasePolicy.PreConditionId) == precondition
-                                                                                ).FirstOrDefault();
+                                                                                dbPurchasePolicy.PreConditionNumber == precondition).FirstOrDefault();
             }
          
             return dbFromDb.Id;

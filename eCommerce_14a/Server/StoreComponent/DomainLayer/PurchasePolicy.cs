@@ -163,10 +163,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class BasketPurchasePolicy : SimplePurchasePolicy
     {
-        int MaxItems { set; get; }
-        int MinItems { set; get; }
-        double MinBasketPrice { set; get; }
-        double MaxBasketPrice { set; get; }
+        public int MaxItems { set; get; }
+        public int MinItems { set; get; }
+        public double MinBasketPrice { set; get; }
+        public double MaxBasketPrice { set; get; }
 
         public BasketPurchasePolicy(PreCondition pre, int maxItems) : base(pre)
         {

@@ -202,10 +202,8 @@
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
     <Compile Include="Utils\DeliverySystem.cs" />
-    <Compile Include="Utils\DiscountPolicyParser.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
-    <Compile Include="Utils\PurchasePolicyParser.cs" />
     <Compile Include="Utils\RequestMaker.cs" />
     <Compile Include="Utils\StateInitiator.cs" />
   </ItemGroup>

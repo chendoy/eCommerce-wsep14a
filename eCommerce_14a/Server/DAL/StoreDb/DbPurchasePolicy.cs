@@ -22,7 +22,7 @@ namespace Server.DAL.StoreDb
 
         public int? ParentId { set; get; }
 
-        public int? PreConditionId { set; get; }
+        public int? PreConditionNumber { set; get; }
 
         [ForeignKey("Product")]
         public int? PolicyProductId { set; get; }
@@ -44,12 +44,12 @@ namespace Server.DAL.StoreDb
         public double? MaxBasketPrice { set; get; }
 
 
-        public DbPurchasePolicy(int storeId, int? mergetype, int? parentid, int? preconditionid, int? policyproductid, string buyerusername, int purchasepolictype, int? maxproductsunits, int ? minproductsunits, int? maxitemsatbasket, int? minitemsatbasket, double? minbasketprice, double? maxbaskeptrice)
+        public DbPurchasePolicy(int storeId, int? mergetype, int? parentid, int? preconditionnumber, int? policyproductid, string buyerusername, int purchasepolictype, int? maxproductsunits, int ? minproductsunits, int? maxitemsatbasket, int? minitemsatbasket, double? minbasketprice, double? maxbaskeptrice)
         {
             StoreId = storeId;
             MergeType = mergetype;
             ParentId = parentid;
-            PreConditionId = preconditionid;
+            PreConditionNumber = preconditionnumber;
             PolicyProductId = policyproductid;
             BuyerUserName = buyerusername;
             PurchasePolicyType = purchasepolictype;

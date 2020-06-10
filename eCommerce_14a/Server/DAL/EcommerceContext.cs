@@ -75,13 +75,13 @@ namespace Server.DAL
         {
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.MergeType).IsOptional();
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.ParentId).IsOptional();
-            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PreConditionId).IsOptional();
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PreConditionNumber).IsOptional();
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PolicyProductId).IsOptional();
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.BuyerUserName).IsOptional();
             
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.MergeType).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.ParentId).IsOptional();
-            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.PreConditionId).IsOptional();
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.PreConditionNumber).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.DiscountProductId).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.Discount).IsOptional();
 

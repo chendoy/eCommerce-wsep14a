@@ -75,7 +75,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             
             if(!store_params.ContainsKey(CommonStr.StoreParams.StoreDiscountPolicy) || store_params[CommonStr.StoreParams.StoreDiscountPolicy] == null)
             {
-                DiscountPolicy = new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
+                DiscountPolicy = new ConditionalBasketDiscount(0, new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount));
             }
             else
             {

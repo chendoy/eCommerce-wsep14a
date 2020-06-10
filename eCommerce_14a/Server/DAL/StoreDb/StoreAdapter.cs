@@ -71,7 +71,7 @@ namespace Server.DAL.StoreDb
 
         public DbDiscountPolicy ToDbRevealdDiscountPolicy(RevealdDiscount revealdDiscount,int? parentid, int storeid)
         {
-            return new DbDiscountPolicy(storeid, null, parentid, null, revealdDiscount.discountProdutId, revealdDiscount.discount, CommonStr.DiscountPolicyTypes.RevealdDiscount);
+            return new DbDiscountPolicy(storeid, null, parentid, null, revealdDiscount.discountProdutId, revealdDiscount.discount, CommonStr.DiscountPolicyTypes.RevealdDiscount, null, null, null, null);
         }
 
         public DbPurchaseBasket ToDbPurchseBasket(PurchaseBasket basket, int cartid)
@@ -83,7 +83,7 @@ namespace Server.DAL.StoreDb
         {
             if (dbDiscountPolicies.Count == 0)
             {
-               return new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount));
+               return new ConditionalBasketDiscount(0, new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount));
             }
             else
             {
@@ -130,7 +130,7 @@ namespace Server.DAL.StoreDb
                 }
                 else if(node.DiscountType == CommonStr.DiscountPolicyTypes.ConditionalProductDiscount)
                 {
-                    int? preCondition = node.PreConditionId;
+                    int? preCondition = node.PreConditionNumber;
                     if(preCondition != null)
                     {
                         DiscountPreCondition preConditionObj = new DiscountPreCondition((int)preCondition);
@@ -151,7 +151,7 @@ namespace Server.DAL.StoreDb
                 }
                 else if(node.DiscountType == CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount)
                 {
-                    int? preCondition = node.PreConditionId;
+                    int? preCondition = node.PreConditionNumber;
                     if (preCondition != null)
                     {
                         DiscountPreCondition preConditionObj = new DiscountPreCondition((int)preCondition);
@@ -278,7 +278,7 @@ namespace Server.DAL.StoreDb
             {
                 if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.ProductPurchasePolicy)
                 {
-                    int? preCondition = node.PreConditionId;
+                    int? preCondition = node.PreConditionNumber;
                     PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
                     if (preCondition != null)
                     {
@@ -302,7 +302,7 @@ namespace Server.DAL.StoreDb
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.BasketPurchasePolicy)
                 {
-                    int? preCondition = node.PreConditionId;
+                    int? preCondition = node.PreConditionNumber;
                     if (preCondition != null)
                     {
                         PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
@@ -339,7 +339,7 @@ namespace Server.DAL.StoreDb
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.SystemPurchasePolicy)
                 {
-                    int? preCondition = node.PreConditionId;
+                    int? preCondition = node.PreConditionNumber;
                     if (preCondition != null)
                     {
                         PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
@@ -359,7 +359,7 @@ namespace Server.DAL.StoreDb
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.UserPurchasePolicy)
                 {
-                    int? preCondition = node.PreConditionId;
+                    int? preCondition = node.PreConditionNumber;
                     if (preCondition != null)
                     {
                         PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
