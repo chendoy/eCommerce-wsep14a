@@ -25,7 +25,7 @@ namespace TestingSystem.UnitTests.InventroyTest
         [TestInitialize]
         public void TestInitialize()
         {
-            validProductList = getValidInventroyProdList(1);
+            validProductList = getValidInventroyProdList();
             validInventory = getInventory(validProductList);
             validProdParamsNewId = new Dictionary<string, object>();
             existingProductIdParams = new Dictionary<string, object>();
@@ -448,13 +448,13 @@ namespace TestingSystem.UnitTests.InventroyTest
             inventory.loadInventory(inv_dict);
             return inventory;
         }
-        public static List<Tuple<Product, int>> getValidInventroyProdList(int store_id)
+        public static List<Tuple<Product, int>> getValidInventroyProdList()
         {
             List<Tuple<Product, int>> lstProds = new List<Tuple<Product, int>>();
-            lstProds.Add(new Tuple<Product, int>(new Product(1, price: 10000, name:"Dell Xps 9560", rank:4, category: CommonStr.ProductCategoty.Computers), 100));
-            lstProds.Add(new Tuple<Product, int>(new Product(2, name:"Ninja Blender V3", price:450, rank:2, category: CommonStr.ProductCategoty.Kitchen), 200));
-            lstProds.Add(new Tuple<Product, int>(new Product(3, "MegaMix", price:1000, rank:5, category: CommonStr.ProductCategoty.Kitchen), 300));
-            lstProds.Add(new Tuple<Product, int>(new Product(4, "Mask Kn95", price:200, rank:3, category: CommonStr.ProductCategoty.Health), 0));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:1, sid:100, price: 10000, name:"Dell Xps 9560", rank:4, category: CommonStr.ProductCategoty.Computers), 100));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:2, sid:100, name:"Ninja Blender V3", price:450, rank:2, category: CommonStr.ProductCategoty.Kitchen), 200));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:3, sid:100, "MegaMix", price:1000, rank:5, category: CommonStr.ProductCategoty.Kitchen), 300));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:4, sid:100, "Mask Kn95", price:200, rank:3, category: CommonStr.ProductCategoty.Health), 0));
             return lstProds;
         }
         

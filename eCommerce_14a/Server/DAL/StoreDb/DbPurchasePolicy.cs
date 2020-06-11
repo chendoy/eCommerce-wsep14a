@@ -34,9 +34,9 @@ namespace Server.DAL.StoreDb
 
         public int PurchasePolicyType { set; get; }
 
-        public int? MaxProductUnits { set; get; }
+        public int? MaxProductIdUnits { set; get; }
         
-        public int? MinProductUnits { set; get; }
+        public int? MinProductIdUnits { set; get; }
         public int? MaxItemsAtBasket { set; get; }
         public int? MinItemsAtBasket { set; get; }
         public double? MinBasketPrice { set; get; }
@@ -44,7 +44,7 @@ namespace Server.DAL.StoreDb
         public double? MaxBasketPrice { set; get; }
 
 
-        public DbPurchasePolicy(int storeId, int? mergetype, int? parentid, int? preconditionnumber, int? policyproductid, string buyerusername, int purchasepolictype, int? maxproductsunits, int ? minproductsunits, int? maxitemsatbasket, int? minitemsatbasket, double? minbasketprice, double? maxbaskeptrice)
+        public DbPurchasePolicy(int storeId, int? mergetype, int? parentid, int? preconditionnumber, int? policyproductid, string buyerusername, int purchasepolictype, int? maxproductidunits, int ? minproductidsunits, int? maxitemsatbasket, int? minitemsatbasket, double? minbasketprice, double? maxbaskeptrice)
         {
             StoreId = storeId;
             MergeType = mergetype;
@@ -53,8 +53,8 @@ namespace Server.DAL.StoreDb
             PolicyProductId = policyproductid;
             BuyerUserName = buyerusername;
             PurchasePolicyType = purchasepolictype;
-            MaxProductUnits = maxproductsunits;
-            MinProductUnits = minproductsunits;
+            MaxProductIdUnits = maxproductidunits;
+            MinProductIdUnits = minproductidsunits;
             MaxItemsAtBasket = maxitemsatbasket;
             MinItemsAtBasket = minitemsatbasket;
             MinBasketPrice = minbasketprice;

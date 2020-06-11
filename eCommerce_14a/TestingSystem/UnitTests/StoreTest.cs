@@ -433,7 +433,7 @@ namespace TestingSystem.UnitTests.StoreTest
             return s;
         }
 
-        public static Store initValidStore(PolicyValidator validator=null)
+        public static Store initValidStore()
         {
             StoreManagment sm = StoreManagment.Instance;
             UserManager userManager = UserManager.Instance;
@@ -450,12 +450,8 @@ namespace TestingSystem.UnitTests.StoreTest
             userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
             userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
 
-            Store validStore = sm.getStore(1);
-            if(validator!=null)
-            {
-                validStore.PolicyValidator = validator;
-            }
-            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList(validStore.Id));
+            Store validStore = sm.getStore(100);
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
             return validStore;
         }
         

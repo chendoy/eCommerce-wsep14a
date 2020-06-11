@@ -284,11 +284,11 @@ namespace Server.DAL.StoreDb
                     {
                         if(preCondition == CommonStr.PurchasePreCondition.MaxUnitsOfProductType)
                         {
-                            return new ProductPurchasePolicy((int)node.MaxProductUnits, preConditionObj, (int)node.PolicyProductId);
+                            return new ProductPurchasePolicy((int)node.MaxProductIdUnits, preConditionObj, (int)node.PolicyProductId);
                         }
                         else if(preCondition == CommonStr.PurchasePreCondition.MinUnitsOfProductType)
                         {
-                            return new ProductPurchasePolicy(preConditionObj, (int)node.MinProductUnits, (int)node.PolicyProductId);
+                            return new ProductPurchasePolicy(preConditionObj, (int)node.MinProductIdUnits, (int)node.PolicyProductId);
                         }
                         else
                         {

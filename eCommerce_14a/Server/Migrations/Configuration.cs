@@ -158,93 +158,161 @@
         private void AddPurchasePolicies(EcommerceContext context)
         {
             var purchasepolicies = new List<DbPurchasePolicy>();
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
-            //                                          mergetype: CommonStr.PurchaseMergeTypes.AND,
-            //                                          parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                                          preconditionid: null, //compund policy, not have pre condition
-            //                                          policyproductid: null, //compund policy not have product based condition
-            //                                          buyerusername: null, //compund policy not based on username
-            //                                          purchasepolictype: CommonStr.PurchasePolicyTypes.CompundPurchasePolicy
-            //                                          )); // ID=1
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
-            //                                          mergetype: null, //not compund policy, there is no mergetype
-            //                                          parentid: 1,
-            //                                          preconditionid: 9, // max 10 product per basket
-            //                                          policyproductid: null,
-            //                                          buyerusername: null,
-            //                                          purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                                          )); // ID=2
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
-            //                                         mergetype: null, //not compund policy, there is no mergetype
-            //                                         parentid: 1, // if parent id is null then it's a root purchasepolicy
-            //                                         preconditionid: 10, // Single Of Product type (will be single of product id 1)
-            //                                         policyproductid: 1,
-            //                                         buyerusername: null,
-            //                                         purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy
-            //                                         )); // ID=3
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
+                                                      mergetype: CommonStr.PurchaseMergeTypes.AND,
+                                                      parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                      preconditionnumber: null, //compund policy, not have pre condition
+                                                      policyproductid: null, //compund policy not have product based condition
+                                                      buyerusername: null, //compund policy not based on username
+                                                      purchasepolictype: CommonStr.PurchasePolicyTypes.CompundPurchasePolicy,
+                                                      maxproductidunits:null,
+                                                      minproductidsunits:null,
+                                                      maxitemsatbasket:null,
+                                                      minitemsatbasket:null,
+                                                      minbasketprice:null,
+                                                      maxbaskeptrice:null)); // ID=1
+            //MAX 10 UNITS PER BASKET POLICY
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 1, 
+                                                      mergetype: null, //not compund policy, there is no mergetype
+                                                      parentid: 1,
+                                                      preconditionnumber: CommonStr.PurchasePreCondition.MaxItemsAtBasket, // max items at basket
+                                                      policyproductid: null,
+                                                      buyerusername: null,
+                                                      purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                      maxproductidunits:null,
+                                                      minproductidsunits:null,
+                                                      maxitemsatbasket:10,
+                                                      minitemsatbasket:null,
+                                                      minbasketprice:null,
+                                                      maxbaskeptrice:null
+                                                      )); // ID=2
+            
+            //MAX 3 units of product Id 3 in store 1 per Basket
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 1,
+                                                     mergetype: null, //not compund policy, there is no mergetype
+                                                     parentid: 1, // if parent id is null then it's a root purchasepolicy
+                                                     preconditionnumber: CommonStr.PurchasePreCondition.MaxUnitsOfProductType, 
+                                                     policyproductid: 1,
+                                                     buyerusername: null,
+                                                     purchasepolictype: CommonStr.PurchasePolicyTypes.ProductPurchasePolicy,
+                                                     maxproductidunits: 3,
+                                                     minproductidsunits:null,
+                                                     maxitemsatbasket:null,
+                                                     minitemsatbasket:null,
+                                                     minbasketprice:null,
+                                                     maxbaskeptrice:null
+                                                     )); // ID=3
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 2,
-            //                                  mergetype: null, //not compund policy, there is no mergetype
-            //                                  parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                                  preconditionid: 7, // default purchasePolicy allways true!
-            //                                  policyproductid: null,
-            //                                  buyerusername: null,
-            //                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                                  )); // ID=4
+            // REGULAR DEFAULT POLICY FOR REST OF THE SHOPS!
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 3,
-            //                               mergetype: null, //not compund policy, there is no mergetype
-            //                               parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                               preconditionid: 7, // default purchasePolicy allways true!
-            //                               policyproductid: null,
-            //                               buyerusername: null,
-            //                               purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                               )); // ID=5
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 2,
+                                                    mergetype: null, //not compund policy, there is no mergetype
+                                                    parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                    preconditionnumber:CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                    policyproductid: null,
+                                                    buyerusername: null,
+                                                    purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                    maxproductidunits: null,
+                                                    minproductidsunits: null,
+                                                    maxitemsatbasket: null,
+                                                    minitemsatbasket: null,
+                                                    minbasketprice: null,
+                                                    maxbaskeptrice: null)); // ID=4
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 4,
-            //                               mergetype: null, //not compund policy, there is no mergetype
-            //                               parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                               preconditionid: 7, // default purchasePolicy allways true!
-            //                               policyproductid: null,
-            //                               buyerusername: null,
-            //                               purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                               )); // ID=6
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 5,
-            //                               mergetype: null, //not compund policy, there is no mergetype
-            //                               parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                               preconditionid: 7, // default purchasePolicy allways true!
-            //                               policyproductid: null,
-            //                               buyerusername: null,
-            //                               purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                               )); // ID=7
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 3,
+                                                  mergetype: null, //not compund policy, there is no mergetype
+                                                  parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                  preconditionnumber: CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                  policyproductid: null,
+                                                  buyerusername: null,
+                                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                  maxproductidunits: null,
+                                                  minproductidsunits: null,
+                                                  maxitemsatbasket: null,
+                                                  minitemsatbasket: null,
+                                                  minbasketprice: null,
+                                                  maxbaskeptrice: null)); // ID=5
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 6,
-            //                               mergetype: null, //not compund policy, there is no mergetype
-            //                               parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                               preconditionid: 7, // default purchasePolicy allways true!
-            //                               policyproductid: null,
-            //                               buyerusername: null,
-            //                               purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                               )); // ID=8
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 7,
-            //                               mergetype: null, //not compund policy, there is no mergetype
-            //                               parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                               preconditionid: 7, // default purchasePolicy allways true!
-            //                               policyproductid: null,
-            //                               buyerusername: null,
-            //                               purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                               )); // ID=9
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 4,
+                                                  mergetype: null, //not compund policy, there is no mergetype
+                                                  parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                  preconditionnumber: CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                  policyproductid: null,
+                                                  buyerusername: null,
+                                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                  maxproductidunits: null,
+                                                  minproductidsunits: null,
+                                                  maxitemsatbasket: null,
+                                                  minitemsatbasket: null,
+                                                  minbasketprice: null,
+                                                  maxbaskeptrice: null)); // ID=6
 
-            //purchasepolicies.Add(new DbPurchasePolicy(storeId: 8,
-            //                               mergetype: null, //not compund policy, there is no mergetype
-            //                               parentid: null, // if parent id is null then it's a root purchasepolicy
-            //                               preconditionid: 7, // default purchasePolicy allways true!
-            //                               policyproductid: null,
-            //                               buyerusername: null,
-            //                               purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy
-            //                               )); // ID=10
+
+
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 5,
+                                                  mergetype: null, //not compund policy, there is no mergetype
+                                                  parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                  preconditionnumber: CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                  policyproductid: null,
+                                                  buyerusername: null,
+                                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                  maxproductidunits: null,
+                                                  minproductidsunits: null,
+                                                  maxitemsatbasket: null,
+                                                  minitemsatbasket: null,
+                                                  minbasketprice: null,
+                                                  maxbaskeptrice: null)); // ID=7
+
+
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 6,
+                                                  mergetype: null, //not compund policy, there is no mergetype
+                                                  parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                  preconditionnumber: CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                  policyproductid: null,
+                                                  buyerusername: null,
+                                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                  maxproductidunits: null,
+                                                  minproductidsunits: null,
+                                                  maxitemsatbasket: null,
+                                                  minitemsatbasket: null,
+                                                  minbasketprice: null,
+                                                  maxbaskeptrice: null)); // ID=8
+
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 7,
+                                                  mergetype: null, //not compund policy, there is no mergetype
+                                                  parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                  preconditionnumber: CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                  policyproductid: null,
+                                                  buyerusername: null,
+                                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                  maxproductidunits: null,
+                                                  minproductidsunits: null,
+                                                  maxitemsatbasket: null,
+                                                  minitemsatbasket: null,
+                                                  minbasketprice: null,
+                                                  maxbaskeptrice: null)); // ID=9
+
+
+
+            purchasepolicies.Add(new DbPurchasePolicy(storeId: 8,
+                                                  mergetype: null, //not compund policy, there is no mergetype
+                                                  parentid: null, // if parent id is null then it's a root purchasepolicy
+                                                  preconditionnumber: CommonStr.PurchasePreCondition.allwaysTrue, // default purchasePolicy allways true!
+                                                  policyproductid: null,
+                                                  buyerusername: null,
+                                                  purchasepolictype: CommonStr.PurchasePolicyTypes.BasketPurchasePolicy,
+                                                  maxproductidunits: null,
+                                                  minproductidsunits: null,
+                                                  maxitemsatbasket: null,
+                                                  minitemsatbasket: null,
+                                                  minbasketprice: null,
+                                                  maxbaskeptrice: null)); // ID=10
+
 
             purchasepolicies.ForEach(pp => context.PurchasePolicies.Add(pp));
             context.SaveChanges();

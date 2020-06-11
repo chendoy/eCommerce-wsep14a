@@ -13,6 +13,8 @@ using Server.DAL.UserDb;
 using eCommerce_14a.Utils;
 using Server.DAL.CommunicationDb;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace TestingSystem.DbManger_Tests
 {

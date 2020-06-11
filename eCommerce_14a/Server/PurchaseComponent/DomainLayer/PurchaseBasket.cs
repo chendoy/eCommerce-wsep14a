@@ -103,7 +103,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 products.Add(productId, wantedAmount);
                 // DB Insert Product At Basket
-                if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+                if (UserManager.Instance.GetAtiveUser(this.User) !=null && !UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                 {
                     DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
                 }
@@ -123,7 +123,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             Price = Store.GetBasketPriceWithDiscount(this);
 
             // DB Updating basket Price
-            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+            if (UserManager.Instance.GetAtiveUser(this.User)!= null && !UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
                 DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             }
@@ -140,7 +140,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             Price = Store.GetBasketPriceWithDiscount(this);
             // DB update purchase BasketPrice
-            if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
+            if (UserManager.Instance.GetAtiveUser(User)!= null && !UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
             }
