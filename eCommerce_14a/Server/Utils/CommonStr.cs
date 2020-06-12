@@ -64,10 +64,10 @@ namespace eCommerce_14a.Utils
             public static int pre_min = 0;
             public static int pre_max = 4;
             public static int NoDiscount = 0;
-            public static int BasketProductPriceAboveX = 1;
-            public static int NumUnitsOfProductAboveX = 2;
-            public static int BasketPriceAboveX = 3;
-            public static int NumUnitsInBasketAboveX = 4;
+            public static int BasketProductPriceAboveX = 1; // parameters: product_price, pre_condition
+            public static int NumUnitsOfProductAboveX = 2; // parameters: product_id, MinUnits, pre_condition 
+            public static int BasketPriceAboveX = 3; // parameters: Price, pre_condition
+            public static int NumUnitsInBasketAboveX = 4; // parameters: Min_NumUnits, pre_condition
         }
 
         public static class PoliciesErrors
@@ -83,14 +83,14 @@ namespace eCommerce_14a.Utils
             public static int pre_min = 0;
             public static int pre_max = 8;
             public static int allwaysTrue = 0;
-            public static int MaxUnitsOfProductType = 1;
-            public static int MinUnitsOfProductType = 2;
-            public static int MaxItemsAtBasket = 3;
-            public static int MinItemsAtBasket = 4;
-            public static int StoreMustBeActive = 5;
-            public static int OwnerCantBuy = 6;
-            public static int MinBasketPrice = 7;
-            public static int MaxBasketPrice = 8;
+            public static int MaxUnitsOfProductType = 1; // parameters: product_id, max_units, pre_condition
+            public static int MinUnitsOfProductType = 2; // parameters: porduct_id, min_units, pre_condition
+            public static int MaxItemsAtBasket = 3; // parameters: max_itesm_number, pre_condition
+            public static int MinItemsAtBasket = 4;// parameters: min_items_number, pre_condition
+            public static int StoreMustBeActive = 5; // parameters: store_id, precondition 
+            public static int OwnerCantBuy = 6; //parameters: precondition, pre_condition
+            public static int MinBasketPrice = 7; // parameter: min_price, pre_condition
+            public static int MaxBasketPrice = 8; // parameters: max_price, pre_condition
 
         }
         public static class StoreParams

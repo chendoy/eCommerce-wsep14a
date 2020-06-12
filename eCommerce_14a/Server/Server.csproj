@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="DAL\configFile.json" />
+    <None Include="serverConfig.json" />
     <None Include="packages.config" />
     <None Include="Properties\launchSettings.json" />
   </ItemGroup>
