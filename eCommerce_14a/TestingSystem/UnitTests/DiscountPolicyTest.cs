@@ -26,10 +26,10 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
         {
             preConditionsDict = new Dictionary<int, PreCondition>();
             preConditionsDict.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.BasketPriceAboveX));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.BasketProductPriceAboveX));
-            preConditionsDict.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX, new DiscountPreCondition(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX, new DiscountPreCondition(CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX));
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX, new DiscountPreCondition(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX));
             preConditionsDict.Add(CommonStr.DiscountPreConditions.NoDiscount, new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount));
-
+            preConditionsDict.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX, new DiscountPreCondition(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX));
             store = StoreTest.StoreTest.initValidStore();
             cart = new Cart("liav");
         }
@@ -45,109 +45,90 @@ namespace TestingSystem.UnitTests.DiscountPolicyTest
             Assert.AreEqual(expected, discount);
         }
 
-        //[TestMethod]
-        //public void TestConditionalDiscount_BasketPreConditionValid()
-        //{
+        [TestMethod]
+        public void TestConditionalDiscount_MinBasketPrice()
+        {
 
-        //    cart.AddProduct(store, 1, 1, false);
-        //    cart.AddProduct(store, 2, 2, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    DiscountPolicy discountplc = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.BasketProductPriceAboveX], 20);
-        //    double discount = discountplc.CalcDiscount(basket);
-        //    double expected = 2180;
-        //    Assert.AreEqual(expected, discount);
-        //}
+            cart.AddProduct(store, 1, 1, false);
+            cart.AddProduct(store, 2, 2, false);
+            PurchaseBasket basket = cart.GetBasket(store);
+            DiscountPolicy discountplc = new ConditionalBasketDiscount(preCondition:preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX],discount:10,minBasketPrice: 2100);
+            double discount = discountplc.CalcDiscount(basket);
+            double expected = 1090;
+            Assert.AreEqual(expected, discount);
+        }
 
-        //[TestMethod]
-        //public void TestConditionalDiscount_BasketPreConditionInValid()
-        //{
-        //    cart.AddProduct(store, 2, 2, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    DiscountPolicy discountplc = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
-        //    double discount = discountplc.CalcDiscount(basket, validator);
-        //    double expected = 0;
-        //    Assert.AreEqual(expected, discount);
-        //}
-        //[TestMethod]
-        //public void TestConditionalDiscount_ProductPreConditionValid()
-        //{
-        //    cart.AddProduct(store, 2, 5, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    DiscountPolicy discountplc = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above2Units], 30);
-        //    double discount = discountplc.CalcDiscount(basket, validator);
-        //    double expected = 675;
-        //    Assert.AreEqual(expected, discount);
-        //}
-        //[TestMethod]
-        //public void TestConditionalDiscount_ProductPreConditionInValid()
-        //{
-        //    cart.AddProduct(store, 2, 2, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    DiscountPolicy discountplc = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above2Units], 30);
-        //    double discount = discountplc.CalcDiscount(basket, validator);
-        //    double expected = 0;
-        //    Assert.AreEqual(expected, discount);
-        //}
+        [TestMethod]
+        public void TestConditionalDiscount_MinItemsAtBasket()
+        {
+            cart.AddProduct(store, 1, 1, false);
+            cart.AddProduct(store, 2, 2, false);
+            PurchaseBasket basket = cart.GetBasket(store);
+            DiscountPolicy discountplc = new ConditionalBasketDiscount(preCondition: preConditionsDict[CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX], discount: 20, minUnitsAtBasket: 2);
+            double discount = discountplc.CalcDiscount(basket);
+            double expected = 1090 * 2;
+            Assert.AreEqual(expected, discount);
+        }
 
-        //[TestMethod]
-        //public void TestCompundDiscountPolicy1_maxBasketDiscount_XOR()
-        //{
-        //    cart.AddProduct(store, 2, 2, false);
-        //    cart.AddProduct(store, 3, 1, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    35 % prectentge on each product(pid) if bought more than 1 unit XOR 20 % on whole basket if price > 1000 but not both! should return maxPrice
-        //    DiscountPolicy contitionalAboveSingleUnit = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 35);
-        //    DiscountPolicy conditionalWholeBasket = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
-        //    List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
-        //    policies_lst.Add(contitionalAboveSingleUnit);
-        //    policies_lst.Add(conditionalWholeBasket);
-        //    DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.XOR, policies_lst);
-        //    double discount = compundDiscount.CalcDiscount(basket, validator);
-        //    double expected = 380;
-        //    Assert.AreEqual(expected, discount);
-        //}
+        [TestMethod]
+        public void TestConditionalDiscount_BasketPrdouctPriceAboveX()
+        {
+            cart.AddProduct(store, 1, 2, false);
+            cart.AddProduct(store, 2, 2, false);
+            PurchaseBasket basket = cart.GetBasket(store);
+            DiscountPolicy discountplc = new ConditionalBasketDiscount(preCondition: preConditionsDict[CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX], discount: 10, minProductPrice: 10000);
+            double discount = discountplc.CalcDiscount(basket);
+            double expected = 2000;
+            Assert.AreEqual(expected, discount);
+        }
 
-        //[TestMethod]
-        //public void TestCompundDiscountPolicy2_maxProductDiscount_XOR()
-        //{
-        //    cart.AddProduct(store, 2, 7, false);
-        //    cart.AddProduct(store, 3, 1, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    35 % prectentge on each product(pid) if bought more than 1 unit XOR 20 % on whole basket if price > 1000 but not both! should return maxPrice
-        //    DiscountPolicy contitionalAboveSingleUnit = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 35);
-        //    DiscountPolicy conditionalWholeBasket = new ConditionalBasketDiscount(preConditionsDict[CommonStr.DiscountPreConditions.basketPriceAbove1000], 20);
-        //    List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
-        //    policies_lst.Add(contitionalAboveSingleUnit);
-        //    policies_lst.Add(conditionalWholeBasket);
-        //    DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.XOR, policies_lst);
-        //    double discount = compundDiscount.CalcDiscount(basket, validator);
-        //    double expected = 1102.5;
-        //    Assert.AreEqual(expected, discount);
-        //}
 
-        //[TestMethod]
-        //public void TestCompundDiscountPolicy2_maxProductDiscount_AND()
-        //{
-        //    cart.AddProduct(store, 2, 3, false);
-        //    cart.AddProduct(store, 3, 2, false);
-        //    PurchaseBasket basket = cart.GetBasket(store);
-        //    35 % prectentge on each product(pid) if bought more than 1 unit XOR 20 % on whole basket if price > 1000 but not both! should return maxPrice
-        //    DiscountPolicy contitionalAboveTwoUnitp2 = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.Above2Units], 30);
-        //    DiscountPolicy contitionalAboveSingleUnitp2 = new ConditionalProductDiscount(2, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 20);
-        //    DiscountPolicy contitionalAboveSingleUnitp3 = new ConditionalProductDiscount(3, preConditionsDict[CommonStr.DiscountPreConditions.BasketPriceAboveX], 20);
+        [TestMethod]
+        public void TestConditionalDiscoun_NoDiscount()
+        {
+            cart.AddProduct(store, 1, 2, false);
+            cart.AddProduct(store, 2, 2, false);
+            PurchaseBasket basket = cart.GetBasket(store);
+            DiscountPolicy discountplc = new ConditionalBasketDiscount(preCondition: preConditionsDict[CommonStr.DiscountPreConditions.NoDiscount], discount: 0);
+            double discount = discountplc.CalcDiscount(basket);
+            double expected = 0;
+            Assert.AreEqual(expected, discount);
+        }
 
-        //    List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
-        //    policies_lst.Add(contitionalAboveSingleUnitp2);
-        //    policies_lst.Add(contitionalAboveTwoUnitp2);
-        //    DiscountPolicy compund_above_1_xor_2 = new CompundDiscount(CommonStr.DiscountMergeTypes.XOR, policies_lst);
-        //    List<DiscountPolicy> policies_lst_2 = new List<DiscountPolicy>();
-        //    policies_lst_2.Add(compund_above_1_xor_2);
-        //    policies_lst_2.Add(contitionalAboveSingleUnitp3);
-        //    DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.OR, policies_lst_2);
-        //    double discount = compundDiscount.CalcDiscount(basket, validator);
-        //    double expected = 805;
-        //    Assert.AreEqual(expected, discount);
-        //}
+        [TestMethod]
+        public void TestConditialDiscount_MinUnitsOfProductX()
+        {
+            cart.AddProduct(store, 1, 6, false);
+            cart.AddProduct(store, 2, 2, false);
+            PurchaseBasket basket = cart.GetBasket(store);
+            DiscountPolicy discountplc = new ConditionalProductDiscount(preCondition: preConditionsDict[CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX], discount: 10, minUnits:5, productId:1);
+            double discount = discountplc.CalcDiscount(basket);
+            double expected = 6000;
+            Assert.AreEqual(expected, discount);
+
+        }
+
+        [TestMethod]
+        public void TestCompundDiscountPolicy_XOR()
+        {
+            cart.AddProduct(store, 1, 1, false);
+            cart.AddProduct(store, 2, 7, false);
+            PurchaseBasket basket = cart.GetBasket(store);
+           
+            DiscountPolicy minItemsBasketPolicy = new ConditionalBasketDiscount(preCondition: preConditionsDict[CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX], discount: 20, minUnitsAtBasket: 7);
+            DiscountPolicy MinUnitsProductPolicy = new ConditionalProductDiscount(preCondition: preConditionsDict[CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX], discount: 30, minUnits:1, productId:1);
+
+            List<DiscountPolicy> policies_lst = new List<DiscountPolicy>();
+            policies_lst.Add(minItemsBasketPolicy);
+            policies_lst.Add(MinUnitsProductPolicy);
+            DiscountPolicy compundDiscount = new CompundDiscount(CommonStr.DiscountMergeTypes.XOR, policies_lst);
+            double discount = compundDiscount.CalcDiscount(basket);
+            double expected = 3000;
+            Assert.AreEqual(expected, discount);
+        }
+
+      
+
 
     }
 

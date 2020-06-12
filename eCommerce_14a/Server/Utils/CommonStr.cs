@@ -64,10 +64,10 @@ namespace eCommerce_14a.Utils
             public static int pre_min = 0;
             public static int pre_max = 4;
             public static int NoDiscount = 0;
-            public static int BasketProductPriceAboveX = 1; // parameters: product_price, pre_condition
-            public static int NumUnitsOfProductAboveX = 2; // parameters: product_id, MinUnits, pre_condition 
+            public static int BasketProductPriceAboveEqX = 1; // parameters: product_price, pre_condition
+            public static int NumUnitsOfProductAboveEqX = 2; // parameters: product_id, MinUnits, pre_condition 
             public static int BasketPriceAboveX = 3; // parameters: Price, pre_condition
-            public static int NumUnitsInBasketAboveX = 4; // parameters: Min_NumUnits, pre_condition
+            public static int NumUnitsInBasketAboveEqX = 4; // parameters: Min_NumUnits, pre_condition
         }
 
         public static class PoliciesErrors

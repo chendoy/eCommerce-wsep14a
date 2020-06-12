@@ -137,7 +137,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public override double CalcDiscount(PurchaseBasket basket)
         {
-            if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX)
+            if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX)
             {
                 double reduction = 0;
                 if(PreCondition.IsFufillledMinProductUnitDiscount(basket, discountProdutId, MinUnits))
@@ -197,14 +197,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         public override double CalcDiscount(PurchaseBasket basket)
         {
 
-            if (PreCondition.preCondNumber == CommonStr.DiscountPreConditions.BasketProductPriceAboveX)
+            if (PreCondition.preCondNumber == CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX)
             {
                 double reduction = 0;
                 foreach (int pid in basket.Products.Keys)
                 {
-                    if (PreCondition.IsFulfilledProductPriceAboveXDiscount(basket, pid, MinProductPrice))
+                    if (PreCondition.IsFulfilledProductPriceAboveEqXDiscount(basket, pid, MinProductPrice))
                     {
-                        reduction += (Discount / 100) * basket.Store.GetProductDetails(pid).Item1.Price;
+                        int amount = basket.products[pid];
+                        reduction += (Discount / 100) * basket.Store.GetProductDetails(pid).Item1.Price * amount;
                     }
                 }
                 return reduction;
@@ -224,7 +225,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                     return 0;
                 }
             }
-            else if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX)
+            else if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX)
             {
                 if(PreCondition.IsFulfilledMinUnitsAtBasketDiscount(basket, MinUnitsAtBasket))
                 {

@@ -14,7 +14,7 @@ namespace Server.StoreComponent.DomainLayer
         }
 
 
-        public virtual bool IsFulfilledProductPriceAboveXDiscount(PurchaseBasket basket, int productId, double minPrice)
+        public virtual bool IsFulfilledProductPriceAboveEqXDiscount(PurchaseBasket basket, int productId, double minPrice)
         {
             return false;
         }
@@ -96,11 +96,11 @@ namespace Server.StoreComponent.DomainLayer
         }
            
         override
-        public bool IsFulfilledProductPriceAboveXDiscount(PurchaseBasket basket, int productId, double minPrice)
+        public bool IsFulfilledProductPriceAboveEqXDiscount(PurchaseBasket basket, int productId, double minPrice)
         {
             if (basket.Store.Inventory.InvProducts.ContainsKey(productId))
             {
-                return basket.Store.Inventory.InvProducts[productId].Item1.Price > minPrice;
+                return basket.Store.Inventory.InvProducts[productId].Item1.Price >= minPrice;
             }
             return false;
         }
@@ -118,7 +118,7 @@ namespace Server.StoreComponent.DomainLayer
         override
         public  bool IsFulfilledMinBasketPriceDiscount(PurchaseBasket basket, double minPrice)
         {
-            return basket.GetBasketOrigPrice() > minPrice;
+            return basket.GetBasketOrigPrice() >= minPrice;
         }
 
         override
@@ -129,7 +129,7 @@ namespace Server.StoreComponent.DomainLayer
             {
                 count += amount;
             }
-            return count > minUnits;
+            return count >= minUnits;
         }
 
     }

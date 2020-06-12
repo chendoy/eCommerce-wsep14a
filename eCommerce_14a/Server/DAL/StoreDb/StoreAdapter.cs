@@ -134,7 +134,7 @@ namespace Server.DAL.StoreDb
                     if(preCondition != null)
                     {
                         DiscountPreCondition preConditionObj = new DiscountPreCondition((int)preCondition);
-                        if(preCondition == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX)
+                        if(preCondition == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX)
                         {
                             return new ConditionalProductDiscount(preConditionObj, (double)node.Discount, (int)node.MinProductUnits, (int)node.DiscountProductId);
                         }
@@ -159,11 +159,11 @@ namespace Server.DAL.StoreDb
                         {
                             return new ConditionalBasketDiscount(preConditionObj, (double)node.Discount, (double)node.MinBasketPrice);
                         }
-                        else if(preCondition == CommonStr.DiscountPreConditions.BasketProductPriceAboveX)
+                        else if(preCondition == CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX)
                         {
                             return new ConditionalBasketDiscount((double)node.MinProductPrice, preConditionObj);
                         }
-                        else if(preCondition == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX)
+                        else if(preCondition == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX)
                         {
                             return new ConditionalBasketDiscount(preConditionObj, (double)node.Discount, (int)node.MinUnitsAtBasket);
                         }

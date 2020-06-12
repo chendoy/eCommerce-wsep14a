@@ -76,9 +76,9 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> avilableDiscount = new Dictionary<int, string>();
             avilableDiscount.Add(CommonStr.DiscountPreConditions.NoDiscount, "no discount at all");
             avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, "Basket Price Above 'X'");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX, "Num Of Items At Basket Above 'X'");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveX, "Discount 'X' On All Products Their Price Above 'Y'");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX, "Discount 'X' On Product 'Y' If Num Units Of Product 'Y' Bigger Than 'Z'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX, "Num Of Items At Basket Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX, "Discount 'X' On All Products Their Price Above 'Y'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX, "Discount 'X' On Product 'Y' If Num Units Of Product 'Y' Bigger Than 'Z'");
             return avilableDiscount;
         }
 

@@ -435,24 +435,24 @@ namespace TestingSystem.UnitTests.StoreTest
 
         public static Store initValidStore()
         {
-            //StoreManagment sm = StoreManagment.Instance;
-            //UserManager userManager = UserManager.Instance;
-            //userManager.Register("shimon", "123");
-            //userManager.Login("shimon", "123", false);
-            //sm.createStore("shimon","Store");
-            //userManager.Register("yosi", "123");
-            //userManager.Login("yosi", "123");
-            //userManager.Register("shmuel", "123");
-            //userManager.Login("shmuel", "123");
-            //AppoitmentManager appmgr = AppoitmentManager.Instance;
-            //appmgr.AppointStoreManager("shimon", "shmuel", 1);
-            //appmgr.AppointStoreManager("shimon", "yosi", 1);
-            //userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
-            //userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
+            StoreManagment sm = StoreManagment.Instance;
+            UserManager userManager = UserManager.Instance;
+            userManager.Register("shimon", "123");
+            userManager.Login("shimon", "123", false);
+            sm.createStore("shimon", "Store");
+            userManager.Register("yosi", "123");
+            userManager.Login("yosi", "123");
+            userManager.Register("shmuel", "123");
+            userManager.Login("shmuel", "123");
+            AppoitmentManager appmgr = AppoitmentManager.Instance;
+            appmgr.AppointStoreManager("shimon", "shmuel", 1);
+            appmgr.AppointStoreManager("shimon", "yosi", 1);
+            userManager.GetAtiveUser("shmuel").setPermmisions(1, new int[] { 0, 0, 1 });
+            userManager.GetAtiveUser("yosi").setPermmisions(1, new int[] { 1, 1, 0 });
 
-            //Store validStore = sm.getStore(1);
-            //validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList(validStore.Id));
-            //return validStore;
+            Store validStore = sm.getStore(100);
+            validStore.Inventory = InventoryTest.getInventory(InventoryTest.getValidInventroyProdList());
+            return validStore;
         }
         
     }
