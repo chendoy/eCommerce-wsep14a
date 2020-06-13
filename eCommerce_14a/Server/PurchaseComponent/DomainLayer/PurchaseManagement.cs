@@ -176,7 +176,8 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             }
             if (!carts.TryGetValue(userName, out Cart cart))
             {
-                carts.Add(userName, CreateNewCart(userName));
+                cart = CreateNewCart(userName);
+                carts.Add(userName, cart);
             }
 
             return new Tuple<Cart, string>(cart, "");

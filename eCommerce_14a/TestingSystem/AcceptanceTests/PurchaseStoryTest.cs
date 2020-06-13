@@ -20,7 +20,7 @@ namespace TestingSystem.AcceptanceTests
         string usernameOwner = UserGenerator.GetValidUsernames()[0];
         string passwordOwner = UserGenerator.GetPasswords()[0];
         int storeID;
-        int productID = 3;
+        int productID = 1;
         int amount = 2;
         string productDetails = "Details";
         double productPrice = 3.02;

@@ -18,7 +18,7 @@ namespace TestingSystem.AcceptanceTests
         string username3 = UserGenerator.GetValidUsernames()[2];
         string password3 = UserGenerator.GetPasswords()[2];
         int storeID;
-        int[] permissions = new int[] { 0, 1, 0, 1 };
+        int[] permissions = new int[] { 0, 1, 0, 1 , 0};
 
         [TestInitialize]
         public void SetUp()

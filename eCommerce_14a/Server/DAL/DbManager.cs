@@ -62,7 +62,18 @@ namespace Server.DAL
         {
             if(testingmode)
             {
-                return 100;
+                //List<Store> stores = StoreManagment.Instance.GetAllStores();
+                //List<int> pids = new List<int>();
+                //foreach(Store store in stores)
+                //{
+                //    pids.AddRange(store.Inventory.InvProducts.Keys.ToList());
+                //}
+                //if (pids.Count > 0)
+                //{
+                //    int max = pids.Max(id => id);
+                //    return max + 1;
+                //}
+                return 1;
             }
             if (dbConn.Products.Any())
             {
@@ -504,19 +515,13 @@ namespace Server.DAL
 
         public List<DbPurchaseBasket> GetCartBaskets(int cartid)
         {
-            if (testingmode)
-            {
-                return null;
-            }
+  
             return dbConn.Baskets.Where(b => b.CartId == cartid).ToList();
         }
 
         public List<ProductAtBasket> GetAllProductAtBasket(int basketid)
         {
-            if (testingmode)
-            {
-                return null;
-            }
+           
             return dbConn.ProductsAtBaskets.Where(pab => pab.BasketId == basketid).ToList();
         }
 
@@ -871,10 +876,6 @@ namespace Server.DAL
 
         public DbCart GetDbCart(int id)
         {
-            if (testingmode)
-            {
-                return null;
-            }
             return dbConn.Carts.Where(c => c.Id == id).FirstOrDefault();
         }
 
@@ -1006,7 +1007,19 @@ namespace Server.DAL
         {
             if (testingmode)
             {
-                return 100;
+                List<int> storesids = StoreManagment.Instance.GetAllStores().Select(store=> store.Id).Distinct().ToList();
+                if(storesids.Count > 0)
+                {
+                    int max = storesids.Max(id => id);
+                    if(max > 0)
+                    {
+                        return max + 1;
+                    }
+                }
+                else
+                {
+                    return 100;
+                }
             }
             if (!dbConn.Stores.Any())
             {
@@ -1267,10 +1280,7 @@ namespace Server.DAL
 
         public List<Store> LoadAllStores()
         {
-            if (testingmode)
-            {
-                return null;
-            }
+          
             List<int> storesIds = dbConn.Stores.Select(store => store.Id).Distinct().ToList();
             List<Store> stores = new List<Store>();
             foreach(int storeId in storesIds)
@@ -1282,10 +1292,7 @@ namespace Server.DAL
 
         public List<Purchase> LoadPurchases()
         {
-            if (testingmode)
-            {
-                return null;
-            }
+         
             List<Purchase> purchases = new List<Purchase>();
             foreach (DbPurchase dbPurchase in dbConn.Purchases)
             {
@@ -1296,10 +1303,7 @@ namespace Server.DAL
 
         public List<Cart> LoadNotPurchasedCarts()
         {
-            if (testingmode)
-            {
-                return null;
-            }
+ 
             List<Cart> carts = new List<Cart>();
             List<DbCart> dbcarts = dbConn.Carts.Where(c => c.IsPurchased == false).ToList();
             foreach(DbCart dbCart in dbcarts)
@@ -1314,10 +1318,7 @@ namespace Server.DAL
         //GET Store Component Functions
         public Store LoadStore(int StoreId)
         {
-            if (testingmode)
-            {
-                return null;
-            }
+ 
             DbStore dbstore = dbConn.Stores.Where(store => store.Id == StoreId).FirstOrDefault();
             if(dbstore == null)
             {
@@ -1379,10 +1380,7 @@ namespace Server.DAL
 
         private List<string> LoadStoreOwners(int StoreId)
         {
-            if (testingmode)
-            {
-                return null;
-            }
+ 
             List<StoreOwner> owners = dbConn.StoreOwners.Where(owner => owner.StoreId == StoreId).ToList();
             if(owners.Count == 0)
             {
@@ -1401,10 +1399,7 @@ namespace Server.DAL
 
         private List<string> LoadStoreManagers(int StoreId)
         {
-            if (testingmode)
-            {
-                return null;
-            }
+         
             List<StoreManager> managers = dbConn.StoreManagers.Where(manager => manager.StoreId == StoreId).ToList();
             if(managers.Count == 0)
             {

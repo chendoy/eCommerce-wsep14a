@@ -52,9 +52,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             string pName = (string)productParams[CommonStr.ProductParams.ProductName];
             string pCategory = (string)productParams[CommonStr.ProductParams.ProductCategory];
             string imgUrl = (string)productParams[CommonStr.ProductParams.ProductImgUrl];
-
+            Product product;
             // DB Addition
-            Product product = new Product(sid:storeId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
+            if(productParams.ContainsKey(CommonStr.ProductParams.ProductId))
+            {
+                product = new Product(pid:(int)productParams[CommonStr.ProductParams.ProductId] ,sid:storeId, details: pDetails, price:pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
+
+            }
+            else
+            {
+                product = new Product(sid: storeId, details: pDetails, price: pPrice, name: pName, category: pCategory, imgUrl: imgUrl);
+
+            }
+
             DbManager.Instance.InsertProduct(StoreAdapter.Instance.ToDbProduct(product));
             DbManager.Instance.InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(product.Id, amount, storeId));
             InvProducts.Add(product.Id, new Tuple<Product, int>(product, amount));

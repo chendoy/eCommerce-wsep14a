@@ -1,4 +1,7 @@
-﻿    using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using eCommerce_14a.PurchaseComponent.DomainLayer;
+using eCommerce_14a.StoreComponent.DomainLayer;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Server.DAL.StoreDb;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +20,8 @@ namespace TestingSystem.AcceptanceTests
         string address = "han";
         int storeID;
 
-        [TestInitialize]
+
+       [TestInitialize]
         public void SetUp()
         {
             Register(username, password);
@@ -38,7 +42,7 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ViewValidHistoryTest() 
         {
-            AddProductToBasket(username, storeID, 3, 1);
+            AddProductToBasket(username, storeID, 1, 1);
             PerformPurchase(username, paymentDetails, address);
             Assert.AreNotEqual(0, ViewPurchaseUserHistory(username).Item1.Count);
         }

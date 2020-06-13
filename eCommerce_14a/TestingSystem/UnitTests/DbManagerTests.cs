@@ -44,7 +44,6 @@ namespace TestingSystem.DbManger_Tests
         {
             StoreManagment.Instance.LoadFromDb();
             StoreManagment b = StoreManagment.Instance;
-            int a = 1;
         }
 
         [TestMethod]
@@ -156,8 +155,6 @@ namespace TestingSystem.DbManger_Tests
         {
             StoreManagment.Instance.LoadFromDb();
             PurchaseManagement.Instance.LoadFromDb();
-            int a = 1;
-
         }
 
 

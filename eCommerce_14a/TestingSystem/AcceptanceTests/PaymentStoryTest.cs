@@ -21,7 +21,7 @@ namespace TestingSystem.AcceptanceTests
         double productPrice = 3.02;
         string productName = "Name";
         string productCategory = "Category";
-        int productID = 3;
+        int productID = 1;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
 

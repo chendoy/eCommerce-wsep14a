@@ -16,7 +16,7 @@ namespace TestingSystem.AcceptanceTests
         int storeID;
         string paymentDetails = "33225554";
         string address = "hanesher3";
-        int productID = 3;
+        int productID = 1;
         int amount = 1;
         string productDetails = "Details";
         double productPrice = 3.02;

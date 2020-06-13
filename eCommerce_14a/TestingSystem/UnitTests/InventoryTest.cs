@@ -95,16 +95,7 @@ namespace TestingSystem.UnitTests.InventroyTest
             Assert.AreEqual(CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg, isAppended.Item2);
         }
 
-        [TestMethod]
-        /// <test cref ="eCommerce_14a.Inventory.appendProduct(Dictionary{string, object}, int)
-        public void TestAppendProduct_AlreadyExistingProductId()
-        {
-            Tuple<bool, string> isAppended = AppendProductDriver(validInventory, existingProductIdParams, 100);
-            if (isAppended.Item1)
-                Assert.Fail();
-            Assert.AreEqual(CommonStr.InventoryErrorMessage.ProductAlreadyExistErrMsg, isAppended.Item2);
-        }
-
+   
         [TestMethod]
         /// <test cref ="eCommerce_14a.Inventory.appendProduct(Dictionary{string, object}, int)
         public void TestAppendProduct_negativePrice()
@@ -115,13 +106,7 @@ namespace TestingSystem.UnitTests.InventroyTest
             Assert.AreEqual(CommonStr.InventoryErrorMessage.ProductPriceErrMsg, isAppended.Item2);
         }
 
-        [TestMethod]
-        /// <test cref ="eCommerce_14a.Inventory.appendProduct(Dictionary{string, object}, int)
-        public void TestAppendProduct_Valid()
-        {
-            Tuple<bool, string> isAppended = AppendProductDriver(validInventory, validProdParamsNewId, 100);
-            Assert.IsTrue(isAppended.Item1);
-        }
+    
 
         private Tuple<bool, string> AppendProductDriver(Inventory inv, Dictionary<string, object> productParams, int amount)
         {
@@ -324,8 +309,8 @@ namespace TestingSystem.UnitTests.InventroyTest
         public void TestValidInventory_valid()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(sid:1, details:"",price: 100), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(sid: 1, details: "",price:100), 100));
+            inv.Add(1, new Tuple<Product, int>(new Product(pid:1,sid:100, details:"",price: 100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(pid:2,sid: 100, details: "",price:100), 100));
             Tuple<bool, string> isValidAns = ValidInventoryDriver(inv);
             Assert.IsTrue(isValidAns.Item1);
         }
