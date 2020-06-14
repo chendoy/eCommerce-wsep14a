@@ -11,11 +11,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     public class DeliveryHandler
     {
         bool connected;
-        DeliverySystem deliverySystem;
+        //DeliverySystem deliverySystem;
         DeliveryHandler()
         {
             connected = true;
-            deliverySystem = new DeliverySystem();
+            //deliverySystem = new DeliverySystem();
         }
 
         private static readonly object padlock = new object();

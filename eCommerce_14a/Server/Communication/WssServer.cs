@@ -18,6 +18,8 @@ using System.Reflection;
 using log4net;
 using log4net.Config;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.UserComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.Communication
 {
@@ -26,7 +28,6 @@ namespace eCommerce_14a.Communication
         public CommunicationHandler handler;
         private static WebSocketServer wsServer;
         private int port;
-        
 
         public WssServer()
         {
