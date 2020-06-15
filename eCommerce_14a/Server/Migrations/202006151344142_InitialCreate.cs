@@ -85,28 +85,20 @@
                         StoreId = c.Int(nullable: false),
                         MergeType = c.Int(),
                         ParentId = c.Int(),
-                        PreConditionId = c.Int(),
+                        PreConditionNumber = c.Int(),
                         DiscountProductId = c.Int(),
                         Discount = c.Double(),
                         DiscountType = c.Int(nullable: false),
+                        MinProductUnits = c.Int(),
+                        MinBasketPrice = c.Double(),
+                        MinProductPrice = c.Double(),
+                        MinUnitsAtBasket = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.DbPreConditions", t => t.PreConditionId)
                 .ForeignKey("dbo.DbProducts", t => t.DiscountProductId)
                 .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.StoreId)
-                .Index(t => t.PreConditionId)
                 .Index(t => t.DiscountProductId);
-            
-            CreateTable(
-                "dbo.DbPreConditions",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        PreConditionType = c.Int(nullable: false),
-                        PreConditionNum = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.DbProducts",
@@ -203,18 +195,22 @@
                         StoreId = c.Int(nullable: false),
                         MergeType = c.Int(),
                         ParentId = c.Int(),
-                        PreConditionId = c.Int(),
+                        PreConditionNumber = c.Int(),
                         PolicyProductId = c.Int(),
                         BuyerUserName = c.String(maxLength: 128),
                         PurchasePolicyType = c.Int(nullable: false),
+                        MaxProductIdUnits = c.Int(),
+                        MinProductIdUnits = c.Int(),
+                        MaxItemsAtBasket = c.Int(),
+                        MinItemsAtBasket = c.Int(),
+                        MinBasketPrice = c.Double(),
+                        MaxBasketPrice = c.Double(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.DbUsers", t => t.BuyerUserName)
-                .ForeignKey("dbo.DbPreConditions", t => t.PreConditionId)
                 .ForeignKey("dbo.DbProducts", t => t.PolicyProductId)
                 .ForeignKey("dbo.DbStores", t => t.StoreId)
                 .Index(t => t.StoreId)
-                .Index(t => t.PreConditionId)
                 .Index(t => t.PolicyProductId)
                 .Index(t => t.BuyerUserName);
             
@@ -339,7 +335,6 @@
             DropForeignKey("dbo.DbPurchases", "CartId", "dbo.DbCarts");
             DropForeignKey("dbo.DbPurchasePolicies", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.DbPurchasePolicies", "PolicyProductId", "dbo.DbProducts");
-            DropForeignKey("dbo.DbPurchasePolicies", "PreConditionId", "dbo.DbPreConditions");
             DropForeignKey("dbo.DbPurchasePolicies", "BuyerUserName", "dbo.DbUsers");
             DropForeignKey("dbo.ProductAtBaskets", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.ProductAtBaskets", "ProductId", "dbo.DbProducts");
@@ -354,7 +349,6 @@
             DropForeignKey("dbo.DbDiscountPolicies", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.DbDiscountPolicies", "DiscountProductId", "dbo.DbProducts");
             DropForeignKey("dbo.DbProducts", "StoreId", "dbo.DbStores");
-            DropForeignKey("dbo.DbDiscountPolicies", "PreConditionId", "dbo.DbPreConditions");
             DropForeignKey("dbo.CandidateToOwnerships", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.CandidateToOwnerships", "CandidateName", "dbo.DbUsers");
             DropForeignKey("dbo.CandidateToOwnerships", "AppointerName", "dbo.DbUsers");
@@ -380,7 +374,6 @@
             DropIndex("dbo.DbPurchases", new[] { "CartId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "BuyerUserName" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "PolicyProductId" });
-            DropIndex("dbo.DbPurchasePolicies", new[] { "PreConditionId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "StoreId" });
             DropIndex("dbo.ProductAtBaskets", new[] { "StoreId" });
             DropIndex("dbo.ProductAtBaskets", new[] { "ProductId" });
@@ -394,7 +387,6 @@
             DropIndex("dbo.DbInventoryItems", new[] { "StoreId" });
             DropIndex("dbo.DbProducts", new[] { "StoreId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "DiscountProductId" });
-            DropIndex("dbo.DbDiscountPolicies", new[] { "PreConditionId" });
             DropIndex("dbo.DbDiscountPolicies", new[] { "StoreId" });
             DropIndex("dbo.CandidateToOwnerships", new[] { "CandidateName" });
             DropIndex("dbo.CandidateToOwnerships", new[] { "StoreId" });
@@ -417,7 +409,6 @@
             DropTable("dbo.NeedToApproves");
             DropTable("dbo.DbInventoryItems");
             DropTable("dbo.DbProducts");
-            DropTable("dbo.DbPreConditions");
             DropTable("dbo.DbDiscountPolicies");
             DropTable("dbo.CandidateToOwnerships");
             DropTable("dbo.DbStores");
