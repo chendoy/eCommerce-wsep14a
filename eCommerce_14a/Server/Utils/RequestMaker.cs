@@ -149,11 +149,11 @@ namespace Server.Utils
 
             return true;
         }
-        public static void Main(String[] args)
-        {
-            RequestMaker reqmaker = new RequestMaker();
-            reqmaker.GenerateBinReq();
-        }
+        //public static void Main(String[] args)
+        //{
+        //    RequestMaker reqmaker = new RequestMaker();
+        //    reqmaker.GenerateBinReq();
+        //}
 
     }
 
