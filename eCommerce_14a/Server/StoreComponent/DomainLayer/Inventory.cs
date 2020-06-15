@@ -157,7 +157,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
 
-        public Tuple<bool, string> IncreaseProductAmount(int productId, int amount, int storeid)
+        public Tuple<bool, string> IncreaseProductAmount(int productId, int amount, int storeid, bool saveCahnges)
         {
             // purpose: add amount to the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
@@ -180,7 +180,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             try
             {
                 //DB Update InventoryItem amount
-                DbManager.Instance.UpdateInventoryItemTransaction(DbManager.Instance.GetDbInventoryItem(productId, storeid), currentAmount + amount);
+                DbManager.Instance.UpdateInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid), currentAmount + amount, saveCahnges);
             }
             catch (Exception ex)
             {
@@ -195,7 +195,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
      
 
-        public Tuple<bool, string> DecraseProductAmount(int productId, int amount, int storeid)
+        public Tuple<bool, string> DecraseProductAmount(int productId, int amount, int storeid, bool saveChanges)
         {
             // purpose: decrase amount from the existing amount of product
             // return: on sucess <true,null> , on failing <false, excpection>
@@ -224,7 +224,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             try
             {
                 //DB updating inventoryItem
-                DbManager.Instance.UpdateInventoryItemTransaction(DbManager.Instance.GetDbInventoryItem(productId, storeid), newAmount);
+                DbManager.Instance.UpdateInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid), newAmount, saveChanges);
             }
             catch (Exception ex)
             {

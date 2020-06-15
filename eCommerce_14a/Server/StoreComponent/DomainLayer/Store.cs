@@ -104,7 +104,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
   
-        public Tuple<bool, string> IncreaseProductAmount(User user, int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmount(User user, int productId, int amount, bool saveCahnges)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -123,7 +123,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return Inventory.IncreaseProductAmount(productId, amount, this.Id);
+            return Inventory.IncreaseProductAmount(productId, amount, this.Id, saveCahnges);
         }
         public List<string> getOwners()
         {
@@ -144,7 +144,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return staff;
         }
 
-        public Tuple<bool, string> decrasePrdouctAmount(User user, int productId, int amount)
+        public Tuple<bool, string> decrasePrdouctAmount(User user, int productId, int amount, bool saveCahnges)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -163,7 +163,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 }
             }
 
-            return Inventory.DecraseProductAmount(productId, amount, this.Id);
+            return Inventory.DecraseProductAmount(productId, amount, this.Id, saveCahnges);
         }
 
         public Tuple<bool,string> changeStoreStatus(User user, bool newStatus)
@@ -478,13 +478,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return Inventory.UpdateProduct(productParams);
         }
 
-        public Tuple<bool, string> DecraseProductAmountAfterPuarchse(int productId, int amount)
+        public Tuple<bool, string> DecraseProductAmountAfterPuarchse(int productId, int amount, bool saveChanges)
         {
-            return Inventory.DecraseProductAmount(productId, amount, this.Id);
+            return Inventory.DecraseProductAmount(productId, amount, this.Id, saveChanges);
         }
-        public Tuple<bool, string> IncreaseProductAmountAfterFailedPuarchse(int productId, int amount)
+        public Tuple<bool, string> IncreaseProductAmountAfterFailedPuarchse(int productId, int amount, bool saveCahnges)
         {
-            return Inventory.IncreaseProductAmount(productId, amount, this.Id);
+            return Inventory.IncreaseProductAmount(productId, amount, this.Id, saveCahnges);
         }
 
         public Dictionary<string, object> getSotoreInfo()
@@ -510,12 +510,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (owners.Contains(user.Name))
                 return false;
 
-
-
             try
             {
                 //DB add owner
-                DbManager.Instance.InsertStoreOwner(StoreAdapter.Instance.toStoreOwner(user.Name, Id), true);
+                DbManager.Instance.InsertStoreOwner(StoreAdapter.Instance.toStoreOwner(user.Name, Id));
             }
             catch(Exception ex)
             {
@@ -537,7 +535,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             try
             {
                 //DB add manager
-                DbManager.Instance.InsertStoreManager(StoreAdapter.Instance.toStoreManager(user.Name, Id), true);
+                DbManager.Instance.InsertStoreManager(StoreAdapter.Instance.toStoreManager(user.Name, Id));
             }
             catch(Exception ex)
             {
@@ -569,7 +567,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if(removed)
             {
-                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManager(user.Name), true);
+                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManager(user.Name));
             }
             return removed;
         }
@@ -582,7 +580,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (removed)
             {
-                DbManager.Instance.DeleteStoreOwner(DbManager.Instance.getStoreOwner(user.Name), true);
+                DbManager.Instance.DeleteStoreOwner(DbManager.Instance.getStoreOwner(user.Name));
             }
 
             return removed;

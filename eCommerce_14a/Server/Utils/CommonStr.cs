@@ -199,7 +199,7 @@ namespace eCommerce_14a.Utils
             public static string BlankOrNullInputErrMsg = "Got null or blank input";
             public static string NegativeProductAmountErrMsg = "Cannot have negative amount of product in cart";
             public static string ZeroProductAmountErrMsg = "Cannot add zero amount of product to cart";
-            public static string ProductNotExistInCartErrMsg = "The product is not already in the shopping cart";
+            public static string ProducAlreadyExistInCartErrMsg = "The product is not already in the shopping cart";
             public static string ProductExistInCartErrMsg = "The product is already in the shopping cart";
             public static string NotValidPaymentErrMsg = "Not a valid paymentDetails";
             public static string NotValidAddressErrMsg = "Not a valid address";

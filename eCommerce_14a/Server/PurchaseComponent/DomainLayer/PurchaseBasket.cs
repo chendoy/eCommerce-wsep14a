@@ -77,20 +77,42 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
 
                 if (wantedAmount == 0)
                 {
-                    products.Remove(productId);
-                    //DB Delete Product From Basekt
+
                     if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                     {
-                        DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                        try
+                        {
+                            DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), true);
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.logError("Cart_AddprProduct_DeleteProductAtBasket db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                            return new Tuple<bool, string>(false, "there was err in Cart_AddprProduct_DeleteProductAtBasket  update db " + ex.Message);
+                        }
+                        products.Remove(productId);
                     }
+                    else
+
+                    {
+                        products.Remove(productId);
+                    }
+
                 }
                 else
                 {
-                    products[productId] = wantedAmount;
-                    //DB Update product amount at basket!
+
                     if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                     {
-                       DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount);
+                        try
+                        {
+                            DbManager.Instance.UpdateProductAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), wantedAmount, true);
+
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.logError("Cart_AddprProduct_UpdateProductAtBasket db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                            return new Tuple<bool, string>(false, "there was err in Cart_AddprProduct_UpdateProductAtBasket  update db " + ex.Message);
+                        }
                     }
                 }
             }
@@ -98,14 +120,29 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 if (exist)
                 {
-                    return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ProductNotExistInCartErrMsg);
+                    return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ProducAlreadyExistInCartErrMsg);
                 }
 
-                products.Add(productId, wantedAmount);
-                // DB Insert Product At Basket
+
                 if (UserManager.Instance.GetAtiveUser(this.User) !=null && !UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                 {
-                    DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id));
+                    try
+                    {
+                        DbManager.Instance.InsertProductAtBasket(StoreAdapter.Instance.ToProductAtBasket(this.Id, productId, wantedAmount, this.Store.Id), true);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.logError("Cart_AddprProduct_InsertProductAtBasket db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "there was err in Cart_AddprProduct_InsertProductAtBasket  update db " + ex.Message);
+                    }
+                    products.Add(productId, wantedAmount);
+                    
+                }
+                else
+                {
+                    products.Add(productId, wantedAmount);
+                    
                 }
             }
 
@@ -115,7 +152,16 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 products = existingProducts;
                 if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
                 {
-                   DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId));
+                    try
+                    {
+                        DbManager.Instance.DeletePrdocutAtBasket(DbManager.Instance.GetProductAtBasket(this.Id, productId), true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.logError("Cart_AddprProduct_DeletePrdocutAtBasket db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "there was err in Cart_AddprProduct_DeletePrdocutAtBasket  update db " + ex.Message);
+                    }
+
                 }
                 return isValidBasket;
             }
@@ -125,7 +171,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             // DB Updating basket Price
             if (UserManager.Instance.GetAtiveUser(this.User)!= null && !UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
-                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+                try
+                {
+                    DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this, true);
+                }
+                catch (Exception ex)
+                {
+                    Logger.logError("Cart_AddprProduct_UpdatePurchaseBasket db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "there was err in Cart_AddprProduct_UpdatePurchaseBasket  update db " + ex.Message);
+                }
             }
             return new Tuple<bool, string>(true, null);
         }
@@ -136,34 +190,48 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
-        internal double UpdateCartPrice()
+        public double UpdateCartPrice(bool saveCahnges)
         {
             Price = Store.GetBasketPriceWithDiscount(this);
             // DB update purchase BasketPrice
             if (UserManager.Instance.GetAtiveUser(User)!= null && !UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
-               DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+               DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this, saveCahnges);
             }
             return Price;
         }
 
-        internal void SetPurchaseTime(DateTime purchaseTime)
+        public Tuple<bool, string> SetPurchaseTime(DateTime purchaseTime, bool saveCahnges)
         {
             PurchaseTime = purchaseTime;
 
             //UPDATING purchase time in db
             if (!UserManager.Instance.GetAtiveUser(this.User).IsGuest)
             {
-                DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this);
+                try
+                {
+                    DbManager.Instance.UpdatePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(this.Id), this, saveCahnges);
+                }
+                catch(Exception ex)
+                {
+                    Logger.logError("Cart_SetPurchaseTime db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "there was err in setpurchasetime update db " + ex.Message);
+                }
             }
+            return new Tuple<bool, string>(true, "");
         }
 
-        internal void RemoveFromStoreStock()
+        public Tuple<bool, string> RemoveFromStoreStock(bool saveCahnges)
         {
             foreach (var product in products.Keys)
             {
-                Store.DecraseProductAmountAfterPuarchse(product, products[product]);
+                Tuple<bool, string> decreased = Store.DecraseProductAmountAfterPuarchse(product, products[product], saveCahnges);
+                if (!decreased.Item1)
+                {
+                    return decreased;
+                }
             }
+            return new Tuple<bool, string>(true, "");
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
@@ -215,11 +283,11 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             get { return products; }
         }
-        internal void RestoreItemsToStore()
+        public void  RestoreItemsToStore(bool saveCahnges)
         {
             foreach (var product in products.Keys)
             {
-                Store.IncreaseProductAmountAfterFailedPuarchse(product, products[product]);
+                Store.IncreaseProductAmountAfterFailedPuarchse(product, products[product], saveCahnges);
             }
         }
     }
