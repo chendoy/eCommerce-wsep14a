@@ -43,6 +43,11 @@ namespace Server.Utils
             {
                 SaveData(MakeLogoutRequest(usernames[i]), "logout" + i);
             }
+            //generate open store requests
+            for (int i = 1; i < REQ_NUM; i++)
+            {
+                SaveData(MakeOpenStoreRequest(usernames[i], "Store" + i), "openstore" + i); //should insert legal payment details for users
+            }
             //generate add to cart product requests
             for (int i = 1; i < REQ_NUM; i++)
             {
@@ -70,6 +75,12 @@ namespace Server.Utils
             }
         }
 
+        public byte[] MakeOpenStoreRequest(string username, string storeName = "Store")
+        {
+            OpenStoreRequest req = new OpenStoreRequest(username, storeName);
+            string jsonString = JsonConvert.SerializeObject(req);
+            return sec.Encrypt(jsonString);
+        }
 
         public byte[] MakeAddProductToStoreRequset(int storeId, string userName, string productDetails, double productPrice,
             string productName, string productCategory, int pamount)
@@ -138,11 +149,11 @@ namespace Server.Utils
 
             return true;
         }
-        //public static void Main(String[] args)
-        //{
-        //    RequestMaker reqmaker = new RequestMaker();
-        //    reqmaker.GenerateBinReq();
-        //}
+        public static void Main(String[] args)
+        {
+            RequestMaker reqmaker = new RequestMaker();
+            reqmaker.GenerateBinReq();
+        }
 
     }
 

@@ -347,24 +347,24 @@ namespace eCommerce_14a.Communication
         }
 
 
-        public static void Main(string[] argv)
-        {
+        //public static void Main(string[] argv)
+        //{
 
 
-            //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
-            //res.SearchResults.Add(1, new List<ProductData>());
-            //string json = JsonConvert.SerializeObject(res);
-            //Console.WriteLine(json);
-            //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
-            //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
-            //RequestMaker req = new RequestMaker();
-            //req.GenerateBinReq();
-            //CommunicationHandler hand = new CommunicationHandler();
-            StateInitiator init = new StateInitiator();
-            WssServer server = new WssServer();
-            init.InitSystemFromFile();
-            server.InitServer();
+        //    //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
+        //    //res.SearchResults.Add(1, new List<ProductData>());
+        //    //string json = JsonConvert.SerializeObject(res);
+        //    //Console.WriteLine(json);
+        //    //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
+        //    //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
+        //    //RequestMaker req = new RequestMaker();
+        //    //req.GenerateBinReq();
+        //    //CommunicationHandler hand = new CommunicationHandler();
+        //    StateInitiator init = new StateInitiator();
+        //    WssServer server = new WssServer();
+        //    init.InitSystemFromFile();
+        //    server.InitServer();
 
-        }
+        //}
     }
 }
