@@ -569,7 +569,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if(removed)
             {
-                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManager(user.Name));
+                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManager(user.Name), true);
             }
             return removed;
         }
@@ -582,7 +582,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (removed)
             {
-                DbManager.Instance.DeleteStoreOwner(DbManager.Instance.getStoreOwner(user.Name));
+                DbManager.Instance.DeleteStoreOwner(DbManager.Instance.getStoreOwner(user.Name), true);
             }
 
             return removed;
