@@ -16,7 +16,7 @@ namespace Server.Utils
         public NetworkSecurity sec;
         public string[] usernames;
         public string[] passwords;
-        public const int REQ_NUM = 500;
+        public const int REQ_NUM = 21;
 
         public RequestMaker() 
         {
@@ -29,20 +29,36 @@ namespace Server.Utils
         public void GenerateBinReq()
         {
             //generate register requests
-            for (int i = 0; i < REQ_NUM; i++)
+            for (int i = 1; i < REQ_NUM; i++)
             {
                 SaveData(MakeRegisterRequest(usernames[i], passwords[i]),"register" + i);
             }
             //generate login requests
-            for (int i = 0; i < REQ_NUM; i++)
+            for (int i = 1; i < REQ_NUM; i++)
             {
                 SaveData(MakeLoginRequest(usernames[i], passwords[i]), "login" + i);
             }
             //generate logout requests
-            for (int i = 0; i < REQ_NUM; i++)
+            for (int i = 1; i < REQ_NUM; i++)
             {
                 SaveData(MakeLogoutRequest(usernames[i]), "logout" + i);
             }
+            //generate add to cart product requests
+            for (int i = 1; i < REQ_NUM; i++)
+            {
+                SaveData(MakeAddToCartRequest(usernames[i], 1, 1, 1), "addprodtocart" + i); //should exist store with id 1 and product id 1 with amount  > REQ_NUM
+            }
+            //generate perform purchase requests
+            for (int i = 1; i < REQ_NUM; i++)
+            {
+                SaveData(MakePerformPurchaseRequset(usernames[i], "llegal address", "legal payment details"), "purchase" + i); //should insert legal payment details for users
+            }
+            //generate perform purchase requests
+            for (int i = 1; i < REQ_NUM; i++)
+            {
+                SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 2), "addprodtostore" + i); //should insert legal payment details for users
+            }
+
         }
 
         public void InitUsers() 
@@ -52,6 +68,29 @@ namespace Server.Utils
                 usernames[i] = "Guy" + i;
                 passwords[i] = "Guy" + i;
             }
+        }
+
+
+        public byte[] MakeAddProductToStoreRequset(int storeId, string userName, string productDetails, double productPrice,
+            string productName, string productCategory, int pamount)
+        {
+            AddProductToStoreRequest req = new AddProductToStoreRequest(storeId, userName, productDetails, productPrice, productName, productCategory, pamount);
+            string jsonString = JsonConvert.SerializeObject(req);
+            return sec.Encrypt(jsonString);
+        }
+
+        public byte[] MakePerformPurchaseRequset(string username, string address, string paymentDetails)
+        {
+            PurchaseRequest req = new PurchaseRequest(username, address, paymentDetails);
+            string jsonString = JsonConvert.SerializeObject(req);
+            return sec.Encrypt(jsonString);
+        }
+
+        public byte[] MakeAddToCartRequest(string user, int store, int product, int amount) 
+        {
+            AddProductToCartRequest req = new AddProductToCartRequest(user, store, product, amount);
+            string jsonString = JsonConvert.SerializeObject(req);
+            return sec.Encrypt(jsonString);
         }
 
         public byte[] MakeRegisterRequest(string username, string password) 
@@ -78,7 +117,8 @@ namespace Server.Utils
         public bool SaveData(byte[] ReqData, string reqName)
         {
             BinaryWriter Writer = null;
-            string Name = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\BinaryRequests\" + reqName + @".bin";
+            //string Name = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\BinaryRequests\" + reqName + @".bin";
+            string Name = @"C: \Users\guyha\Desktop\BinaryRequests\" + reqName + @".bin";
 
             try
             {
@@ -98,5 +138,12 @@ namespace Server.Utils
 
             return true;
         }
+        public static void Main(String[] args)
+        {
+            RequestMaker reqmaker = new RequestMaker();
+            reqmaker.GenerateBinReq();
+        }
+
     }
+
 }
