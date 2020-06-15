@@ -510,9 +510,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (owners.Contains(user.Name))
                 return false;
 
+
+
+            try
+            {
+                //DB add owner
+                DbManager.Instance.InsertStoreOwner(StoreAdapter.Instance.toStoreOwner(user.Name, Id), true);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("AddStoreOwner db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return false;
+            }
+
             owners.Add(user.Name);
-            //DB add owner
-            DbManager.Instance.InsertStoreOwner(StoreAdapter.Instance.toStoreOwner(user.Name, Id));
+
             return true;
         }
         public bool AddStoreManager(User user)
@@ -521,9 +533,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (managers.Contains(user.Name))
                 return false;
+
+            try
+            {
+                //DB add manager
+                DbManager.Instance.InsertStoreManager(StoreAdapter.Instance.toStoreManager(user.Name, Id), true);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("AddStoreOwner db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return false;
+            }
+            
             managers.Add(user.Name);
-            //DB add manager
-            DbManager.Instance.InsertStoreManager(StoreAdapter.Instance.toStoreManager(user.Name, Id));
             return true;
         }
         public bool IsStoreOwner(User user)

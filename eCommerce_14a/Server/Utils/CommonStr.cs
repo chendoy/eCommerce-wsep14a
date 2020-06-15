@@ -8,6 +8,7 @@ namespace eCommerce_14a.Utils
         public static class GeneralErrMessage
         {
             public static string UnKnownErr = "UnKnown Error Occured";
+            public static string DbErrorMessage = "There was error while editing the DB";
         }
         
         public static class StoreRoles
@@ -153,6 +154,7 @@ namespace eCommerce_14a.Utils
             public static string NegativeProductAmountErrMsg = "Product amount cann't be negative in the inventory";
             public static string UnmatchedProductAnKeyErrMsg = " Proudct Id dos'nt matches his key";
             public static string InvalidInventory = "Invalid Inventory";
+            public static string DbErrMessage = "there was error while editing the db";
         }
 
         public static class StoreMangmentErrorMessage

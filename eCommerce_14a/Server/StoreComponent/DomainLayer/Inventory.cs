@@ -65,9 +65,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             }
 
-            DbManager.Instance.InsertProduct(StoreAdapter.Instance.ToDbProduct(product));
-            DbManager.Instance.InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(product.Id, amount, storeId));
             InvProducts.Add(product.Id, new Tuple<Product, int>(product, amount));
+            try
+            {
+               DbManager.Instance.AppendProductTransaction(product, amount, storeId);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("append product db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+
+            }
             return new Tuple<bool, string>(true, "");
         }
 
@@ -81,18 +89,28 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
 
+            //Remove product and inventory item from db!
+            try
+            {
+                DbManager.Instance.RemoveProductTransaction(InvProducts[productId].Item1);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("remove product db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
+
             if (InvProducts.Remove(productId))
             {
-                //Remove product and inventory item from db!
-                DbManager.Instance.DeleteInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid));
-                DbManager.Instance.DeleteProduct(DbManager.Instance.GetDbProductItem(productId));
-                return new Tuple<bool, string>(true, "");
+            
             }
             else
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.GeneralErrMessage.UnKnownErr);
                 return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.UnKnownErr);
             }
+            return new Tuple<bool, string>(true, "");
 
         }
 
@@ -124,9 +142,15 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             int amount = InvProducts[productId].Item2;
 
             InvProducts[productId] = new Tuple<Product, int>(product, amount);
-            DbProduct dbProd = DbManager.Instance.GetDbProductItem(productId);
-            //DB update 
-            DbManager.Instance.UpdatePrdouct(dbProd, product);
+            try
+            {
+                DbManager.Instance.UpdateProductTransaction(product);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("updateproduct db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
 
             return new Tuple<bool, string>(true, "");
         }
@@ -151,12 +175,20 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.ProductNotExistErrMsg);
             }
 
+
             int currentAmount = InvProducts[productId].Item2;
+            try
+            {
+                //DB Update InventoryItem amount
+                DbManager.Instance.UpdateInventoryItemTransaction(DbManager.Instance.GetDbInventoryItem(productId, storeid), currentAmount + amount);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("IncreaseProductAmount db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
+
             InvProducts[productId] = new Tuple<Product, int>(InvProducts[productId].Item1, currentAmount + amount);
-
-            //DB Update InventoryItem amount
-            DbManager.Instance.UpdateInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid), currentAmount + amount);
-
             return new Tuple<bool, string>(true, "");
         }
 
@@ -189,11 +221,18 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.InventoryErrorMessage.productAmountErrMsg);
             }
 
+            try
+            {
+                //DB updating inventoryItem
+                DbManager.Instance.UpdateInventoryItemTransaction(DbManager.Instance.GetDbInventoryItem(productId, storeid), newAmount);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("decreaseProductAmount db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
+
             InvProducts[productId] = new Tuple<Product, int>(InvProducts[productId].Item1, newAmount);
-
-            //DB updating inventoryItem
-            DbManager.Instance.UpdateInventoryItem(DbManager.Instance.GetDbInventoryItem(productId, storeid), newAmount);
-
             return new Tuple<bool, string>(true, "");
         }
 

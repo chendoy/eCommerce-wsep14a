@@ -112,6 +112,14 @@ namespace Server.DAL
             dbConn.CandidateToOwnerships.Remove(candidateToOwnership);
             dbConn.SaveChanges();
         }
+
+        public void AppendProductTransaction(Product product, int amount, int storeid)
+        {
+            InsertProduct(StoreAdapter.Instance.ToDbProduct(product), false);
+           InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(product.Id, amount, storeid), false);
+           dbConn.SaveChanges();
+        }
+
         public CandidateToOwnership GetCandidateToOwnership(string cand, string owner, int storeId)
         {
             if (testingmode)
@@ -120,6 +128,14 @@ namespace Server.DAL
             }
             return dbConn.CandidateToOwnerships.Where(o => o.CandidateName == cand && o.AppointerName == owner && o.StoreId == storeId).FirstOrDefault();
         }
+
+        public void RemoveProductTransaction(Product product)
+        {
+            DeleteInventoryItem(GetDbInventoryItem(product.Id, product.StoreId), false);
+            DeleteProduct(Instance.GetDbProductItem(product.Id), false);
+            dbConn.SaveChanges();
+        }
+
         public void DeleteUser(DbUser user)
         {
             if (testingmode)
@@ -200,6 +216,15 @@ namespace Server.DAL
             }
             return dbConn.NeedToApproves.Where(o => o.ApproverName == aprover && o.CandiateName == cand && o.StoreId == storeid).FirstOrDefault();
         }
+
+        public void UpdateProductTransaction(Product product)
+        {
+            DbProduct dbProd = GetDbProductItem(product.Id);
+            //DB update 
+            UpdatePrdouct(dbProd, product, false);
+            dbConn.SaveChanges();
+        }
+
         public void DeleteAprovals(List<NeedToApprove> list)
         {
             if (testingmode)
@@ -674,12 +699,13 @@ namespace Server.DAL
             {
                 return;
             }
-            InsertDbstore(StoreAdapter.Instance.ToDbStore(store));
+            InsertDbstore(StoreAdapter.Instance.ToDbStore(store), false);
             //InsertInventory(store.Inventory, store.Id);
-            InsertDiscountPolicy(store.DiscountPolicy, store.Id, parentId: null);
-            InsertPurchasePolicy(store.PurchasePolicy, store.Id, parentId: null);
-            InsertOwners(store.owners, store.Id);
-            InsertManagers(store.managers, store.Id);
+            InsertDiscountPolicy(store.DiscountPolicy, store.Id, parentId: null, false);
+            InsertPurchasePolicy(store.PurchasePolicy, store.Id, parentId: null, false);
+            InsertOwners(store.owners, store.Id, false);
+            InsertManagers(store.managers, store.Id, false);
+            dbConn.SaveChanges();
         }
 
         public void InsertPurchaseBasket(DbPurchaseBasket dbPurchaseBasket)
@@ -712,14 +738,17 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        private void InsertDbstore(DbStore dbStore)
+        private void InsertDbstore(DbStore dbStore, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Stores.Add(dbStore);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public void UpdateDbCart(DbCart dbCart, Cart cart, bool isPurchased)
@@ -743,7 +772,7 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId)
+        public void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId, bool saveChanges)
         {
             if (testingmode)
             {
@@ -768,7 +797,10 @@ namespace Server.DAL
                                                                  minitemsatbasket: null,
                                                                  minbasketprice: null,
                                                                  maxbaskeptrice: null));
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (policyData.GetType() == typeof(BasketPurchasePolicy))
@@ -789,7 +821,10 @@ namespace Server.DAL
                                                                  minitemsatbasket: policy.MinItems,
                                                                  minbasketprice:   policy.MinBasketPrice,
                                                                  maxbaskeptrice:   policy.MaxBasketPrice));;
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (policyData.GetType() == typeof(SystemPurchasePolicy))
@@ -810,7 +845,10 @@ namespace Server.DAL
                                                                  minitemsatbasket:null,
                                                                  minbasketprice:null,
                                                                  maxbaskeptrice:null));
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (policyData.GetType() == typeof(UserPurchasePolicy))
@@ -830,7 +868,10 @@ namespace Server.DAL
                                                                 minitemsatbasket:null,
                                                                 minbasketprice:null,
                                                                 maxbaskeptrice:null));
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (policyData.GetType() == typeof(CompundPurchasePolicy))
@@ -850,14 +891,17 @@ namespace Server.DAL
                                                                    minbasketprice:null,
                                                                    maxbaskeptrice:null);
                 dbConn.PurchasePolicies.Add(dbPurchase);
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
 
                 int dbPolicyId = GetDbPurchsePolicyId(dbPurchase, storeId, null);
                 List<PurchasePolicy> policies = ((CompundPurchasePolicy)policyData).getChildren();
 
                 foreach (PurchasePolicy policy in policies)
                 {
-                    InsertPurchasePolicy(policy, storeId, dbPolicyId);
+                    InsertPurchasePolicy(policy, storeId, dbPolicyId, saveChanges);
                 }
 
             }
@@ -879,7 +923,7 @@ namespace Server.DAL
             return dbConn.Carts.Where(c => c.Id == id).FirstOrDefault();
         }
 
-        public void UpdatePrdouct(DbProduct dbProd, Product product)
+        public void UpdatePrdouct(DbProduct dbProd, Product product, bool saveChanges)
         {
             if (testingmode)
             {
@@ -891,10 +935,13 @@ namespace Server.DAL
             dbProd.Name = product.Name;
             dbProd.Price = product.Price;
             dbProd.Rank = product.Rank;
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void UpdateInventoryItem(DbInventoryItem dbInventoryItem, int amount)
+        public void UpdateInventoryItemTransaction(DbInventoryItem dbInventoryItem, int amount)
         {
             if (testingmode)
             {
@@ -928,8 +975,8 @@ namespace Server.DAL
             {
                 return;
             }
-            DeleteAllStoreDiscountPolicy(s);
-            InsertDiscountPolicy(newPolicy, s.Id, null);
+            DeleteAllStoreDiscountPolicy(s, true);
+            InsertDiscountPolicy(newPolicy, s.Id, null, true);
         }
 
         public void UpdatePurchasePolicy(PurchasePolicy newPolicy, Store store)
@@ -938,8 +985,8 @@ namespace Server.DAL
             {
                 return;
             }
-            DeleteAllStorePurchasePolicy(store);
-            InsertPurchasePolicy(newPolicy, store.Id, null);
+            DeleteAllStorePurchasePolicy(store, true);
+            InsertPurchasePolicy(newPolicy, store.Id, null, true);
         }
 
         public void UpdateStore(DbStore dbstore, Store store)
@@ -983,14 +1030,18 @@ namespace Server.DAL
             return dbConn.InventoriesItmes.Where(invItem => invItem.ProductId == productId  && invItem.StoreId == storeId).FirstOrDefault();
         }
 
-        internal void InsertInventoryItem(DbInventoryItem dbInventoryItem)
+        internal void InsertInventoryItem(DbInventoryItem dbInventoryItem, bool saveCahnges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.InventoriesItmes.Add(dbInventoryItem);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            { 
+                dbConn.SaveChanges();
+            }
+
         }
 
         public void InsertDbCart(DbCart dbCart)
@@ -1030,7 +1081,7 @@ namespace Server.DAL
             return max_storeId + 1;
         }
 
-        public void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId)
+        public void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1054,7 +1105,10 @@ namespace Server.DAL
                                                                  minbaskeptice: null,
                                                                  minproductprice: null,
                                                                  minunitsatbasket: null));
-                dbConn.SaveChanges();
+                if(saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (discountPolicy.GetType() == typeof(ConditionalBasketDiscount))
@@ -1075,7 +1129,10 @@ namespace Server.DAL
                                                                  minproductprice: policy.MinProductPrice,
                                                                  minunitsatbasket: policy.MinUnitsAtBasket);
                 dbConn.DiscountPolicies.Add(dbDiscount);
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (discountPolicy.GetType() == typeof(RevealdDiscount))
@@ -1095,7 +1152,10 @@ namespace Server.DAL
                                                                  minbaskeptice:null,
                                                                  minproductprice:null,
                                                                  minunitsatbasket:null));
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
             else if (discountPolicy.GetType() == typeof(CompundDiscount))
@@ -1113,12 +1173,15 @@ namespace Server.DAL
                                                               minproductprice:null,
                                                               minunitsatbasket:null);
                 dbConn.DiscountPolicies.Add(dbDiscount);
-                dbConn.SaveChanges();
+                if (saveChanges)
+                {
+                    dbConn.SaveChanges();
+                }
                 int dbPolicyId = GetDbDiscountPolicyId(dbDiscount, storeId, null);
                 List<DiscountPolicy> policies = ((CompundDiscount)discountPolicy).getChildren();
                 foreach (DiscountPolicy policy in policies)
                 {
-                    InsertDiscountPolicy(discountPolicy: policy, storeId: storeId, parentId: dbPolicyId);
+                    InsertDiscountPolicy(discountPolicy: policy, storeId: storeId, parentId: dbPolicyId, saveChanges);
                 }
             }
         }
@@ -1193,7 +1256,7 @@ namespace Server.DAL
         //}
 
 
-        private void InsertOwners(List<string> owners, int storeId)
+        private void InsertOwners(List<string> owners, int storeId, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1201,12 +1264,17 @@ namespace Server.DAL
             }
             foreach (string owner in owners)
             {
-                InsertStoreOwner(new StoreOwner(storeId, owner));
+                InsertStoreOwner(new StoreOwner(storeId, owner), false);
+            }
+
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
 
         }
 
-        private void InsertManagers(List<string> managers, int storeId)
+        private void InsertManagers(List<string> managers, int storeId, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1214,29 +1282,38 @@ namespace Server.DAL
             }
             foreach (string manager in managers)
             {
-                InsertStoreManager(new StoreManager(storeId, manager));
+                InsertStoreManager(new StoreManager(storeId, manager), false);
             }
-
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertStoreOwner(StoreOwner owner)
+        public void InsertStoreOwner(StoreOwner owner, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwners.Add(owner);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertStoreManager(StoreManager manager)
+        public void InsertStoreManager(StoreManager manager, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreManagers.Add(manager);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public void InsretInventoryItem(DbInventoryItem invItem)
@@ -1256,14 +1333,17 @@ namespace Server.DAL
         //    dbConn.SaveChanges();
         //}
 
-        public void InsertProduct(DbProduct product)
+        public void InsertProduct(DbProduct product, bool savechanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Products.Add(product);
-            dbConn.SaveChanges();
+            if (savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public void InsertPurchase(DbPurchase dbPurchase)
@@ -1506,24 +1586,30 @@ namespace Server.DAL
         //Store Componenet Delete Functions
 
 
-        public void DeleteProduct(DbProduct dbProd)
+        public void DeleteProduct(DbProduct dbProd, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Products.Remove(dbProd);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void DeleteInventoryItem(DbInventoryItem invItem)
+        public void DeleteInventoryItem(DbInventoryItem invItem, bool saveCahnges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.InventoriesItmes.Remove(invItem);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
@@ -1547,100 +1633,122 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void DeleteStoreManager(StoreManager manager)
+        public void DeleteStoreManager(StoreManager manager, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreManagers.Remove(manager);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void DeleteStoreOwner(StoreOwner owner)
+        public void DeleteStoreOwner(StoreOwner owner, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwners.Remove(owner);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
-        public void DeleteStoreOwnerShipAppoint(StoreOwnershipAppoint soaItem)
+        public void DeleteStoreOwnerShipAppoint(StoreOwnershipAppoint soaItem, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwnershipAppoints.Remove(soaItem);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void DeleteStoreManagerAppoint(StoreManagersAppoint soaItem)
+        public void DeleteStoreManagerAppoint(StoreManagersAppoint soaItem, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreManagersAppoints.Remove(soaItem);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
-        public void DeletePurchaseBasket(DbPurchaseBasket purchasebasket)
+        public void DeletePurchaseBasket(DbPurchaseBasket purchasebasket, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Baskets.Remove(purchasebasket);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void DeletePrdocutAtBasket(ProductAtBasket productab)
+        public void DeletePrdocutAtBasket(ProductAtBasket productab, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.ProductsAtBaskets.Remove(productab);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void DeleteUserStorePermission(UserStorePermissions permission)
+        public void DeleteUserStorePermission(UserStorePermissions permission, bool saveCahnges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.UserStorePermissions.Remove(permission);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
-        public void DeleteFullStore(Store store)
+        public void DeleteFullStoreTransaction(Store store)
         {
             if (testingmode)
             {
                 return;
             }
-            DeleteAllStoreDiscountPolicy(store);
-            DeleteAllStorePurchasePolicy(store);
-            DeleteAllStoreInventoryItems(store);
-            DeleteAllStoreProductAtBasket(store);
-            DeleteAllStoreOwners(store);
-            DeleteAllStoreManagers(store);
-            DeleteAllStoreOwnersAppoint(store);
-            DeleteAllStoreManagersAppoint(store);
-            DeleteAllStorePurchaseBasket(store);
-            DeleteAllUserStorePermissions(store);
-            DeleteAllStoresProducts(store);
-            DeleteDbStore(store);
+            DeleteAllStoreDiscountPolicy(store, false);
+            DeleteAllStorePurchasePolicy(store, false);
+            DeleteAllStoreInventoryItems(store, false);
+            DeleteAllStoreProductAtBasket(store, false);
+            DeleteAllStoreOwners(store, false);
+            DeleteAllStoreManagers(store, false);
+            DeleteAllStoreOwnersAppoint(store, false);
+            DeleteAllStoreManagersAppoint(store, false);
+            DeleteAllStorePurchaseBasket(store, false);
+            DeleteAllUserStorePermissions(store, false);
+            DeleteAllStoresProducts(store, false);
+            DeleteDbStore(store, false);
+            dbConn.SaveChanges();
         }
 
-        private void DeleteAllUserStorePermissions(Store store)
+        private void DeleteAllUserStorePermissions(Store store, bool saveCahnges)
         {
             if (testingmode)
             {
@@ -1649,13 +1757,17 @@ namespace Server.DAL
             List<UserStorePermissions> userStorePermissions = dbConn.UserStorePermissions.Where(p => p.StoreId == store.Id).ToList();
             foreach(UserStorePermissions permission in userStorePermissions)
             {
-                DeleteUserStorePermission(permission);
+                DeleteUserStorePermission(permission, false);
+            }
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
      
 
-        private void DeleteAllStorePurchaseBasket(Store store)
+        private void DeleteAllStorePurchaseBasket(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1664,27 +1776,37 @@ namespace Server.DAL
             List<DbPurchaseBasket> lstBaskets = dbConn.Baskets.Where(basket => basket.StoreId == store.Id).ToList();
             foreach(DbPurchaseBasket purchasebasket in lstBaskets)
             {
-                DeletePurchaseBasket(purchasebasket);
+                DeletePurchaseBasket(purchasebasket, false);
+            }
+
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
 
-        private void DeleteAllStoreProductAtBasket(Store store)
+        private void DeleteAllStoreProductAtBasket(Store store, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             List<ProductAtBasket> pabLst = dbConn.ProductsAtBaskets.Where(pab => pab.StoreId == store.Id).ToList();
+            
             foreach(ProductAtBasket productab in pabLst)
             {
-                DeletePrdocutAtBasket(productab);
+                DeletePrdocutAtBasket(productab, false);
+            }
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
       
 
-        private void DeleteAllStoreOwnersAppoint(Store store)
+        private void DeleteAllStoreOwnersAppoint(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1693,12 +1815,17 @@ namespace Server.DAL
             List<StoreOwnershipAppoint> soaLst =  dbConn.StoreOwnershipAppoints.Where(soa => soa.StoreId == store.Id).ToList();
             foreach(StoreOwnershipAppoint soaItem in soaLst)
             {
-                DeleteStoreOwnerShipAppoint(soaItem);
+                DeleteStoreOwnerShipAppoint(soaItem, false);
+            }
+
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
             
         }
 
-        private void DeleteAllStoreManagersAppoint(Store store)
+        private void DeleteAllStoreManagersAppoint(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1707,13 +1834,17 @@ namespace Server.DAL
             List<StoreManagersAppoint> soaLst = dbConn.StoreManagersAppoints.Where(soa => soa.StoreId == store.Id).ToList();
             foreach (StoreManagersAppoint soaItem in soaLst)
             {
-                DeleteStoreManagerAppoint(soaItem);
+                DeleteStoreManagerAppoint(soaItem, false);
             }
 
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
-        private void DeleteDbStore(Store store)
+        private void DeleteDbStore(Store store, bool saveCahnges)
         {
             if (testingmode)
             {
@@ -1724,10 +1855,13 @@ namespace Server.DAL
             {
                 dbConn.Stores.Remove(delStore);
             }
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        private void DeleteAllStoreManagers(Store store)
+        private void DeleteAllStoreManagers(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1738,12 +1872,16 @@ namespace Server.DAL
                 StoreManager manager = dbConn.StoreManagers.Where(storeman => storeman.ManagerName == name).FirstOrDefault();
                 if(manager != null)
                 {
-                    DeleteStoreManager(manager);
+                    DeleteStoreManager(manager, false);
                 }
+            }
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
-        private void DeleteAllStoreOwners(Store store)
+        private void DeleteAllStoreOwners(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1754,15 +1892,20 @@ namespace Server.DAL
                 StoreOwner owner = dbConn.StoreOwners.Where(o => o.OwnerName == name).FirstOrDefault();
                 if (owner != null)
                 {
-                    DeleteStoreOwner(owner);
+                    DeleteStoreOwner(owner, false);
                 }
+            }
+
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
 
 
 
-        private void DeleteAllStoresProducts(Store store)
+        private void DeleteAllStoresProducts(Store store, bool saveCahnges)
         {
             if (testingmode)
             {
@@ -1771,12 +1914,16 @@ namespace Server.DAL
             List<DbProduct> prods = dbConn.Products.Where(p => p.StoreId == store.Id).ToList();
             foreach (DbProduct product in prods)
             {
-                DeleteProduct(product);
+                DeleteProduct(product, false);
+            }
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
             }
 
         }
 
-        private void DeleteAllStoreInventoryItems(Store store)
+        private void DeleteAllStoreInventoryItems(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1785,14 +1932,17 @@ namespace Server.DAL
             List<DbInventoryItem> invItems = dbConn.InventoriesItmes.Where(item => item.StoreId == store.Id).ToList();
             foreach(DbInventoryItem invItem in invItems)
             {
-                DeleteInventoryItem(invItem);
+                DeleteInventoryItem(invItem, false);
             }
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
 
-        private void DeleteAllStorePurchasePolicy(Store store)
+        private void DeleteAllStorePurchasePolicy(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1803,11 +1953,14 @@ namespace Server.DAL
             {
                 DeletePurchasePolicy(purchasePolicy);
             }
-            dbConn.SaveChanges();
+            if(saveChanges)
+            { 
+                dbConn.SaveChanges();
+            }
         }
 
 
-        private void DeleteAllStoreDiscountPolicy(Store store)
+        private void DeleteAllStoreDiscountPolicy(Store store, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1818,7 +1971,10 @@ namespace Server.DAL
             {
                 DeleteDiscountPolicy(discountPolicy);
             }
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
       
