@@ -39,7 +39,7 @@ namespace eCommerce_14a.Utils
                     string[] constructs = text.Split(':');
                     int precondition = Convert.ToInt32(constructs[1]);
                     double discount = Convert.ToDouble(constructs[2]);
-                    return new ConditionalBasketDiscount(new DiscountPreCondition(precondition), discount);
+                    return new ConditionalBasketDiscount(discount, new DiscountPreCondition(precondition));
                 }
                 else if (conditionalProductDiscountRegex.IsMatch(text))
                 {
@@ -47,7 +47,7 @@ namespace eCommerce_14a.Utils
                     int productId = Convert.ToInt32(constructs[1]);
                     int precondition = Convert.ToInt32(constructs[2]);
                     double discount = Convert.ToDouble(constructs[3]);
-                    return new ConditionalProductDiscount(productId, new DiscountPreCondition(precondition), discount);
+                    return new ConditionalProductDiscount(discount, productId, new DiscountPreCondition(precondition));
                 }
                 else if (revealdDiscountRegex.IsMatch(text))
                 {

@@ -51,10 +51,10 @@ namespace Server.DAL.StoreDb
         {
             return new DbPurchase(newPurchase.UserCart.Id, newPurchase.User);
         }
-        public DbPreCondition ToDbDiscountPreCondition(DiscountPreCondition preCondition)
-        {
-            return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);
-        }
+        //public DbPreCondition ToDbDiscountPreCondition(DiscountPreCondition preCondition)
+        //{
+        //    return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);
+        //}
         public StoreOwner toStoreOwner(string name, int sid)
         {
             return new StoreOwner(sid, name);
@@ -64,14 +64,14 @@ namespace Server.DAL.StoreDb
         {
             return new StoreManager(sid, name);
         }
-        public DbPreCondition ToDbPurchasePreCondition(DiscountPreCondition preCondition)
-        {
-            return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);
-        }
+        //public DbPreCondition ToDbPurchasePreCondition(DiscountPreCondition preCondition)
+        //{
+        //    return new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, preCondition.preCondNumber);
+        //}
 
         public DbDiscountPolicy ToDbRevealdDiscountPolicy(RevealdDiscount revealdDiscount,int? parentid, int storeid)
         {
-            return new DbDiscountPolicy(storeid, null, parentid, null, revealdDiscount.discountProdutId, revealdDiscount.discount, CommonStr.DiscountPolicyTypes.RevealdDiscount);
+            return new DbDiscountPolicy(storeid, null, parentid, null, revealdDiscount.discountProdutId, revealdDiscount.discount, CommonStr.DiscountPolicyTypes.RevealdDiscount, null, null, null, null);
         }
 
         public DbPurchaseBasket ToDbPurchseBasket(PurchaseBasket basket, int cartid)
@@ -83,7 +83,7 @@ namespace Server.DAL.StoreDb
         {
             if (dbDiscountPolicies.Count == 0)
             {
-               return new ConditionalBasketDiscount(new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount), 0);
+               return new ConditionalBasketDiscount(0, new DiscountPreCondition(CommonStr.DiscountPreConditions.NoDiscount));
             }
             else
             {
@@ -130,17 +130,56 @@ namespace Server.DAL.StoreDb
                 }
                 else if(node.DiscountType == CommonStr.DiscountPolicyTypes.ConditionalProductDiscount)
                 {
-                    DiscountPreCondition preCondition = (DiscountPreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new ConditionalProductDiscount((int)node.DiscountProductId, preCondition, (double)node.Discount);
+                    int? preCondition = node.PreConditionNumber;
+                    if(preCondition != null)
+                    {
+                        DiscountPreCondition preConditionObj = new DiscountPreCondition((int)preCondition);
+                        if(preCondition == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX)
+                        {
+                            return new ConditionalProductDiscount(preConditionObj, (double)node.Discount, (int)node.MinProductUnits, (int)node.DiscountProductId);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    
                 }
                 else if(node.DiscountType == CommonStr.DiscountPolicyTypes.ConditionalBasketDiscount)
                 {
-                    DiscountPreCondition preCondition = (DiscountPreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new ConditionalBasketDiscount(preCondition, (double)node.Discount);
+                    int? preCondition = node.PreConditionNumber;
+                    if (preCondition != null)
+                    {
+                        DiscountPreCondition preConditionObj = new DiscountPreCondition((int)preCondition);
+                        if(preCondition == CommonStr.DiscountPreConditions.BasketPriceAboveX)
+                        {
+                            return new ConditionalBasketDiscount(preConditionObj, (double)node.Discount, (double)node.MinBasketPrice);
+                        }
+                        else if(preCondition == CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX)
+                        {
+                            return new ConditionalBasketDiscount((double)node.MinProductPrice, preConditionObj);
+                        }
+                        else if(preCondition == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX)
+                        {
+                            return new ConditionalBasketDiscount(preConditionObj, (double)node.Discount, (int)node.MinUnitsAtBasket);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {
-                    throw new Exception("not valid discount policy child");
+                    return null;
                 }
 
             }
@@ -239,34 +278,116 @@ namespace Server.DAL.StoreDb
             {
                 if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.ProductPurchasePolicy)
                 {
-                    PurchasePreCondition preCondition = (PurchasePreCondition) DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new ProductPurchasePolicy(preCondition, (int)node.PolicyProductId);
+                    int? preCondition = node.PreConditionNumber;
+                    PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
+                    if (preCondition != null)
+                    {
+                        if(preCondition == CommonStr.PurchasePreCondition.MaxUnitsOfProductType)
+                        {
+                            return new ProductPurchasePolicy((int)node.MaxProductIdUnits, preConditionObj, (int)node.PolicyProductId);
+                        }
+                        else if(preCondition == CommonStr.PurchasePreCondition.MinUnitsOfProductType)
+                        {
+                            return new ProductPurchasePolicy(preConditionObj, (int)node.MinProductIdUnits, (int)node.PolicyProductId);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.BasketPurchasePolicy)
                 {
-                    PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new BasketPurchasePolicy(preCondition);
+                    int? preCondition = node.PreConditionNumber;
+                    if (preCondition != null)
+                    {
+                        PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
+                        if (preCondition == CommonStr.PurchasePreCondition.MaxItemsAtBasket)
+                        {
+                            return new BasketPurchasePolicy(preConditionObj, (int)node.MaxItemsAtBasket);
+                        }
+                        else if(preCondition == CommonStr.PurchasePreCondition.MinItemsAtBasket)
+                        {
+                            return new BasketPurchasePolicy((int)node.MinItemsAtBasket, preConditionObj);
+                        }
+                        else if (preCondition == CommonStr.PurchasePreCondition.MaxBasketPrice)
+                        {
+                            return new BasketPurchasePolicy(preConditionObj, (double)node.MaxBasketPrice);
+                        }
+                        else if (preCondition == CommonStr.PurchasePreCondition.MinBasketPrice)
+                        {
+                            return new BasketPurchasePolicy((double)node.MinBasketPrice, preConditionObj);
+                        }
+                        else if(preCondition == CommonStr.PurchasePreCondition.allwaysTrue)
+                        {
+                            return new BasketPurchasePolicy(preConditionObj);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+       
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.SystemPurchasePolicy)
                 {
-                    PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new SystemPurchasePolicy(preCondition, node.StoreId); 
+                    int? preCondition = node.PreConditionNumber;
+                    if (preCondition != null)
+                    {
+                        PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
+                        if (preCondition == CommonStr.PurchasePreCondition.StoreMustBeActive)
+                        {
+                            return new SystemPurchasePolicy(preConditionObj, node.StoreId);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else if (node.PurchasePolicyType == CommonStr.PurchasePolicyTypes.UserPurchasePolicy)
                 {
-                    PurchasePreCondition preCondition = (PurchasePreCondition)DbManager.Instance.GetPreCondition((int)node.PreConditionId);
-                    return new UserPurchasePolicy(preCondition); 
+                    int? preCondition = node.PreConditionNumber;
+                    if (preCondition != null)
+                    {
+                        PurchasePreCondition preConditionObj = new PurchasePreCondition((int)preCondition);
+                        if(preCondition == CommonStr.PurchasePreCondition.OwnerCantBuy)
+                        {
+                            return new UserPurchasePolicy(preConditionObj);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                        
                 }
                 else
                 {
-                    throw new Exception("not valid discount policy child");
+                    return null;
                 }
 
             }
 
             if (node.PurchasePolicyType != CommonStr.PurchasePolicyTypes.CompundPurchasePolicy)
             {
-                throw new Exception("should be compund discount type!");
+                throw new Exception("should be compund purchase type!");
             }
 
             List<PurchasePolicy> childrens = new List<PurchasePolicy>();

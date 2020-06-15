@@ -9,6 +9,10 @@ using Server.Communication.DataObject.ThinObjects;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 using Server.DAL;
 using Server.Utils;
+using System.Data.Entity.Infrastructure;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -73,11 +77,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Dictionary<int, string> avilableDiscount = new Dictionary<int, string>();
             avilableDiscount.Add(CommonStr.DiscountPreConditions.NoDiscount, "no discount at all");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above1Unit, "buy more Than 1 unit and get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above2Units, "buy more than 2 units and get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAbove100, "if product price above 100, get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAbove200, "if product price above 200, get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, "if basket price above 1000, get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, "Basket Price Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX, "Num Of Items At Basket Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX, "Discount 'X' On All Products Their Price Above 'Y'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX, "Discount 'X' On Product 'Y' If Num Units Of Product 'Y' Bigger Than 'Z'");
             return avilableDiscount;
         }
 
@@ -86,10 +89,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> avilablePurchasePolicy = new Dictionary<int, string>();
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.allwaysTrue, "No Condition");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.OwnerCantBuy, "Strore Owner Can't buy from the store");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, "Max 10 product per basket!");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.AtLeat11ProductPerBasket, "At Leat 11 product per basket");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.singleOfProductType, "you can buy only single unit of product id");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, "in order to buy store must be active");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxItemsAtBasket, "Max 'X' Items Per Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinItemsAtBasket, "Min 'X' Items Per Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxUnitsOfProductType, "Max 'X' Units Of Product 'Y' In Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinUnitsOfProductType, "Min 'X' Units Of Product 'Y' In Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxBasketPrice, "Basket Price Is 'X' At Most");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinBasketPrice, "Basket Price Is 'X' At Least");
             return avilablePurchasePolicy;
         }
 
@@ -263,49 +269,52 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, string discountPolicy)
         {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            }
-            if (!stores.ContainsKey(storeId))
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            }
-            DiscountPolicy parsedDiscount = DiscountParser.Parse(discountPolicy);
-            if(!DiscountParser.checkDiscount(parsedDiscount))
-            {
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.DiscountPolicyParsedFailed);
-            }
-            return stores[storeId].UpdateDiscountPolicy(user, parsedDiscount);
+            throw new NotImplementedException();
+
+            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            //User user = userManager.GetAtiveUser(userName);
+            //if (user == null)
+            //{
+            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            //}
+            //if (!stores.ContainsKey(storeId))
+            //{
+            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            //}
+            //DiscountPolicy parsedDiscount = DiscountParser.Parse(discountPolicy);
+            //if(!DiscountParser.checkDiscount(parsedDiscount))
+            //{
+            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.DiscountPolicyParsedFailed);
+            //}
+            //return stores[storeId].UpdateDiscountPolicy(user, parsedDiscount);
 
         }
 
 
         public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, string purchasePolicy)
         {
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            User user = userManager.GetAtiveUser(userName);
-            if (user == null)
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            }
-            if (!stores.ContainsKey(storeId))
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            }
-            PurchasePolicy parsedPurchase = PurchasePolicyParser.Parse(purchasePolicy);
-            if(!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
-            {
-                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.PurchasePolicyParsedFailed);
+            throw new NotImplementedException();
+            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            //User user = userManager.GetAtiveUser(userName);
+            //if (user == null)
+            //{
+            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            //}
+            //if (!stores.ContainsKey(storeId))
+            //{
+            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            //}
+            //PurchasePolicy parsedPurchase = PurchasePolicyParser.Parse(purchasePolicy);
+            //if(!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
+            //{
+            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.PurchasePolicyParsedFailed);
 
-            }
-            return stores[storeId].UpdatePurchasePolicy(user, parsedPurchase);
+            //}
+            //return stores[storeId].UpdatePurchasePolicy(user, parsedPurchase);
 
         }
 

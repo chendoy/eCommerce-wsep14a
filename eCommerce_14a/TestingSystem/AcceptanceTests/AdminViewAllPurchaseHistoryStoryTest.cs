@@ -42,7 +42,7 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ViewValidHistoryTest()
         {
-            AddProductToBasket(username, storeID, 3, 1);
+            AddProductToBasket(username, storeID, 1, 1);
             PerformPurchase(username, paymentDetails, address);
             Assert.AreNotEqual(0, GetAllUsersHistory("Admin").Item1.Count);
         }

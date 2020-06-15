@@ -11,7 +11,7 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ManagerRemoveProductStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID = 1;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
         string userManager = UserGenerator.GetValidUsernames()[1];
@@ -34,7 +34,7 @@ namespace TestingSystem.AcceptanceTests
             storeID = OpenStore(username).Item1;
             anotherStoreID = OpenStore(username).Item1;
             AppointStoreManage(username, userManager, storeID);
-            ChangePermissions(username, userManager, storeID, new int[] { 1, 1, 1 });
+            ChangePermissions(username, userManager, storeID, new int[] { 1, 1, 1 , 0, 0});
         }
 
         [TestCleanup]

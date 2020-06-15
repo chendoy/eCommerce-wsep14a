@@ -75,7 +75,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         private bool ValidStoreId(Store store, Dictionary<string, object> searchBy)
         {
             if (searchBy.ContainsKey(CommonStr.SearcherKeys.StoreId))
-                if ((long)searchBy[CommonStr.SearcherKeys.StoreId] == store.Id)
+                if ((int)searchBy[CommonStr.SearcherKeys.StoreId] == store.Id)
                     return true;
                 else
                     return false;

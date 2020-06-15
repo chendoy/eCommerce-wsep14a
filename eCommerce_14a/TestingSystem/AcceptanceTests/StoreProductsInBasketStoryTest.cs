@@ -14,7 +14,7 @@ namespace TestingSystem.AcceptanceTests
     {
         int storeID;
         string userID;
-        int productID = 3;
+        int productID = 1;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
         string productDetails = "Details";

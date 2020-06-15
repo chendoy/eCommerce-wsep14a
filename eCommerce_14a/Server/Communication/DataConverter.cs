@@ -146,7 +146,7 @@ namespace Server.Communication
         {
             if (policyData.GetType() == typeof(ProductPurchasePolicy))
             {
-                int policyProdutId = ((ProductPurchasePolicy)policyData).policyProductId;
+                int policyProdutId = ((ProductPurchasePolicy)policyData).ProductId;
                 int preCondition = ((ProductPurchasePolicy)policyData).PreCondition.PreConditionNumber;
                 return new PurchasePolicyProductData(preCondition, policyProdutId);
             }

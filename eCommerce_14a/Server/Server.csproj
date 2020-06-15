@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="serverConfig.json" />
     <None Include="packages.config" />
     <None Include="Properties\launchSettings.json" />
   </ItemGroup>
@@ -163,7 +164,6 @@
     <Compile Include="DAL\StoreDb\DbProduct.cs" />
     <Compile Include="DAL\StoreDb\DbPurchasePolicy.cs" />
     <Compile Include="DAL\StoreDb\DbStore.cs" />
-    <Compile Include="DAL\StoreDb\DbPreCondition.cs" />
     <Compile Include="DAL\StoreDb\StoreAdapter.cs" />
     <Compile Include="DAL\StoreDb\StoreManager.cs" />
     <Compile Include="DAL\StoreDb\StoreOwner.cs" />
@@ -183,7 +183,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
-    <Compile Include="StoreComponent\DomainLayer\PolicyValidator.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
@@ -204,10 +203,8 @@
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
     <Compile Include="Utils\DeliverySystem.cs" />
-    <Compile Include="Utils\DiscountPolicyParser.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
-    <Compile Include="Utils\PurchasePolicyParser.cs" />
     <Compile Include="Utils\RequestMaker.cs" />
     <Compile Include="Utils\StateInitiator.cs" />
   </ItemGroup>
