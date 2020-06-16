@@ -28,7 +28,8 @@ namespace Server.DAL
         private static readonly object padlock = new object();
         private static DbManager instance = null;
         private bool testingmode;
-
+        List<object> insertData;
+        List<object> deleteData;
         private DbManager()
         {
             dbConn = new EcommerceContext();
@@ -36,6 +37,8 @@ namespace Server.DAL
             String Root = Directory.GetCurrentDirectory();
             JObject data =  JObject.Parse(File.ReadAllText(Path.Combine(new string[] { Root, "configFile.json" })));
             testingmode = data.GetValue("mode").ToString().Equals("testing");
+            insertData = new List<object>();
+            deleteData = new List<object>();
         }
 
         public static DbManager Instance
