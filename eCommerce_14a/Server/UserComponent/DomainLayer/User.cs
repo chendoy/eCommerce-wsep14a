@@ -335,7 +335,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
 
         //This user will be store Owner 
-        public Tuple<bool, string> addStoreOwnership(int storeId, string appointer)
+        public Tuple<bool, string> addStoreOwnership(int storeId, string appointer, bool saveCahnges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
@@ -351,10 +351,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             
             //DB Insert//
             StoreOwnershipAppoint soa = new StoreOwnershipAppoint(appointer, this.Name, storeId);
-            DbManager.Instance.InsertStoreOwnershipAppoint(soa);
+            try
+            {
+                DbManager.Instance.InsertStoreOwnershipAppoint(soa, saveCahnges);
+
+            }
+            catch(Exception ex)
+            {
+                // write to log err and return failed
+            }
 
 
-            return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions);
+            return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions, saveCahnges);
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
@@ -445,7 +453,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return this.IsAdmin;
         }
         //Set User permission over spesific store
-        public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set)
+        public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set, bool saveChanges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (store_id < 1)
@@ -461,11 +469,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
                 List<UserStorePermissions> perms = DbManager.Instance.GetUserStorePermissionSet(store_id, this.Name);
                 Store_options.Remove(store_id);
-                DbManager.Instance.DeletePermission(perms);
+                DbManager.Instance.DeletePermission(perms, saveChanges);
             }
 
             List<UserStorePermissions> permsN = AdapterUser.CreateNewPermissionSet(Name, store_id, permission_set);
-            DbManager.Instance.InsertUserStorePermissionSet(permsN);
+            DbManager.Instance.InsertUserStorePermissionSet(permsN, saveChanges);
             Store_options.Add(store_id, permission_set);
             return new Tuple<bool, string>(true, "");
         }

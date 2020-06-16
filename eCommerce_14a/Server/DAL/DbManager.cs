@@ -298,16 +298,19 @@ namespace Server.DAL
                 DeleteSingleManager(single);
             }
         }
-        public void DeleteSinglePermission(UserStorePermissions msg)
+        public void DeleteSinglePermission(UserStorePermissions msg, bool saveChanges=false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.UserStorePermissions.Remove(msg);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeletePermission(List<UserStorePermissions> list)
+        public void DeletePermission(List<UserStorePermissions> list, bool saveChanges)
         {
             if (testingmode)
             {
@@ -315,7 +318,11 @@ namespace Server.DAL
             }
             foreach (UserStorePermissions single in list)
             {
-                DeleteSinglePermission(single);
+                DeleteSinglePermission(single, saveChanges);
+            }
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
@@ -465,7 +472,7 @@ namespace Server.DAL
             DeleteManagers(manager);
             //Permissions
             List<UserStorePermissions> perm = dbConn.UserStorePermissions.Where(p => p.UserName == name).ToList();
-            DeletePermission(perm);
+            DeletePermission(perm, true);
             //Approvals
             List<StoreOwnertshipApprovalStatus> apprvs = dbConn.StoreOwnertshipApprovalStatuses.Where(c => c.CandidateName == name).ToList();
             DeleteAprovalsStatuses(apprvs);
@@ -561,7 +568,7 @@ namespace Server.DAL
                 return new Tuple<int, string>(-1, CommonStr.GeneralErrMessage.DbErrorMessage);
             }
 
-            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id, userName);
+            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id, userName, false);
 
             if (!ownershipAdded.Item1)
             {
@@ -2170,14 +2177,17 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void InsertStoreOwnershipAppoint(StoreOwnershipAppoint soa)
+        public void InsertStoreOwnershipAppoint(StoreOwnershipAppoint soa, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwnershipAppoints.Add(soa);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public void InsertStoreOwnerShipApprovalStatus(StoreOwnertshipApprovalStatus soas)
@@ -2190,17 +2200,20 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void InsertUserStorePermission(UserStorePermissions usp)
+        public void InsertUserStorePermission(UserStorePermissions usp, bool saveCahnges=false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.UserStorePermissions.Add(usp);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertUserStorePermissionSet(List<UserStorePermissions> usps)
+        public void InsertUserStorePermissionSet(List<UserStorePermissions> usps, bool saveChanges)
         {
             if (testingmode)
             {
@@ -2208,7 +2221,11 @@ namespace Server.DAL
             }
             foreach (UserStorePermissions usp in usps)
             {
-                InsertUserStorePermission(usp);
+                InsertUserStorePermission(usp, saveChanges);
+            }
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
