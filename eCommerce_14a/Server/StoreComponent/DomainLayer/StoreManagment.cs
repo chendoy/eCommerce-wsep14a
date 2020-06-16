@@ -226,7 +226,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return retList;
         }
 
-        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount, bool saveChanges)
+        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount, bool saveChanges= false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -246,7 +246,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount, saveCahnges: saveChanges);
         }
 
-        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount, bool saveCahnges)
+        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount, bool saveCahnges = false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
