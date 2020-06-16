@@ -117,7 +117,7 @@ namespace TestingSystem.DbManger_Tests
             storeParam.Add(CommonStr.StoreParams.StoreName, "shopiShop");
             storeParam.Add(CommonStr.StoreParams.mainOwner, "liav");
             Store store = new Store(storeParam);
-            DbManager.Instance.InsertStore(store);
+            DbManager.Instance.InsertStore(store, true);
         }
 
         [TestMethod]
