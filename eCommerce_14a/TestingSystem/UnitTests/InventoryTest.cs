@@ -210,7 +210,7 @@ namespace TestingSystem.UnitTests.InventroyTest
 
         private Tuple<bool, string> AddProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.IncreaseProductAmount(productId, amount, 1);
+            return inv.IncreaseProductAmount(productId, amount, 1,false);
         }
 
 
@@ -268,7 +268,7 @@ namespace TestingSystem.UnitTests.InventroyTest
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         private Tuple<bool, string> decraseProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.DecraseProductAmount(productId, amount, 1);
+            return inv.DecraseProductAmount(productId, amount, 1,false);
         }
 
 

@@ -509,7 +509,6 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if (owners.Contains(user.Name))
                 return false;
-
             try
             {
                 //DB add owner

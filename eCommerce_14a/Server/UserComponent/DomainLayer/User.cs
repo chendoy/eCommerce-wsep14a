@@ -358,11 +358,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             }
             catch(Exception ex)
             {
-                // write to log err and return failed
+                Logger.logError("Add Store Owner db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Insert Store Owner Operation to DB Failed cannot proceed");
             }
-
-
-            return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions, saveCahnges);
+            Tuple<bool,string> ans =  setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions, saveCahnges);
+            if(!ans.Item1)
+            {
+                DbManager.Instance.DeleteStoreOwnerShipAppoint(soa);
+                return new Tuple<bool, string>(false, "Insert Store Permissions Operation to DB Failed cannot proceed");
+            }
+            return new Tuple<bool, string>(true, "Insert Permissions to DB is OK");
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
@@ -469,12 +474,28 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
                 List<UserStorePermissions> perms = DbManager.Instance.GetUserStorePermissionSet(store_id, this.Name);
                 Store_options.Remove(store_id);
-                DbManager.Instance.DeletePermission(perms, saveChanges);
+                try
+                {
+                    DbManager.Instance.DeletePermission(perms);
+                }
+                catch(Exception ex)
+                {
+                    Logger.logError("Delete Permissions error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "Delete Permissions DB Failed cannot proceed");
+                }
+                
             }
-
-            List<UserStorePermissions> permsN = AdapterUser.CreateNewPermissionSet(Name, store_id, permission_set);
-            DbManager.Instance.InsertUserStorePermissionSet(permsN, saveChanges);
             Store_options.Add(store_id, permission_set);
+            List<UserStorePermissions> permsN = AdapterUser.CreateNewPermissionSet(Name, store_id, permission_set);
+            try
+            {
+                DbManager.Instance.InsertUserStorePermissionSet(permsN, saveChanges);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("Insert Permissions error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Insert Permissions DB Failed cannot proceed");
+            }
             return new Tuple<bool, string>(true, "");
         }
         public bool RemovePermission(int store_id)
