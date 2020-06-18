@@ -18,6 +18,7 @@ using System.Data.Common;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.ComponentModel;
+using eCommerce_14a;
 
 namespace Server.DAL
 {
@@ -79,7 +80,10 @@ namespace Server.DAL
         }
         public void SaveChanges()
         {
-            dbConn.SaveChanges();
+            if(dbConn.SaveChanges() <= 0)
+            {
+                Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
+            }
         }
         public int GetNextPurchBasketId()
         {
@@ -2194,14 +2198,17 @@ namespace Server.DAL
 
 
         // User Componnent Insert Functions
-        public void InsertUser(DbUser user)
+        public void InsertUser(DbUser user, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Users.Add(user);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public void InsertCandidateToOwnerShip(CandidateToOwnership candidate, bool savechanges = false)
