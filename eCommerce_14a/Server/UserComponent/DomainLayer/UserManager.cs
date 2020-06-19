@@ -147,10 +147,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
             DbUser dbadmin = DbManager.Instance.GetUser(username);
-            if(dbadmin == null)
+            if (dbadmin == null)
             {
                 DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, true, false));
-                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1),true);
+                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1), true);
             }
             return new Tuple<bool, string>(true, "");
         }
@@ -219,6 +219,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 DbManager.Instance.SaveChanges();
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
+            Statistics.Instance.InserRecord(username, DateTime.Now);
             DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(false, "Wrong Credentials\n");
 
@@ -258,6 +259,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Active_users.Add(tName, nUser);
             Available_ID++;
             Interlocked.Exchange(ref usingResource, 0);
+            Statistics.Instance.InserRecord(tName, DateTime.Now);
             return tName;
         }
         //Tries to get User from users list

@@ -78,8 +78,12 @@ namespace Server.DAL
                 return 1;
             }
         }
-        public void SaveChanges()
+        public void SaveChanges(bool working = true)
         {
+            if(!working)
+            {
+                Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
+            }
             if(dbConn.SaveChanges() <= 0)
             {
                 Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
