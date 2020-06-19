@@ -186,7 +186,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             }
             ActiveStore = newStatus;
             //DB-UPDATE
-            DbManager.Instance.UpdateStore(DbManager.Instance.GetDbStore(this.Id), this);
+            DbManager.Instance.UpdateStore(DbManager.Instance.GetDbStore(this.Id), this, true);
             return new Tuple<bool, string>(true, "");
         }
 
@@ -218,7 +218,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             DiscountPolicy = discountPolicy;
             //DB update Discount Policy
-            DbManager.Instance.UpdateDiscountPolicy(DiscountPolicy, this);
+            DbManager.Instance.UpdateDiscountPolicy(DiscountPolicy, this, true);
             return new Tuple<bool, string>(true, "");
             
         }
@@ -252,7 +252,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             PurchasePolicy = purchasePolicy;
             //DB update Purchase Policy
-            DbManager.Instance.UpdatePurchasePolicy(purchasePolicy, this);
+            DbManager.Instance.UpdatePurchasePolicy(purchasePolicy, this, true);
             return new Tuple<bool, string>(true, "");
           
         }
