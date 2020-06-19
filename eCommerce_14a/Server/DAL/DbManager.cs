@@ -1741,7 +1741,7 @@ namespace Server.DAL
                 dbConn.SaveChanges();
             }
         }
-        public void UpdateUserLogInStatus(string user,bool status)
+        public void UpdateUserLogInStatus(string user,bool status, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -1751,7 +1751,11 @@ namespace Server.DAL
             if(usr != null)
             {
                 usr.IsLoggedIn = status;
-                dbConn.SaveChanges();
+                if(savechanges)
+                {
+                    dbConn.SaveChanges();
+                }
+
             }
 
         }

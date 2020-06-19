@@ -215,7 +215,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             {
                 //Is ready to become Owner.
                 
-                appointed.AppointerMasterAppointer(storeId);
+                string maserAppointer = appointed.MasterAppointer[storeId];
+                appointed.MasterAppointer.Remove(storeId);
                 if(!appointed.addStoreOwnership(storeId, appointer.getUserName()).Item1)
                 {
                     return new Tuple<bool, string>(false, "Could not add store Owner to DB");
