@@ -1,5 +1,6 @@
 ﻿using eCommerce_14a;
 using eCommerce_14a.UserComponent.DomainLayer;
+using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,14 @@ namespace Server.UserComponent.DomainLayer
     public class Statistics
     {
         public List<Tuple<string,DateTime>> visitors { get; set; }
-        
+        public Statistic_View sv { get; set; }
+
+        bool view_is_active { get; set; }
         Statistics()
         {
+            sv = new Statistic_View();
             visitors = new List<Tuple<string, DateTime>>();
+            view_is_active = false;
         }
         private static readonly object padlock = new object();
         private static Statistics instance = null;
@@ -38,15 +43,22 @@ namespace Server.UserComponent.DomainLayer
         public void InserRecord(string uname, DateTime time)
         {
             visitors.Add(new Tuple<string, DateTime>(uname, time));
+            if (view_is_active)
+            {
+                SetNumber(uname, sv);
+                Publisher.Instance.NotifyStatistics(sv);
+            }
         }
         public void cleanup()
         {
+            sv = new Statistic_View();
+            view_is_active = false;
             visitors = new List<Tuple<string, DateTime>>();
         }
         public Statistic_View getViewData(DateTime starttime, DateTime endTime)
         {
-            Statistic_View sv = new Statistic_View();
-            foreach(Tuple<string,DateTime> user in visitors)
+            view_is_active = true;
+            foreach (Tuple<string,DateTime> user in visitors)
             {
                 if(user.Item2 >= starttime && user.Item2 <= endTime)
                 {
@@ -58,7 +70,7 @@ namespace Server.UserComponent.DomainLayer
         }
         public Statistic_View getViewDataStart(DateTime starttime)
         {
-            Statistic_View sv = new Statistic_View();
+            view_is_active = true;
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 if((user.Item2 >= starttime))
@@ -72,7 +84,7 @@ namespace Server.UserComponent.DomainLayer
         }
         public Statistic_View getViewDataEnd(DateTime endtime)
         {
-            Statistic_View sv = new Statistic_View();
+            view_is_active = true;
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 if(user.Item2 <= endtime)
@@ -86,7 +98,7 @@ namespace Server.UserComponent.DomainLayer
         }
         public Statistic_View getViewDataAll()
         {
-            Statistic_View sv = new Statistic_View();
+            view_is_active = true;
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 SetNumber(user.Item1, sv);
