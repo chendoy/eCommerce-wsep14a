@@ -1170,27 +1170,37 @@ namespace Server.DAL
             }
             return dbConn.StoreOwners.Where(o => o.OwnerName.Equals(name) && o.StoreId == storeID).FirstOrDefault();
         }
-        public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s)
+        public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
-            DeleteAllStoreDiscountPolicy(s, true);
-            InsertDiscountPolicy(newPolicy, s.Id, null, true);
+
+            DeleteAllStoreDiscountPolicy(s, false);
+            InsertDiscountPolicy(newPolicy, s.Id, null, false);
+            if (saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void UpdatePurchasePolicy(PurchasePolicy newPolicy, Store store)
+        public void UpdatePurchasePolicy(PurchasePolicy newPolicy, Store store, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
-            DeleteAllStorePurchasePolicy(store, true);
-            InsertPurchasePolicy(newPolicy, store.Id, null, true);
+            
+            DeleteAllStorePurchasePolicy(store, false);
+            InsertPurchasePolicy(newPolicy, store.Id, null, false);
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void UpdateStore(DbStore dbstore, Store store)
+        public void UpdateStore(DbStore dbstore, Store store, bool saveCahnges)
         {
             if (testingmode)
             {
@@ -1199,7 +1209,10 @@ namespace Server.DAL
             dbstore.ActiveStore = store.ActiveStore;
             dbstore.Rank = store.Rank;
             dbstore.StoreName = store.StoreName;
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public void UpdatePurchaseBasket(DbPurchaseBasket dbPurchaseBasket, PurchaseBasket basket, bool saveChanges)
@@ -1452,15 +1465,7 @@ namespace Server.DAL
 
         }
 
-        //private int GetDbPreConditionNumberById(int Id)
-        //{
-        //    return dbConn.PreConditions.Where(pre => pre.Id == Id).FirstOrDefault().PreConditionNum;
-        //}
-
-        //private DbPreCondition GetDbPreCondition(int preCondition_num, int preType)
-        //{
-        //    return dbConn.PreConditions.Where(pre => pre.PreConditionNum == preCondition_num && pre.PreConditionType == preType).FirstOrDefault();
-        //}
+ 
 
 
         private void InsertOwners(List<string> owners, int storeId, bool saveChanges)
@@ -1534,11 +1539,7 @@ namespace Server.DAL
         }
 
 
-        //public void InsertPreCondition(DbPreCondition preCoondition)
-        //{
-        //    dbConn.PreConditions.Add(preCoondition);
-        //    dbConn.SaveChanges();
-        //}
+
 
         public void InsertProduct(DbProduct product, bool savechanges)
         {

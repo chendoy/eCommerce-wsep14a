@@ -448,30 +448,6 @@
 
         }
 
-        //private void AddPreConditions(EcommerceContext context)
-        //{
-
-
-        //    var preconditions = new List<DbPreCondition>();
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.NoDiscount)); //1
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.BasketPriceAboveX)); //2
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.NumUnitsInBasketAboveX)); //3
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.NumUnitsOfProductAboveX)); //4
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.DiscountPreCondition, CommonStr.DiscountPreConditions.ProductPriceAboveX)); //5
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.allwaysTrue)); //6
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MaxBasketPrice)); //7
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MaxItemsAtBasket)); //8
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MaxUnitsOfProductType)); //9
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MinBasketPrice)); //10
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MinItemsAtBasket)); //11
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.MinUnitsOfProductType)); //12
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.OwnerCantBuy)); //13
-        //    preconditions.Add(new DbPreCondition(CommonStr.PreConditionType.PurchasePreCondition, CommonStr.PurchasePreCondition.StoreMustBeActive)); //14
-
-
-        //    preconditions.ForEach(pc => context.PreConditions.Add(pc));
-        //    context.SaveChanges();
-        //}
 
         private void AddStoreManagers(EcommerceContext context)
         {
