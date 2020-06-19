@@ -184,6 +184,8 @@
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
+    <Compile Include="UserComponent\DomainLayer\Statistics.cs" />
+    <Compile Include="UserComponent\DomainLayer\Statistic_View.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
     <Compile Include="UserComponent\DomainLayer\DeliveryHandler.cs" />
