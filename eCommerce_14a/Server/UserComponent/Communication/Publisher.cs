@@ -160,7 +160,8 @@ namespace Server.UserComponent.Communication
         }
         public void NotifyStatistics(Statistic_View sv)
         {
-            //ws.notifyStatistics(sv);
+            List<string> admins = UserManager.Instance.GetAllAdmins();
+            //ws.notifyStatistics(admins,sv);
         }
         public void cleanup()
         {

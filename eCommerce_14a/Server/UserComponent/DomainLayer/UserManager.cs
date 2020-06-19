@@ -358,8 +358,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             return permissionsSet;
         }
-
+        public List<string> GetAllAdmins()
+        {
+            List<string> admins = new List<string>();
+            foreach(User usr in users.Values)
+            {
+                if (usr.IsAdmin)
+                    admins.Add(usr.getUserName());
+            }
+            return admins;
+        }
     }
+    
 
 
 }
