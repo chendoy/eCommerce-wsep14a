@@ -177,8 +177,10 @@
     <Compile Include="SystemTrackTest.cs" />
     <Compile Include="TestValidator.cs" />
     <Compile Include="UnitTests\Appoitment_Test.cs" />
+    <Compile Include="UnitTests\DeliverySystemTests.cs" />
     <Compile Include="UnitTests\DiscountPolicyTest.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
+    <Compile Include="UnitTests\PaymentSystemTests.cs" />
     <Compile Include="UnitTests\PurchaseManagementTest.cs" />
     <Compile Include="UnitTests\PurchasePolicyTest.cs" />
     <Compile Include="UnitTests\SearcherTest.cs" />

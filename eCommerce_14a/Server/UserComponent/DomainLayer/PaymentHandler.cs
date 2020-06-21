@@ -11,11 +11,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     public class PaymentHandler
     {
         bool connected;
-        PaymentSystem paymentSystem;
+        //PaymentSystem paymentSystem;
         PaymentHandler()
         {
             connected = true;
-            paymentSystem = new PaymentSystem();
+            //paymentSystem = new PaymentSystem();
         }
 
         private static readonly object padlock = new object();
