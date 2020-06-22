@@ -278,8 +278,59 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 100).Item1);
             Assert.IsFalse(AP.ChangePermissions("Secondowner", "Appointed", 100, fullpermissions).Item1);
         }
-    
-
+        [TestMethod]
+        public void ManagerAppointsManager()
+        {
+            UM.Register("user1", "Test1");
+            Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 100).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("Appointed", "user1", 100).Item1);
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("user1")));
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("Appointed")));
+        }
+        [TestMethod]
+        public void ManagerRemoveManager()
+        {
+            UM.Register("user1", "Test1");
+            Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 100).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("Appointed", "user1", 100).Item1);
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("user1")));
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("Appointed")));
+            Assert.IsTrue(AP.RemoveAppStoreManager("Appointed", "user1", 100).Item1);
+            Assert.IsFalse(SM.getStore(100).IsStoreManager(UM.GetUser("user1")));
+        }
+        [TestMethod]
+        public void CircularAppoitmentManager()
+        {
+            UM.Register("user1", "Test1");
+            Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 100).Item1);
+            Assert.IsTrue(AP.AppointStoreManager("Appointed", "user1", 100).Item1);
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("user1")));
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("Appointed")));
+            Assert.IsFalse(AP.AppointStoreManager("user1", "Appointed", 100).Item1);
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("Appointed")));
+        }
+        [TestMethod]
+        public void CircularAppoitmentOwner()
+        {
+            UM.Register("user1", "Test1");
+            Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 100).Item1);
+            Assert.IsTrue(AP.AppointStoreOwner("Appointed", "user1", 100).Item1);
+            Assert.IsTrue(AP.ApproveAppoitment("owner", "user1", 100, true).Item1);
+            Assert.IsTrue(SM.getStore(100).IsStoreOwner(UM.GetUser("user1")));
+            Assert.IsTrue(SM.getStore(100).IsStoreOwner(UM.GetUser("Appointed")));
+            Assert.IsFalse(AP.AppointStoreOwner("user1", "Appointed", 100).Item1);
+        }
+        [TestMethod]
+        public void CircularAppoitmentOwnerSelf()
+        {
+            Assert.IsFalse(AP.AppointStoreOwner("owner", "owner", 100).Item1);
+        }
+        [TestMethod]
+        public void CircularAppoitmentManagerSelf()
+        {
+            Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 100).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("Appointed", "Appointed", 100).Item1);
+        }
         [TestMethod]
         public void RemoveOwnerLoop()
         {
@@ -291,6 +342,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             UM.Register("user6", "Test1");
             UM.Register("user7", "Test1");
             UM.Register("user8", "Test1");
+            UM.Register("user9", "Test1");
             UM.Login("user1", "Test1");
             SM.createStore("user1", "Store7");
             //User1 Store Owner
@@ -316,9 +368,21 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             UM.Login("user4", "Test1");
             Assert.IsTrue(AP.AppointStoreManager("user4", "user6", 101).Item1);
             Assert.IsTrue(AP.AppointStoreManager("user2", "user5", 101).Item1);
+            UM.Login("user6", "Test1");
+            Assert.IsTrue(AP.AppointStoreManager("user6", "user9", 101).Item1);
             AP.RemoveStoreOwner("user2", "user7", 101);
+            //user 7 need to remain owner
+            Assert.IsTrue(SM.getStore(101).IsStoreOwner(UM.GetUser("user7")));
             AP.RemoveStoreOwner("user1", "user2", 101);
             //Add checks if owner loop is working corrctly
+            //user 7 user remains removed 2 3 4 6 9 8 stays
+            Assert.IsTrue(SM.getStore(101).IsStoreOwner(UM.GetUser("user7")));
+            Assert.IsFalse(SM.getStore(101).IsStoreOwner(UM.GetUser("user2")));
+            Assert.IsFalse(SM.getStore(101).IsStoreOwner(UM.GetUser("user3")));
+            Assert.IsFalse(SM.getStore(101).IsStoreOwner(UM.GetUser("user4")));
+            Assert.IsTrue(SM.getStore(101).IsStoreManager(UM.GetUser("user8")));
+            Assert.IsFalse(SM.getStore(101).IsStoreManager(UM.GetUser("user6")));
+            Assert.IsFalse(SM.getStore(101).IsStoreManager(UM.GetUser("user9")));
         }
     }
 }
