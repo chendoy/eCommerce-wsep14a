@@ -41,12 +41,16 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public bool checkconnection()
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return this.connected;
+            return PaymentSystem.IsAlive();
         }
         public virtual Tuple<bool,string> pay(string paymentDetails, double amount)
         {
-            if (!connected)
+            if (!PaymentSystem.IsAlive())
                 return new Tuple<bool, string>(false, "Not Connected");
+
+            int transaction_num = PaymentSystem.Pay("1", 1, 1, "1", "1", "1");
+            if(transaction_num < 0)
+                return new Tuple<bool, string>(false, "Payment Failed");
 
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return new Tuple<bool,string>(true,"OK");
@@ -64,6 +68,20 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, "Blank args");
             }
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return new Tuple<bool, string>(true, "OK");
+        }
+
+        public virtual Tuple<bool, string> refund(int transactionId)
+        {
+            if(transactionId < 0 )
+                return new Tuple<bool, string>(false, "Invalid TransactionId");
+
+
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            int cancel_res = PaymentSystem.CancelPayment(transactionId);
+            if(cancel_res < 0)
+                return new Tuple<bool, string>(false, "refund failed");
+
             return new Tuple<bool, string>(true, "OK");
         }
         public void setConnections(bool con)

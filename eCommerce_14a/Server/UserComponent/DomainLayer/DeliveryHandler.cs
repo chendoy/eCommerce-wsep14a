@@ -50,9 +50,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
         public virtual Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
         {
-            if(!connected)
-                return new Tuple<bool, string>(false, "NotConnected");
+            if(!DeliverySystem.IsAlive())
+                return new Tuple<bool, string>(false, "Not Connected Delivery System");
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            int delivery_res = DeliverySystem.Supply("dummy", "dummy", "dummy", "dummy", "dummy");
+            if(delivery_res < 0)
+                return new Tuple<bool, string>(false, "Delivery Failed");
+
             return new Tuple<bool, string>(true, "FineByNow");
         }
         public void setConnection(bool con)
