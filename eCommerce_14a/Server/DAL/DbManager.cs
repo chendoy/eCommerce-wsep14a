@@ -129,11 +129,14 @@ namespace Server.DAL
             return;
         }
 
-        public void AppendProductTransaction(Product product, int amount, int storeid)
+        public void AppendProductTransaction(Product product, int amount, int storeid, bool saveChanges)
         {
             InsertProduct(StoreAdapter.Instance.ToDbProduct(product), false);
            InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(product.Id, amount, storeid), false);
-           dbConn.SaveChanges();
+           if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public CandidateToOwnership GetCandidateToOwnership(string cand, string owner, int storeId)
@@ -383,7 +386,7 @@ namespace Server.DAL
             }
         }
 
-        public Tuple<bool, string> PerformPurchaseTransaction(Cart userCart, PaymentHandler paymentHandler, string paymentDetails, string address, DeliveryHandler devHandler, Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore, Dictionary<string, List<Purchase>> purchasesHistoryByUser)
+        public Tuple<bool, string> PerformPurchaseTransaction(Cart userCart, PaymentHandler paymentHandler, string paymentDetails, string deliveryDetails, DeliveryHandler devHandler, Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore, Dictionary<string, List<Purchase>> purchasesHistoryByUser)
         {
             string user = userCart.user;
             Tuple<bool, string> updatePriceRes = userCart.UpdateCartPrice(false);
@@ -392,30 +395,40 @@ namespace Server.DAL
                 return new Tuple<bool, string>(false, "there was err in PerformPurchase when Calling to UpdatePrice with Db Update " + updatePriceRes.Item2);
             }
 
-            Tuple<bool, string> payRes = paymentHandler.pay(paymentDetails, userCart.Price);
-            if (!payRes.Item1)
+            int payRes = paymentHandler.pay(paymentDetails);
+            if (payRes == -1)
             {
-                return payRes;
+                return new Tuple<bool, string>(false, "payment faield");
             }
 
             Tuple<bool, string> removeFromStockRes = userCart.RemoveFromStoresStock(false);
 
             if (!removeFromStockRes.Item1)
             {
+                Tuple<bool, string> refund_res = paymentHandler.refund(payRes);
+                if (!refund_res.Item1)
+                    return refund_res;
                 return removeFromStockRes;
             }
 
-            Tuple<bool, string> delvRes = devHandler.ProvideDeliveryForUser(address, true);
+            Tuple<bool, string> delvRes = devHandler.ProvideDeliveryForUser(deliveryDetails);
             if (!delvRes.Item1)
             {
-                paymentHandler.refund(paymentDetails, userCart.Price);
                 userCart.RestoreItemsToStores(false);
+                Tuple<bool, string> refund_res = paymentHandler.refund(payRes);
+                if (!refund_res.Item1)
+                    return refund_res;
                 return delvRes;
             }
 
             Tuple<bool, string> setPurchaseTimeRes =  userCart.SetPurchaseTime(DateTime.Now, false);
             if(!setPurchaseTimeRes.Item1)
             {
+                userCart.RestoreItemsToStores(false);
+                Tuple<bool, string> refund_res = paymentHandler.refund(payRes);
+                if (!refund_res.Item1)
+                    return refund_res;
+
                 return setPurchaseTimeRes;
             }
 
