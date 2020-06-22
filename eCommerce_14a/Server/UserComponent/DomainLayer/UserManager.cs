@@ -363,7 +363,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             List<string> admins = new List<string>();
             foreach(User usr in users.Values)
             {
-                if (usr.IsAdmin)
+                if (usr.IsAdmin && usr.LoggedStatus())
                     admins.Add(usr.getUserName());
             }
             return admins;
