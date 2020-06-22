@@ -189,7 +189,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28 </req>
-        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address, bool Failed = false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (String.IsNullOrWhiteSpace(user))
@@ -229,7 +229,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return validCart;
             }
 
-            Tuple<bool, string> transactionres = DbManager.Instance.PerformPurchaseTransaction(userCart, paymentHandler, paymentDetails, address, deliveryHandler, purchasesHistoryByStore, purchasesHistoryByUser);
+            Tuple<bool, string> transactionres = DbManager.Instance.PerformPurchaseTransaction(userCart, paymentHandler, paymentDetails, address, deliveryHandler, purchasesHistoryByStore, purchasesHistoryByUser,Failed);
             if(!transactionres.Item1)
             {
                 return transactionres;

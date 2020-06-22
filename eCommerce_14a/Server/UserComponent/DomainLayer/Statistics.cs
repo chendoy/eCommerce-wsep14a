@@ -12,6 +12,7 @@ namespace Server.UserComponent.DomainLayer
     public class Statistics
     {
         public List<Tuple<string,DateTime>> visitors { get; set; }
+        //Dictonary<string,int>
         public Statistic_View sv { get; set; }
 
         bool view_is_active { get; set; }

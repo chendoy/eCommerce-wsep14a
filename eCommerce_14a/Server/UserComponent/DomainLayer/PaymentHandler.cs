@@ -44,9 +44,9 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return PaymentSystem.IsAlive();
         }
-        public virtual Tuple<bool,string> pay(string paymentDetails, double amount)
+        public virtual Tuple<bool,string> pay(string paymentDetails, double amount, bool Failed = false)
         {
-            if (!PaymentSystem.IsAlive())
+            if (!PaymentSystem.IsAlive(Failed))
                 return new Tuple<bool, string>(false, "Not Connected");
             string[] parsedDetails = paymentDetails.Split('&');
             int transaction_num = PaymentSystem.Pay(parsedDetails[0], parsedDetails[1].ToInt32(), parsedDetails[2].ToInt32(), parsedDetails[3], parsedDetails[4], parsedDetails[5]);
@@ -57,17 +57,59 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return new Tuple<bool,string>(true,"OK");
         }
 
-        public virtual  int pay(string paymentDetails)
+        public virtual  int pay(string paymentDetails, bool Failed = false)
         {
-            if (!PaymentSystem.IsAlive())
+            if (paymentDetails is null)
+                return -1;
+            if (!PaymentSystem.IsAlive(Failed))
                 return -1;
             string[] parsedDetails = paymentDetails.Split('&');
-            int transaction_num = PaymentSystem.Pay(parsedDetails[0], parsedDetails[1].ToInt32(), parsedDetails[2].ToInt32(), parsedDetails[3], parsedDetails[4], parsedDetails[5]);
-            if (transaction_num < 0)
+            if (parsedDetails.Length < 6)
+            {
                 return -1;
+            }
+            try
+            {
+                string cardNum = parsedDetails[0];
+                if(cardNum.Length == 0)
+                {
+                    return -1;
+                }
+                int month = parsedDetails[1].ToInt32();
+                if(month < 1 || month > 12)
+                {
+                    return -1;
+                }
+                int year = parsedDetails[2].ToInt32();
+                string name = parsedDetails[3];
+                if (name.Length == 0)
+                {
+                    return -1;
+                }
+                string cvv = parsedDetails[4];
+                if (cvv.Length == 0)
+                {
+                    return -1;
+                }
+                string sid = parsedDetails[5];
+                if (sid.Length == 0)
+                {
+                    return -1;
+                }
+                int transaction_num = PaymentSystem.Pay(cardNum, month, year, name, cvv, sid);
+                if (transaction_num < 0)
+                    return -1;
 
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return transaction_num;
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+                return transaction_num;
+
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("ParseFailed"+ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return -1;
+            }
+            
         }
 
         public virtual Tuple<bool, string> refund(string paymentDetails, double amount)

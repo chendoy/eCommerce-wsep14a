@@ -41,9 +41,9 @@ namespace TestingSystem
             return sys.PayForProduct(userID, paymentDetails, address);
         }
         
-        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address,bool Failed = false)
         {
-            return sys.PerformPurchase(user, paymentDetails, address);
+            return sys.PerformPurchase(user, paymentDetails, address,Failed);
         }
 
 

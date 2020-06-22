@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,6 +35,50 @@ namespace TestingSystem.UnitTests
         {
             int res = PaymentSystem.CancelPayment(90914);
             Assert.AreEqual(res, 1);
+        }
+        [TestMethod]
+        public void UnSuccesfullPaymentBlankArgs()
+        {
+            string paymentDetails = "3333444455556666&&11&&333&222222222";
+            int res = PaymentHandler.Instance.pay(paymentDetails);
+            Assert.IsFalse(res >= 10000 && res <= 100000);
+        }
+        [TestMethod]
+        public void UnSuccesfullPaymentNullArgs()
+        {
+            int res = PaymentHandler.Instance.pay(null);
+            Assert.IsFalse(res >= 10000 && res <= 100000);
+        }
+        [TestMethod]
+        public void UnSuccesfullPaymentNotEnoughArgs()
+        {
+            string paymentDetails = "3333444455556666&11&333&222222222";
+            int res = PaymentHandler.Instance.pay(paymentDetails);
+            Assert.IsTrue(res == -1);
+        }
+        [TestMethod]
+        public void SuccesfullPayment()
+        {
+            string paymentDetails = "3333444455556666&4&11&333&222222222&4568";
+            int res = PaymentHandler.Instance.pay(paymentDetails);
+            Assert.IsTrue(res != -1);
+        }
+        [TestMethod]
+        public void MonthNotGood()
+        {
+            string paymentDetails = "3333444455556666&78&11&333&222222222&4568";
+            int res = PaymentHandler.Instance.pay(paymentDetails);
+            Assert.IsTrue(res == -1);
+        }
+        [TestMethod]
+        public void SystemIsNouTp()
+        {
+            string paymentDetails = "3333444455556666&4&11&333&222222222&4568";
+            int res = PaymentHandler.Instance.pay(paymentDetails);
+            Assert.IsTrue(res != -1);
+            string paymentDetails2 = "3333444455556666&4&11&333&222222222&4568";
+            int res2 = PaymentHandler.Instance.pay(paymentDetails2,true);
+            Assert.IsTrue(res2 == -1);
         }
     }
 }

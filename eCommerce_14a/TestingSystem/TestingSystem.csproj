@@ -170,6 +170,8 @@
     <Compile Include="IntegrationTests\StubClass.cs" />
     <Compile Include="BridgeInterface.cs" />
     <Compile Include="Driver.cs" />
+    <Compile Include="IntegrationTests\UserStorePurchase.cs" />
+    <Compile Include="IntegrationTests\UserStoreAppoitmentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyBridge.cs" />
     <Compile Include="RealBridge.cs" />
