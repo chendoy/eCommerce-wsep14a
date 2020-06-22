@@ -140,6 +140,18 @@ namespace TestingSystem.DbManger_Tests
             PurchaseManagement.Instance.LoadFromDb();
         }
 
+        [TestMethod]
+        public void TestAppendProductSavedOnProxy()
+        {
+            Product p = new Product(45, 1);
+            DbManager.Instance.AppendProductTransaction(p, 1, 1, false);
+            Assert.AreEqual(null, DbManager.Instance.GetDbProductItem(45));
+            Product p2 = new Product(46, 1);
+            DbManager.Instance.AppendProductTransaction(p2, 1, 1, true);
+            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(45));
+            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(46));
+        }
+
 
     }
 }

@@ -59,6 +59,19 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             return new Tuple<bool, string>(true, "FineByNow");
         }
+
+        public virtual Tuple<bool, string> ProvideDeliveryForUser(string deliveryDetails)
+        {
+            if (!DeliverySystem.IsAlive())
+                return new Tuple<bool, string>(false, "Not Connected Delivery System");
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            string[] parsedData = deliveryDetails.Split('&');
+            int delivery_res = DeliverySystem.Supply(parsedData[0], parsedData[1], parsedData[3], parsedData[2], parsedData[4]);
+            if (delivery_res < 0)
+                return new Tuple<bool, string>(false, "Delivery Failed");
+
+            return new Tuple<bool, string>(true, "FineByNow");
+        }
         public void setConnection(bool con)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());

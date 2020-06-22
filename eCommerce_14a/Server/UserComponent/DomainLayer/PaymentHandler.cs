@@ -1,4 +1,5 @@
 ﻿using eCommerce_14a.Utils;
+using SuperSocket.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,14 +48,28 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             if (!PaymentSystem.IsAlive())
                 return new Tuple<bool, string>(false, "Not Connected");
-
-            int transaction_num = PaymentSystem.Pay("1", 1, 1, "1", "1", "1");
+            string[] parsedDetails = paymentDetails.Split('&');
+            int transaction_num = PaymentSystem.Pay(parsedDetails[0], parsedDetails[1].ToInt32(), parsedDetails[2].ToInt32(), parsedDetails[3], parsedDetails[4], parsedDetails[5]);
             if(transaction_num < 0)
                 return new Tuple<bool, string>(false, "Payment Failed");
 
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return new Tuple<bool,string>(true,"OK");
         }
+
+        public virtual  int pay(string paymentDetails)
+        {
+            if (!PaymentSystem.IsAlive())
+                return -1;
+            string[] parsedDetails = paymentDetails.Split('&');
+            int transaction_num = PaymentSystem.Pay(parsedDetails[0], parsedDetails[1].ToInt32(), parsedDetails[2].ToInt32(), parsedDetails[3], parsedDetails[4], parsedDetails[5]);
+            if (transaction_num < 0)
+                return -1;
+
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            return transaction_num;
+        }
+
         public virtual Tuple<bool, string> refund(string paymentDetails, double amount)
         {
             if (paymentDetails is null)

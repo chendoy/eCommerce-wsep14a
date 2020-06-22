@@ -158,6 +158,7 @@
     <Compile Include="DAL\PurchaseDb\DbPurchase.cs" />
     <Compile Include="DAL\PurchaseDb\DbPurchaseBasket.cs" />
     <Compile Include="DAL\PurchaseDb\ProductAtBasket.cs" />
+    <Compile Include="DAL\StatisticsDb\DbStatistics.cs" />
     <Compile Include="DAL\StoreDb\DbDiscountPolicy.cs" />
     <Compile Include="DAL\StoreDb\DbInventoryItem.cs" />
     <Compile Include="DAL\StoreDb\DbProduct.cs" />
@@ -175,9 +176,9 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006211332239_InitialCreate.cs" />
-    <Compile Include="Migrations\202006211332239_InitialCreate.designer.cs">
-      <DependentUpon>202006211332239_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006220909565_InitialCreate.cs" />
+    <Compile Include="Migrations\202006220909565_InitialCreate.designer.cs">
+      <DependentUpon>202006220909565_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -302,8 +303,8 @@
     <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006211332239_InitialCreate.resx">
-      <DependentUpon>202006211332239_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006220909565_InitialCreate.resx">
+      <DependentUpon>202006220909565_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
