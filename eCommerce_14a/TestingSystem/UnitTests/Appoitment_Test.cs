@@ -59,19 +59,19 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         [TestMethod]
         public void AddNewStoreOwnerNullArgs()
         {
-            Assert.IsFalse(AP.AppointStoreOwner(null, null, 1).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner(null, null, 100).Item1);
         }
         [TestMethod]
         public void AddNewStoreOwnerBlankArgs()
         {
-            Assert.IsFalse(AP.AppointStoreOwner("owner", "", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner("owner", "", 100).Item1);
         }
         [TestMethod]
         public void StoreOwnerNotLoggedIn()
         {
             //User is not logged in
             UM.Logout("owner");
-            Assert.IsFalse(AP.AppointStoreOwner("owner", "NotLogged", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner("owner", "NotLogged", 100).Item1);
         }
         [TestMethod]
         public void AddNewStoreOwnerNoneExistingStore()
@@ -81,9 +81,9 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         [TestMethod]
         public void AddNewStoreOwnerNoneOwner()
         {
-            Assert.IsFalse(AP.AppointStoreOwner("Appointed", "NotLogged", 1).Item1);
-            Assert.IsFalse(AP.AppointStoreOwner("Appointed", "Appointed", 1).Item1);
-            Assert.IsFalse(AP.AppointStoreOwner("Appointed", "owner", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner("Appointed", "NotLogged", 100).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner("Appointed", "Appointed", 100).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner("Appointed", "owner", 100).Item1);
         }
         [TestMethod]
         public void AddNewStoreOwnerWaitingList()
@@ -112,7 +112,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         
         public void AppointGuest()
         {
-            Assert.IsFalse(AP.AppointStoreOwner("owner", "Guest3", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreOwner("owner", "Guest3", 100).Item1);
         }
         [TestMethod]
 
@@ -126,19 +126,19 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         [TestMethod]
         public void AddNewStoreManagerNullArgs()
         {
-            Assert.IsFalse(AP.AppointStoreManager(null, null, 1).Item1);
+            Assert.IsFalse(AP.AppointStoreManager(null, null, 100).Item1);
         }
         [TestMethod]
         public void AddNewStoreManagerBlankArgs()
         {
-            Assert.IsFalse(AP.AppointStoreManager("owner", "", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("owner", "", 100).Item1);
         }
         [TestMethod]
         public void StoreManagerNotLoggedIn()
         {
             //User is not logged in
             UM.Logout("owner");
-            Assert.IsFalse(AP.AppointStoreManager("owner", "NotLogged", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("owner", "NotLogged", 100).Item1);
         }
         [TestMethod]
         public void AddNewStoreManagerNoneExistingStore()
@@ -148,9 +148,9 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         [TestMethod]
         public void AddNewStoreManagerNoneManager()
         {
-            Assert.IsFalse(AP.AppointStoreManager("Appointed", "NotLogged", 1).Item1);
-            Assert.IsFalse(AP.AppointStoreManager("Appointed", "Appointed", 1).Item1);
-            Assert.IsFalse(AP.AppointStoreManager("Appointed", "owner", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("Appointed", "NotLogged", 100).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("Appointed", "Appointed", 100).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("Appointed", "owner", 100).Item1);
         }
         [TestMethod]
         public void AddNewStoreManager()
@@ -170,7 +170,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
 
         public void AppoinManagertGuest()
         {
-            Assert.IsFalse(AP.AppointStoreManager("owner", "Guest3", 1).Item1);
+            Assert.IsFalse(AP.AppointStoreManager("owner", "Guest3", 100).Item1);
         }
         [TestMethod]
 
@@ -251,12 +251,12 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         [TestMethod]
         public void ChangePermissionsNullArgs()
         {
-            Assert.IsFalse(AP.ChangePermissions(null, null,1, fullpermissions).Item1);
+            Assert.IsFalse(AP.ChangePermissions(null, null,100, fullpermissions).Item1);
         }
         [TestMethod]
         public void ChangePermissionsBlankArgs()
         {
-            Assert.IsFalse(AP.ChangePermissions("owner", "", 1,Blankpermissions).Item1);
+            Assert.IsFalse(AP.ChangePermissions("owner", "", 100,Blankpermissions).Item1);
         }
         [TestMethod]
         public void ChangePermissionsNoneExistingStore()
@@ -318,6 +318,7 @@ namespace TestingSystem.UnitTests.Appoitment_Test
             Assert.IsTrue(AP.AppointStoreManager("user2", "user5", 101).Item1);
             AP.RemoveStoreOwner("user2", "user7", 101);
             AP.RemoveStoreOwner("user1", "user2", 101);
+            //Add checks if owner loop is working corrctly
         }
     }
 }

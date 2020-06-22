@@ -80,7 +80,11 @@ namespace Server.DAL
         }
         public void SaveChanges(bool working = true)
         {
-            if(!working)
+            if (testingmode)
+            {
+                return;
+            }
+            if (!working)
             {
                 Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
             }
@@ -655,8 +659,8 @@ namespace Server.DAL
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
                 if (!ans.Item1)
                     return new Tuple<int, string>(-1, ans.Item2);
-                
-                dbConn.SaveChanges();
+
+                DbManager.Instance.SaveChanges();
                 return new Tuple<int, string>(next_id, "");
             }
         }
