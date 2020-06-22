@@ -3,6 +3,7 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +13,13 @@ namespace Server.UserComponent.DomainLayer
     public class Statistics
     {
         public List<Tuple<string,DateTime>> visitors { get; set; }
-        //Dictonary<string,int>
-        public Statistic_View sv { get; set; }
+        Dictionary<string, Statistic_View> adminsStatistics { get; set; }
+        //public Statistic_View sv { get; set; }
 
         bool view_is_active { get; set; }
         Statistics()
         {
-            sv = new Statistic_View();
+            adminsStatistics = new Dictionary<string, Statistic_View>();
             visitors = new List<Tuple<string, DateTime>>();
             view_is_active = false;
         }
@@ -44,70 +45,158 @@ namespace Server.UserComponent.DomainLayer
         public void InserRecord(string uname, DateTime time)
         {
             visitors.Add(new Tuple<string, DateTime>(uname, time));
-            if (view_is_active)
+            if (adminsStatistics.Count == 0)
+                return;
+            foreach(string admin_name in adminsStatistics.Keys)
             {
-                SetNumber(uname, sv);
-                Publisher.Instance.NotifyStatistics(sv);
+                SetNumberInsert(uname, adminsStatistics[admin_name],time);
+                adminsStatistics[admin_name].SetTotal();
+                Publisher.Instance.NotifyStatistics(admin_name,adminsStatistics[admin_name]);
             }
         }
         public void cleanup()
         {
-            sv = new Statistic_View();
+            adminsStatistics = new Dictionary<string, Statistic_View>();
             view_is_active = false;
             visitors = new List<Tuple<string, DateTime>>();
         }
-        public Statistic_View getViewData(DateTime starttime, DateTime endTime)
+        public Statistic_View getViewData(string adminName,DateTime starttime, DateTime endTime)
         {
-            view_is_active = true;
+            if (!UserManager.Instance.GetAllAdmins().Contains(adminName))
+            {
+                return null;
+            }
+            Statistic_View sv;
+            if(!adminsStatistics.TryGetValue(adminName,out sv))
+            {
+                adminsStatistics.Add(adminName, new Statistic_View());
+                sv = adminsStatistics[adminName];
+            }
+            sv.ends_bool = true;
+            sv.start_bool = true;
+            sv.start = starttime;
+            sv.endt = endTime;
             foreach (Tuple<string,DateTime> user in visitors)
             {
                 if(user.Item2 >= starttime && user.Item2 <= endTime)
                 {
-                    SetNumber(user.Item1, sv);
+                    FirstSet(user.Item1, sv);
                 }
             }
             sv.SetTotal();
             return sv;
         }
-        public Statistic_View getViewDataStart(DateTime starttime)
+        public Statistic_View getViewDataStart(string adminName,DateTime starttime)
         {
-            view_is_active = true;
+            if (!UserManager.Instance.GetAllAdmins().Contains(adminName))
+            {
+                return null;
+            }
+            Statistic_View sv;
+            if (!adminsStatistics.TryGetValue(adminName, out sv))
+            {
+                adminsStatistics.Add(adminName, new Statistic_View());
+                sv = adminsStatistics[adminName];
+            }
+            sv.start_bool = true;
+            sv.start = starttime;            
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 if((user.Item2 >= starttime))
                 {
-                    SetNumber(user.Item1, sv);
+                    FirstSet(user.Item1, sv);
                 }
 
             }
             sv.SetTotal();
             return sv;
         }
-        public Statistic_View getViewDataEnd(DateTime endtime)
+        public Statistic_View getViewDataEnd(string adminName,DateTime endtime)
         {
+            if (!UserManager.Instance.GetAllAdmins().Contains(adminName))
+            {
+                return null;
+            }
             view_is_active = true;
+            Statistic_View sv;
+            if (!adminsStatistics.TryGetValue(adminName, out sv))
+            {
+                adminsStatistics.Add(adminName, new Statistic_View());
+                sv = adminsStatistics[adminName];
+            }
+            sv.ends_bool = true;
+            sv.endt = endtime;
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 if(user.Item2 <= endtime)
                 {
-                    SetNumber(user.Item1, sv);
+                    FirstSet(user.Item1, sv);
                 }
 
             }
             sv.SetTotal();
             return sv;
         }
-        public Statistic_View getViewDataAll()
+        public Statistic_View getViewDataAll(string adminName)
         {
+            if(!UserManager.Instance.GetAllAdmins().Contains(adminName))
+            {
+                return null;
+            }
             view_is_active = true;
+            Statistic_View sv;
+            if (!adminsStatistics.TryGetValue(adminName, out sv))
+            {
+                adminsStatistics.Add(adminName, new Statistic_View());
+                sv = adminsStatistics[adminName];
+            }
             foreach (Tuple<string, DateTime> user in visitors)
             {
-                SetNumber(user.Item1, sv);
+                FirstSet(user.Item1, sv);
             }
             sv.SetTotal();
             return sv;
         }
-        public void SetNumber(string username, Statistic_View s)
+        public void FirstSet(string username, Statistic_View s)
+        {
+            User user = UserManager.Instance.GetAtiveUser(username);
+            if (user is null)
+            {
+                user = UserManager.Instance.GetUser(username);
+                if (user is null)
+                {
+                    Logger.logError("UserName is not in active users or Usersslist", this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return;
+                }
+            }
+            if (user.isguest())
+            {
+                s.GuestVisitors++;
+                return;
+            }
+            if (user.IsAdmin)
+            {
+                s.AdministratorsVisitors++;
+                return;
+            }
+            if (user.Store_Ownership.Count == 0 && user.Store_Managment.Count == 0)
+            {
+                s.RegularVisistors++;
+                return;
+            }
+            if (user.Store_Ownership.Count == 0 && user.Store_Managment.Count > 0)
+            {
+                s.ManagersVisitors++;
+                return;
+            }
+            if (user.Store_Ownership.Count > 0)
+            {
+                s.OwnersVisitors++;
+                return;
+            }
+              
+        }
+        public void SetNumberInsert(string username, Statistic_View s,DateTime time)
         {
             User user = UserManager.Instance.GetAtiveUser(username);
             if(user is null)
@@ -121,27 +210,158 @@ namespace Server.UserComponent.DomainLayer
             }
             if(user.isguest())
             {
-                s.GuestVisitors++;
+                if(!s.ends_bool)
+                {
+                    if(!s.start_bool)
+                    {
+                        s.GuestVisitors++;
+                        return;
+                    }
+                    if(s.start < time)
+                    {
+                        s.GuestVisitors++;
+                        return;
+                    }
+                }
+                if(s.ends_bool && s.endt > time)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.GuestVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.GuestVisitors++;
+                        return;
+                    }
+                    return;
+                }
                 return;
             }
-            if(user.Store_Ownership.Count == 0 && user.Store_Managment.Count == 0)
+
+            if (user.IsAdmin)
             {
-                s.RegularVisistors++;
+                if (!s.ends_bool)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.AdministratorsVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.AdministratorsVisitors++;
+                        return;
+                    }
+                }
+                if (s.ends_bool && s.endt > time)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.AdministratorsVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.AdministratorsVisitors++;
+                        return;
+                    }
+                    return;
+                }
+                return;
+            }
+            if (user.Store_Ownership.Count == 0 && user.Store_Managment.Count == 0)
+            {
+                if (!s.ends_bool)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.RegularVisistors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.RegularVisistors++;
+                        return;
+                    }
+                }
+                if (s.ends_bool && s.endt > time)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.RegularVisistors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.RegularVisistors++;
+                        return;
+                    }
+                    return;
+                }
                 return;
             }
             if(user.Store_Ownership.Count == 0 && user.Store_Managment.Count > 0)
             {
-                s.ManagersVisitors++;
+                if (!s.ends_bool)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.ManagersVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.ManagersVisitors++;
+                        return;
+                    }
+                }
+                if (s.ends_bool && s.endt > time)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.ManagersVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.ManagersVisitors++;
+                        return;
+                    }
+                    return;
+                }
                 return;
             }
             if(user.Store_Ownership.Count > 0)
             {
-                s.OwnersVisitors++;
-                return;
-            }
-            if(user.IsAdmin)
-            {
-                s.AdministratorsVisitors++;
+                if (!s.ends_bool)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.OwnersVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.OwnersVisitors++;
+                        return;
+                    }
+                }
+                if (s.ends_bool && s.endt > time)
+                {
+                    if (!s.start_bool)
+                    {
+                        s.OwnersVisitors++;
+                        return;
+                    }
+                    if (s.start < time)
+                    {
+                        s.OwnersVisitors++;
+                        return;
+                    }
+                    return;
+                }
                 return;
             }
         }

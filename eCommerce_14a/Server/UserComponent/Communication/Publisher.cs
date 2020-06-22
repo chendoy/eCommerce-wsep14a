@@ -158,10 +158,10 @@ namespace Server.UserComponent.Communication
 
             return new Tuple<bool, string>(true, "");
         }
-        public void NotifyStatistics(Statistic_View sv)
+        public void NotifyStatistics(string admin_user_name,Statistic_View sv)
         {
             List<string> admins = UserManager.Instance.GetAllAdmins();
-            //ws.notifyStatistics(admins,sv);
+            //ws.notifyStatistics(admin_user_name,sv);
         }
         public void cleanup()
         {

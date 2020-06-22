@@ -58,6 +58,28 @@
 //            DbManager.Instance.DeleteUser(test);
 //        }
 //        [TestMethod]
+//        public void InsertDuplicatePrimaryKey()
+//        {
+//            DbUser test = new DbUser("Test1", false, false, false);
+//            DbManager.Instance.InsertUser(test);
+//            DbManager.Instance.InsertUser(test,true);
+//        }
+//        [TestMethod]
+//        public void DBRobustnesError()
+//        {
+//            DbUser test = new DbUser("Test1", false, false, false);
+//            DbManager.Instance.InsertUser(test);
+//            DBManager.Instance.SaveChanges(false);
+//        }
+//        [TestMethod]
+//        public void DBRobustnesWorkings()
+//        {
+//            DbUser test = new DbUser("Test1", false, false, false);
+//            DbManager.Instance.InsertUser(test);
+//            DBManager.Instance.SaveChanges(false);
+//            DBManager.Instance.SaveChanges(true);
+//        }
+//        [TestMethod]
 //        public void RemovePassword()
 //        {
 //            DbPassword test = new DbPassword("Test1", "Test1");

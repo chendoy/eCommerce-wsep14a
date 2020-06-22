@@ -200,6 +200,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 //Update LogginStatus
+                Statistics.Instance.InserRecord(username, DateTime.Now);
                 DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), false);
                 Active_users.Add(tUser.getUserName(), tUser);
                 if (tUser.HasPendingMessages()) 
@@ -219,7 +220,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 DbManager.Instance.SaveChanges();
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
-            Statistics.Instance.InserRecord(username, DateTime.Now);
             DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(false, "Wrong Credentials\n");
 
