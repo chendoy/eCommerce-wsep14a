@@ -234,9 +234,7 @@
                         Name = c.String(nullable: false, maxLength: 128),
                         DateTime = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => new { t.Name, t.DateTime })
-                .ForeignKey("dbo.DbUsers", t => t.Name)
-                .Index(t => t.Name);
+                .PrimaryKey(t => new { t.Name, t.DateTime });
             
             CreateTable(
                 "dbo.StoreManagers",
@@ -342,7 +340,6 @@
             DropForeignKey("dbo.StoreManagersAppoints", "AppointedName", "dbo.DbUsers");
             DropForeignKey("dbo.StoreManagers", "StoreId", "dbo.DbStores");
             DropForeignKey("dbo.StoreManagers", "ManagerName", "dbo.DbUsers");
-            DropForeignKey("dbo.DbStatistics", "Name", "dbo.DbUsers");
             DropForeignKey("dbo.DbPurchases", "UserName", "dbo.DbUsers");
             DropForeignKey("dbo.DbPurchases", "CartId", "dbo.DbCarts");
             DropForeignKey("dbo.DbPurchasePolicies", "StoreId", "dbo.DbStores");
@@ -382,7 +379,6 @@
             DropIndex("dbo.StoreManagersAppoints", new[] { "AppointerName" });
             DropIndex("dbo.StoreManagers", new[] { "StoreId" });
             DropIndex("dbo.StoreManagers", new[] { "ManagerName" });
-            DropIndex("dbo.DbStatistics", new[] { "Name" });
             DropIndex("dbo.DbPurchases", new[] { "UserName" });
             DropIndex("dbo.DbPurchases", new[] { "CartId" });
             DropIndex("dbo.DbPurchasePolicies", new[] { "BuyerUserName" });

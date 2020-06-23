@@ -12,10 +12,9 @@ namespace Server.DAL.StatisticsDb
 {
     public class DbStatistics
     {
-        [Key, ForeignKey("User")]
+        [Key]
         [Column(Order = 1)]
         public string Name { set; get; }
-        public virtual DbUser User{ set; get; }
 
         [Key]
         [Column(Order = 2)]
@@ -25,6 +24,11 @@ namespace Server.DAL.StatisticsDb
         {
             Name = userName;
             DateTime = dateTime;
+        }
+
+        public DbStatistics()
+        {
+
         }
 
     }

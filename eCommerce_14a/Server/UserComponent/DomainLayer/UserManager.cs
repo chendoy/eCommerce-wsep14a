@@ -257,11 +257,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Active_users.Remove(user.getUserName());
             //Change LogInStatus at DB
             DbManager.Instance.UpdateUserLogInStatus(user.getUserName(), true);
-            addGuest();
+            addGuest(false);
             return new Tuple<bool, string>(true, sname + " Logged out succesuffly\n");
         }
         //Add Guest user to the system and to the relevant lists.
-        private string addGuest()
+        private string addGuest(bool islogout=true)
         {
             lock (this)
             {
@@ -272,6 +272,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 User nUser = new User(Available_ID, tName);
                 Console.WriteLine(tName);
                 nUser.LogIn();
+                if(islogout)
+                {
+                    Statistics.Instance.InserRecord(tName, DateTime.Now);
+                }
                 Active_users.Add(tName, nUser);
                 Available_ID++;
                 Interlocked.Exchange(ref usingResource, 0);

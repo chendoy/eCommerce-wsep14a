@@ -280,11 +280,6 @@ namespace Server.DAL
          .WithMany()
          .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<DbStatistics>()
-        .HasRequired(c => c.User)
-        .WithMany()
-        .WillCascadeOnDelete(false);
-            base.OnModelCreating(modelBuilder);
         }
     }
 }
