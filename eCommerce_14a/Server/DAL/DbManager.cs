@@ -87,6 +87,7 @@ namespace Server.DAL
             if (!working)
             {
                 Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
+                return;
             }
             if(dbConn.SaveChanges() <= 0)
             {
@@ -2242,7 +2243,10 @@ namespace Server.DAL
             {
                 return;
             }
-            dbConn.Users.Add(user);
+            if(GetUser(user.Name) == null)
+            {
+                dbConn.Users.Add(user);
+            }
             if(savechanges)
             {
                 dbConn.SaveChanges();

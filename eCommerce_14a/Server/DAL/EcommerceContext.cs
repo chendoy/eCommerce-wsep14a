@@ -18,7 +18,7 @@ namespace Server.DAL
 
     public class EcommerceContext : DbContext
     {
-        public EcommerceContext() : base("EF_Azure_Ecommerce_ConnStr")
+        public EcommerceContext() : base("EF_TestingDB")
         {
         }
 
