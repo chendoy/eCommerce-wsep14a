@@ -192,24 +192,6 @@ namespace TestingSystem.UnitTests.SearcherTest
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
         }
 
-        [TestMethod]
-        /// <function cref ="eCommerce_14a.Searcher.SearchProducts(Dictionary{string, object})"/>
-        public void searchByStoreId()
-        {
-            Dictionary<int, List<Product>> expectedRes = new Dictionary<int, List<Product>>();
-            List<Product> lstProducts1 = new List<Product> { inv_store_1.getProductDetails(1).Item1,
-                                                             inv_store_1.getProductDetails(2).Item1,
-                                                            inv_store_1.getProductDetails(3).Item1,
-                                                            inv_store_1.getProductDetails(4).Item1};
-
-            expectedRes.Add(1, lstProducts1);
-
-            Dictionary<string, object> filters = new Dictionary<string, object>();
-            filters.Add(CommonStr.SearcherKeys.StoreId, 1);
-            Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
-            Assert.IsTrue(equalDicts(expectedRes, searcherRes));
-        }
-
         
         private Dictionary<int, List<Product>> searchProductsDriver(Dictionary<string, object> searchFilters)
         {
