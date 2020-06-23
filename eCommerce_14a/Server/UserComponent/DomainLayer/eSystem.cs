@@ -42,7 +42,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             }
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             PH.setConnections(paymmentconnection);
-            if (!DH.checkconnection() || !PH.checkconnection())
+            if (!DH.checkconnection() || !PH.checkconnection() || !paymmentconnection)
             {
                 return new Tuple<bool, string>(false, "cann't connect to 3rd party system");
             }
