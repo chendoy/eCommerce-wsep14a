@@ -56,6 +56,7 @@ namespace Server.Communication.DataObject
         GET_ALL_PRECONDITIONS,
         GET_APPROVAL_LIST,
         MAKE_ADMIN,
+        GET_STATISTICS,
         RESPONSE,
         ERROR
     }

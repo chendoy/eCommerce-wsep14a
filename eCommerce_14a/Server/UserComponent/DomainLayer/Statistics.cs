@@ -60,7 +60,7 @@ namespace Server.UserComponent.DomainLayer
             view_is_active = false;
             visitors = new List<Tuple<string, DateTime>>();
         }
-        public Statistic_View getViewData(string adminName,DateTime starttime, DateTime endTime)
+        public Statistic_View getViewData(string adminName,DateTime? starttime, DateTime? endTime)
         {
             if (!UserManager.Instance.GetAllAdmins().Contains(adminName))
             {
@@ -86,7 +86,7 @@ namespace Server.UserComponent.DomainLayer
             sv.SetTotal();
             return sv;
         }
-        public Statistic_View getViewDataStart(string adminName,DateTime starttime)
+        public Statistic_View getViewDataStart(string adminName,DateTime? starttime)
         {
             if (!UserManager.Instance.GetAllAdmins().Contains(adminName))
             {
@@ -112,7 +112,7 @@ namespace Server.UserComponent.DomainLayer
             sv.SetTotal();
             return sv;
         }
-        public Statistic_View getViewDataEnd(string adminName,DateTime endtime)
+        public Statistic_View getViewDataEnd(string adminName,DateTime? endtime)
         {
             if (!UserManager.Instance.GetAllAdmins().Contains(adminName))
             {

@@ -27,7 +27,7 @@ namespace eCommerce_14a.Communication
 
         public byte[] Encrypt(string plainText) 
         {
-            return Encoding.ASCII.GetBytes(plainText);
+            return Encoding.UTF8.GetBytes(plainText);
             //encryptor = aesAlg.CreateEncryptor(GetKey(), GetInitialVector());
             //byte[] encrypted;
             //    using (MemoryStream msEncrypt = new MemoryStream())
