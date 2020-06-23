@@ -49,7 +49,7 @@ namespace TestingSystem.AcceptanceTests
         public void ConnectionLostWithSupplySystemTest()
         {
             SetSupplySystemConnection(false);
-            Assert.IsFalse(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
+        Assert.IsFalse(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
         }
     }
 }

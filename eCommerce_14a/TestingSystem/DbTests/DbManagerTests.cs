@@ -58,6 +58,28 @@ namespace TestingSystem.DbManger_Tests
             DbManager.Instance.DeleteUser(test);
         }
         [TestMethod]
+        public void InsertDuplicatePrimaryKey()
+        {
+            DbUser test = new DbUser("Test1111", false, false, false);
+            DbManager.Instance.InsertUser(test);
+            DbManager.Instance.InsertUser(test, true);
+        }
+        [TestMethod]
+        public void DBRobustnesError()
+        {
+            DbUser test = new DbUser("Test1", false, false, false);
+            DbManager.Instance.InsertUser(test);
+            DbManager.Instance.SaveChanges(false);
+        }
+        [TestMethod]
+        public void DBRobustnesWorkings()
+        {
+            DbUser test = new DbUser("Test11", false, false, false);
+            DbManager.Instance.InsertUser(test);
+            DbManager.Instance.SaveChanges(false);
+            DbManager.Instance.SaveChanges(true);
+        }
+        [TestMethod]
         public void RemovePassword()
         {
             DbPassword test = new DbPassword("Test1", "Test1");
@@ -138,6 +160,18 @@ namespace TestingSystem.DbManger_Tests
         {
             StoreManagment.Instance.LoadFromDb();
             PurchaseManagement.Instance.LoadFromDb();
+        }
+
+        [TestMethod]
+        public void TestAppendProductSavedOnProxy()
+        {
+            Product p = new Product(45, 1);
+            DbManager.Instance.AppendProductTransaction(p, 1, 1, false);
+            Assert.AreEqual(null, DbManager.Instance.GetDbProductItem(45));
+            Product p2 = new Product(46, 1);
+            DbManager.Instance.AppendProductTransaction(p2, 1, 1, true);
+            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(45));
+            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(46));
         }
 
 

@@ -110,6 +110,12 @@ namespace eCommerce_14a.Communication
             userService.Logout(GetUserNameBySocket(session));
         }
 
+        //internal byte[] HandleStatistics(StatisticsView statistics)
+        //{
+        //    string jsonAns = Seralize(new NotifyStatisticsData);
+        //    return security.Encrypt(jsonAns);
+        //}
+
         public byte[] HandleLogin(string json, WebSocketSession session)
         {
             bool isAdmin = false;

@@ -566,7 +566,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
             if(removed)
             {
-                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManager(user.Name));
+                DbManager.Instance.DeleteStoreManager(DbManager.Instance.getStoreManagerbyStore(user.Name,this.Id));
             }
             return removed;
         }

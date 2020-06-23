@@ -68,7 +68,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             InvProducts.Add(product.Id, new Tuple<Product, int>(product, amount));
             try
             {
-               DbManager.Instance.AppendProductTransaction(product, amount, storeId);
+               DbManager.Instance.AppendProductTransaction(product, amount, storeId, true);
             }
             catch(Exception ex)
             {

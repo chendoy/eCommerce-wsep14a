@@ -15,6 +15,11 @@ namespace Server.UserComponent.DomainLayer
         public int AdministratorsVisitors { get; set; }
         public int TotalVisistors { get; set; }
 
+        public DateTime start { get; set; }
+        public DateTime endt { get; set; }
+
+        public bool start_bool { get; set; }
+        public bool ends_bool { get; set; }
         public Statistic_View()
         {
             GuestVisitors = 0;
@@ -23,6 +28,9 @@ namespace Server.UserComponent.DomainLayer
             OwnersVisitors = 0;
             AdministratorsVisitors = 0;
             TotalVisistors = 0;
+            start_bool = false;
+            ends_bool = false;
+
         }
         public void SetTotal()
         {

@@ -108,7 +108,7 @@ namespace TestingSystem
             return;
         }
 
-        public virtual Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public virtual Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address, bool Failed)
         {
             return new Tuple<bool, String>(true, "");
         }

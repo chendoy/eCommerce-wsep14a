@@ -14,8 +14,8 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class PurchaseStoryTest : SystemTrackTest
     {
-        string paymentDetails = "ValidPaymentDetails";
-        string address = "hanesher38";
+        string paymentDetails = "3333444455556666&4&11&Wolloloo&333&222222222";
+        private string address = "dani&Wollu&Wollurberg&wolocountry&12345678";
         string userID;
         string usernameOwner = UserGenerator.GetValidUsernames()[0];
         string passwordOwner = UserGenerator.GetPasswords()[0];
@@ -70,7 +70,7 @@ namespace TestingSystem.AcceptanceTests
         public void ConnectionLostWithPaymentSystemTest()
         {
             SetPaymentSystemConnection(false);
-            Assert.IsFalse(PerformPurchase(userID, paymentDetails, address).Item1, PerformPurchase(userID, paymentDetails, address).Item2);
+            Assert.IsFalse(PerformPurchase(userID, paymentDetails, address,true).Item1, PerformPurchase(userID, paymentDetails, address,true).Item2);
         }
 
     }
