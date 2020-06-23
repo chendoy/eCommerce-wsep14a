@@ -21,6 +21,8 @@ namespace TestingSystem.UnitTests
         private Store store;
         private string buyer = "meni";
         private string admin = "Admin";
+        private string PaymentDetails = "3333444455556666&4&11&Wolloloo&333&222222222";
+        private string DeliveryDetails = "dani&Wollu&Wollurberg&wolocountry&12345678";
 
         [TestInitialize]
         public void TestInitialize()
@@ -32,6 +34,8 @@ namespace TestingSystem.UnitTests
             UserManager.Instance.Login(buyer, "123");
             UserManager.Instance.RegisterMaster(admin, admin);
             UserManager.Instance.Login(admin, admin);
+            
+            
             //purchaseManagement.SetupDependencies(
             //    new StoreManagementStub(123),
             //    PaymentHandler.Instance,
@@ -51,7 +55,7 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void PurchaseEmptyCart()
         {
-            Tuple<bool, string> res = purchaseManagement.PerformPurchase(buyer,"aaa","aaa");
+            Tuple<bool, string> res = purchaseManagement.PerformPurchase(buyer,PaymentDetails,DeliveryDetails);
             Assert.IsFalse(res.Item1, res.Item2);
         }
         [TestMethod]
@@ -193,7 +197,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 10, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
         }
 
@@ -205,9 +209,9 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(res1.Item1, res1.Item2);
             Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "", "");
             Assert.IsFalse(res2.Item1, res2.Item2);
-            Tuple<bool, string> res3 = purchaseManagement.PerformPurchase(buyer, "", "Wololo");
+            Tuple<bool, string> res3 = purchaseManagement.PerformPurchase(buyer, "", DeliveryDetails);
             Assert.IsFalse(res3.Item1, res3.Item2);
-            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase(buyer, "WoloCarads", "");
+            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, "");
             Assert.IsFalse(res4.Item1, res4.Item2);
         }
 
@@ -217,7 +221,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 10, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase("Nosuchi userio", "Soldi Soldi", "Italy cough");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase("Nosuchi userio", PaymentDetails, DeliveryDetails);
             Assert.IsFalse(res2.Item1, res2.Item2);
         }
 
@@ -229,9 +233,9 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(res1.Item1, res1.Item2);
             Tuple<bool, string> res3 = purchaseManagement.AddProductToShoppingCart("yosi", 100, 1, 10, false);
             Assert.IsTrue(res3.Item1, res3.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
-            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", "WoloCard", "Wololo");
+            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", PaymentDetails, DeliveryDetails);
             Assert.IsFalse(res4.Item1, res4.Item2);
         }
         [TestMethod]
@@ -242,9 +246,9 @@ namespace TestingSystem.UnitTests
             Assert.IsTrue(res1.Item1, res1.Item2);
             Tuple<bool, string> res3 = purchaseManagement.AddProductToShoppingCart("yosi", 100, 1, 10, false);
             Assert.IsTrue(res3.Item1, res3.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, "");
             Assert.IsFalse(res2.Item1, res2.Item2);
-            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", "WoloCard", "Wololo");
+            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res4.Item1, res4.Item2);
         }
         [TestMethod]
@@ -256,10 +260,10 @@ namespace TestingSystem.UnitTests
             Tuple<bool, string> res3 = purchaseManagement.AddProductToShoppingCart("yosi", 100, 1, 10, false);
             Assert.IsTrue(res3.Item1, res3.Item2);
             purchaseManagement.GetDeliveryHandler().setConnection(false);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "AAAA");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails,true);
             Assert.IsFalse(res2.Item1, res2.Item2);
             purchaseManagement.GetDeliveryHandler().setConnection(true);
-            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", "WoloCard", "Wololo");
+            Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res4.Item1, res4.Item2);
         }
         [TestMethod]
@@ -271,7 +275,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(purchaseManagement.GetCartDetails(buyer).Item1.IsEmpty());
             Cart c1 = purchaseManagement.GetCartDetails(buyer).Item1;
             purchaseManagement.GetDeliveryHandler().setConnection(false);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "AAAA");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails,true);
             Assert.IsFalse(res2.Item1, res2.Item2);
             Cart c2 = purchaseManagement.GetCartDetails(buyer).Item1;
             Assert.IsTrue(c1.Equals(c2));
@@ -284,7 +288,7 @@ namespace TestingSystem.UnitTests
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
             purchaseManagement.GetDeliveryHandler().setConnection(false);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "AAA");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             if(!res2.Item1)
             {
                 Assert.IsTrue(purchaseManagement.GetPaymentHandler().refund("WoloCard",100).Item1);
@@ -297,9 +301,9 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
-            Tuple<bool, string> res3 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res3 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsFalse(res3.Item1, res3.Item2);
         }
 
@@ -309,7 +313,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<List<Purchase>, string> res3 = purchaseManagement.GetBuyerHistory(buyer);
             Assert.AreEqual(1,res3.Item1.Count, res3.Item2);
@@ -337,7 +341,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<List<PurchaseBasket>, string> res3 = purchaseManagement.GetStoreHistory("shimon", 100);
             Assert.AreEqual(1, res3.Item1.Count, res3.Item2);
@@ -351,7 +355,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<List<PurchaseBasket>, string> res4 = purchaseManagement.GetStoreHistory("shmuel", 1);
             Assert.AreEqual(0, res4.Item1.Count, res4.Item2);
@@ -363,7 +367,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<List<PurchaseBasket>, string> res4 = purchaseManagement.GetStoreHistory("wallE", 1);
             Assert.AreEqual(0, res4.Item1.Count, res4.Item2);
@@ -375,7 +379,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<List<PurchaseBasket>, string> res4 = purchaseManagement.GetStoreHistory(admin, 100);
             Assert.AreEqual(1, res4.Item1.Count, res4.Item2);
@@ -387,7 +391,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<Dictionary<Store, List<PurchaseBasket>>, string> res4 = purchaseManagement.GetAllStoresHistory(admin);
             Assert.AreEqual(1, res4.Item1.Count, res4.Item2);
@@ -399,7 +403,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<Dictionary<Store, List<PurchaseBasket>>, string> res4 = purchaseManagement.GetAllStoresHistory(buyer);
             Assert.IsNull(res4.Item1, res4.Item2);
@@ -419,7 +423,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<Dictionary<Store, List<PurchaseBasket>>, string> res4;
             res4 = purchaseManagement.GetAllStoresHistory("NoSuchiSuch");
@@ -433,7 +437,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<Dictionary<string, List<Purchase>>, string> res4 = purchaseManagement.GetAllUsersHistory(admin);
             Assert.AreEqual(1, res4.Item1.Count, res4.Item2);
@@ -445,7 +449,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<Dictionary<string, List<Purchase>>, string> res4 = purchaseManagement.GetAllUsersHistory(buyer);
             Assert.IsNull(res4.Item1, res4.Item2);
@@ -465,7 +469,7 @@ namespace TestingSystem.UnitTests
         {
             Tuple<bool, string> res1 = purchaseManagement.AddProductToShoppingCart(buyer, 100, 1, 100, false);
             Assert.IsTrue(res1.Item1, res1.Item2);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, "WoloCard", "Wololo");
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
             Assert.IsTrue(res2.Item1, res2.Item2);
             Tuple<Dictionary<string, List<Purchase>>, string> res4;
             res4 = purchaseManagement.GetAllUsersHistory("NoSuchiSuch");

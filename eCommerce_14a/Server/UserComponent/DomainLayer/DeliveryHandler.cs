@@ -48,7 +48,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return isAlive;
         }
-        public virtual Tuple<bool, string> ProvideDeliveryForUser(string name, bool ispayed)
+        public virtual Tuple<bool, string> ProvideDeliveryForUserold(string name, bool ispayed, bool Failed = false)
         {
             if(!DeliverySystem.IsAlive())
                 return new Tuple<bool, string>(false, "Not Connected Delivery System");
@@ -60,17 +60,58 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return new Tuple<bool, string>(true, "FineByNow");
         }
 
-        public virtual Tuple<bool, string> ProvideDeliveryForUser(string deliveryDetails)
+        public virtual Tuple<bool, string> ProvideDeliveryForUser(string deliveryDetails, bool Failed = false)
         {
-            if (!DeliverySystem.IsAlive())
+            if(deliveryDetails is null)
+                return new Tuple<bool, string>(false, "Null Delivery System");
+            if (!DeliverySystem.IsAlive(Failed))
                 return new Tuple<bool, string>(false, "Not Connected Delivery System");
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            string[] parsedData = deliveryDetails.Split('&');
-            int delivery_res = DeliverySystem.Supply(parsedData[0], parsedData[1], parsedData[3], parsedData[2], parsedData[4]);
-            if (delivery_res < 0)
-                return new Tuple<bool, string>(false, "Delivery Failed");
+            string[] parsedDetails = deliveryDetails.Split('&');
+            if (parsedDetails.Length < 5)
+            {
+                return new Tuple<bool, string>(false, "Not Enough Data");
+            }
+            try
+            {
+                string Name = parsedDetails[0];
+                if (Name.Length == 0)
+                {
+                    return new Tuple<bool, string>(false, "Name is Not good");
+                }
+                string add = parsedDetails[1];
+                if (add.Length == 0)
+                {
+                    return new Tuple<bool, string>(false, "Address is Not good");
+                }
+                string city = parsedDetails[2];
+                if (city.Length == 0)
+                {
+                    return new Tuple<bool, string>(false, "City is Not good");
+                }
+                string country = parsedDetails[3];
+                if (country.Length == 0)
+                {
+                    return new Tuple<bool, string>(false, "Country is Not good");
+                }
+                string zip = parsedDetails[4];
+                if (zip.Length == 0)
+                {
+                    return new Tuple<bool, string>(false, "Zip is Not good");
+                }
+                int transaction_num = DeliverySystem.Supply(Name, add, city, country, zip);
+                if (transaction_num < 0)
+                    return new Tuple<bool, string>(false, "Transaction Failed");
 
-            return new Tuple<bool, string>(true, "FineByNow");
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(true, "Transaction Success");
+
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("ParseFailed" + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Transaction Failed");
+            }
         }
         public void setConnection(bool con)
         {

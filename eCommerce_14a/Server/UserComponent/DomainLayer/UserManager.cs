@@ -200,6 +200,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 //Update LogginStatus
+                Statistics.Instance.InserRecord(username, DateTime.Now);
                 DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), false);
                 Active_users.Add(tUser.getUserName(), tUser);
                 if (tUser.HasPendingMessages()) 
@@ -219,7 +220,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 DbManager.Instance.SaveChanges();
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
-            Statistics.Instance.InserRecord(username, DateTime.Now);
             DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(false, "Wrong Credentials\n");
 
@@ -248,19 +248,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+            lock (this)
+            {
+                if (0 == Interlocked.Exchange(ref usingResource, 1))
+                    //Add Guest DO not Require DB Changes
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+                string tName = "Guest" + Available_ID;
+                User nUser = new User(Available_ID, tName);
+                Console.WriteLine(tName);
+                nUser.LogIn();
+                Active_users.Add(tName, nUser);
+                Available_ID++;
+                Interlocked.Exchange(ref usingResource, 0);
 
-            if(0 == Interlocked.Exchange(ref usingResource, 1))
-            //Add Guest DO not Require DB Changes
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            string tName = "Guest" + Available_ID;
-            User nUser = new User(Available_ID, tName);
-            Console.WriteLine(tName);
-            nUser.LogIn();
-            Active_users.Add(tName, nUser);
-            Available_ID++;
-            Interlocked.Exchange(ref usingResource, 0);
-            Statistics.Instance.InserRecord(tName, DateTime.Now);
-            return tName;
+                return tName;
+            }
         }
         //Tries to get User from users list
         public User GetUser(string username)
@@ -363,7 +365,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             List<string> admins = new List<string>();
             foreach(User usr in users.Values)
             {
-                if (usr.IsAdmin)
+                if (usr.IsAdmin && usr.LoggedStatus())
                     admins.Add(usr.getUserName());
             }
             return admins;

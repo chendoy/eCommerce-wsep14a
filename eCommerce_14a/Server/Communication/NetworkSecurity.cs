@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,43 +27,46 @@ namespace eCommerce_14a.Communication
 
         public byte[] Encrypt(string plainText) 
         {
-            encryptor = aesAlg.CreateEncryptor(GetKey(), GetInitialVector());
-            byte[] encrypted;
-            using (MemoryStream msEncrypt = new MemoryStream())
-            {
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                {
-                    using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                    {
-                        //Write all data to the stream.
-                        swEncrypt.Write(plainText);
-                    }
-                    encrypted = msEncrypt.ToArray();
-                }
-            }
+            return Encoding.ASCII.GetBytes(plainText);
+            //encryptor = aesAlg.CreateEncryptor(GetKey(), GetInitialVector());
+            //byte[] encrypted;
+            //    using (MemoryStream msEncrypt = new MemoryStream())
+            //    {
+            //        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+            //        {
+            //            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+            //            {
+            //                //Write all data to the stream.
 
-            // Return the encrypted bytes from the memory stream.
-            return encrypted;
+            //                swEncrypt.Write(plainText);
+
+            //            }
+            //            encrypted = msEncrypt.ToArray();
+            //        }
+            //    }
+
+            //// Return the encrypted bytes from the memory stream.
+            //return encrypted;
         }
 
         public string Decrypt(byte[] cipherText) 
         {
-            decryptor = aesAlg.CreateDecryptor(GetKey(), GetInitialVector());
-            string plaintext = null;
-                // Create the streams used for decryption.
-            using (MemoryStream msDecrypt = new MemoryStream(cipherText))
-                {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                        {
-                        // Read the decrypted bytes from the decrypting stream
-                        // and place them in a string.
-                        plaintext = srDecrypt.ReadToEnd();
-                        }
-                    }
-                }
-          return plaintext;
+            return Encoding.UTF8.GetString(cipherText);
+            //decryptor = aesAlg.CreateDecryptor(GetKey(), GetInitialVector());
+            //string plaintext = null;
+            //// Create the streams used for decryption.
+            //    using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+            //    {
+            //        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+            //        {
+            //            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+            //            {
+            //                // Read the decrypted bytes from the decrypting stream
+            //                plaintext = srDecrypt.ReadToEnd();
+            //            }
+            //        }
+            //    }
+            //    return plaintext;
         }
 
         public byte[] GetKey() 

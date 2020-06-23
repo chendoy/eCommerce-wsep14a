@@ -13,7 +13,6 @@ namespace eCommerce_14a.Utils
     {
         private static readonly HttpClient httpClient = new HttpClient();
         private static readonly string Url = "https://cs-bgu-wsep.herokuapp.com";
-
         private static async Task<string> SendPostRequestAsync(Dictionary<string, string> request)
         {
             var content = new FormUrlEncodedContent(request);
@@ -23,8 +22,12 @@ namespace eCommerce_14a.Utils
         }
 
         /// <test> TestingSystem.UnitTests.PaymentSystemTests</test>
-        public static bool IsAlive()
+        public static bool IsAlive(bool Failed = false)
         {
+            if(Failed)
+            {
+                return false;
+            }
             var handshake = new Dictionary<string, string>
             {
                 { "action_type", "handshake" }

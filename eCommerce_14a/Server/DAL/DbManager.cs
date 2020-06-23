@@ -80,7 +80,11 @@ namespace Server.DAL
         }
         public void SaveChanges(bool working = true)
         {
-            if(!working)
+            if (testingmode)
+            {
+                return;
+            }
+            if (!working)
             {
                 Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
             }
@@ -386,7 +390,7 @@ namespace Server.DAL
             }
         }
 
-        public Tuple<bool, string> PerformPurchaseTransaction(Cart userCart, PaymentHandler paymentHandler, string paymentDetails, string deliveryDetails, DeliveryHandler devHandler, Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore, Dictionary<string, List<Purchase>> purchasesHistoryByUser)
+        public Tuple<bool, string> PerformPurchaseTransaction(Cart userCart, PaymentHandler paymentHandler, string paymentDetails, string deliveryDetails, DeliveryHandler devHandler, Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore, Dictionary<string, List<Purchase>> purchasesHistoryByUser, bool Failed = false)
         {
             string user = userCart.user;
             Tuple<bool, string> updatePriceRes = userCart.UpdateCartPrice(false);
@@ -395,7 +399,7 @@ namespace Server.DAL
                 return new Tuple<bool, string>(false, "there was err in PerformPurchase when Calling to UpdatePrice with Db Update " + updatePriceRes.Item2);
             }
 
-            int payRes = paymentHandler.pay(paymentDetails);
+            int payRes = paymentHandler.pay(paymentDetails,Failed);
             if (payRes == -1)
             {
                 return new Tuple<bool, string>(false, "payment faield");
@@ -655,8 +659,8 @@ namespace Server.DAL
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
                 if (!ans.Item1)
                     return new Tuple<int, string>(-1, ans.Item2);
-                
-                dbConn.SaveChanges();
+
+                DbManager.Instance.SaveChanges();
                 return new Tuple<int, string>(next_id, "");
             }
         }
@@ -1128,6 +1132,10 @@ namespace Server.DAL
 
         public DbCart GetDbCart(int id)
         {
+            if(testingmode)
+            {
+                return null;
+            }
             return dbConn.Carts.Where(c => c.Id == id).FirstOrDefault();
         }
 
@@ -1186,6 +1194,14 @@ namespace Server.DAL
                 return null;
             }
             return dbConn.StoreOwners.Where(o => o.OwnerName.Equals(name) && o.StoreId == storeID).FirstOrDefault();
+        }
+        public StoreManager getStoreManagerbyStore(string name, int storeID)
+        {
+            if (testingmode)
+            {
+                return null;
+            }
+            return dbConn.StoreManagers.Where(o => o.ManagerName.Equals(name) && o.StoreId == storeID).FirstOrDefault();
         }
         public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s, bool saveChanges)
         {
@@ -1911,7 +1927,7 @@ namespace Server.DAL
             }
         }
 
-        public void DeleteStoreManagerAppoint(StoreManagersAppoint soaItem, bool saveChanges)
+        public void DeleteStoreManagerAppoint(StoreManagersAppoint soaItem, bool saveChanges = false)
         {
             if (testingmode)
             {

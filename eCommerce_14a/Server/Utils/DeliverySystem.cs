@@ -21,8 +21,10 @@ namespace eCommerce_14a.Utils
         }
 
         /// <test> TestingSystem.UnitTests.DeliverySystemTests</test>
-        public static bool IsAlive()
+        public static bool IsAlive(bool Failed = false)
         {
+            if (Failed)
+                return false;
             var handshake = new Dictionary<string, string>
             {
                 { "action_type", "handshake" }
