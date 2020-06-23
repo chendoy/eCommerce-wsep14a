@@ -11,11 +11,13 @@ namespace Server.DAL
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Server.DAL.CommunicationDb;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.IO;
+    using System;
+    using Newtonsoft.Json.Linq;
 
     public class EcommerceContext : DbContext
     {
-        public EcommerceContext()
-            : base("name=EF_Azure_Ecommerce_ConnStr")
+        public EcommerceContext() : base("EF_TestingDB")
         {
         }
 

@@ -1,20 +1,14 @@
 ﻿using eCommerce_14a.StoreComponent.DomainLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Server.DAL;
 using eCommerce_14a.UserComponent.DomainLayer;
-using System.Data.Entity.Core.Metadata.Edm;
 using Server.DAL.UserDb;
 using eCommerce_14a.Utils;
 using Server.DAL.CommunicationDb;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
-using System.IO;
-using Newtonsoft.Json.Linq;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -33,33 +27,22 @@ namespace TestingSystem.DbManger_Tests
         {
         }
 
-        [TestMethod]
-        public List<Store> GetAllStore()
-        {
-            List<Store> stores = DbManager.Instance.LoadAllStores();
-            return stores;
-        }
-        [TestMethod]
-        public void TestLoadStores()
-        {
-            StoreManagment.Instance.LoadFromDb();
-            StoreManagment b = StoreManagment.Instance;
-        }
 
         [TestMethod]
         public void TestGetAllUsers()
         {
             List<User> useres = DbManager.Instance.LoadAllUsers();
-            int a = 1;
+            Assert.AreEqual(useres.Count, 9);
         }
 
-        //[TestMethod]
-        //public void InsertCandidate()
-        //{
-        //    DbManager.Instance.InsertCandidateToOwnerShip(new CandidateToOwnership("liav", "yosi", 1));
-        //}
 
-
+        [TestMethod]
+        public List<Store> TestGetAllStore()
+        {
+            List<Store> stores = DbManager.Instance.LoadAllStores();
+            Assert.AreEqual(stores.Count, 8);
+            return stores;
+        }
 
         [TestMethod]
         public void RemoveCandidate()
@@ -147,7 +130,7 @@ namespace TestingSystem.DbManger_Tests
         public void TestDeleteFullStore_t1()
         {
             Store s = TestLoadStore(6);
-            DbManager.Instance.DeleteFullStore(s);
+            DbManager.Instance.DeleteFullStoreTransaction(s);
         }
 
         [TestMethod]

@@ -412,14 +412,32 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             storeParam.Add(CommonStr.StoreParams.mainOwner, user.Name);
             Store store = new Store(storeParam);
             //DB Insert Store
-            DbManager.Instance.InsertStore(store);
+
+
+            try
+            {
+                DbManager.Instance.InsertStore(store);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("Createstore_InsertStore db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<int, string>(-1, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
 
             Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id,userName);
 
             if (!ownershipAdded.Item1)
             {
                 Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownershipAdded.Item2);
-                DbManager.Instance.DeleteFullStore(store);
+                try
+                {
+                    DbManager.Instance.DeleteFullStoreTransaction(store);
+                }
+                catch(Exception ex)
+                {
+                    Logger.logError("Createstore_DeleteFullStore db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<int, string>(-1, CommonStr.GeneralErrMessage.DbErrorMessage);
+                }
                 return new Tuple<int, string>(-1, ownershipAdded.Item2);
             }
             else
@@ -481,8 +499,18 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (!Publisher.Instance.RemoveSubscriptionStore(storeId))
                 return new Tuple<bool, string>(false,"Cannot Remove Subscription Store");
 
-            //DB addition 
-            DbManager.Instance.DeleteFullStore(stores[storeId]);
+
+            try
+            {
+                //DB addition 
+                DbManager.Instance.DeleteFullStoreTransaction(stores[storeId]);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("RemoveStore db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
+
             stores.Remove(storeId);
             return new Tuple<bool, string>(true, "");
         }
