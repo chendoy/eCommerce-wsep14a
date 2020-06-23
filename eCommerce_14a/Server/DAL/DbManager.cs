@@ -996,6 +996,7 @@ namespace Server.DAL
 
         public void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId, bool saveChanges)
         {
+            saveChanges = true;
             if (testingmode)
             {
                 return;
@@ -1352,6 +1353,7 @@ namespace Server.DAL
 
         public void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId, bool saveChanges)
         {
+            saveChanges = true;
             if (testingmode)
             {
                 return;
