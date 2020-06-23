@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using System.Collections.Concurrent;
 using Server.Communication.DataObject;
+using Server.Communication.DataObject.Responses;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Server.UserComponent.Communication;
@@ -53,6 +54,10 @@ namespace Client.Service
                 {
                     NotifyData notifyData = JsonConvert.DeserializeObject<NotifyData>(json);
                     await NotifierService.Update(notifyData.Context);
+                } else if (opcode == (int)Opcode.STATISTICS)
+                {
+                    NotifyStatisticsData statData = JsonConvert.DeserializeObject<NotifyStatisticsData>(json);
+                    await NotifierService.GotStatistics(statData.statistics);
                 }
                 else
                 {
