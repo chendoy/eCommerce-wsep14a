@@ -15,8 +15,8 @@ namespace Server.UserComponent.DomainLayer
         public int AdministratorsVisitors { get; set; }
         public int TotalVisistors { get; set; }
 
-        public DateTime start { get; set; }
-        public DateTime endt { get; set; }
+        public DateTime? start { get; set; }
+        public DateTime? endt { get; set; }
 
         public bool start_bool { get; set; }
         public bool ends_bool { get; set; }

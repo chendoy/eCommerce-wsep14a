@@ -20,6 +20,7 @@ using log4net.Config;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.Communication
 {
@@ -105,18 +106,15 @@ namespace eCommerce_14a.Communication
             session.Send(response, 0, response.Length);
         }
 
-        //public void notifyStatistics(StatisticsView statistics, string[] admins)
-        //{
-        //    byte[] response;
-        //    foreach (string admin in admins) 
-        //    {
-        //        WebSocketSession session = handler.GetSession(admin);
-        //        if (session == null)
-        //            continue;
-        //        response = handler.HandleStatistics(statistics);
-        //        session.Send(response, 0, response.Length);
-        //    }
-        //}
+        public void notifyStatistics(string admin, Statistic_View statistics)
+        {
+            byte[] response;
+            WebSocketSession session = handler.GetSession(admin);
+            if (session == null)
+                return;
+            response = handler.HandleStatisticsNotification(statistics);
+            session.Send(response, 0, response.Length);
+        }
 
 
         private void HandleMessage(WebSocketSession session, byte[] msg)
@@ -342,6 +340,11 @@ namespace eCommerce_14a.Communication
 
                 case Opcode.MAKE_ADMIN:
                     response = handler.HandleMakeAdmin(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.GET_STATISTICS:
+                    response = handler.HandleStatistics(json);
                     session.Send(response, 0, response.Length);
                     break;
 

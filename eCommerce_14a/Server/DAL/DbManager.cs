@@ -19,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.ComponentModel;
 using eCommerce_14a;
+using Server.DAL.StatisticsDb;
 
 namespace Server.DAL
 {
@@ -665,7 +666,39 @@ namespace Server.DAL
                 return new Tuple<int, string>(next_id, "");
             }
         }
-
+        public void InsertStatisticRecord(string userName, DateTime date, bool savechanges = false)
+        {
+            if (testingmode)
+            {
+                return;
+            }
+            try
+            {
+                dbConn.Statistics.Add(new DbStatistics(userName, date));
+            }
+            catch(Exception ex)
+            {
+                return;
+            }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
+        }
+        public List<Tuple<string,DateTime>> GetStatisticsRecords()
+        {
+            if(testingmode)
+            {
+                return null;
+            }
+            List<Tuple<string, DateTime>> str = new List<Tuple<string, DateTime>>();
+            List<DbStatistics> allstatistics = dbConn.Statistics.ToList();
+            foreach(DbStatistics dbsts in allstatistics)
+            {
+                str.Add(new Tuple<string,DateTime>(dbsts.Name, dbsts.DateTime));
+            }
+            return str;
+        }
         public Dictionary<int,bool> GetIsApprovedStoreUsers(string userName)
         {
             if (testingmode)

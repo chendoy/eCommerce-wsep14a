@@ -43,11 +43,6 @@ namespace TestingSystem.AcceptanceTests
             Assert.AreNotEqual(0, ViewStoreDetails(storeID).Keys.Count);
         }
         [TestMethod]
-        public void EmptyStoreTest()
-        {
-            Assert.AreEqual(0, ViewProductByStoreID(storeID).Count);// suppose to return an EmptyList
-        }
-        [TestMethod]
         public void CloseShopViewShopDetailsTest()
         {
             ClearAllShops();

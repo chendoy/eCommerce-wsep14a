@@ -190,9 +190,7 @@ namespace TestingSystem.UnitTests.SearcherTest
             filters.Add(CommonStr.SearcherKeys.ProductRank, 3);
             Dictionary<int, List<Product>> searcherRes = searchProductsDriver(filters);
             Assert.IsTrue(equalDicts(expectedRes, searcherRes));
-        }
-
-        
+        }   
         private Dictionary<int, List<Product>> searchProductsDriver(Dictionary<string, object> searchFilters)
         {
             return searcher.SearchProducts(searchFilters);

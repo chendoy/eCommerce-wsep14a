@@ -20,6 +20,10 @@ namespace TestingSystem.UnitTests
         [TestInitialize]
         public void TestInitialize()
         {
+            //SM.cleanup();
+            //UM.cleanup();
+            //Publisher.Instance.cleanup();
+            Statistics.Instance.cleanup();
             UM = UserManager.Instance;
             SM = StoreManagment.Instance;
             UM.RegisterMaster("Admin", "Test1");
@@ -41,7 +45,6 @@ namespace TestingSystem.UnitTests
         [TestMethod]
         public void NotAdmin()
         {
-            
            Statistic_View sv =  Statistics.Instance.getViewDataAll("user8");
            Assert.IsNull(sv);
         }

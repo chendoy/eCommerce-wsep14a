@@ -16,7 +16,7 @@ namespace Server.Utils
         public NetworkSecurity sec;
         public string[] usernames;
         public string[] passwords;
-        public const int REQ_NUM = 21;
+        public const int REQ_NUM = 1001;
 
         public RequestMaker() 
         {
@@ -64,7 +64,7 @@ namespace Server.Utils
                 SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 2), "addprodtostore" + i); //should insert legal payment details for users
             }
             //generate login as guest requests
-            for (int i = 1; i < 1001; i++)
+            for (int i = 1; i < REQ_NUM; i++)
             {
                 SaveData(MakeLoginAsGuestRequest(), "loginasguest" + i);
             }

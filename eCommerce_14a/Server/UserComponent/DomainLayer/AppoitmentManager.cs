@@ -11,6 +11,7 @@ using Server.DAL.PurchaseDb;
 using Server.DAL.StoreDb;
 using Server.DAL.UserDb;
 using Server.UserComponent.Communication;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -20,10 +21,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         StoreManagment storeManagment;
         //Publisher publisher;
         UserManager UM;
+        private List<Appoitment> AllAppoitments;
+        private List<Candidation> AllCandidates;
         AppoitmentManager()
         {
             UM = UserManager.Instance;
             storeManagment = StoreManagment.Instance;
+            AllAppoitments = new List<Appoitment>();
+            AllCandidates = new List<Candidation>();
         }
         private static readonly object padlock = new object();  
         private static AppoitmentManager instance = null;  
@@ -43,6 +48,50 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 }  
                 return instance;  
             }  
+        }
+        public void insertCandidate(string appointer,string appointed,int storeId)
+        {
+            foreach(Candidation candidation in AllCandidates)
+            {
+                if(candidation.Appointer == appointer && candidation.Candidate == appointed && candidation.storeId == storeId)
+                {
+                    return;
+                }
+            }
+            AllCandidates.Add(new Candidation(appointer, appointed, storeId));
+        }
+        public void insertAppointment(string appointer, string appointed, int storeId)
+        {
+            foreach (Appoitment appo in AllAppoitments)
+            {
+                if (appo.Appointer == appointer && appo.Appointed == appointed && appo.storeId == storeId)
+                {
+                    return;
+                }
+            }
+            AllAppoitments.Add(new Appoitment(appointer, appointed, storeId));
+        }
+        public bool RemoveCnadidate(string appointer, string appointed, int storeId)
+        {
+            foreach (Candidation cand in AllCandidates)
+            {
+                if (cand.Appointer == appointer && cand.Candidate == appointed && cand.storeId == storeId)
+                {
+                    return AllCandidates.Remove(cand);
+                }
+            }
+            return false;
+        }
+        public bool RemoveAppoitment(string appointer, string appointed, int storeId)
+        {
+            foreach (Appoitment appo in AllAppoitments)
+            {
+                if (appo.Appointer == appointer && appo.Appointed == appointed && appo.storeId == storeId)
+                {
+                    return AllAppoitments.Remove(appo);
+                }
+            }
+            return false;
         }
         public void LoadAppointments()
         {
@@ -104,6 +153,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             //Set to false if False and the operation will fail.
             if(!approval)
             {
+                RemoveCnadidate(owner, Appointed, storeID);
                 appointed.SetApprovalStatus(storeID, approval);
                 //Update The Approval Status in the DB
                 //Remove MasterAppointer - Candidtae Table from DB
@@ -127,6 +177,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             }
             if(appointed.CheckSApprovalStatus(storeID))
             {
+                RemoveCnadidate(owner, Appointed, storeID);
                 //User can be assigned to Store owner
                 appointed.RemoveApprovalStatus(storeID);
                 string Mappointer = appointed.MasterAppointer[storeID];
@@ -142,6 +193,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 {
                     return new Tuple<bool, string>(false, "Failed to insert store owner to DB memory");
                 }
+                insertAppointment(owner, Appointed, storeID);
                 if (store.IsStoreManager(appointed))
                 {
                     try
@@ -220,7 +272,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if(owners.Count == 0)
             {
                 //Is ready to become Owner.
-                
+                insertAppointment(owner, addto, storeId);
                 string maserAppointer = appointed.MasterAppointer[storeId];
                 appointed.MasterAppointer.Remove(storeId);
                 if(!appointed.addStoreOwnership(storeId, appointer.getUserName()).Item1)
@@ -277,6 +329,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 Publisher.Instance.Notify(storeOwner, new NotifyData("User: " + addto + " Is want to Be store:" + storeId + " Owner Let him know what you think"));
             }
             //Add AptovmentStatus to DB
+            insertCandidate(owner, addto, storeId);
             try
             {
                 DbManager.Instance.InsertStoreOwnerShipApprovalStatus(AdapterUser.CreateNewStoreAppoitmentApprovalStatus(storeId, true, addto));
@@ -446,6 +499,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public List<User> RemoveManagerLoop(User appointer, User DemoteOwner, Store store)
         {
             List<User> ManagersToRemove = new List<User>();
+            RemoveAppoitment(appointer.Name, DemoteOwner.Name, store.Id);
             ManagersToRemove.Add(DemoteOwner);
             string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
             DemoteOwner.RemoveStoreManagment(store.GetStoreId());
@@ -473,6 +527,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             List<User> OwnersToRemove = new List<User>();
             OwnersToRemove.Add(DemoteOwner);
+            RemoveAppoitment(appointer.Name, DemoteOwner.Name, store.Id);
             string OwnerRemovalMessage = "You have been Removed From Owner position in the Store " + store.StoreName +"By you appointer - "+appointer.getUserName()+"\n";
             DemoteOwner.RemoveStoreOwner(store.GetStoreId());
             //Remove Store Ownership from DB here

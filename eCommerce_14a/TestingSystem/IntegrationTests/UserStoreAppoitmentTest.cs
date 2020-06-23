@@ -49,15 +49,15 @@ namespace TestingSystem.IntegrationTests
         [TestMethod]
         public void RemoveStoreOwnerTest()
         {
-            SM.createStore("owner", "Store");
-            Assert.IsTrue(SM.getStore(100).IsStoreOwner(UM.GetUser("owner")));
-            Assert.IsTrue(UM.GetUser("owner").isStoreOwner(100));
-            Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 100).Item1);
-            Assert.IsTrue(SM.getStore(100).IsStoreOwner(UM.GetUser("Appointed")));
-            Assert.IsTrue(UM.GetUser("Appointed").isStoreOwner(100));
-            Assert.IsTrue(AP.RemoveStoreOwner("owner", "Appointed", 100).Item1);
-            Assert.IsFalse(SM.getStore(100).IsStoreOwner(UM.GetUser("Appointed")));
-            Assert.IsFalse(UM.GetUser("Appointed").isStoreOwner(100));
+            Tuple<int,string> ans = SM.createStore("owner", "Store");
+            Assert.IsTrue(SM.getStore(ans.Item1).IsStoreOwner(UM.GetUser("owner")));
+            Assert.IsTrue(UM.GetUser("owner").isStoreOwner(ans.Item1));
+            Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", ans.Item1).Item1);
+            Assert.IsTrue(SM.getStore(ans.Item1).IsStoreOwner(UM.GetUser("Appointed")));
+            Assert.IsTrue(UM.GetUser("Appointed").isStoreOwner(ans.Item1));
+            Assert.IsTrue(AP.RemoveStoreOwner("owner", "Appointed", ans.Item1).Item1);
+            Assert.IsFalse(SM.getStore(ans.Item1).IsStoreOwner(UM.GetUser("Appointed")));
+            Assert.IsFalse(UM.GetUser("Appointed").isStoreOwner(ans.Item1));
         }
     }
 }

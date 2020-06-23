@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using System.Collections.Concurrent;
 using Server.Communication.DataObject;
+using Server.Communication.DataObject.Responses;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Server.UserComponent.Communication;
@@ -53,6 +54,10 @@ namespace Client.Service
                 {
                     NotifyData notifyData = JsonConvert.DeserializeObject<NotifyData>(json);
                     await NotifierService.Update(notifyData.Context);
+                } else if (opcode == (int)Opcode.STATISTICS)
+                {
+                    NotifyStatisticsData statData = JsonConvert.DeserializeObject<NotifyStatisticsData>(json);
+                    await NotifierService.GotStatistics(statData.statistics);
                 }
                 else
                 {
@@ -65,7 +70,7 @@ namespace Client.Service
         {
             string json = JsonConvert.SerializeObject(obj); // seralize this object into json string
             Console.WriteLine("sent: " + json);
-            byte[] arr = Encoding.ASCII.GetBytes(json); // encrypt the string using aes algorithm and convert it to byte array // changed
+            byte[] arr = Encoding.UTF8.GetBytes(json); // encrypt the string using aes algorithm and convert it to byte array // changed
             //ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
             client.Send(arr);
             //client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server
