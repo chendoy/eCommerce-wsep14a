@@ -1,5 +1,6 @@
 ﻿using eCommerce_14a;
 using eCommerce_14a.UserComponent.DomainLayer;
+using Server.DAL;
 using Server.UserComponent.Communication;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,9 @@ namespace Server.UserComponent.DomainLayer
         }
         public void InserRecord(string uname, DateTime time)
         {
+
             visitors.Add(new Tuple<string, DateTime>(uname, time));
+            DbManager.Instance.InsertStatisticRecord(uname, time);
             if (adminsStatistics.Count == 0)
                 return;
             foreach(string admin_name in adminsStatistics.Keys)
