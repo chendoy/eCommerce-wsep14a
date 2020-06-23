@@ -38,9 +38,9 @@ namespace eCommerce_14a.PurchaseComponent.ServiceLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28 </req>
-        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address, bool Failed = false)
         {
-            return purchaseManagement.PerformPurchase(user, paymentDetails, address);
+            return purchaseManagement.PerformPurchase(user, paymentDetails, address,Failed);
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>

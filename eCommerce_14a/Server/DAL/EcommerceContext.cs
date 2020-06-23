@@ -14,10 +14,11 @@ namespace Server.DAL
     using System.IO;
     using System;
     using Newtonsoft.Json.Linq;
+    using Server.DAL.StatisticsDb;
 
     public class EcommerceContext : DbContext
     {
-        public EcommerceContext() : base("EF_TestingDB")
+        public EcommerceContext() : base("EF_Azure_Ecommerce_ConnStr")
         {
         }
 
@@ -68,6 +69,10 @@ namespace Server.DAL
         public virtual DbSet<ProductAtBasket> ProductsAtBaskets { get; set; }
 
         public virtual DbSet<DbPurchase> Purchases { get; set; }
+
+
+        //statstics
+        public virtual DbSet<DbStatistics> Statistics { get; set; }
 
 
 
@@ -275,6 +280,10 @@ namespace Server.DAL
          .WithMany()
          .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<DbStatistics>()
+        .HasRequired(c => c.User)
+        .WithMany()
+        .WillCascadeOnDelete(false);
             base.OnModelCreating(modelBuilder);
         }
     }

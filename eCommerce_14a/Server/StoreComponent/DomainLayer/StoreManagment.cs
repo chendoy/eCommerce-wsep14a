@@ -226,7 +226,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return retList;
         }
 
-        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount, bool saveChanges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -243,10 +243,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount);
+            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount, saveCahnges: saveChanges);
         }
 
-        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount, bool saveCahnges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -263,7 +263,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].decrasePrdouctAmount(user: user, productId: productId, amount: amount);
+            return stores[storeId].decrasePrdouctAmount(user: user, productId: productId, amount: amount, saveCahnges: saveCahnges);
         }
 
 
@@ -413,43 +413,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Store store = new Store(storeParam);
             //DB Insert Store
 
-
-            try
+            Tuple<int, string> transactionRes =  DbManager.Instance.InsertStoreTranscation(store, user, userName, next_id);
+            if(transactionRes.Item1 >= 0)
             {
-                DbManager.Instance.InsertStore(store);
-            }
-            catch(Exception ex)
-            {
-                Logger.logError("Createstore_InsertStore db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return new Tuple<int, string>(-1, CommonStr.GeneralErrMessage.DbErrorMessage);
-            }
-
-            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id,userName);
-
-            if (!ownershipAdded.Item1)
-            {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownershipAdded.Item2);
-                try
-                {
-                    DbManager.Instance.DeleteFullStoreTransaction(store);
-                }
-                catch(Exception ex)
-                {
-                    Logger.logError("Createstore_DeleteFullStore db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
-                    return new Tuple<int, string>(-1, CommonStr.GeneralErrMessage.DbErrorMessage);
-                }
-                return new Tuple<int, string>(-1, ownershipAdded.Item2);
-            }
-            else
-            {        
                 stores.Add(next_id, store);
-                
-                //Version 2 Addition
-                Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
-                if (!ans.Item1)
-                    return new Tuple<int, string>(-1, ans.Item2);
-                return new Tuple<int, string>(next_id, "");
             }
+
+            return transactionRes;
+
 
         }
 

@@ -335,7 +335,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         }
 
         //This user will be store Owner 
-        public Tuple<bool, string> addStoreOwnership(int storeId, string appointer)
+        public Tuple<bool, string> addStoreOwnership(int storeId, string appointer, bool saveCahnges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (isguest())
@@ -351,10 +351,23 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             
             //DB Insert//
             StoreOwnershipAppoint soa = new StoreOwnershipAppoint(appointer, this.Name, storeId);
-            DbManager.Instance.InsertStoreOwnershipAppoint(soa);
+            try
+            {
+                DbManager.Instance.InsertStoreOwnershipAppoint(soa, saveCahnges);
 
-
-            return setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("Add Store Owner db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Insert Store Owner Operation to DB Failed cannot proceed");
+            }
+            Tuple<bool,string> ans =  setPermmisions(storeId, CommonStr.StorePermissions.FullPermissions, saveCahnges);
+            if(!ans.Item1)
+            {
+                DbManager.Instance.DeleteStoreOwnerShipAppoint(soa);
+                return new Tuple<bool, string>(false, "Insert Store Permissions Operation to DB Failed cannot proceed");
+            }
+            return new Tuple<bool, string>(true, "Insert Permissions to DB is OK");
         }
         //Version 2 changes
         public void AddMessage(NotifyData notification)
@@ -445,7 +458,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             return this.IsAdmin;
         }
         //Set User permission over spesific store
-        public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set)
+        public Tuple<bool, string> setPermmisions(int store_id, int[] permission_set, bool saveChanges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (store_id < 1)
@@ -461,12 +474,28 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
                 List<UserStorePermissions> perms = DbManager.Instance.GetUserStorePermissionSet(store_id, this.Name);
                 Store_options.Remove(store_id);
-                DbManager.Instance.DeletePermission(perms);
+                try
+                {
+                    DbManager.Instance.DeletePermission(perms);
+                }
+                catch(Exception ex)
+                {
+                    Logger.logError("Delete Permissions error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "Delete Permissions DB Failed cannot proceed");
+                }
+                
             }
-
-            List<UserStorePermissions> permsN = AdapterUser.CreateNewPermissionSet(Name, store_id, permission_set);
-            DbManager.Instance.InsertUserStorePermissionSet(permsN);
             Store_options.Add(store_id, permission_set);
+            List<UserStorePermissions> permsN = AdapterUser.CreateNewPermissionSet(Name, store_id, permission_set);
+            try
+            {
+                DbManager.Instance.InsertUserStorePermissionSet(permsN, saveChanges);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("Insert Permissions error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Insert Permissions DB Failed cannot proceed");
+            }
             return new Tuple<bool, string>(true, "");
         }
         public bool RemovePermission(int store_id)

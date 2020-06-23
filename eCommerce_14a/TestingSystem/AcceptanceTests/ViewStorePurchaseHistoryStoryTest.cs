@@ -14,8 +14,8 @@ namespace TestingSystem.AcceptanceTests
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
         int storeID;
-        string paymentDetails = "33225554";
-        string address = "hanesher3";
+        string paymentDetails = "3333444455556666&4&11&Wolloloo&333&222222222";
+        string address = "dani&Wollu&Wollurberg&wolocountry&12345678";
         int productID = 1;
         int amount = 1;
         string productDetails = "Details";

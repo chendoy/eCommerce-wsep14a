@@ -2,6 +2,7 @@
 using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.DAL;
+using Server.DAL.PurchaseDb;
 using Server.DAL.StoreDb;
 using Server.UserComponent.Communication;
 using System;
@@ -151,6 +152,10 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             if (!carts.TryGetValue(userId, out cart))
             {
                 cart = CreateNewCart(userId);
+                if(cart == null)
+                {
+                    return new Tuple<bool, string>(false, "there was error with CreateNewCart in the DB  in addProduct Function");
+                }
                 carts.Add(userId, cart);
             }
 
@@ -184,7 +189,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         }
 
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28 </req>
-        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address, bool Failed = false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             if (String.IsNullOrWhiteSpace(user))
@@ -224,62 +229,13 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
                 return validCart;
             }
 
-            userCart.UpdateCartPrice();
-
-            Tuple<bool, string> payRes = paymentHandler.pay(paymentDetails, userCart.Price);
-            if (!payRes.Item1)
+            Tuple<bool, string> transactionres = DbManager.Instance.PerformPurchaseTransaction(userCart, paymentHandler, paymentDetails, address, deliveryHandler, purchasesHistoryByStore, purchasesHistoryByUser,Failed);
+            if(!transactionres.Item1)
             {
-                return payRes;
-            }
-
-            userCart.RemoveFromStoresStock();
-
-            Tuple<bool, string> delvRes = deliveryHandler.ProvideDeliveryForUser(address, true);
-            if (!delvRes.Item1)
-            {
-                paymentHandler.refund(paymentDetails, userCart.Price);
-                userCart.RestoreItemsToStores();
-                return delvRes;
-            }
-
-            userCart.SetPurchaseTime(DateTime.Now);
-            foreach (Store store in userCart.GetBaskets().Keys)
-            {
-                if (!purchasesHistoryByStore.TryGetValue(store, out List<PurchaseBasket> currHistory))
-                {
-                    currHistory = new List<PurchaseBasket>();
-                }
-
-                currHistory.Add(userCart.GetBaskets()[store]);
-                purchasesHistoryByStore[store] = currHistory;
-                //Version 2 Addition
-                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.GetStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
-                Tuple<bool, string> ans = Publisher.Instance.Notify(store.GetStoreId(), new NotifyData(message_data));
-                if (!ans.Item1)
-                    return ans;
-            }
-            Purchase newPurchase = new Purchase(user, userCart);
-            if (!purchasesHistoryByUser.TryGetValue(user, out List<Purchase> userHistory))
-            {
-                userHistory = new List<Purchase>();
-            }
-
-            userHistory.Add(newPurchase);
-            // DB Insert New Purchase
-            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
-            {
-               DbManager.Instance.InsertPurchase(StoreAdapter.Instance.ToDbPurchase(newPurchase));
-            }
-            purchasesHistoryByUser[user] = userHistory;
-            //DB Updating cart status to purchased
-            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
-            {
-                
-                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(carts[user].Id), carts[user], true);
+                return transactionres;
             }
 
             carts[user] = CreateNewCart(user);
-
             return new Tuple<bool, string>(true, "");
         }
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-subscription-buyer--history-37 </req>
@@ -437,7 +393,15 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             //DB Insert New Cart
             if (!UserManager.Instance.GetAtiveUser(userId).IsGuest)
             {
-                DbManager.Instance.InsertDbCart(StoreAdapter.Instance.ToDbCart(newCart));
+                try
+                {
+                    DbManager.Instance.InsertCart(StoreAdapter.Instance.ToDbCart(newCart), true);
+                }
+                catch(Exception ex)
+                {
+                    Logger.logError("Cart_CreateNewCartt db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return null;
+                }
             }
             return newCart;
         }

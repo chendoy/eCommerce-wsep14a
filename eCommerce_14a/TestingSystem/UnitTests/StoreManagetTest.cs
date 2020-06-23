@@ -203,7 +203,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
 
         private Tuple<bool, string> addProductAmountDriver(int storeId, string userName, int productId,int amount) 
         {
-            return storeManagment.addProductAmount(storeId, userName, productId, amount);
+            return storeManagment.addProductAmount(storeId, userName, productId, amount, false);
         }
 
 
@@ -211,7 +211,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.decraseProductAmount(int, string, int, int)
         public void TestDecraseProductAmount_nonExistingUser()
         {
-            Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(1, "shimon", 1, 1);
+            Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(1, "shimon", 1, 1, false);
             if (decraseRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, decraseRes.Item2);
@@ -222,7 +222,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.decraseProductAmount(int, string, int, int)
         public void TestDecraseProductAmount_notActiveUser()
         {
-            Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(3, "yosef", 1, 1);
+            Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(3, "yosef", 1, 1, false);
             if (decraseRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg, decraseRes.Item2);
@@ -232,7 +232,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.decraseProductAmount(int, string, int, int)
         public void TestDecraseProductAmount_notExistStore()
         {
-            Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(8, "liav", 1, 1);
+            Tuple<bool, string> decraseRes = storeManagment.decraseProductAmount(8, "liav", 1, 1, false);
             if (decraseRes.Item1)
                 Assert.Fail();
             Assert.AreEqual(CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage, decraseRes.Item2);
@@ -249,7 +249,7 @@ namespace TestingSystem.UnitTests.StoreManagmentTest
         /// <function cref ="eCommerce_14a.StoreManagment.decraseProductAmount(int, string, int, int)
         public Tuple<bool, string> decraseProductAmountDriver(int storeId, string userName, int productId, int amount)
         {
-            return storeManagment.decraseProductAmount(storeId, userName, productId, amount);
+            return storeManagment.decraseProductAmount(storeId, userName, productId, amount, false);
         }
 
         [TestMethod]

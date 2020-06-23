@@ -17,6 +17,8 @@ using System.Reflection.PortableExecutable;
 using System.Data.Common;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.ComponentModel;
+using eCommerce_14a;
 
 namespace Server.DAL
 {
@@ -27,7 +29,8 @@ namespace Server.DAL
         private static readonly object padlock = new object();
         private static DbManager instance = null;
         private bool testingmode;
-
+        List<Tuple<object,string>> insertData;
+        List<Tuple<object,string>> deleteData;
         private DbManager()
         {
             dbConn = new EcommerceContext();
@@ -35,6 +38,8 @@ namespace Server.DAL
             String Root = Directory.GetCurrentDirectory();
             JObject data =  JObject.Parse(File.ReadAllText(Path.Combine(new string[] { Root, "configFile.json" })));
             testingmode = data.GetValue("mode").ToString().Equals("testing");
+            insertData = new List<Tuple<object, string>>();
+            deleteData = new List<Tuple<object, string>>();
         }
 
         public static DbManager Instance
@@ -62,17 +67,6 @@ namespace Server.DAL
         {
             if(testingmode)
             {
-                //List<Store> stores = StoreManagment.Instance.GetAllStores();
-                //List<int> pids = new List<int>();
-                //foreach(Store store in stores)
-                //{
-                //    pids.AddRange(store.Inventory.InvProducts.Keys.ToList());
-                //}
-                //if (pids.Count > 0)
-                //{
-                //    int max = pids.Max(id => id);
-                //    return max + 1;
-                //}
                 return 1;
             }
             if (dbConn.Products.Any())
@@ -84,7 +78,21 @@ namespace Server.DAL
                 return 1;
             }
         }
-
+        public void SaveChanges(bool working = true)
+        {
+            if (testingmode)
+            {
+                return;
+            }
+            if (!working)
+            {
+                Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
+            }
+            if(dbConn.SaveChanges() <= 0)
+            {
+                Logger.logError("Save changes To Db Failed", this, System.Reflection.MethodBase.GetCurrentMethod());
+            }
+        }
         public int GetNextPurchBasketId()
         {
             if (testingmode)
@@ -102,22 +110,37 @@ namespace Server.DAL
             }
         }
 
-
-        public void DeleteSingleCandidate(CandidateToOwnership candidateToOwnership)
+        public void DeApprovalTransaction(StoreOwnertshipApprovalStatus status, bool astatus, CandidateToOwnership cand, bool savechanges)
+        {
+            UpdateApprovalStatus(status, astatus);
+            DeleteSingleCandidate(cand);
+            if (savechanges)
+            {
+                dbConn.SaveChanges();
+            }
+        }
+        public void DeleteSingleCandidate(CandidateToOwnership candidateToOwnership, bool savechanges = false)
         {
             if (testingmode)
             {
                 return ;
             }
             dbConn.CandidateToOwnerships.Remove(candidateToOwnership);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
+            return;
         }
 
-        public void AppendProductTransaction(Product product, int amount, int storeid)
+        public void AppendProductTransaction(Product product, int amount, int storeid, bool saveChanges)
         {
             InsertProduct(StoreAdapter.Instance.ToDbProduct(product), false);
            InsertInventoryItem(StoreAdapter.Instance.ToDbInventoryItem(product.Id, amount, storeid), false);
-           dbConn.SaveChanges();
+           if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public CandidateToOwnership GetCandidateToOwnership(string cand, string owner, int storeId)
@@ -136,32 +159,46 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void DeleteUser(DbUser user)
+        public void DeleteUser(DbUser user, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Users.Remove(user);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
+            return;
         }
-        public void DeletePass(DbPassword pass)
+        public void DeletePass(DbPassword pass,bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Passwords.Remove(pass);
-            dbConn.SaveChanges();
+            if (savechanges)
+            {
+                dbConn.SaveChanges();
+            }
+            return;
         }
-        public void DeleteSingleMessage(DbNotifyData msg)
+
+ 
+        public void DeleteSingleMessage(DbNotifyData msg, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Notifies.Remove(msg);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+               dbConn.SaveChanges();
+            }
+            
         }
 
         public DbNotifyData GetDbNotification(string username, string context) 
@@ -174,7 +211,7 @@ namespace Server.DAL
             return msg;
         }
 
-        public void DeleteMessages(List<DbNotifyData> lmessage)
+        public void DeleteMessages(List<DbNotifyData> lmessage, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -184,8 +221,12 @@ namespace Server.DAL
             {
                 DeleteSingleMessage(data);
             }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeleteCandidates(List<CandidateToOwnership> candidates)
+        public void DeleteCandidates(List<CandidateToOwnership> candidates, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -195,18 +236,26 @@ namespace Server.DAL
             {
                 DeleteSingleCandidate(can);
             }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
        
 
-        public void DeleteSingleApproval(NeedToApprove msg)
+        public void DeleteSingleApproval(NeedToApprove msg, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.NeedToApproves.Remove(msg);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
+            
         }
         public NeedToApprove GetNeedToApprove(string aprover, string cand, int storeid)
         {
@@ -225,7 +274,9 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void DeleteAprovals(List<NeedToApprove> list)
+
+
+        public void DeleteAprovals(List<NeedToApprove> list, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -236,17 +287,24 @@ namespace Server.DAL
             {
                 DeleteSingleApproval(single);
             }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeleteSingleOwnership(StoreOwnershipAppoint msg)
+        public void DeleteSingleOwnership(StoreOwnershipAppoint msg, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwnershipAppoints.Remove(msg);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeleteOwnership(List<StoreOwnershipAppoint> list)
+        public void DeleteOwnership(List<StoreOwnershipAppoint> list, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -256,15 +314,22 @@ namespace Server.DAL
             {
                 DeleteSingleOwnership(single);
             }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeleteSingleManager(StoreManagersAppoint msg)
+        public void DeleteSingleManager(StoreManagersAppoint msg, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreManagersAppoints.Remove(msg);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
         public StoreManagersAppoint GetSingleManagerAppoints(string apr, string apo, int storeId)
         {
@@ -282,7 +347,7 @@ namespace Server.DAL
             }
             return dbConn.StoreOwnershipAppoints.Where(ap => ap.AppointerName == apr && ap.AppointedName == apo && ap.StoreId == storeId).FirstOrDefault();
         }
-        public void DeleteManagers(List<StoreManagersAppoint> list)
+        public void DeleteManagers(List<StoreManagersAppoint> list, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -292,17 +357,24 @@ namespace Server.DAL
             {
                 DeleteSingleManager(single);
             }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeleteSinglePermission(UserStorePermissions msg)
+        public void DeleteSinglePermission(UserStorePermissions msg, bool saveChanges=false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.UserStorePermissions.Remove(msg);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeletePermission(List<UserStorePermissions> list)
+        public void DeletePermission(List<UserStorePermissions> list, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -310,9 +382,101 @@ namespace Server.DAL
             }
             foreach (UserStorePermissions single in list)
             {
-                DeleteSinglePermission(single);
+                DeleteSinglePermission(single, saveChanges);
+            }
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
+
+        public Tuple<bool, string> PerformPurchaseTransaction(Cart userCart, PaymentHandler paymentHandler, string paymentDetails, string deliveryDetails, DeliveryHandler devHandler, Dictionary<Store, List<PurchaseBasket>> purchasesHistoryByStore, Dictionary<string, List<Purchase>> purchasesHistoryByUser, bool Failed = false)
+        {
+            string user = userCart.user;
+            Tuple<bool, string> updatePriceRes = userCart.UpdateCartPrice(false);
+            if (!updatePriceRes.Item1)
+            {
+                return new Tuple<bool, string>(false, "there was err in PerformPurchase when Calling to UpdatePrice with Db Update " + updatePriceRes.Item2);
+            }
+
+            int payRes = paymentHandler.pay(paymentDetails,Failed);
+            if (payRes == -1)
+            {
+                return new Tuple<bool, string>(false, "payment faield");
+            }
+
+            Tuple<bool, string> removeFromStockRes = userCart.RemoveFromStoresStock(false);
+
+            if (!removeFromStockRes.Item1)
+            {
+                Tuple<bool, string> refund_res = paymentHandler.refund(payRes);
+                if (!refund_res.Item1)
+                    return refund_res;
+                return removeFromStockRes;
+            }
+
+            Tuple<bool, string> delvRes = devHandler.ProvideDeliveryForUser(deliveryDetails);
+            if (!delvRes.Item1)
+            {
+                userCart.RestoreItemsToStores(false);
+                Tuple<bool, string> refund_res = paymentHandler.refund(payRes);
+                if (!refund_res.Item1)
+                    return refund_res;
+                return delvRes;
+            }
+
+            Tuple<bool, string> setPurchaseTimeRes =  userCart.SetPurchaseTime(DateTime.Now, false);
+            if(!setPurchaseTimeRes.Item1)
+            {
+                userCart.RestoreItemsToStores(false);
+                Tuple<bool, string> refund_res = paymentHandler.refund(payRes);
+                if (!refund_res.Item1)
+                    return refund_res;
+
+                return setPurchaseTimeRes;
+            }
+
+            foreach (Store store in userCart.GetBaskets().Keys)
+            {
+                if (!purchasesHistoryByStore.TryGetValue(store, out List<PurchaseBasket> currHistory))
+                {
+                    currHistory = new List<PurchaseBasket>();
+                }
+
+                currHistory.Add(userCart.GetBaskets()[store]);
+                purchasesHistoryByStore[store] = currHistory;
+                //Version 2 Addition
+                string message_data = "Purchase was made from - " + user + ",StoreId - " + store.GetStoreId() + " ,StoreName -" + store.GetName() + ", Products: " + (userCart.GetBaskets()[store]).ToString();
+                Tuple<bool, string> ans = Publisher.Instance.Notify(store.GetStoreId(), new NotifyData(message_data));
+                if (!ans.Item1)
+                    return ans;
+            }
+            Purchase newPurchase = new Purchase(user, userCart);
+            if (!purchasesHistoryByUser.TryGetValue(user, out List<Purchase> userHistory))
+            {
+                userHistory = new List<Purchase>();
+            }
+
+            userHistory.Add(newPurchase);
+            // DB Insert New Purchase
+            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
+            {
+                InsertPurchase(StoreAdapter.Instance.ToDbPurchase(newPurchase), false);
+            }
+            purchasesHistoryByUser[user] = userHistory;
+            //DB Updating cart status to purchased
+            if (!UserManager.Instance.GetAtiveUser(user).IsGuest)
+            {
+
+               UpdateDbCart(GetDbCart(userCart.Id), userCart, true, false);
+            }
+
+            dbConn.SaveChanges();
+
+            return new Tuple<bool, string>(true, "");
+
+        }
+
         public List<UserStorePermissions> GetUserStorePermissionSet(int storeId, string username)
         {
             if (testingmode)
@@ -323,16 +487,19 @@ namespace Server.DAL
             res = dbConn.UserStorePermissions.Where(pe => pe.StoreId == storeId && pe.UserName == username).ToList();
             return res;
         }
-        public void DeleteSingleApprovalStatus(StoreOwnertshipApprovalStatus msg)
+        public void DeleteSingleApprovalStatus(StoreOwnertshipApprovalStatus msg, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwnertshipApprovalStatuses.Remove(msg);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void DeleteAprovalsStatuses(List<StoreOwnertshipApprovalStatus> list)
+        public void DeleteAprovalsStatuses(List<StoreOwnertshipApprovalStatus> list, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -341,6 +508,10 @@ namespace Server.DAL
             foreach (StoreOwnertshipApprovalStatus single in list)
             {
                 DeleteSingleApprovalStatus(single);
+            }
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
@@ -386,8 +557,6 @@ namespace Server.DAL
             //Approvals
             List<StoreOwnertshipApprovalStatus> apprvs = dbConn.StoreOwnertshipApprovalStatuses.Where(c => c.CandidateName == name).ToList();
             DeleteAprovalsStatuses(apprvs);
-
-
         }
 
         internal DbUser GetUser(string username)
@@ -466,6 +635,36 @@ namespace Server.DAL
 
             return user;
         }
+
+        public Tuple<int,string> InsertStoreTranscation(Store store, User user, string userName, int next_id)
+        {
+            try
+            {
+               InsertStore(store, false);
+            }
+            catch
+            {
+                return new Tuple<int, string>(-1, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
+
+            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id, userName, false);
+
+            if (!ownershipAdded.Item1)
+            {
+                return new Tuple<int, string>(-1, ownershipAdded.Item2);
+            }
+            else
+            {
+                //Version 2 Addition
+                Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
+                if (!ans.Item1)
+                    return new Tuple<int, string>(-1, ans.Item2);
+
+                DbManager.Instance.SaveChanges();
+                return new Tuple<int, string>(next_id, "");
+            }
+        }
+
         public Dictionary<int,bool> GetIsApprovedStoreUsers(string userName)
         {
             if (testingmode)
@@ -693,7 +892,7 @@ namespace Server.DAL
             return ownershipsDict;
         }
 
-        public void InsertStore(Store store)
+        public void InsertStore(Store store, bool saveCahnges)
         {
             if (testingmode)
             {
@@ -705,17 +904,24 @@ namespace Server.DAL
             InsertPurchasePolicy(store.PurchasePolicy, store.Id, parentId: null, false);
             InsertOwners(store.owners, store.Id, false);
             InsertManagers(store.managers, store.Id, false);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertPurchaseBasket(DbPurchaseBasket dbPurchaseBasket)
+        public void InsertPurchaseBasket(PurchaseBasket basket, int cartId, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
+            DbPurchaseBasket dbPurchaseBasket = StoreAdapter.Instance.ToDbPurchseBasket(basket, cartId);
             dbConn.Baskets.Add(dbPurchaseBasket);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
      
@@ -728,14 +934,17 @@ namespace Server.DAL
             return dbConn.ProductsAtBaskets.Where(pab => pab.BasketId == basketId && pab.ProductId == productId).FirstOrDefault();
         }
 
-        public void UpdateProductAtBasket(ProductAtBasket productAtBasket, int wantedAmount)
+        public void UpdateProductAtBasket(ProductAtBasket productAtBasket, int wantedAmount, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             productAtBasket.ProductAmount = wantedAmount;
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         private void InsertDbstore(DbStore dbStore, bool saveChanges)
@@ -751,7 +960,7 @@ namespace Server.DAL
             }
         }
 
-        public void UpdateDbCart(DbCart dbCart, Cart cart, bool isPurchased)
+        public void UpdateDbCart(DbCart dbCart, Cart cart, bool isPurchased, bool saveChanges)
         {
             if (testingmode)
             {
@@ -759,10 +968,13 @@ namespace Server.DAL
             }
             dbCart.Price = cart.Price;
             dbCart.IsPurchased = isPurchased;
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertProductAtBasket(ProductAtBasket productAtBasket)
+        public void InsertProductAtBasket(ProductAtBasket productAtBasket, bool saveChanges)
         {
             if (testingmode)
             {
@@ -920,6 +1132,10 @@ namespace Server.DAL
 
         public DbCart GetDbCart(int id)
         {
+            if(testingmode)
+            {
+                return null;
+            }
             return dbConn.Carts.Where(c => c.Id == id).FirstOrDefault();
         }
 
@@ -941,14 +1157,17 @@ namespace Server.DAL
             }
         }
 
-        public void UpdateInventoryItemTransaction(DbInventoryItem dbInventoryItem, int amount)
+        public void UpdateInventoryItem(DbInventoryItem dbInventoryItem, int amount, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
             dbInventoryItem.Amount = amount;
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public StoreManager getStoreManager(string name)
@@ -968,28 +1187,45 @@ namespace Server.DAL
             }
             return dbConn.StoreOwners.Where(o => o.OwnerName.Equals(name)).FirstOrDefault();
         }
-
-        public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s)
+        public StoreOwner getStoreOwnerbyStore(string name, int storeID)
+        {
+            if (testingmode)
+            {
+                return null;
+            }
+            return dbConn.StoreOwners.Where(o => o.OwnerName.Equals(name) && o.StoreId == storeID).FirstOrDefault();
+        }
+        public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
-            DeleteAllStoreDiscountPolicy(s, true);
-            InsertDiscountPolicy(newPolicy, s.Id, null, true);
+
+            DeleteAllStoreDiscountPolicy(s, false);
+            InsertDiscountPolicy(newPolicy, s.Id, null, false);
+            if (saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void UpdatePurchasePolicy(PurchasePolicy newPolicy, Store store)
+        public void UpdatePurchasePolicy(PurchasePolicy newPolicy, Store store, bool saveChanges)
         {
             if (testingmode)
             {
                 return;
             }
-            DeleteAllStorePurchasePolicy(store, true);
-            InsertPurchasePolicy(newPolicy, store.Id, null, true);
+            
+            DeleteAllStorePurchasePolicy(store, false);
+            InsertPurchasePolicy(newPolicy, store.Id, null, false);
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void UpdateStore(DbStore dbstore, Store store)
+        public void UpdateStore(DbStore dbstore, Store store, bool saveCahnges)
         {
             if (testingmode)
             {
@@ -998,10 +1234,13 @@ namespace Server.DAL
             dbstore.ActiveStore = store.ActiveStore;
             dbstore.Rank = store.Rank;
             dbstore.StoreName = store.StoreName;
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void UpdatePurchaseBasket(DbPurchaseBasket dbPurchaseBasket, PurchaseBasket basket)
+        public void UpdatePurchaseBasket(DbPurchaseBasket dbPurchaseBasket, PurchaseBasket basket, bool saveChanges)
         {
             if (testingmode)
             {
@@ -1009,7 +1248,10 @@ namespace Server.DAL
             }
             dbPurchaseBasket.Price = basket.Price;
             dbPurchaseBasket.PurchaseTime = basket.PurchaseTime;
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public DbProduct GetDbProductItem(int productId)
@@ -1044,14 +1286,17 @@ namespace Server.DAL
 
         }
 
-        public void InsertDbCart(DbCart dbCart)
+        public void InsertCart(DbCart dbCart, bool saveCahnges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Carts.Add(dbCart);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
         public int GetNextStoreId()
@@ -1245,15 +1490,7 @@ namespace Server.DAL
 
         }
 
-        //private int GetDbPreConditionNumberById(int Id)
-        //{
-        //    return dbConn.PreConditions.Where(pre => pre.Id == Id).FirstOrDefault().PreConditionNum;
-        //}
-
-        //private DbPreCondition GetDbPreCondition(int preCondition_num, int preType)
-        //{
-        //    return dbConn.PreConditions.Where(pre => pre.PreConditionNum == preCondition_num && pre.PreConditionType == preType).FirstOrDefault();
-        //}
+ 
 
 
         private void InsertOwners(List<string> owners, int storeId, bool saveChanges)
@@ -1290,7 +1527,7 @@ namespace Server.DAL
             }
         }
 
-        public void InsertStoreOwner(StoreOwner owner, bool saveChanges)
+        public void InsertStoreOwner(StoreOwner owner, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -1303,7 +1540,7 @@ namespace Server.DAL
             }
         }
 
-        public void InsertStoreManager(StoreManager manager, bool saveChanges)
+        public void InsertStoreManager(StoreManager manager, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -1327,11 +1564,7 @@ namespace Server.DAL
         }
 
 
-        //public void InsertPreCondition(DbPreCondition preCoondition)
-        //{
-        //    dbConn.PreConditions.Add(preCoondition);
-        //    dbConn.SaveChanges();
-        //}
+
 
         public void InsertProduct(DbProduct product, bool savechanges)
         {
@@ -1346,14 +1579,17 @@ namespace Server.DAL
             }
         }
 
-        public void InsertPurchase(DbPurchase dbPurchase)
+        public void InsertPurchase(DbPurchase dbPurchase, bool saveCahnges)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Purchases.Add(dbPurchase);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
@@ -1519,16 +1755,19 @@ namespace Server.DAL
             List<DbPurchasePolicy> storePurchasePolicies = dbConn.PurchasePolicies.Where(policy => policy.StoreId == storeId).ToList();
             return StoreAdapter.Instance.ComposePurchasePolicy(storePurchasePolicies);
         }
-        public void InsertUserNotification(DbNotifyData notification)
+        public void InsertUserNotification(DbNotifyData notification,bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Notifies.Add(notification);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
-        public void UpdateUserLogInStatus(string user,bool status)
+        public void UpdateUserLogInStatus(string user,bool status, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -1538,7 +1777,11 @@ namespace Server.DAL
             if(usr != null)
             {
                 usr.IsLoggedIn = status;
-                dbConn.SaveChanges();
+                if(savechanges)
+                {
+                    dbConn.SaveChanges();
+                }
+
             }
 
         }
@@ -1551,7 +1794,7 @@ namespace Server.DAL
             StoreOwnertshipApprovalStatus s = dbConn.StoreOwnertshipApprovalStatuses.Where(u => u.CandidateName == cand && u.StoreId == storeID).SingleOrDefault();
             return s;
         }
-        public void UpdateApprovalStatus(StoreOwnertshipApprovalStatus aps, bool status)
+        public void UpdateApprovalStatus(StoreOwnertshipApprovalStatus aps, bool status, bool savechanges = false)
         {
             if (testingmode)
             {
@@ -1561,7 +1804,10 @@ namespace Server.DAL
             if (s != null)
             {
                 s.Status = status;
-                dbConn.SaveChanges();
+                if(savechanges)
+                {
+                    dbConn.SaveChanges();
+                }
             }
 
         }
@@ -1633,7 +1879,7 @@ namespace Server.DAL
             dbConn.SaveChanges();
         }
 
-        public void DeleteStoreManager(StoreManager manager, bool saveChanges)
+        public void DeleteStoreManager(StoreManager manager, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -1646,7 +1892,7 @@ namespace Server.DAL
             }
         }
 
-        public void DeleteStoreOwner(StoreOwner owner, bool saveChanges)
+        public void DeleteStoreOwner(StoreOwner owner, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -1660,7 +1906,7 @@ namespace Server.DAL
         }
 
 
-        public void DeleteStoreOwnerShipAppoint(StoreOwnershipAppoint soaItem, bool saveChanges)
+        public void DeleteStoreOwnerShipAppoint(StoreOwnershipAppoint soaItem, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -1982,87 +2228,111 @@ namespace Server.DAL
 
 
         // User Componnent Insert Functions
-        public void InsertUser(DbUser user)
+        public void InsertUser(DbUser user, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Users.Add(user);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertCandidateToOwnerShip(CandidateToOwnership candidate)
+        public void InsertCandidateToOwnerShip(CandidateToOwnership candidate, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.CandidateToOwnerships.Add(candidate);
-            dbConn.SaveChanges();
+            if (savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertNeedToApprove(NeedToApprove nta)
+        public void InsertNeedToApprove(NeedToApprove nta, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.NeedToApproves.Add(nta);
-            dbConn.SaveChanges();
+            if (savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertPassword(DbPassword password)
+        public void InsertPassword(DbPassword password, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Passwords.Add(password);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertStoreManagerAppoint(StoreManagersAppoint sma)
+        public void InsertStoreManagerAppoint(StoreManagersAppoint sma, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreManagersAppoints.Add(sma);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertStoreOwnershipAppoint(StoreOwnershipAppoint soa)
+        public void InsertStoreOwnershipAppoint(StoreOwnershipAppoint soa, bool saveChanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwnershipAppoints.Add(soa);
-            dbConn.SaveChanges();
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertStoreOwnerShipApprovalStatus(StoreOwnertshipApprovalStatus soas)
+        public void InsertStoreOwnerShipApprovalStatus(StoreOwnertshipApprovalStatus soas, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.StoreOwnertshipApprovalStatuses.Add(soas);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertUserStorePermission(UserStorePermissions usp)
+        public void InsertUserStorePermission(UserStorePermissions usp, bool saveCahnges=false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.UserStorePermissions.Add(usp);
-            dbConn.SaveChanges();
+            if(saveCahnges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
-        public void InsertUserStorePermissionSet(List<UserStorePermissions> usps)
+        public void InsertUserStorePermissionSet(List<UserStorePermissions> usps, bool saveChanges = false)
         {
             if (testingmode)
             {
@@ -2070,7 +2340,11 @@ namespace Server.DAL
             }
             foreach (UserStorePermissions usp in usps)
             {
-                InsertUserStorePermission(usp);
+                InsertUserStorePermission(usp, saveChanges);
+            }
+            if(saveChanges)
+            {
+                dbConn.SaveChanges();
             }
         }
 
@@ -2085,14 +2359,17 @@ namespace Server.DAL
             return dbConn.CandidateToOwnerships.Where(candidate => candidate.CandidateName == userName && candidate.StoreId == storeId).FirstOrDefault();
         }
 
-        public void DeleteCandidate(CandidateToOwnership candidateToOwnership)
+        public void DeleteCandidate(CandidateToOwnership candidateToOwnership, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.CandidateToOwnerships.Remove(candidateToOwnership);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
 
 
@@ -2114,14 +2391,17 @@ namespace Server.DAL
           
         }
 
-        public void InsertUserUnreadMessages(DbNotifyData ntfd)
+        public void InsertUserUnreadMessages(DbNotifyData ntfd, bool savechanges = false)
         {
             if (testingmode)
             {
                 return;
             }
             dbConn.Notifies.Add(ntfd);
-            dbConn.SaveChanges();
+            if(savechanges)
+            {
+                dbConn.SaveChanges();
+            }
         }
         public Dictionary<int,LinkedList<string>> GetAllsubsribers()
         {

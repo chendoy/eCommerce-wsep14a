@@ -11,8 +11,8 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class PaymentSystemStoryTest : SystemTrackTest
     {
-        string paymentDetails = "ValidPaymentDetails";
-        string address = "hanesher38";
+        string paymentDetails = "3333444455556666&4&11&Wolloloo&333&222222222";
+        string address = "dani&Wollu&Wollurberg&wolocountry&12345678";
         string userID;
         int storeID;
         int amount = 1;

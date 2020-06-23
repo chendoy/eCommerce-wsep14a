@@ -147,12 +147,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
             DbUser dbadmin = DbManager.Instance.GetUser(username);
-            if(dbadmin == null)
+            if (dbadmin == null)
             {
                 DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, true, false));
-                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
+                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1), true);
             }
-
             return new Tuple<bool, string>(true, "");
         }
         //Register regular user to the system 
@@ -172,8 +171,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
-            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
-        
+            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1),true);
             return new Tuple<bool, string>(true, "");
         }
         //Login to Unlogged Register User with valid user name and pass.
@@ -202,7 +200,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 //Update LogginStatus
-                DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), true);
+                Statistics.Instance.InserRecord(username, DateTime.Now);
+                DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), false);
                 Active_users.Add(tUser.getUserName(), tUser);
                 if (tUser.HasPendingMessages()) 
                 {
@@ -218,8 +217,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     }
                     tUser.RemoveAllPendingMessages();
                 }
+                DbManager.Instance.SaveChanges();
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
+            DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(false, "Wrong Credentials\n");
 
         }
@@ -240,7 +241,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             user.Logout();
             Active_users.Remove(user.getUserName());
             //Change LogInStatus at DB
-            DbManager.Instance.UpdateUserLogInStatus(user.getUserName(), false);
+            DbManager.Instance.UpdateUserLogInStatus(user.getUserName(), true);
             addGuest();
             return new Tuple<bool, string>(true, sname + " Logged out succesuffly\n");
         }
@@ -359,8 +360,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             return permissionsSet;
         }
-
+        public List<string> GetAllAdmins()
+        {
+            List<string> admins = new List<string>();
+            foreach(User usr in users.Values)
+            {
+                if (usr.IsAdmin && usr.LoggedStatus())
+                    admins.Add(usr.getUserName());
+            }
+            return admins;
+        }
     }
+    
 
 
 }

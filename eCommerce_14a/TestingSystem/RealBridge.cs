@@ -56,9 +56,9 @@ namespace TestingSystem
             return purchService.PerformPurchase(userID, paymentDetails, address);
         }
 
-        public override Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public override Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address, bool Failed = false)
         {
-            return purchService.PerformPurchase(user, paymentDetails, address);
+            return purchService.PerformPurchase(user, paymentDetails, address,Failed);
         }
         
         public override Tuple<List<Purchase>, string> ViewPurchaseUserHistory(string userName)

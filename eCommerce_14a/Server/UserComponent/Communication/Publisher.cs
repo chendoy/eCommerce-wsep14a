@@ -7,6 +7,7 @@ using eCommerce_14a.Communication;
 using eCommerce_14a.UserComponent.DomainLayer;
 using Server.DAL;
 using Server.DAL.CommunicationDb;
+using Server.UserComponent.DomainLayer;
 
 namespace Server.UserComponent.Communication
 {
@@ -156,6 +157,11 @@ namespace Server.UserComponent.Communication
             }
 
             return new Tuple<bool, string>(true, "");
+        }
+        public void NotifyStatistics(string admin_user_name,Statistic_View sv)
+        {
+            List<string> admins = UserManager.Instance.GetAllAdmins();
+            //ws.notifyStatistics(admin_user_name,sv);
         }
         public void cleanup()
         {
