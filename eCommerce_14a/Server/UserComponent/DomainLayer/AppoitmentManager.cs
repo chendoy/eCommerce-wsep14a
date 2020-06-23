@@ -92,7 +92,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 }
             }
             return false;
-
         }
         public void LoadAppointments()
         {
@@ -154,6 +153,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             //Set to false if False and the operation will fail.
             if(!approval)
             {
+                RemoveCnadidate(owner, Appointed, storeID);
                 appointed.SetApprovalStatus(storeID, approval);
                 //Update The Approval Status in the DB
                 //Remove MasterAppointer - Candidtae Table from DB
@@ -177,6 +177,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             }
             if(appointed.CheckSApprovalStatus(storeID))
             {
+                RemoveCnadidate(owner, Appointed, storeID);
                 //User can be assigned to Store owner
                 appointed.RemoveApprovalStatus(storeID);
                 string Mappointer = appointed.MasterAppointer[storeID];
@@ -192,6 +193,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 {
                     return new Tuple<bool, string>(false, "Failed to insert store owner to DB memory");
                 }
+                insertAppointment(owner, Appointed, storeID);
                 if (store.IsStoreManager(appointed))
                 {
                     try
@@ -270,7 +272,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if(owners.Count == 0)
             {
                 //Is ready to become Owner.
-                
+                insertAppointment(owner, addto, storeId);
                 string maserAppointer = appointed.MasterAppointer[storeId];
                 appointed.MasterAppointer.Remove(storeId);
                 if(!appointed.addStoreOwnership(storeId, appointer.getUserName()).Item1)
@@ -327,6 +329,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 Publisher.Instance.Notify(storeOwner, new NotifyData("User: " + addto + " Is want to Be store:" + storeId + " Owner Let him know what you think"));
             }
             //Add AptovmentStatus to DB
+            insertCandidate(owner, addto, storeId);
             try
             {
                 DbManager.Instance.InsertStoreOwnerShipApprovalStatus(AdapterUser.CreateNewStoreAppoitmentApprovalStatus(storeId, true, addto));
@@ -496,6 +499,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         public List<User> RemoveManagerLoop(User appointer, User DemoteOwner, Store store)
         {
             List<User> ManagersToRemove = new List<User>();
+            RemoveAppoitment(appointer.Name, DemoteOwner.Name, store.Id);
             ManagersToRemove.Add(DemoteOwner);
             string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
             DemoteOwner.RemoveStoreManagment(store.GetStoreId());
@@ -523,6 +527,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             List<User> OwnersToRemove = new List<User>();
             OwnersToRemove.Add(DemoteOwner);
+            RemoveAppoitment(appointer.Name, DemoteOwner.Name, store.Id);
             string OwnerRemovalMessage = "You have been Removed From Owner position in the Store " + store.StoreName +"By you appointer - "+appointer.getUserName()+"\n";
             DemoteOwner.RemoveStoreOwner(store.GetStoreId());
             //Remove Store Ownership from DB here
