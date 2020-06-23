@@ -18,6 +18,7 @@ using System.Reflection;
 using log4net;
 using log4net.Config;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.Utils;
 
 namespace eCommerce_14a.Communication
 {
@@ -349,7 +350,6 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-
 
             //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
             //res.SearchResults.Add(1, new List<ProductData>());
