@@ -57,6 +57,7 @@ namespace Server.Communication.DataObject
         GET_APPROVAL_LIST,
         MAKE_ADMIN,
         GET_STATISTICS,
+        STATISTICS,
         RESPONSE,
         ERROR
     }

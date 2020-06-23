@@ -12,7 +12,7 @@ namespace Server.Communication.DataObject.Responses
 
         public Statistic_View statistics {get; set;}
 
-        public NotifyStatisticsData(Statistic_View statistics) : base(Opcode.NOTIFICATION)
+        public NotifyStatisticsData(Statistic_View statistics) : base(Opcode.STATISTICS)
         {
             this.statistics = statistics;
         }
