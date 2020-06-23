@@ -116,6 +116,7 @@
     <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetUserPermissionsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\NotifyStatisticsData.cs" />
     <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
@@ -176,9 +177,9 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006220909565_InitialCreate.cs" />
-    <Compile Include="Migrations\202006220909565_InitialCreate.designer.cs">
-      <DependentUpon>202006220909565_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006221526341_InitialCreate.cs" />
+    <Compile Include="Migrations\202006221526341_InitialCreate.designer.cs">
+      <DependentUpon>202006221526341_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -297,14 +298,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Utils\DefaultInitFile.txt" />
     <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utils\State.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006220909565_InitialCreate.resx">
-      <DependentUpon>202006220909565_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006221526341_InitialCreate.resx">
+      <DependentUpon>202006221526341_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
