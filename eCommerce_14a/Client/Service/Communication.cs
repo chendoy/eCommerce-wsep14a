@@ -65,7 +65,7 @@ namespace Client.Service
         {
             string json = JsonConvert.SerializeObject(obj); // seralize this object into json string
             Console.WriteLine("sent: " + json);
-            byte[] arr = Encoding.ASCII.GetBytes(json); // encrypt the string using aes algorithm and convert it to byte array // changed
+            byte[] arr = Encoding.UTF8.GetBytes(json); // encrypt the string using aes algorithm and convert it to byte array // changed
             //ArraySegment<byte> msg = new ArraySegment<byte>(arr); // init client msg
             client.Send(arr);
             //client.SendAsync(msg, WebSocketMessageType.Binary, true, new CancellationToken()); // send async the msg above to the server

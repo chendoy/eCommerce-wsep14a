@@ -13,6 +13,7 @@ using Server.DAL;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using Server.UserComponent.DomainLayer;
 using eCommerce_14a;
+using System.Security.Cryptography;
 
 namespace Server.Utils
 {
@@ -30,25 +31,16 @@ namespace Server.Utils
 
         public void CreateScenario() 
         {
-            MakeRegisterLine("u11", "u11");
-            MakeRegisterLine("u22", "u22");
-            MakeRegisterLine("u33", "u33");
-            MakeRegisterLine("u44", "u44");
-            MakeRegisterLine("u55", "u55");
-            MakeAdminLine("u11");
-            MakeLoginLine("u22", "u22");
-            MakeOpenStoreLine("u22");
-            int storeID = DbManager.Instance.GetNextStoreId(); // (s1)
-            MakeAddProductToStoreLine(storeID, "u22", "for age 0 - 2", 30, "diapers", "hygiene", 20);
-            MakeAppointManagerLine("u22", "u33", storeID);
-            MakeChangePermissionsLine("u22", "u33", storeID, new int[5] {1,1,1,0,0});
-            MakeLoginLine("u33", "u33");
-            MakeAppointManagerLine("u33", "u44", storeID);
-            MakeLoginLine("u44", "u44");
-            MakeAppointManagerLine("u44", "u55", storeID);
-            MakeLogoutLine("u22");
-            MakeLogoutLine("u33");
-            MakeLogoutLine("u44");
+            MakeRegisterLine("UA1", "UA1");
+            MakeAdminLine("UA1");
+            MakeRegisterLine("U11", "U11");
+            MakeRegisterLine("U12", "U12");
+            MakeRegisterLine("U13", "U13");
+            MakeRegisterLine("U44", "U44");
+            MakeRegisterLine("U55", "U55");
+            MakeLoginLine("U11", "U11");
+            MakeOpenStoreLine("U11");
+            MakeLogoutLine("U11");
             WriteScenarioToFile();
         }
         public void WriteScenarioToFile()
@@ -106,7 +98,7 @@ namespace Server.Utils
 
         public void MakeOpenStoreLine(string username)
         {
-            OpenStoreRequest req = new OpenStoreRequest(username);
+            OpenStoreRequest req = new OpenStoreRequest(username, "S2");
             string json = JsonConvert.SerializeObject(req);
             lines.Add(json);
         }
@@ -320,7 +312,7 @@ namespace Server.Utils
         //public static void Main(string[] argv)
         //{
         //    StateInitiator init = new StateInitiator();
-        //    init.InitSystemFromFile();
+        //    init.CreateScenario();
         //}
     }
 }

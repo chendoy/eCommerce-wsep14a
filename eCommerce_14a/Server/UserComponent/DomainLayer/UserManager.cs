@@ -87,6 +87,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return null;
             return user.GetUserPermissions();
         }
+
+        public Statistic_View GetStatistics(string username, DateTime? startTime, DateTime? endTime)
+        {
+            if (startTime == null && endTime == null)
+                return Statistics.Instance.getViewDataAll(username);
+            if (startTime != null && endTime == null)
+                return Statistics.Instance.getViewDataStart(username, startTime);
+            if (startTime == null && endTime != null)
+                return Statistics.Instance.getViewDataEnd(username, endTime);
+            else
+                return Statistics.Instance.getViewData(username, startTime, endTime);
+
+
+        }
+
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)
         {

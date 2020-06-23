@@ -81,6 +81,9 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             return UM.GetStoreManagersPermissions(appointer, storeId);
         }
 
-    
+        internal Statistic_View GetStatistics(string username, DateTime? startTime, DateTime? endTime)
+        {
+            return UM.GetStatistics(username, startTime, endTime);
+        }
     }
 }

@@ -83,6 +83,7 @@
     <Compile Include="Communication\DataObject\Requests\GetManagersPermissionRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetPurchasePolicyRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStatisticsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
