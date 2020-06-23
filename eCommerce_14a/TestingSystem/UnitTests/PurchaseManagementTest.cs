@@ -260,7 +260,7 @@ namespace TestingSystem.UnitTests
             Tuple<bool, string> res3 = purchaseManagement.AddProductToShoppingCart("yosi", 100, 1, 10, false);
             Assert.IsTrue(res3.Item1, res3.Item2);
             purchaseManagement.GetDeliveryHandler().setConnection(false);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails,true);
             Assert.IsFalse(res2.Item1, res2.Item2);
             purchaseManagement.GetDeliveryHandler().setConnection(true);
             Tuple<bool, string> res4 = purchaseManagement.PerformPurchase("yosi", PaymentDetails, DeliveryDetails);
@@ -275,7 +275,7 @@ namespace TestingSystem.UnitTests
             Assert.IsFalse(purchaseManagement.GetCartDetails(buyer).Item1.IsEmpty());
             Cart c1 = purchaseManagement.GetCartDetails(buyer).Item1;
             purchaseManagement.GetDeliveryHandler().setConnection(false);
-            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails);
+            Tuple<bool, string> res2 = purchaseManagement.PerformPurchase(buyer, PaymentDetails, DeliveryDetails,true);
             Assert.IsFalse(res2.Item1, res2.Item2);
             Cart c2 = purchaseManagement.GetCartDetails(buyer).Item1;
             Assert.IsTrue(c1.Equals(c2));
