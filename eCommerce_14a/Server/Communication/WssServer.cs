@@ -41,14 +41,14 @@ namespace eCommerce_14a.Communication
         }
         private void LoadData()
         {
-            handler.loaddata();
+            //handler.loaddata();
         }
         private void InitServer()
         {
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
-            config1.MaxConnectionNumber = 2000;
+            config1.MaxConnectionNumber = 10000;
             config1.Security = "Tls";
             config1.LogAllSocketException = false;
             config1.LogBasicSessionActivity = false;

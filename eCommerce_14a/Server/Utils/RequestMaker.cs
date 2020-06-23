@@ -61,7 +61,7 @@ namespace Server.Utils
             //generate perform purchase requests
             for (int i = 1; i < REQ_NUM; i++)
             {
-                SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 2), "addprodtostore" + i); //should insert legal payment details for users
+                SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 1000), "addprodtostore" + i); //should insert legal payment details for users
             }
             //generate login as guest requests
             for (int i = 1; i < REQ_NUM; i++)
