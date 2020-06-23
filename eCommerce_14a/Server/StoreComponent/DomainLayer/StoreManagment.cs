@@ -269,52 +269,52 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, string discountPolicy)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
-            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            //User user = userManager.GetAtiveUser(userName);
-            //if (user == null)
-            //{
-            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            //}
-            //if (!stores.ContainsKey(storeId))
-            //{
-            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            //}
-            //DiscountPolicy parsedDiscount = DiscountParser.Parse(discountPolicy);
-            //if(!DiscountParser.checkDiscount(parsedDiscount))
-            //{
-            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.DiscountPolicyParsedFailed);
-            //}
-            //return stores[storeId].UpdateDiscountPolicy(user, parsedDiscount);
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+            DiscountPolicy parsedDiscount = DiscountParser.Parse(discountPolicy);
+            if (!DiscountParser.checkDiscount(parsedDiscount))
+            {
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.DiscountPolicyParsedFailed);
+            }
+            return stores[storeId].UpdateDiscountPolicy(user, parsedDiscount);
 
         }
 
 
         public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, string purchasePolicy)
         {
-            throw new NotImplementedException();
-            //Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            //User user = userManager.GetAtiveUser(userName);
-            //if (user == null)
-            //{
-            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
-            //}
-            //if (!stores.ContainsKey(storeId))
-            //{
-            //    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
-            //}
-            //PurchasePolicy parsedPurchase = PurchasePolicyParser.Parse(purchasePolicy);
-            //if(!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
-            //{
-            //    return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.PurchasePolicyParsedFailed);
+            //throw new NotImplementedException();
+            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            User user = userManager.GetAtiveUser(userName);
+            if (user == null)
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.userNotFoundErrMsg);
+            }
+            if (!stores.ContainsKey(storeId))
+            {
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
+            }
+            PurchasePolicy parsedPurchase = PurchasePolicyParser.Parse(purchasePolicy);
+            if (!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
+            {
+                return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.PurchasePolicyParsedFailed);
 
-            //}
-            //return stores[storeId].UpdatePurchasePolicy(user, parsedPurchase);
+            }
+            return stores[storeId].UpdatePurchasePolicy(user, parsedPurchase);
 
         }
 

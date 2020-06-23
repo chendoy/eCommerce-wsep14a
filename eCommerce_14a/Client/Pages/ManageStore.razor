@@ -187,10 +187,11 @@
                     <hr>
                     <h4>Conditional Basket Discount</h4>
                     <span>There are 3 types of conditional basket discount</span>
+                    <hr />
                     <h5>Type I: Min Basket Price</h5>
                     <span>cb_mbp:[pre condition]:[discount%]:[min basket price]</span>
                     <br />
-                    <sapn>For example: cb:3:20:120</sapn>
+                    <sapn>For example: cb_mbp:3:20:120</sapn>
                     <hr>
                     <h5>Type II: Min Product Price</h5>
                     <span>cb_mpp:[pre condition]:[discount%]:[min product price]</span>
@@ -198,15 +199,15 @@
                     <sapn>For example: cb_mpp:3:20:50</sapn>
                     <hr>
                     <h5>Type III: Min Units at basket</h5>
-                    <span>cb_mub:[pre condition]:[discount%]:[min product price]:[minUnitsAtBasket]</span>
+                    <span>cb_mub:[pre condition]:[discount%]:[minUnitsAtBasket]</span>
                     <br />
-                    <sapn>For example: cb_mub:3:20:50:10</sapn>
+                    <sapn>For example: cb_mub:3:20:10</sapn>
                     <hr>
                     <h4>Conditional Product Discount</h4>
                     <span>Conditional product discounts are denoted by the term</span>
-                    <span>cp:[Produt ID]:[pre condition]:[discount%]</span>
+                    <span>cp:[minUnits]:[ProdutId]:[preCondition]:[discount%]</span>
                     <br />
-                    <sapn>For example: cp:3:2:20</sapn>
+                    <sapn>For example: cp:5:3:2:20</sapn>
                     <hr>
                     <h4>Compound Discount</h4>
                     <span>Compound discount are denoted by the term</span>
@@ -216,7 +217,7 @@
                     <span>Note the prefix operator!</span>
                     <span>child discoutns can be compund themselves, considier the following compound discount:</span>
                     <br />
-                    <span>(AND (XOR (OR r:20:1 cb_mub:1:10:5) r:30:2) (OR cp:10:1:2:30 cb_mpp:5:15:50))</span>
+                    <span>(AND (XOR (OR r:20:13 cb_mub:1:13:5) r:30:13) (OR cp:10:14:2:30 cb_mpp:4:13:50))</span>
 
                 </RadzenCard>
             </div>
