@@ -12,6 +12,7 @@ using eCommerce_14a.StoreComponent.ServiceLayer;
 using Server.DAL;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using Server.UserComponent.DomainLayer;
+using eCommerce_14a;
 
 namespace Server.Utils
 {
@@ -143,8 +144,9 @@ namespace Server.Utils
                     HandleState(operation);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.logError("Init from file system failed : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
                 Console.WriteLine("load system from init file failed - init the system from default init file..\n");
                 //default path
                 string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\DefaultInitFile.txt";
