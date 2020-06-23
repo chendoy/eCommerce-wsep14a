@@ -133,14 +133,28 @@ namespace Server.Utils
 
         public void InitSystemFromFile() 
         {
-            string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\State.txt";
-            //CreateScenario();
-            string[] operations = File.ReadAllLines(path);
-            foreach (string operation in operations)
+            try
             {
-                HandleState(operation);
+                string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\State.txt";
+                string[] operations = File.ReadAllLines(path);
+
+                foreach (string operation in operations)
+                {
+                    HandleState(operation);
+                }
             }
-            //File.WriteAllText(path, String.Empty);
+            catch
+            {
+                Console.WriteLine("load system from init file failed - init the system from default init file..\n");
+                //default path
+                string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\DefaultInitFile.txt";
+                string[] operations = File.ReadAllLines(path);
+
+                foreach (string operation in operations)
+                {
+                    HandleState(operation);
+                }
+            }
         }
 
         private void HandleState(string json)

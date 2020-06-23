@@ -247,18 +247,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         //Add Guest user to the system and to the relevant lists.
         private string addGuest()
         {
+            lock (this)
+            {
+                if (0 == Interlocked.Exchange(ref usingResource, 1))
+                    //Add Guest DO not Require DB Changes
+                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+                string tName = "Guest" + Available_ID;
+                User nUser = new User(Available_ID, tName);
+                Console.WriteLine(tName);
+                nUser.LogIn();
+                Active_users.Add(tName, nUser);
+                Available_ID++;
+                Interlocked.Exchange(ref usingResource, 0);
 
-            if(0 == Interlocked.Exchange(ref usingResource, 1))
-            //Add Guest DO not Require DB Changes
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            string tName = "Guest" + Available_ID;
-            User nUser = new User(Available_ID, tName);
-            Console.WriteLine(tName);
-            nUser.LogIn();
-            Active_users.Add(tName, nUser);
-            Available_ID++;
-            Interlocked.Exchange(ref usingResource, 0);
-            return tName;
+                return tName;
+            }
         }
         //Tries to get User from users list
         public User GetUser(string username)

@@ -1971,7 +1971,7 @@ namespace Server.DAL
         {
             if (testingmode)
             {
-                return null;
+                return new Dictionary<int, LinkedList<string>>();
             }
             Dictionary<int, LinkedList<string>> subscruberList = new Dictionary<int, LinkedList<string>>();
             List<StoreOwnershipAppoint> owners = dbConn.StoreOwnershipAppoints.ToList();

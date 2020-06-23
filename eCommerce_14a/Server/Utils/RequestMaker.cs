@@ -63,6 +63,11 @@ namespace Server.Utils
             {
                 SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 2), "addprodtostore" + i); //should insert legal payment details for users
             }
+            //generate login as guest requests
+            for (int i = 1; i < 1001; i++)
+            {
+                SaveData(MakeLoginAsGuestRequest(), "loginasguest" + i);
+            }
 
         }
 
@@ -73,6 +78,14 @@ namespace Server.Utils
                 usernames[i] = "Guy" + i;
                 passwords[i] = "Guy" + i;
             }
+        }
+
+
+        public byte[] MakeLoginAsGuestRequest()
+        {
+            LoginAsGuestRequest req = new LoginAsGuestRequest();
+            string jsonString = JsonConvert.SerializeObject(req);
+            return sec.Encrypt(jsonString);
         }
 
         public byte[] MakeOpenStoreRequest(string username, string storeName = "Store")
@@ -149,6 +162,7 @@ namespace Server.Utils
 
             return true;
         }
+
         //public static void Main(String[] args)
         //{
         //    RequestMaker reqmaker = new RequestMaker();

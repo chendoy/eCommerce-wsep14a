@@ -117,6 +117,7 @@
     <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetUserPermissionsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\NotifyStatisticsData.cs" />
     <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
@@ -295,6 +296,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Utils\DefaultInitFile.txt" />
     <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
