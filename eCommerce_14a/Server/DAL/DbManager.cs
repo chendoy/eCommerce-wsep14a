@@ -1621,14 +1621,21 @@ namespace Server.DAL
             {
                 return;
             }
-            dbConn.Purchases.Add(dbPurchase);
+            if(GetPurchase(dbPurchase.CartId) == null)
+            {
+                dbConn.Purchases.Add(dbPurchase);
+            }
             if(saveCahnges)
             {
                 dbConn.SaveChanges();
             }
         }
 
+        private DbPurchase GetPurchase(int cartId)
+        {
+            return dbConn.Purchases.Where(s => s.CartId == cartId).FirstOrDefault();
 
+        }
 
         public List<Store> LoadAllStores()
         {
@@ -2321,11 +2328,20 @@ namespace Server.DAL
             {
                 return;
             }
-            dbConn.Passwords.Add(password);
+            if(GetdbPassword(password.UserName) == null)
+            {
+                dbConn.Passwords.Add(password);
+            }
             if(savechanges)
             {
                 dbConn.SaveChanges();
             }
+        }
+
+        private DbPassword GetdbPassword(string userName)
+        {
+            return dbConn.Passwords.Where(s => s.UserName == userName).FirstOrDefault();
+
         }
 
         public void InsertStoreManagerAppoint(StoreManagersAppoint sma, bool savechanges = false)
@@ -2334,8 +2350,10 @@ namespace Server.DAL
             {
                 return;
             }
-            
-            dbConn.StoreManagersAppoints.Add(sma);
+            if(GetSingleManagerAppoints(sma.AppointerName, sma.AppointedName, sma.StoreId) == null)
+            {
+                dbConn.StoreManagersAppoints.Add(sma);
+            }
             if(savechanges)
             {
                 dbConn.SaveChanges();
@@ -2348,7 +2366,10 @@ namespace Server.DAL
             {
                 return;
             }
-            dbConn.StoreOwnershipAppoints.Add(soa);
+            if(GetSingleOwnesAppoints(soa.AppointerName, soa.AppointedName, soa.StoreId) == null)
+            {
+                dbConn.StoreOwnershipAppoints.Add(soa);
+            }
             if(saveChanges)
             {
                 dbConn.SaveChanges();
@@ -2361,7 +2382,10 @@ namespace Server.DAL
             {
                 return;
             }
-            dbConn.StoreOwnertshipApprovalStatuses.Add(soas);
+            if(getApprovalStat(soas.CandidateName, soas.StoreId) == null)
+            {
+                dbConn.StoreOwnertshipApprovalStatuses.Add(soas);
+            }
             if(savechanges)
             {
                 dbConn.SaveChanges();
@@ -2446,6 +2470,7 @@ namespace Server.DAL
             {
                 return;
             }
+            
             dbConn.Notifies.Add(ntfd);
             if(savechanges)
             {
