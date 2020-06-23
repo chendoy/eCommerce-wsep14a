@@ -13,11 +13,13 @@ namespace eCommerce_14a.Utils
     public static class DiscountParser
     {
         // RevealdDiscount: (r:discount:productId)
-        // ConditionalBasketDiscount: (cb:pre_condition:discount)
-        // ConditionalProductDiscount: (cp:ProdutId:preCondition:discount)
+        // ConditionalBasketDiscount (Min basket price): (cb_mbp:pre_condition:discount:minBasketPrice)
+        // ConditionalBasketDiscount (Min product price): (cb_mpp:pre_condition:discount:minProductPrice)
+        // ConditionalBasketDiscount (Min units at basket): (cb_mub:pre_condition:discount:minUnitsAtBasket)
+        // ConditionalProductDiscount: (cp:minUnits:ProdutId:preCondition:discount)
         // CompoundDiscount: (AND (XOR (OR r1 cb1) r2) (cp1 OR cb2)) *** NOTICE: prefix operator ***
 
-        // ---------------------- ERROR CODES -----------------------------------------------------
+        // ------------------------------------- ERROR CODES -------------------------------------
         // RevealedDiscount(-1, -1) -> "parenthesis are not balanced in outer expression"
         // RevealedDiscount(-2, -2) -> "parenthesis are not balanced in one if the inner expressions"
         // RevealedDiscount(-3, -3) -> "invalid operator: must be one of {XOR, OR, AND}
@@ -26,7 +28,10 @@ namespace eCommerce_14a.Utils
 
         static Regex simpleDiscountRegex = new Regex(@"\b(?<word>\w+):\d*$");
         static Regex conditionalBasketDiscountRegex = new Regex(@"\bcb:\d*:\d*\.?\d*$");
-        static Regex conditionalProductDiscountRegex = new Regex(@"\bcp:\d*:\d:\d*\.?\d*$");
+        static Regex conditionalBasketDiscountMBPRegex = new Regex(@"\bcb_mbp:\d*:\d*\.?\d*:\d*\.?\d*$");
+        static Regex conditionalBasketDiscountMPPRegex = new Regex(@"\bcb_mpp:\d*:\d*\.?\d*:\d*\.?\d*$");
+        static Regex conditionalBasketDiscountMUBRegex = new Regex(@"\bcb_mub:\d*:\d*\.?\d*:\d*$");
+        static Regex conditionalProductDiscountRegex = new Regex(@"\bcp:\d*:\d*:\d:\d*\.?\d*$");
         static Regex revealdDiscountRegex = new Regex(@"r:\d*\.?\d*:\d*");
         static string[] operators = new string[3] { "XOR", "OR", "AND" };
 
@@ -41,13 +46,38 @@ namespace eCommerce_14a.Utils
                     double discount = Convert.ToDouble(constructs[2]);
                     return new ConditionalBasketDiscount(discount, new DiscountPreCondition(precondition));
                 }
+                else if (conditionalBasketDiscountMBPRegex.IsMatch(text))
+                {
+                    string[] constructs = text.Split(':');
+                    int precondition = Convert.ToInt32(constructs[1]);
+                    double discount = Convert.ToDouble(constructs[2]);
+                    double minBasketPrice = Convert.ToDouble(constructs[3]);
+                    return new ConditionalBasketDiscount(new DiscountPreCondition(precondition), discount, minBasketPrice);
+                }
+                else if (conditionalBasketDiscountMPPRegex.IsMatch(text))
+                {
+                    string[] constructs = text.Split(':');
+                    int precondition = Convert.ToInt32(constructs[1]);
+                    double discount = Convert.ToDouble(constructs[2]);
+                    double minProductPrice = Convert.ToDouble(constructs[3]);
+                    return new ConditionalBasketDiscount(minProductPrice, discount, new DiscountPreCondition(precondition));
+                }
+                else if (conditionalBasketDiscountMUBRegex.IsMatch(text))
+                {
+                    string[] constructs = text.Split(':');
+                    int precondition = Convert.ToInt32(constructs[1]);
+                    double discount = Convert.ToDouble(constructs[2]);
+                    int minUnitsAtBasket = Convert.ToInt32(constructs[3]);
+                    return new ConditionalBasketDiscount(new DiscountPreCondition(precondition), discount, minUnitsAtBasket);
+                }
                 else if (conditionalProductDiscountRegex.IsMatch(text))
                 {
                     string[] constructs = text.Split(':');
-                    int productId = Convert.ToInt32(constructs[1]);
-                    int precondition = Convert.ToInt32(constructs[2]);
-                    double discount = Convert.ToDouble(constructs[3]);
-                    return new ConditionalProductDiscount(discount, productId, new DiscountPreCondition(precondition));
+                    int minUnits = Convert.ToInt32(constructs[1]);
+                    int productId = Convert.ToInt32(constructs[2]);
+                    int precondition = Convert.ToInt32(constructs[3]);
+                    double discount = Convert.ToDouble(constructs[4]);
+                    return new ConditionalProductDiscount(new DiscountPreCondition(precondition), discount, minUnits, productId);
                 }
                 else if (revealdDiscountRegex.IsMatch(text))
                 {

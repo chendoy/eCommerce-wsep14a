@@ -159,9 +159,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             //string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
+            string cond = "if more than " + MinUnits + " units, ";
             string pad = "";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Conditional Product Discount: buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
+            return pad + "[Conditional Product Discount: " + cond + " buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
         }
     }
 
@@ -248,8 +249,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
             string pad = "";
+            string cond = "";
+            // decide which type of ConditionalBasketDiscount we're describing
+            if (MinBasketPrice != int.MaxValue)
+                cond = "basket price above " + MinBasketPrice + ",";
+            if (MinProductPrice != 0)
+                cond = "min product price is above " + MinProductPrice + ",";
+            if (MinUnitsAtBasket != int.MaxValue)
+                cond = "basket has at least " + MinUnitsAtBasket + " products,";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Conditional Basket Discount:" + preStr + " and get " + Discount + "% off]";
+            return pad + "[Conditional Basket Discount:" + "if " + cond + " " + preStr + " and get " + Discount + "% off]";
         }
 
     }

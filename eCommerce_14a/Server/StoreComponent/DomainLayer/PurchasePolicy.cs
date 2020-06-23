@@ -155,9 +155,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             //string productStr = inv.getProductDetails(policyProductId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
+            string amount = "";
+            if (MinAmount != int.MaxValue)
+                amount = "min amount " + MinAmount + ",";
+            if (MaxAmount != int.MinValue)
+                amount = "max amount " + MaxAmount + ",";
             string pad = "";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Product Purchase Policy: " + ProductId + " - " + preStr + " ]";
+            return pad + "[Product Purchase Policy: " + amount + " product #" + ProductId + " - " + preStr + " ]";
         }
     }
 
@@ -236,8 +241,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
             string preStr = dic[PreCondition.PreConditionNumber];
             string pad = "";
+            string amount = "";
+            if (MinBasketPrice != int.MaxValue)
+                amount = "min basket price - " + MinBasketPrice + ",";
+            if (MaxBasketPrice != int.MinValue)
+                amount = "max basket price - " + MaxBasketPrice + ",";
+            if (MinItems != int.MaxValue)
+                amount = "min items - " + MinItems + ",";
+            if (MaxItems != int.MinValue)
+                amount = "max items - " + MaxItems + ",";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Basket Purchase Policy: " + preStr + "]";
+            return pad + "[Basket Purchase Policy: " + amount + " " + preStr + "]";
         }
     }
 

@@ -178,9 +178,9 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006220909565_InitialCreate.cs" />
-    <Compile Include="Migrations\202006220909565_InitialCreate.designer.cs">
-      <DependentUpon>202006220909565_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006221526341_InitialCreate.cs" />
+    <Compile Include="Migrations\202006221526341_InitialCreate.designer.cs">
+      <DependentUpon>202006221526341_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
@@ -207,8 +207,10 @@
     <Compile Include="PurchaseComponent\DomainLayer\PurchaseManagement.cs" />
     <Compile Include="PurchaseComponent\ServiceLayer\PurchaseService.cs" />
     <Compile Include="Utils\DeliverySystem.cs" />
+    <Compile Include="Utils\DiscountPolicyParser.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PaymentSystem.cs" />
+    <Compile Include="Utils\PurchasePolicyParser.cs" />
     <Compile Include="Utils\RequestMaker.cs" />
     <Compile Include="Utils\StateInitiator.cs" />
   </ItemGroup>
@@ -303,8 +305,8 @@
     <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006220909565_InitialCreate.resx">
-      <DependentUpon>202006220909565_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006221526341_InitialCreate.resx">
+      <DependentUpon>202006221526341_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
