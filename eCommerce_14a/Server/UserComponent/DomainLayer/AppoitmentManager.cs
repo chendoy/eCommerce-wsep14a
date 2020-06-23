@@ -11,6 +11,7 @@ using Server.DAL.PurchaseDb;
 using Server.DAL.StoreDb;
 using Server.DAL.UserDb;
 using Server.UserComponent.Communication;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -20,10 +21,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         StoreManagment storeManagment;
         //Publisher publisher;
         UserManager UM;
+        private List<Appoitment> AllAppoitments;
+        private List<Candidation> AllCandidates;
         AppoitmentManager()
         {
             UM = UserManager.Instance;
             storeManagment = StoreManagment.Instance;
+            AllAppoitments = new List<Appoitment>();
+            AllCandidates = new List<Candidation>();
         }
         private static readonly object padlock = new object();  
         private static AppoitmentManager instance = null;  
@@ -43,6 +48,51 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 }  
                 return instance;  
             }  
+        }
+        public void insertCandidate(string appointer,string appointed,int storeId)
+        {
+            foreach(Candidation candidation in AllCandidates)
+            {
+                if(candidation.Appointer == appointer && candidation.Candidate == appointed && candidation.storeId == storeId)
+                {
+                    return;
+                }
+            }
+            AllCandidates.Add(new Candidation(appointer, appointed, storeId));
+        }
+        public void insertAppointment(string appointer, string appointed, int storeId)
+        {
+            foreach (Appoitment appo in AllAppoitments)
+            {
+                if (appo.Appointer == appointer && appo.Appointed == appointed && appo.storeId == storeId)
+                {
+                    return;
+                }
+            }
+            AllAppoitments.Add(new Appoitment(appointer, appointed, storeId));
+        }
+        public bool RemoveCnadidate(string appointer, string appointed, int storeId)
+        {
+            foreach (Candidation cand in AllCandidates)
+            {
+                if (cand.Appointer == appointer && cand.Candidate == appointed && cand.storeId == storeId)
+                {
+                    return AllCandidates.Remove(cand);
+                }
+            }
+            return false;
+        }
+        public bool RemoveAppoitment(string appointer, string appointed, int storeId)
+        {
+            foreach (Appoitment appo in AllAppoitments)
+            {
+                if (appo.Appointer == appointer && appo.Appointed == appointed && appo.storeId == storeId)
+                {
+                    return AllAppoitments.Remove(appo);
+                }
+            }
+            return false;
+
         }
         public void LoadAppointments()
         {

@@ -184,7 +184,9 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
+    <Compile Include="UserComponent\DomainLayer\Appoitment.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
+    <Compile Include="UserComponent\DomainLayer\Candidation.cs" />
     <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
     <Compile Include="UserComponent\DomainLayer\Statistics.cs" />
     <Compile Include="UserComponent\DomainLayer\Statistic_View.cs" />
