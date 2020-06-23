@@ -1195,6 +1195,14 @@ namespace Server.DAL
             }
             return dbConn.StoreOwners.Where(o => o.OwnerName.Equals(name) && o.StoreId == storeID).FirstOrDefault();
         }
+        public StoreManager getStoreManagerbyStore(string name, int storeID)
+        {
+            if (testingmode)
+            {
+                return null;
+            }
+            return dbConn.StoreManagers.Where(o => o.ManagerName.Equals(name) && o.StoreId == storeID).FirstOrDefault();
+        }
         public void UpdateDiscountPolicy(DiscountPolicy newPolicy,Store s, bool saveChanges)
         {
             if (testingmode)
@@ -1919,7 +1927,7 @@ namespace Server.DAL
             }
         }
 
-        public void DeleteStoreManagerAppoint(StoreManagersAppoint soaItem, bool saveChanges)
+        public void DeleteStoreManagerAppoint(StoreManagersAppoint soaItem, bool saveChanges = false)
         {
             if (testingmode)
             {

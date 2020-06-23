@@ -388,7 +388,13 @@ namespace TestingSystem.UnitTests.Appoitment_Test
         public void AppointManagerTOBeOwner()
         {
             Assert.IsTrue(AP.AppointStoreManager("owner", "Appointed", 100).Item1);
+            Assert.IsTrue(SM.getStore(100).IsStoreManager(UM.GetUser("Appointed")));
+            Assert.IsTrue(UM.GetUser("Appointed").isStorManager(100));
             Assert.IsTrue(AP.AppointStoreOwner("owner", "Appointed", 100).Item1);
+            Assert.IsFalse(SM.getStore(100).IsStoreManager(UM.GetUser("Appointed")));
+            Assert.IsFalse(UM.GetUser("Appointed").isStorManager(100));
+            Assert.IsTrue(SM.getStore(100).IsStoreOwner(UM.GetUser("Appointed")));
+            Assert.IsTrue(UM.GetUser("Appointed").isStoreOwner(100));
         }
     }
 }

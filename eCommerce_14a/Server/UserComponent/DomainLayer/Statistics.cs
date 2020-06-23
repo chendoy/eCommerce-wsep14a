@@ -99,6 +99,7 @@ namespace Server.UserComponent.DomainLayer
                 sv = adminsStatistics[adminName];
             }
             sv.start_bool = true;
+            sv.ends_bool = false;
             sv.start = starttime;            
             foreach (Tuple<string, DateTime> user in visitors)
             {
@@ -117,7 +118,6 @@ namespace Server.UserComponent.DomainLayer
             {
                 return null;
             }
-            view_is_active = true;
             Statistic_View sv;
             if (!adminsStatistics.TryGetValue(adminName, out sv))
             {
@@ -125,6 +125,7 @@ namespace Server.UserComponent.DomainLayer
                 sv = adminsStatistics[adminName];
             }
             sv.ends_bool = true;
+            sv.start_bool = false;
             sv.endt = endtime;
             foreach (Tuple<string, DateTime> user in visitors)
             {
@@ -150,6 +151,8 @@ namespace Server.UserComponent.DomainLayer
                 adminsStatistics.Add(adminName, new Statistic_View());
                 sv = adminsStatistics[adminName];
             }
+            sv.start_bool = false;
+            sv.ends_bool = false;
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 FirstSet(user.Item1, sv);

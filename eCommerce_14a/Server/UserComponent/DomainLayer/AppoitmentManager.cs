@@ -142,17 +142,23 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 {
                     return new Tuple<bool, string>(false, "Failed to insert store owner to DB memory");
                 }
-                //int[] p = { 1, 1, 1, 1, 1 };
-                //appointed.setPermmisions(store.GetStoreId(), p);
-                ////Add StorePermissions to DB
-                //List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(Appointed, storeID, p);
-                //DbManager.Instance.InsertUserStorePermissionSet(permissions);
+                if (store.IsStoreManager(appointed))
+                {
+                    try
+                    {
+                        StoreManagersAppoint Sma = DbManager.Instance.GetSingleManagerAppoints(appointed.Store_Managment[storeID], appointed.Name, storeID);
+                        DbManager.Instance.DeleteSingleManager(Sma);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.logError("Remove Store Manager db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "Could not Remove Manager store from  DB");
+                    }
+                    store.RemoveManager(appointed);
+                    appointed.RemoveStoreManagment(storeID);
+                }
                 Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " is Approved"));
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(Appointed, storeID);
-                //Add Store Ownership to DB
-                //StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(Mappointer, Appointed, storeID);
-                //DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
-                //Remove Candidation From DB
                 try
                 {
                     CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed, Mappointer, storeID);
@@ -225,13 +231,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 {
                     return new Tuple<bool, string>(false, "Could not add store Owner to DB");
                 }
-                //StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(owner, addto, storeId);
-                //DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
-                //int[] p = { 1, 1, 1, 1, 1 };
-                //appointed.setPermmisions(store.GetStoreId(), p);
-                //Insert Permissions Into DB
-                //List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
-                //DbManager.Instance.InsertUserStorePermissionSet(permissions);
+                if(store.IsStoreManager(appointed))
+                {
+                    try
+                    {
+                        StoreManagersAppoint Sma = DbManager.Instance.GetSingleManagerAppoints(appointed.Store_Managment[storeId], appointed.Name, storeId);
+                        DbManager.Instance.DeleteSingleManager(Sma);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.logError("Remove Store Manager db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "Could not Remove Manager store from  DB");
+                    }
+                    store.RemoveManager(appointed);
+                    appointed.RemoveStoreManagment(storeId);
+                }
                 Publisher.Instance.Notify(addto, new NotifyData("Your request to be an Owner to Store - " + storeId + " is Approved"));
                 Tuple<bool, string> ansSuccess = Publisher.Instance.subscribe(addto, storeId);
                 DbManager.Instance.SaveChanges();
