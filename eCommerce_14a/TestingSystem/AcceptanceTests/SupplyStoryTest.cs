@@ -29,13 +29,13 @@ namespace TestingSystem.AcceptanceTests
             ClearAllUsers();
         }
 
-        [TestMethod]
-        //happy
-        public void LegalSupplyDetailsTest()
-        {
-            Assert.IsTrue(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
+        //[TestMethod]
+        ////happy
+        //public void LegalSupplyDetailsTest()
+        //{
+        //    Assert.IsTrue(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
             
-        }
+        //}
 
         [TestMethod]
         //sad
