@@ -17,7 +17,7 @@ using System.Security.Cryptography;
 
 namespace Server.Utils
 {
-    class StateInitiator
+    public class StateInitiator
     {
         CommunicationHandler handler;
         List<string> lines;
@@ -124,11 +124,15 @@ namespace Server.Utils
             lines.Add(json);
         }
 
-        public void InitSystemFromFile() 
+        public void InitSystemFromFile(string argPath = null) 
         {
+            string path;
             try
             {
-                string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\State.txt";
+                if (argPath != null)
+                    path = argPath;
+                else
+                    path = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\Server\Utils\State.txt";
                 string[] operations = File.ReadAllLines(path);
 
                 foreach (string operation in operations)
@@ -141,7 +145,7 @@ namespace Server.Utils
                 Logger.logError("Init from file system failed : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
                 Console.WriteLine("load system from init file failed - init the system from default init file..\n");
                 //default path
-                string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\DefaultInitFile.txt";
+                path = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\Server\Utils\\DefaultInitFile.txt";
                 string[] operations = File.ReadAllLines(path);
 
                 foreach (string operation in operations)

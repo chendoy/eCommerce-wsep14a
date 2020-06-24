@@ -181,6 +181,7 @@
     <Compile Include="UnitTests\Appoitment_Test.cs" />
     <Compile Include="UnitTests\DeliverySystemTests.cs" />
     <Compile Include="UnitTests\DiscountPolicyTest.cs" />
+    <Compile Include="UnitTests\InitFileTest.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
     <Compile Include="UnitTests\PaymentSystemTests.cs" />
     <Compile Include="UnitTests\PurchaseManagementTest.cs" />

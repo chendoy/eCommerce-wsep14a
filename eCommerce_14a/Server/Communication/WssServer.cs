@@ -41,7 +41,7 @@ namespace eCommerce_14a.Communication
         }
         private void LoadData()
         {
-            //handler.loaddata();
+            handler.loaddata();
         }
         private void InitServer()
         {
