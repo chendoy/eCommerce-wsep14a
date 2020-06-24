@@ -103,7 +103,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return PH.pay(PaymentDetails, amount);
         }
-        public Tuple<bool, string>  ProvideDeliveryForUser(string name ,bool ispayed)
+        public Tuple<bool, string>  ProvideDeliveryForUser(string name ,bool faield=false)
         {
             if(name is null)
             {
@@ -115,12 +115,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Blank args");
             }
-            if (ispayed == false) 
-            {
-                return new Tuple<bool, string>(false, "Not payed");
-            }
+         
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            return DH.ProvideDeliveryForUser(name, ispayed);
+
+            return DH.ProvideDeliveryForUser(name, faield);
         }
         public void clean(string name,string pass)
         {

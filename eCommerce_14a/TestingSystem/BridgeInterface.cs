@@ -13,6 +13,19 @@ namespace TestingSystem
     {
         public BridgeInterface() { }
 
+
+
+        public virtual Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, string discountPolicy)
+        {
+            return new Tuple<bool, String>(true, "");
+        }
+
+        public virtual Tuple<bool, string> updatePurchasePolicy(int storeId, string userName, string purchasePolicy)
+        {
+            return new Tuple<bool, String>(true, "");
+        }
+
+
         public virtual Tuple<bool, string> Login(String username, String password)
         {
             return new Tuple<bool, String>(true, "");

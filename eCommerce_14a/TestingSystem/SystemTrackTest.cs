@@ -31,6 +31,18 @@ namespace TestingSystem
             return sys.CartIsEmpty(userID);
         }
 
+
+
+        public  Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, string discountPolicy)
+        {
+            return sys.updateDiscountPolicy(storeId, userName, discountPolicy);
+        }
+
+        public  Tuple<bool, string> updatePurchasePolicy(int storeId, string userName, string purchasePolicy)
+        {
+            return sys.updatePurchasePolicy(storeId, userName, purchasePolicy);
+        }
+
         public Tuple<bool, string> AddProductToBasket(string UserID, int storeID, int productID, int amount)
         {
             return sys.AddProductToBasket(UserID, storeID, productID, amount);
