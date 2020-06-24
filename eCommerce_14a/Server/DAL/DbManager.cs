@@ -1608,7 +1608,7 @@ namespace Server.DAL
             {
                 return;
             }
-            if(getStoreManager(manager.ManagerName) == null)
+            if(getStoreManagerbyStore(manager.ManagerName,manager.StoreId) == null)
             {
                 dbConn.StoreManagers.Add(manager);
             }
@@ -1966,8 +1966,12 @@ namespace Server.DAL
             {
                 return;
             }
+            if(manager is null)
+            {
+                return;
+            }
             dbConn.StoreManagers.Remove(manager);
-            if(saveChanges)
+            if (saveChanges)
             {
                 dbConn.SaveChanges();
             }
