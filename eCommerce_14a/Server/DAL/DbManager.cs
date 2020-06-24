@@ -1029,6 +1029,7 @@ namespace Server.DAL
 
         public void InsertPurchasePolicy(PurchasePolicy policyData, int storeId, int? parentId, bool saveChanges)
         {
+            saveChanges = true;
             if (testingmode)
             {
                 return;
@@ -1385,6 +1386,7 @@ namespace Server.DAL
 
         public void InsertDiscountPolicy(DiscountPolicy discountPolicy, int storeId, int? parentId, bool saveChanges)
         {
+            saveChanges = true;
             if (testingmode)
             {
                 return;
@@ -1606,7 +1608,7 @@ namespace Server.DAL
             {
                 return;
             }
-            if(getStoreManager(manager.ManagerName) == null)
+            if(getStoreManagerbyStore(manager.ManagerName,manager.StoreId) == null)
             {
                 dbConn.StoreManagers.Add(manager);
             }
@@ -1964,8 +1966,12 @@ namespace Server.DAL
             {
                 return;
             }
+            if(manager is null)
+            {
+                return;
+            }
             dbConn.StoreManagers.Remove(manager);
-            if(saveChanges)
+            if (saveChanges)
             {
                 dbConn.SaveChanges();
             }

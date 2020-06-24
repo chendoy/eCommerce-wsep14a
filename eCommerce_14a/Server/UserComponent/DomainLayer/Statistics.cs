@@ -69,25 +69,24 @@ namespace Server.UserComponent.DomainLayer
             {
                 return null;
             }
-            Statistic_View sv;
-            if(!adminsStatistics.TryGetValue(adminName,out sv))
+            if(!adminsStatistics.ContainsKey(adminName))
             {
                 adminsStatistics.Add(adminName, new Statistic_View());
-                sv = adminsStatistics[adminName];
             }
-            sv.ends_bool = true;
-            sv.start_bool = true;
-            sv.start = starttime;
-            sv.endt = endTime;
+            adminsStatistics[adminName] = new Statistic_View();
+            adminsStatistics[adminName].ends_bool = true;
+            adminsStatistics[adminName].start_bool = true;
+            adminsStatistics[adminName].start = starttime;
+            adminsStatistics[adminName].endt = endTime;
             foreach (Tuple<string,DateTime> user in visitors)
             {
                 if(user.Item2 >= starttime && user.Item2 <= endTime)
                 {
-                    FirstSet(user.Item1, sv);
+                    FirstSet(user.Item1, adminsStatistics[adminName]);
                 }
             }
-            sv.SetTotal();
-            return sv;
+            adminsStatistics[adminName].SetTotal();
+            return adminsStatistics[adminName];
         }
         public Statistic_View getViewDataStart(string adminName,DateTime? starttime)
         {
@@ -95,25 +94,24 @@ namespace Server.UserComponent.DomainLayer
             {
                 return null;
             }
-            Statistic_View sv;
-            if (!adminsStatistics.TryGetValue(adminName, out sv))
+            if (!adminsStatistics.ContainsKey(adminName))
             {
                 adminsStatistics.Add(adminName, new Statistic_View());
-                sv = adminsStatistics[adminName];
             }
-            sv.start_bool = true;
-            sv.ends_bool = false;
-            sv.start = starttime;            
+            adminsStatistics[adminName] = new Statistic_View();
+            adminsStatistics[adminName].start_bool = true;
+            adminsStatistics[adminName].ends_bool = false;
+            adminsStatistics[adminName].start = starttime;            
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 if((user.Item2 >= starttime))
                 {
-                    FirstSet(user.Item1, sv);
+                    FirstSet(user.Item1, adminsStatistics[adminName]);
                 }
 
             }
-            sv.SetTotal();
-            return sv;
+            adminsStatistics[adminName].SetTotal();
+            return adminsStatistics[adminName];
         }
         public Statistic_View getViewDataEnd(string adminName,DateTime? endtime)
         {
@@ -121,25 +119,24 @@ namespace Server.UserComponent.DomainLayer
             {
                 return null;
             }
-            Statistic_View sv;
-            if (!adminsStatistics.TryGetValue(adminName, out sv))
+            if (!adminsStatistics.ContainsKey(adminName))
             {
                 adminsStatistics.Add(adminName, new Statistic_View());
-                sv = adminsStatistics[adminName];
             }
-            sv.ends_bool = true;
-            sv.start_bool = false;
-            sv.endt = endtime;
+            adminsStatistics[adminName] = new Statistic_View();
+            adminsStatistics[adminName].ends_bool = true;
+            adminsStatistics[adminName].start_bool = false;
+            adminsStatistics[adminName].endt = endtime;
             foreach (Tuple<string, DateTime> user in visitors)
             {
                 if(user.Item2 <= endtime)
                 {
-                    FirstSet(user.Item1, sv);
+                    FirstSet(user.Item1, adminsStatistics[adminName]);
                 }
 
             }
-            sv.SetTotal();
-            return sv;
+            adminsStatistics[adminName].SetTotal();
+            return adminsStatistics[adminName];
         }
         public Statistic_View getViewDataAll(string adminName)
         {
@@ -148,20 +145,19 @@ namespace Server.UserComponent.DomainLayer
                 return null;
             }
             view_is_active = true;
-            Statistic_View sv;
-            if (!adminsStatistics.TryGetValue(adminName, out sv))
+            if (!adminsStatistics.ContainsKey(adminName))
             {
                 adminsStatistics.Add(adminName, new Statistic_View());
-                sv = adminsStatistics[adminName];
             }
-            sv.start_bool = false;
-            sv.ends_bool = false;
+            adminsStatistics[adminName] = new Statistic_View();
+            adminsStatistics[adminName].start_bool = false;
+            adminsStatistics[adminName].ends_bool = false;
             foreach (Tuple<string, DateTime> user in visitors)
             {
-                FirstSet(user.Item1, sv);
+                FirstSet(user.Item1, adminsStatistics[adminName]);
             }
-            sv.SetTotal();
-            return sv;
+            adminsStatistics[adminName].SetTotal();
+            return adminsStatistics[adminName];
         }
         public void FirstSet(string username, Statistic_View s)
         {

@@ -18,7 +18,7 @@ namespace Server.DAL
 
     public class EcommerceContext : DbContext
     {
-        public EcommerceContext() : base("EF_TestingDB")
+        public EcommerceContext() : base("EF_Azure_Ecommerce_ConnStr")
         {
         }
 
@@ -280,11 +280,6 @@ namespace Server.DAL
          .WithMany()
          .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<DbStatistics>()
-        .HasRequired(c => c.User)
-        .WithMany()
-        .WillCascadeOnDelete(false);
-            base.OnModelCreating(modelBuilder);
         }
     }
 }
