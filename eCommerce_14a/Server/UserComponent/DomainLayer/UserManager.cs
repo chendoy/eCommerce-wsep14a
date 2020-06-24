@@ -272,11 +272,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 User nUser = new User(Available_ID, tName);
                 Console.WriteLine(tName);
                 nUser.LogIn();
-                if(islogout)
+                Active_users.Add(tName, nUser);
+                if (islogout)
                 {
                     Statistics.Instance.InserRecord(tName, DateTime.Now);
                 }
-                Active_users.Add(tName, nUser);
                 Available_ID++;
                 Interlocked.Exchange(ref usingResource, 0);
 
