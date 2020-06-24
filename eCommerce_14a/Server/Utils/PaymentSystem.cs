@@ -13,6 +13,22 @@ namespace eCommerce_14a.Utils
     {
         private static readonly HttpClient httpClient = new HttpClient();
         private static readonly string Url = "https://cs-bgu-wsep.herokuapp.com";
+
+
+        private static async Task<string> SendPostRequestAsyncTimeOut(Dictionary<string, string> request)
+        {
+            int timeout = 1000;
+            var task = SendPostRequestAsync(request);
+            if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
+            {
+                return task.Result;
+            }
+            else
+            {
+                return "BAD";
+            }
+        }
+
         private static async Task<string> SendPostRequestAsync(Dictionary<string, string> request)
         {
             var content = new FormUrlEncodedContent(request);
@@ -20,6 +36,7 @@ namespace eCommerce_14a.Utils
             var responseString = await response.Content.ReadAsStringAsync();
             return responseString;
         }
+
 
         /// <test> TestingSystem.UnitTests.PaymentSystemTests</test>
         public static bool IsAlive(bool Failed = false)
@@ -33,7 +50,7 @@ namespace eCommerce_14a.Utils
                 { "action_type", "handshake" }
             };
 
-            string response = SendPostRequestAsync(handshake).Result;
+            string response = SendPostRequestAsyncTimeOut(handshake).Result;
             return response == "OK" ? true : false;
         }
 
@@ -51,7 +68,11 @@ namespace eCommerce_14a.Utils
                 { "id", id },
             };
 
-            string response = SendPostRequestAsync(pay).Result;
+            string response = SendPostRequestAsyncTimeOut(pay).Result;
+            if(response == "BAD")
+            {
+                return -1;
+            }
             return Int32.Parse(response);
         }
 
@@ -64,7 +85,13 @@ namespace eCommerce_14a.Utils
                 { "transaction_id", transactionID.ToString() }
             };
 
-            string response = SendPostRequestAsync(cancelPay).Result;
+
+            string response = SendPostRequestAsyncTimeOut(cancelPay).Result;
+            if (response == "BAD")
+            {
+                return -1;
+            }
+
             return Int32.Parse(response);
         }
     }

@@ -63,6 +63,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return -1;
             if (!PaymentSystem.IsAlive(Failed))
                 return -1;
+
             string[] parsedDetails = paymentDetails.Split('&');
             if (parsedDetails.Length < 6)
             {
