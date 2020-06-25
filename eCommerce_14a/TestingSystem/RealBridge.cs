@@ -45,7 +45,18 @@ namespace TestingSystem
             Cart resCart = res.Item1;
             return resCart.IsEmpty();
         }
-       
+
+        public override Tuple<bool, string> updateDiscountPolicy(int storeId, string userName, string discountPolicy)
+        {
+            return StoreService.updateDiscountPolicy(storeId, userName, discountPolicy);
+        }
+
+        public override Tuple<bool, string> updatePurchasePolicy(int storeId, string userName, string purchasePolicy)
+        {
+            return StoreService.updatePurchasePolicy(storeId, userName, purchasePolicy);
+        }
+
+
         public override Tuple<bool, string> AddProductToBasket(string userID, int storeID, int productID, int amount)
         {
             return purchService.AddProductToShoppingCart(userID, storeID, productID, amount);
@@ -199,9 +210,9 @@ namespace TestingSystem
             return userService.LoginAsGuest();
         }
 
-        public override Tuple<bool, string> ProvideDeliveryForUser(string UserID, bool paymentFlag)
+        public override Tuple<bool, string> ProvideDeliveryForUser(string details, bool paymentFlag)
         {
-            return sysService.ProvideDeliveryForUser(UserID, paymentFlag);
+            return sysService.ProvideDeliveryForUser(details, paymentFlag);
         }
 
         public override Tuple<bool, string> AppointStoreOwner(string owner, string appoint, int store)

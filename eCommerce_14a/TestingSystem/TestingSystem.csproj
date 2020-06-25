@@ -143,6 +143,7 @@
     <Compile Include="AcceptanceTests\ManagerChangeAmountStoryTest.cs" />
     <Compile Include="AcceptanceTests\ManagerEditProductStoryTest.cs" />
     <Compile Include="AcceptanceTests\ManagerRemoveProductStoryTest.cs" />
+    <Compile Include="AcceptanceTests\PurchasePolicyStoryTest.cs" />
     <Compile Include="AcceptanceTests\RemoveProductStoryTest.cs" />
     <Compile Include="AcceptanceTests\BuyingPolicyStoryTest.cs" />
     <Compile Include="AcceptanceTests\ChangeManagerPermissionsStoryTest.cs" />

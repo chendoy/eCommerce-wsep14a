@@ -23,6 +23,7 @@ namespace TestingSystem.AcceptanceTests
             Register(username, password);
             Login(username, password);
             storeID = OpenStore(username).Item1;
+            AddProductToStore(storeID, username,1, "", 4343, "43", "gfdfg", 24);
         }
         
         [TestCleanup]
@@ -36,21 +37,21 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ValidDiscountPolicyTest() 
         {
-            Assert.IsTrue(CheckDiscountPolicy(guestID, 1, true).Item1, CheckDiscountPolicy(guestID, 1, true).Item2);
+            Assert.IsTrue(updateDiscountPolicy(storeID, username, "r:20:1").Item1);
         }
 
         [TestMethod]
         //sad
         public void InvalidUserIDPolicyTest()
         {
-            Assert.IsFalse(CheckDiscountPolicy("", 0, false).Item1, CheckDiscountPolicy("", 0, false).Item2);
+            Assert.IsFalse(updateDiscountPolicy(storeID, username, "r:20:100").Item1);
         }
 
         [TestMethod]
         //bad
         public void InvalidUserIDAndStoreIDPolicyTest()
         {
-            Assert.IsFalse(CheckDiscountPolicy("       ", 0, false).Item1, CheckDiscountPolicy("       ", 0, false).Item2);
+            Assert.IsFalse(updateDiscountPolicy(storeID, username, "r:20:-6").Item1);
         }
     }
 }
