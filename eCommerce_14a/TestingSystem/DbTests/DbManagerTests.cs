@@ -9,6 +9,9 @@ using Server.DAL.UserDb;
 using eCommerce_14a.Utils;
 using Server.DAL.CommunicationDb;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
+using System.Linq;
+using Server.UserComponent.DomainLayer;
+using Server.UserComponent.Communication;
 
 namespace TestingSystem.DbManger_Tests
 {
@@ -143,10 +146,26 @@ namespace TestingSystem.DbManger_Tests
         }
 
         [TestMethod]
+        public void TestCreateStore()
+        {
+            DbManager.Instance.LoadAllUsers();
+            foreach(string u in UserManager.Instance.users.Keys)
+            {
+                UserManager.Instance.Active_users.Add(u, UserManager.Instance.users[u]);
+            }
+            StoreManagment.Instance.LoadFromDb();
+            StoreManagment.Instance.createStore("Naor", "NaorTestShop_Shop");
+            List<Store> all = StoreManagment.Instance.GetAllStores();
+            int max_id = all.Max(s => s.Id);
+            Assert.AreEqual(StoreManagment.Instance.getStore(max_id).StoreName, "NaorTestShop_Shop");
+        }
+
+        [TestMethod]
         public Store TestLoadStore(int sid = 9)
         {
             return DbManager.Instance.LoadStore(sid);
         }
+
 
         [TestMethod]
         public void TestDeleteFullStore_t1()
@@ -165,14 +184,16 @@ namespace TestingSystem.DbManger_Tests
         [TestMethod]
         public void TestAppendProductSavedOnProxy()
         {
-            Product p = new Product(45, 1);
+            Product p = new Product(69, 1);
             DbManager.Instance.AppendProductTransaction(p, 1, 1, false);
             Assert.AreEqual(null, DbManager.Instance.GetDbProductItem(45));
-            Product p2 = new Product(46, 1);
+            Product p2 = new Product(70, 1);
             DbManager.Instance.AppendProductTransaction(p2, 1, 1, true);
-            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(45));
-            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(46));
+            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(69));
+            Assert.AreNotEqual(null, DbManager.Instance.GetDbProductItem(70));
         }
+
+    
 
 
     }

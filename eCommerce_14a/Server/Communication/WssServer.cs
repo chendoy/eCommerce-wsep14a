@@ -367,7 +367,7 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-           // StateInitiator init = new StateInitiator();
+            //StateInitiator init = new StateInitiator();
             WssServer server = new WssServer();
             //init.InitSystemFromFile();
             server.InitServer();
