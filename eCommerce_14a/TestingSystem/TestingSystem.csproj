@@ -167,6 +167,7 @@
     <Compile Include="AcceptanceTests\ViewStorePurchaseHistoryStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewAndEditCartStoryTest.cs" />
     <Compile Include="AcceptanceTests\ViewUserPurchaseHistoryStoryTest.cs" />
+    <Compile Include="ConcurrencyTests\ConcurrencyWhiteBoxTests.cs" />
     <Compile Include="DbTests\DbManagerTests.cs" />
     <Compile Include="IntegrationTests\StubClass.cs" />
     <Compile Include="BridgeInterface.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="UnitTests\Appoitment_Test.cs" />
     <Compile Include="UnitTests\DeliverySystemTests.cs" />
     <Compile Include="UnitTests\DiscountPolicyTest.cs" />
+    <Compile Include="UnitTests\InitFileTest.cs" />
     <Compile Include="UnitTests\InventoryTest.cs" />
     <Compile Include="UnitTests\PaymentSystemTests.cs" />
     <Compile Include="UnitTests\PurchaseManagementTest.cs" />

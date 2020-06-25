@@ -48,7 +48,7 @@ namespace eCommerce_14a.Communication
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
-            config1.MaxConnectionNumber = 2000;
+            config1.MaxConnectionNumber = 100000;
             config1.Security = "Tls";
             config1.LogAllSocketException = false;
             config1.LogBasicSessionActivity = false;
@@ -367,9 +367,9 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-            StateInitiator init = new StateInitiator();
+           // StateInitiator init = new StateInitiator();
             WssServer server = new WssServer();
-            init.InitSystemFromFile();
+            //init.InitSystemFromFile();
             server.InitServer();
         }
     }

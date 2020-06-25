@@ -147,7 +147,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             //if user name exist return false
-            return Users_And_Hashes.ContainsKey(username);
+            return Users_And_Hashes.ContainsKey(username) || users.ContainsKey(username);
         }
         //Register the system admin
         public Tuple<bool, string> RegisterMaster(string username, string pass)
@@ -265,9 +265,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             lock (this)
             {
-                if (0 == Interlocked.Exchange(ref usingResource, 1))
                     //Add Guest DO not Require DB Changes
-                    Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
                 string tName = "Guest" + Available_ID;
                 User nUser = new User(Available_ID, tName);
                 Console.WriteLine(tName);
@@ -278,7 +277,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     Statistics.Instance.InserRecord(tName, DateTime.Now);
                 }
                 Available_ID++;
-                Interlocked.Exchange(ref usingResource, 0);
 
                 return tName;
             }

@@ -406,22 +406,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
-            int next_id = DbManager.Instance.GetNextStoreId();
-            storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
-            storeParam.Add(CommonStr.StoreParams.StoreName, storename);
-            storeParam.Add(CommonStr.StoreParams.mainOwner, user.Name);
-            Store store = new Store(storeParam);
-            //DB Insert Store
-
-            Tuple<int, string> transactionRes =  DbManager.Instance.InsertStoreTranscation(store, user, userName, next_id);
-            if(transactionRes.Item1 >= 0)
+            lock (this)
             {
-                stores.Add(next_id, store);
+                int next_id = DbManager.Instance.GetNextStoreId();
+                storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
+                storeParam.Add(CommonStr.StoreParams.StoreName, storename);
+                storeParam.Add(CommonStr.StoreParams.mainOwner, user.Name);
+                Store store = new Store(storeParam);
+                //DB Insert Store
+                Tuple<int, string> transactionRes = DbManager.Instance.InsertStoreTranscation(store, user, userName, next_id);
+                if (transactionRes.Item1 >= 0)
+                {
+                    stores.Add(next_id, store);
+                }
+                return transactionRes;
             }
-
-            return transactionRes;
-
-
         }
 
 
