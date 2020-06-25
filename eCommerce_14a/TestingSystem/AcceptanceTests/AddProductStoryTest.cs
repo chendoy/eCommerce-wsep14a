@@ -12,7 +12,7 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class AddProductStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID = 1;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
         int storeID;
@@ -44,20 +44,10 @@ namespace TestingSystem.AcceptanceTests
         {
             amount = 1;
             Assert.IsTrue(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
+                "err");
         }
 
-        [TestMethod]
-        //sad
-        public void AddTwiceProductToStoreTest()
-        {
-            amount = 1;
-            Assert.IsTrue(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
-            Assert.IsFalse(AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, username, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
-        }
-
+    
         [TestMethod]
         //bad
         public void AddProductWithNegAmountToStoreTest()

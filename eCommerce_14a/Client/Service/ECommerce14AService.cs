@@ -10,6 +10,7 @@ using Server.Communication.DataObject.ThinObjects;
 using Server.Communication.DataObject.Requests;
 using Server.Communication.DataObject.Responses;
 using Server.UserComponent.DomainLayer;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace Client.Service
 {
@@ -38,6 +39,12 @@ namespace Client.Service
             {
                 Permissions.Add(item.Key, new Permission(item.Value));
             }
+        }
+
+        async public Task SendStatisticsRequest(string username, DateTime? startDate, DateTime? endDate)
+        {
+            GetStatisticsRequest request = new GetStatisticsRequest(username, startDate, endDate);
+            comm.SendRequest(request);
         }
 
         async public Task<List<StoreData>> GetAllActiveStores()

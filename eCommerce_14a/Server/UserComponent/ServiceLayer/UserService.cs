@@ -80,7 +80,10 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
         {
             return UM.GetStoreManagersPermissions(appointer, storeId);
         }
-
-    
+        /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-admin-views-statistics-65</req>
+        internal Statistic_View GetStatistics(string username, DateTime? startTime, DateTime? endTime)
+        {
+            return UM.GetStatistics(username, startTime, endTime);
+        }
     }
 }

@@ -101,13 +101,40 @@ namespace eCommerce_14a.Communication
 
         public string GetUserNameBySocket(WebSocketSession session) 
         {
-            var username = usersSessions.FirstOrDefault(x => x.Value == session).Key;
+            string username = "";
+            try
+            {
+                foreach (KeyValuePair<string, WebSocketSession> entry in usersSessions)
+                {
+                    if (entry.Value == session)
+                        username = entry.Key;
+                }
+            }
+            catch (Exception ex) 
+            {
+                Logger.logError("GetUserNameBySocket failed : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Console.WriteLine("error occured during GetUserNameBySocket");
+            }
             return username;
+        }
+
+        internal byte[] HandleStatisticsNotification(Statistic_View statistics)
+        {
+            string jsonAns = Seralize(new NotifyStatisticsData(statistics));
+            return security.Encrypt(jsonAns);
         }
 
         public void HandleSessionClosed(WebSocketSession session) 
         {
             userService.Logout(GetUserNameBySocket(session));
+        }
+
+        internal byte[] HandleStatistics(string json)
+        {
+            GetStatisticsRequest res = JsonConvert.DeserializeObject<GetStatisticsRequest>(json);
+            Statistic_View ans = userService.GetStatistics(res.username, res.startTime, res.endTime);
+            string jsonAns = Seralize(new NotifyStatisticsData(ans));
+            return security.Encrypt(jsonAns);
         }
 
         public byte[] HandleLogin(string json, WebSocketSession session)
@@ -211,6 +238,14 @@ namespace eCommerce_14a.Communication
         {
             Tuple<bool,string> ans = userService.LoginAsGuest();
             string jsonAns = Seralize(new LoginAsGuestResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
+        public byte[] HandleNoConnectionPurchase(string json)
+        {
+            NoConnectionPurchaseRequest res = JsonConvert.DeserializeObject<NoConnectionPurchaseRequest>(json);
+            Tuple<bool, string> ans = purchService.PerformPurchase(res.Username, res.PaymentDetails, res.Address, true);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
             return security.Encrypt(jsonAns);
         }
 

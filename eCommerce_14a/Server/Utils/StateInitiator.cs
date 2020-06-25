@@ -12,10 +12,12 @@ using eCommerce_14a.StoreComponent.ServiceLayer;
 using Server.DAL;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using Server.UserComponent.DomainLayer;
+using eCommerce_14a;
+using System.Security.Cryptography;
 
 namespace Server.Utils
 {
-    class StateInitiator
+    public class StateInitiator
     {
         CommunicationHandler handler;
         List<string> lines;
@@ -29,25 +31,16 @@ namespace Server.Utils
 
         public void CreateScenario() 
         {
-            MakeRegisterLine("u11", "u11");
-            MakeRegisterLine("u22", "u22");
-            MakeRegisterLine("u33", "u33");
-            MakeRegisterLine("u44", "u44");
-            MakeRegisterLine("u55", "u55");
-            MakeAdminLine("u11");
-            MakeLoginLine("u22", "u22");
-            MakeOpenStoreLine("u22");
-            int storeID = DbManager.Instance.GetNextStoreId(); // (s1)
-            MakeAddProductToStoreLine(storeID, "u22", "for age 0 - 2", 30, "diapers", "hygiene", 20);
-            MakeAppointManagerLine("u22", "u33", storeID);
-            MakeChangePermissionsLine("u22", "u33", storeID, new int[5] {1,1,1,0,0});
-            MakeLoginLine("u33", "u33");
-            MakeAppointManagerLine("u33", "u44", storeID);
-            MakeLoginLine("u44", "u44");
-            MakeAppointManagerLine("u44", "u55", storeID);
-            MakeLogoutLine("u22");
-            MakeLogoutLine("u33");
-            MakeLogoutLine("u44");
+            MakeRegisterLine("UA1", "UA1");
+            MakeAdminLine("UA1");
+            MakeRegisterLine("U11", "U11");
+            MakeRegisterLine("U12", "U12");
+            MakeRegisterLine("U13", "U13");
+            MakeRegisterLine("U44", "U44");
+            MakeRegisterLine("U55", "U55");
+            MakeLoginLine("U11", "U11");
+            MakeOpenStoreLine("U11");
+            MakeLogoutLine("U11");
             WriteScenarioToFile();
         }
         public void WriteScenarioToFile()
@@ -105,7 +98,7 @@ namespace Server.Utils
 
         public void MakeOpenStoreLine(string username)
         {
-            OpenStoreRequest req = new OpenStoreRequest(username);
+            OpenStoreRequest req = new OpenStoreRequest(username, "S2");
             string json = JsonConvert.SerializeObject(req);
             lines.Add(json);
         }
@@ -131,16 +124,35 @@ namespace Server.Utils
             lines.Add(json);
         }
 
-        public void InitSystemFromFile() 
+        public void InitSystemFromFile(string argPath = null) 
         {
-            string path = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Utils\State.txt";
-            //CreateScenario();
-            string[] operations = File.ReadAllLines(path);
-            foreach (string operation in operations)
+            string path;
+            try
             {
-                HandleState(operation);
+                if (argPath != null)
+                    path = argPath;
+                else
+                    path = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\Server\Utils\State.txt";
+                string[] operations = File.ReadAllLines(path);
+
+                foreach (string operation in operations)
+                {
+                    HandleState(operation);
+                }
             }
-            //File.WriteAllText(path, String.Empty);
+            catch(Exception ex)
+            {
+                Logger.logError("Init from file system failed : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                Console.WriteLine("load system from init file failed - init the system from default init file..\n");
+                //default path
+                path = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\Server\Utils\\DefaultInitFile.txt";
+                string[] operations = File.ReadAllLines(path);
+
+                foreach (string operation in operations)
+                {
+                    HandleState(operation);
+                }
+            }
         }
 
         private void HandleState(string json)
@@ -304,7 +316,7 @@ namespace Server.Utils
         //public static void Main(string[] argv)
         //{
         //    StateInitiator init = new StateInitiator();
-        //    init.InitSystemFromFile();
+        //    init.CreateScenario();
         //}
     }
 }

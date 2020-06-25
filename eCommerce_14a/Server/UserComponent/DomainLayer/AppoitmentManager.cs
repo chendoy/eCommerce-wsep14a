@@ -5,9 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.StoreComponent.DomainLayer;
 using eCommerce_14a.Utils;
+using log4net.Appender;
 using Server.DAL;
+using Server.DAL.PurchaseDb;
+using Server.DAL.StoreDb;
 using Server.DAL.UserDb;
 using Server.UserComponent.Communication;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 {
@@ -17,10 +21,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         StoreManagment storeManagment;
         //Publisher publisher;
         UserManager UM;
+        private List<Appoitment> AllAppoitments;
+        private List<Candidation> AllCandidates;
         AppoitmentManager()
         {
             UM = UserManager.Instance;
             storeManagment = StoreManagment.Instance;
+            AllAppoitments = new List<Appoitment>();
+            AllCandidates = new List<Candidation>();
         }
         private static readonly object padlock = new object();  
         private static AppoitmentManager instance = null;  
@@ -40,6 +48,50 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 }  
                 return instance;  
             }  
+        }
+        public void insertCandidate(string appointer,string appointed,int storeId)
+        {
+            foreach(Candidation candidation in AllCandidates)
+            {
+                if(candidation.Appointer == appointer && candidation.Candidate == appointed && candidation.storeId == storeId)
+                {
+                    return;
+                }
+            }
+            AllCandidates.Add(new Candidation(appointer, appointed, storeId));
+        }
+        public void insertAppointment(string appointer, string appointed, int storeId)
+        {
+            foreach (Appoitment appo in AllAppoitments)
+            {
+                if (appo.Appointer == appointer && appo.Appointed == appointed && appo.storeId == storeId)
+                {
+                    return;
+                }
+            }
+            AllAppoitments.Add(new Appoitment(appointer, appointed, storeId));
+        }
+        public bool RemoveCnadidate(string appointer, string appointed, int storeId)
+        {
+            foreach (Candidation cand in AllCandidates)
+            {
+                if (cand.Appointer == appointer && cand.Candidate == appointed && cand.storeId == storeId)
+                {
+                    return AllCandidates.Remove(cand);
+                }
+            }
+            return false;
+        }
+        public bool RemoveAppoitment(string appointer, string appointed, int storeId)
+        {
+            foreach (Appoitment appo in AllAppoitments)
+            {
+                if (appo.Appointer == appointer && appo.Appointed == appointed && appo.storeId == storeId)
+                {
+                    return AllAppoitments.Remove(appo);
+                }
+            }
+            return false;
         }
         public void LoadAppointments()
         {
@@ -68,6 +120,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 Logger.logError(CommonStr.ArgsTypes.Empty, this, System.Reflection.MethodBase.GetCurrentMethod());
                 return new Tuple<bool, string>(false, "Blank Arguemtns\n");
             }
+            Store store = storeManagment.getStore(storeID);
+            if (store is null)
+            {
+                return new Tuple<bool, string>(false, "Store Does not Exist");
+            }
             User appointer = UM.GetAtiveUser(owner);
             User appointed = UM.GetUser(Appointed);
             if (appointer is null || appointed is null)
@@ -80,59 +137,97 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 //Remove The Pending for the user
                 if (appointed.RemoveOtherApprovalRequest(storeID, owner))
                 {
-                    //Remove Need to Approve From DB
-                    NeedToApprove ndap = DbManager.Instance.GetNeedToApprove(owner, Appointed, storeID);
-                    DbManager.Instance.DeleteSingleApproval(ndap);
+                    //Remove Need to Approve From DB  
+                    try
+                    {
+                        NeedToApprove ndap = DbManager.Instance.GetNeedToApprove(owner, Appointed, storeID);
+                        DbManager.Instance.DeleteSingleApproval(ndap);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.logError("DeleteSingleApproval error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "Delete Operation from DB Failed cannot proceed");
+                    }
                 }
             }
             //Set to false if False and the operation will fail.
             if(!approval)
             {
+                RemoveCnadidate(owner, Appointed, storeID);
                 appointed.SetApprovalStatus(storeID, approval);
                 //Update The Approval Status in the DB
-                StoreOwnertshipApprovalStatus status = DbManager.Instance.getApprovalStat(Appointed, storeID);
-                DbManager.Instance.UpdateApprovalStatus(status, approval);
                 //Remove MasterAppointer - Candidtae Table from DB
                 string masterNmae = appointed.MasterAppointer[storeID];
                 appointed.RemoveMasterAppointer(storeID);
-                Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " Didn't Approved"));
-                CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed, masterNmae, storeID);
-                DbManager.Instance.DeleteSingleCandidate(cand);
+                try
+                {
+                    StoreOwnertshipApprovalStatus status = DbManager.Instance.getApprovalStat(Appointed, storeID);
+                    CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed, masterNmae, storeID);
+                    Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " Didn't Approved"));
+                    DbManager.Instance.DeApprovalTransaction(status,approval,cand,true);
+                    //DbManager.Instance.DeleteSingleCandidate(cand);
+                    //DbManager.Instance.UpdateApprovalStatus(status, approval);
+                }
+                catch (Exception ex)
+                {
+                    Logger.logError("De-Approval db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "De-Approval Operation from DB Failed cannot proceed");
+                }
                 return new Tuple<bool, string>(true, "User failed to become an owner");
             }
             if(appointed.CheckSApprovalStatus(storeID))
             {
+                RemoveCnadidate(owner, Appointed, storeID);
                 //User can be assigned to Store owner
-                Store store = storeManagment.getStore(storeID);
-                if (store is null)
-                {
-                    return new Tuple<bool, string>(false, "Store Does not Exist");
-                }
                 appointed.RemoveApprovalStatus(storeID);
-                //Delete Approval Status from DB
-                StoreOwnertshipApprovalStatus status = DbManager.Instance.getApprovalStat(Appointed, storeID);
-                DbManager.Instance.DeleteSingleApprovalStatus(status);
-                //Add Store Ownership in store Liav is incharge of this
-                store.AddStoreOwner(appointed);
                 string Mappointer = appointed.MasterAppointer[storeID];
-                //Remove Candidation From DB
-                CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed,Mappointer,storeID);
-                DbManager.Instance.DeleteSingleCandidate(cand);
+                //Add Store Ownership in store Liav is incharge of this
+                if (!appointed.addStoreOwnership(storeID, Mappointer).Item1)
+                {
+                    StoreOwner so = DbManager.Instance.getStoreOwnerbyStore(appointed.getUserName(), store.Id);
+                    DbManager.Instance.DeleteStoreOwner(so,true);
+                    return new Tuple<bool, string>(false, "Failed to insert store owner to DB memory");
+                }
                 appointed.AppointerMasterAppointer(storeID);
-                appointed.addStoreOwnership(storeID, Mappointer);
-                //Add Store Ownership to DB
-                StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(Mappointer, Appointed, storeID);
-                DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
-                int[] p = { 1, 1, 1, 1, 1 };
-                appointed.setPermmisions(store.GetStoreId(), p);
-                //Add StorePermissions to DB
-                List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(Appointed, storeID, p);
-                DbManager.Instance.InsertUserStorePermissionSet(permissions);
-                //Adapter Will Insert EveryThing Needed
+                if (!store.AddStoreOwner(appointed))
+                {
+                    return new Tuple<bool, string>(false, "Failed to insert store owner to DB memory");
+                }
+                insertAppointment(owner, Appointed, storeID);
+                if (store.IsStoreManager(appointed))
+                {
+                    try
+                    {
+                        StoreManagersAppoint Sma = DbManager.Instance.GetSingleManagerAppoints(appointed.Store_Managment[storeID], appointed.Name, storeID);
+                        DbManager.Instance.DeleteSingleManager(Sma);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.logError("Remove Store Manager db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "Could not Remove Manager store from  DB");
+                    }
+                    store.RemoveManager(appointed);
+                    appointed.RemoveStoreManagment(storeID);
+                }
                 Publisher.Instance.Notify(Appointed, new NotifyData("Your request to be an Owner to Store - " + storeID + " is Approved"));
                 Tuple<bool, string> ans = Publisher.Instance.subscribe(Appointed, storeID);
+                try
+                {
+                    CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(Appointed, Mappointer, storeID);
+                    DbManager.Instance.DeleteSingleCandidate(cand);
+                    //Delete Approval Status from DB
+                    StoreOwnertshipApprovalStatus status = DbManager.Instance.getApprovalStat(Appointed, storeID);
+                    DbManager.Instance.DeleteSingleApprovalStatus(status);
+                    DbManager.Instance.SaveChanges();
+                }
+                catch(Exception ex)
+                {
+                    Logger.logError("Inser Store Owner db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "Inser Store Owner Operation from DB Failed cannot proceed");
+                }
                 return ans;
             }
+            DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(true, "User Still has some Work to do before he can become an Owner of this Store.");
 
         }
@@ -177,39 +272,81 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if(owners.Count == 0)
             {
                 //Is ready to become Owner.
-                store.AddStoreOwner(appointed);
-                appointed.AppointerMasterAppointer(storeId);
-                //Remove Candidtation from DataBase
-                //CandidateToOwnership cand = DbManager.Instance.GetCandidateToOwnership(addto, owner , storeId);
-                //DbManager.Instance.DeleteSingleCandidate(cand);
-                appointed.addStoreOwnership(storeId, appointer.getUserName());
-                StoreOwnershipAppoint appoitment = AdapterUser.CreateNewOwnerAppoitment(owner, addto, storeId);
-                DbManager.Instance.InsertStoreOwnershipAppoint(appoitment);
-                int[] p = { 1, 1, 1, 1, 1 };
-                appointed.setPermmisions(store.GetStoreId(), p);
-                //Insert Permissions Into DB
-                List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
-                DbManager.Instance.InsertUserStorePermissionSet(permissions);
+                insertAppointment(owner, addto, storeId);
+                string maserAppointer = appointed.MasterAppointer[storeId];
+                appointed.MasterAppointer.Remove(storeId);
+                if(!appointed.addStoreOwnership(storeId, appointer.getUserName()).Item1)
+                {
+                    return new Tuple<bool, string>(false, "Could not add store Owner to DB");
+                }
+                if (!store.AddStoreOwner(appointed))
+                {
+                    return new Tuple<bool, string>(false, "Could not add store Owner to DB");
+                }
+                if(store.IsStoreManager(appointed))
+                {
+                    try
+                    {
+                        StoreManagersAppoint Sma = DbManager.Instance.GetSingleManagerAppoints(appointed.Store_Managment[storeId], appointed.Name, storeId);
+                        DbManager.Instance.DeleteSingleManager(Sma);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.logError("Remove Store Manager db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, "Could not Remove Manager store from  DB");
+                    }
+                    store.RemoveManager(appointed);
+                    appointed.RemoveStoreManagment(storeId);
+                }
                 Publisher.Instance.Notify(addto, new NotifyData("Your request to be an Owner to Store - " + storeId + " is Approved"));
                 Tuple<bool, string> ansSuccess = Publisher.Instance.subscribe(addto, storeId);
+                DbManager.Instance.SaveChanges();
                 return ansSuccess;
             }
-            //Test
             //Add Candidate TO ownership
-            DbManager.Instance.InsertCandidateToOwnerShip(AdapterUser.CreateCandidate(owner, addto, storeId));
             appointed.SetApprovalStatus(storeId, true);
-            //Add AptovmentStatus to DB
-            DbManager.Instance.InsertStoreOwnerShipApprovalStatus(AdapterUser.CreateNewStoreAppoitmentApprovalStatus(storeId, true, addto));
             //No need to Inser Here Approvals we will Insert in the Inner Loop by the Owners.
             appointed.InsertOtherApprovalRequest(storeId, owners);
             foreach(string storeOwner in owners)
             {
                 User tmpOwner = UM.GetUser(storeOwner);
+                try
+                {
+                    DbManager.Instance.InsertNeedToApprove(AdapterUser.CreateNewApprovalNote(storeOwner, addto, storeId));
+                }
+                catch(Exception ex)
+                {
+                    appointed.RemoveApprovalStatus(storeId);
+                    appointed.RemoveOtherApprovalList(storeId);
+                    Logger.logError("Need to approve isnert Failed"+ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, "Insert Failed");
+                }
+            }
+            foreach(string storeOwner in owners)
+            {
+                User tmpOwner = UM.GetUser(storeOwner);
                 tmpOwner.INeedToApproveInsert(storeId, addto);
-                //Insert Approval To DB
-                DbManager.Instance.InsertNeedToApprove(AdapterUser.CreateNewApprovalNote(storeOwner, addto, storeId));
                 Publisher.Instance.Notify(storeOwner, new NotifyData("User: " + addto + " Is want to Be store:" + storeId + " Owner Let him know what you think"));
-
+            }
+            //Add AptovmentStatus to DB
+            insertCandidate(owner, addto, storeId);
+            try
+            {
+                DbManager.Instance.InsertStoreOwnerShipApprovalStatus(AdapterUser.CreateNewStoreAppoitmentApprovalStatus(storeId, true, addto));
+                DbManager.Instance.InsertCandidateToOwnerShip(AdapterUser.CreateCandidate(owner, addto, storeId), true);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("Ownership status to approve isnert Failed" + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                appointed.RemoveApprovalStatus(storeId);
+                appointed.RemoveOtherApprovalList(storeId);
+                foreach (string storeOwner in owners)
+                {
+                    User tmpOwner = UM.GetUser(storeOwner);
+                    NeedToApprove nta = DbManager.Instance.GetNeedToApprove(storeOwner, addto, storeId);
+                    tmpOwner.INeedToApproveRemove(storeId, addto);
+                }
+                return new Tuple<bool, string>(false, "Ownership status Failed");
             }
             return new Tuple<bool, string>(true, "Waiting For Approal By store Owners");
         }
@@ -253,17 +390,27 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return new Tuple<bool, string>(false, addto + " Is already Store Owner or Manager\n");
             if (!store.IsStoreOwner(appointer) && !store.IsStoreManager(appointer))
                 return new Tuple<bool, string>(false, owner + "Is not a store Owner or Manager\n");
-            //Liav Will Insert In the correct Table in the DB here
-            store.AddStoreManager(appointed);
             //appointed.addManagerAppointment(appointer, store.GetStoreId());
             Tuple<bool, string> res = appointed.addStoreManagment(store,owner);
+            if(!res.Item1)
+            {
+                return new Tuple<bool, string>(false, "Insert to store Managmnet Failed to DB");
+            }
+            if(!store.AddStoreManager(appointed))
+            {
+                return new Tuple<bool, string>(false, "Insert to store Managmnet Failed to DB");
+            }
             //Insert StoreManager Appoint Into DB
-            DbManager.Instance.InsertStoreManagerAppoint(AdapterUser.CreateNewManagerAppoitment(owner, addto, storeId));
             int[] p = {1, 1, 0, 0, 0};
             appointed.setPermmisions(store.GetStoreId(), p);
-            //Insert Permissions into DB
-            //List<UserStorePermissions> permissions = AdapterUser.CreateNewPermissionSet(addto, storeId, p);
-            //DbManager.Instance.InsertUserStorePermissionSet(permissions);
+            try
+            {
+                DbManager.Instance.InsertStoreManagerAppoint(AdapterUser.CreateNewManagerAppoitment(owner, addto, storeId),true);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("Managment status to approve isnert Failed" + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+            }
             //Version 2 Addition
             Tuple<bool, string> ans = Publisher.Instance.subscribe(addto, storeId);
             if (!ans.Item1)
@@ -304,6 +451,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 //Liav Will Delete From DB Here
                 store.RemoveManager(manager);
             }
+            DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(true, appointed + " Removed from store: - " + store.StoreName + "\n");
         }
 
@@ -345,11 +493,13 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 //Liav Remove from DB Here
                 store.RemoveOwner(Prevowner);
             }
+            DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(true, PrevOwner + " Removed from store: - " + store.StoreName + "\n");
         }
         public List<User> RemoveManagerLoop(User appointer, User DemoteOwner, Store store)
         {
             List<User> ManagersToRemove = new List<User>();
+            RemoveAppoitment(appointer.Name, DemoteOwner.Name, store.Id);
             ManagersToRemove.Add(DemoteOwner);
             string Message = "You have been Removed From Manager position in the Store " + store.StoreName + " Due to the fact that you appointer " + DemoteOwner.getUserName() + "Was fired now\n";
             DemoteOwner.RemoveStoreManagment(store.GetStoreId());
@@ -377,6 +527,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             List<User> OwnersToRemove = new List<User>();
             OwnersToRemove.Add(DemoteOwner);
+            RemoveAppoitment(appointer.Name, DemoteOwner.Name, store.Id);
             string OwnerRemovalMessage = "You have been Removed From Owner position in the Store " + store.StoreName +"By you appointer - "+appointer.getUserName()+"\n";
             DemoteOwner.RemoveStoreOwner(store.GetStoreId());
             //Remove Store Ownership from DB here
@@ -446,8 +597,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!manager.isAppointedByManager(owner, store.GetStoreId()) && !(manager.isAppointedByOwner(ownerS, store.GetStoreId())))
                 return new Tuple<bool, string>(false, worker + "Is not appointed by " + ownerS + "to be store manager\n");
             //Insert New Permissions TO DB will happen in SetPermissions func
-
-            return manager.setPermmisions(store.GetStoreId(), permissions);
+            return manager.setPermmisions(store.GetStoreId(), permissions,true);
         }
         //Temp function for tests
         //Add user to logged in list and Remove user from logged in lists.

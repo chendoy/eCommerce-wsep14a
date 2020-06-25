@@ -11,7 +11,7 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ManagerChangeAmountStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID = 1;
         int storeID;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
@@ -33,7 +33,7 @@ namespace TestingSystem.AcceptanceTests
             Login(username2, password2);
             storeID = OpenStore(username).Item1;
             AppointStoreManage(username,username2,storeID);
-            ChangePermissions(username, username2, storeID, new int[] { 1, 1, 1 });
+            ChangePermissions(username, username2, storeID, new int[] { 1, 1, 1 , 0, 0});
         }
 
         [TestCleanup]

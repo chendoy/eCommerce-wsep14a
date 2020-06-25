@@ -3,13 +3,13 @@ using eCommerce_14a.UserComponent.DomainLayer;
 using eCommerce_14a.Utils;
 using Server.StoreComponent.DomainLayer;
 using System.Collections.Generic;
-
+using System.Net.Http.Headers;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {  
     public interface PurchasePolicy
     {
-        bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
+        bool IsEligiblePurchase(PurchaseBasket basket);
         string Describe(int depth);
     }
     public class CompundPurchasePolicy : PurchasePolicy
@@ -28,19 +28,19 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
+        public bool IsEligiblePurchase(PurchaseBasket basket)
         {
             if (mergeType == CommonStr.PurchaseMergeTypes.AND)
             {
                 foreach (PurchasePolicy child in children)
-                    if (!child.IsEligiblePurchase(basket, validator))
+                    if (!child.IsEligiblePurchase(basket))
                         return false;
                 return true;
             }
             else if (mergeType == CommonStr.PurchaseMergeTypes.OR)
             {
                 foreach (PurchasePolicy child in children)
-                    if (child.IsEligiblePurchase(basket, validator))
+                    if (child.IsEligiblePurchase(basket))
                         return true;
                 return false;
             }
@@ -52,11 +52,11 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 if (children.Count > 2)
                     return false;
                 if (children.Count == 1)
-                    return children[0].IsEligiblePurchase(basket, validator);
+                    return children[0].IsEligiblePurchase(basket);
                 if(children.Count == 2)
                 {
-                    bool firstRes = children[0].IsEligiblePurchase(basket, validator);
-                    bool secondRes = children[1].IsEligiblePurchase(basket, validator);
+                    bool firstRes = children[0].IsEligiblePurchase(basket);
+                    bool secondRes = children[1].IsEligiblePurchase(basket);
                     return firstRes & !secondRes || secondRes & !firstRes;
                 }
                 return false;   
@@ -104,7 +104,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         }
 
         abstract
-        public bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator);
+        public bool IsEligiblePurchase(PurchaseBasket basket);
         public abstract string Describe(int depth);
 
         public PreCondition PreCondition
@@ -115,15 +115,38 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
     public class ProductPurchasePolicy : SimplePurchasePolicy
     {
-        public int policyProductId { get; set; }
-        public ProductPurchasePolicy(PreCondition pre, int policyProductId) : base(pre)
+        public int ProductId { get; set; }
+        public int MinAmount { get; set; }
+
+        public int MaxAmount { get; set; }
+        public ProductPurchasePolicy(PreCondition pre, int productId, int minAmount) : base(pre)
         {
-            this.policyProductId = policyProductId;
+            ProductId = productId;
+            MinAmount = minAmount;
+            MaxAmount = int.MinValue;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
+        public ProductPurchasePolicy(int maxAmount, PreCondition pre , int productId) : base(pre)
         {
-            return PreCondition.IsFulfilled(basket, policyProductId, null, -1, validator);
+            ProductId = productId;
+            MaxAmount = maxAmount;
+            MinAmount = int.MaxValue;
+        }
+
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
+        {
+            if(PreCondition.preCondNumber == CommonStr.PurchasePreCondition.MinUnitsOfProductType)
+            {
+                return PreCondition.IsFulfilledMinUnitsOfProductTypePurchase(basket, ProductId, MinAmount);   
+            }
+            else if(PreCondition.preCondNumber == CommonStr.PurchasePreCondition.MaxUnitsOfProductType)
+            {
+                return PreCondition.IsFulfilledMaxUnitsOfProductPurchase(basket, ProductId, MaxAmount);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override string Describe(int depth)
@@ -132,23 +155,85 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             //string productStr = inv.getProductDetails(policyProductId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
+            string amount = "";
+            if (MinAmount != int.MaxValue)
+                amount = "min amount " + MinAmount + ",";
+            if (MaxAmount != int.MinValue)
+                amount = "max amount " + MaxAmount + ",";
             string pad = "";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Product Purchase Policy: " + policyProductId + " - " + preStr + " ]";
+            return pad + "[Product Purchase Policy: " + amount + " product #" + ProductId + " - " + preStr + " ]";
         }
     }
 
     public class BasketPurchasePolicy : SimplePurchasePolicy
     {
+        public int MaxItems { set; get; }
+        public int MinItems { set; get; }
+        public double MinBasketPrice { set; get; }
+        public double MaxBasketPrice { set; get; }
 
-        public BasketPurchasePolicy(PreCondition pre) : base(pre)
+        public BasketPurchasePolicy(PreCondition pre, int maxItems) : base(pre)
         {
-
+            MaxItems = maxItems;
+            MinItems = int.MaxValue;
+            MinBasketPrice = int.MaxValue;
+            MaxBasketPrice = int.MinValue;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
+        public BasketPurchasePolicy(int minItems, PreCondition pre) : base(pre)
         {
-            return PreCondition.IsFulfilled(basket, -1, null, -1, validator);
+            MinItems = minItems;
+            MaxItems = int.MinValue;
+            MinBasketPrice = int.MaxValue;
+            MaxBasketPrice = int.MinValue;
+        }
+
+        public BasketPurchasePolicy(double minBasketPrice, PreCondition pre) : base(pre)
+        {
+            MinItems = int.MaxValue;
+            MaxItems = int.MinValue;
+            MinBasketPrice = minBasketPrice;
+            MaxBasketPrice = int.MinValue;
+        }
+        public BasketPurchasePolicy(PreCondition pre, double maxBasketPrice) : base(pre)
+        {
+            MinItems = int.MaxValue;
+            MaxItems = int.MinValue;
+            MinBasketPrice = int.MaxValue;
+            MaxBasketPrice = maxBasketPrice;
+        }
+        public BasketPurchasePolicy(PreCondition pre) : base(pre)
+        {
+            MinItems = int.MaxValue;
+            MaxItems = int.MinValue;
+            MinBasketPrice = int.MaxValue;
+            MaxBasketPrice = int.MinValue;
+        }
+
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
+        {
+            if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.allwaysTrue)
+            {
+                return true;
+            }
+            else if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.MaxItemsAtBasket)
+            {
+                return PreCondition.IsFulfilledMaxItemAtBasketPurchase(basket, MaxItems);
+            }
+            else if(PreCondition.preCondNumber == CommonStr.PurchasePreCondition.MinItemsAtBasket)
+            {
+                return PreCondition.IsFulfilledMinItemAtBasketPurchase(basket, MinItems);
+            }
+            else if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.MinBasketPrice)
+            {
+                return PreCondition.IsFulfilledMinBasketPricePurchase(basket, MinBasketPrice);
+            }
+            else if(PreCondition.PreConditionNumber == CommonStr.PurchasePreCondition.MaxBasketPrice)
+            {
+                return PreCondition.IsFulfilledMaxBasketPricePurchase(basket, MaxBasketPrice);
+            }
+            return false;
         }
 
         public override string Describe(int depth)
@@ -156,8 +241,17 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawPurchasePolicy();
             string preStr = dic[PreCondition.PreConditionNumber];
             string pad = "";
+            string amount = "";
+            if (MinBasketPrice != int.MaxValue)
+                amount = "min basket price - " + MinBasketPrice + ",";
+            if (MaxBasketPrice != int.MinValue)
+                amount = "max basket price - " + MaxBasketPrice + ",";
+            if (MinItems != int.MaxValue)
+                amount = "min items - " + MinItems + ",";
+            if (MaxItems != int.MinValue)
+                amount = "max items - " + MaxItems + ",";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Basket Purchase Policy: " + preStr + "]";
+            return pad + "[Basket Purchase Policy: " + amount + " " + preStr + "]";
         }
     }
 
@@ -169,9 +263,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             StoreId = storeId;
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
         {
-            return PreCondition.IsFulfilled(basket, -1, null, StoreId, validator);
+           if(PreCondition.preCondNumber == CommonStr.PurchasePreCondition.StoreMustBeActive)
+            {
+                return PreCondition.IsFulfilledStoreMustBeActivePurchase(StoreId);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override string Describe(int depth)
@@ -190,9 +291,16 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
         }
 
-        public override bool IsEligiblePurchase(PurchaseBasket basket, PolicyValidator validator)
-        {
-            return PreCondition.IsFulfilled(basket, -1, basket.User, -1, validator);
+        public override bool IsEligiblePurchase(PurchaseBasket basket)
+        { 
+            if(PreCondition.preCondNumber == CommonStr.PurchasePreCondition.OwnerCantBuy)
+            {
+                return PreCondition.IsFulfilledOwnerCantBuyPurchase(basket.User, basket.Store.Id);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public override string Describe(int depth)

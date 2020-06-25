@@ -11,11 +11,14 @@ namespace Server.DAL
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Server.DAL.CommunicationDb;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.IO;
+    using System;
+    using Newtonsoft.Json.Linq;
+    using Server.DAL.StatisticsDb;
 
     public class EcommerceContext : DbContext
     {
-        public EcommerceContext()
-            : base("name=EF_Azure_Ecommerce_ConnStr")
+        public EcommerceContext() : base("EF_Azure_Ecommerce_ConnStr")
         {
         }
 
@@ -51,7 +54,7 @@ namespace Server.DAL
 
         public virtual DbSet<DbPurchasePolicy> PurchasePolicies { get; set; }
 
-        public virtual DbSet<DbPreCondition> PreConditions { get; set; }
+        //public virtual DbSet<DbPreCondition> PreConditions { get; set; }
 
 
         public virtual DbSet<StoreOwner> StoreOwners { get; set; }
@@ -68,6 +71,10 @@ namespace Server.DAL
         public virtual DbSet<DbPurchase> Purchases { get; set; }
 
 
+        //statstics
+        public virtual DbSet<DbStatistics> Statistics { get; set; }
+
+
 
 
 
@@ -75,13 +82,13 @@ namespace Server.DAL
         {
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.MergeType).IsOptional();
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.ParentId).IsOptional();
-            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PreConditionId).IsOptional();
+            modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PreConditionNumber).IsOptional();
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.PolicyProductId).IsOptional();
             modelBuilder.Entity<DbPurchasePolicy>().Property(p => p.BuyerUserName).IsOptional();
             
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.MergeType).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.ParentId).IsOptional();
-            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.PreConditionId).IsOptional();
+            modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.PreConditionNumber).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.DiscountProductId).IsOptional();
             modelBuilder.Entity<DbDiscountPolicy>().Property(p => p.Discount).IsOptional();
 
@@ -273,7 +280,6 @@ namespace Server.DAL
          .WithMany()
          .WillCascadeOnDelete(false);
 
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

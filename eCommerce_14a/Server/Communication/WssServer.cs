@@ -18,6 +18,9 @@ using System.Reflection;
 using log4net;
 using log4net.Config;
 using eCommerce_14a.StoreComponent.DomainLayer;
+using eCommerce_14a.UserComponent.DomainLayer;
+using eCommerce_14a.Utils;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.Communication
 {
@@ -26,7 +29,6 @@ namespace eCommerce_14a.Communication
         public CommunicationHandler handler;
         private static WebSocketServer wsServer;
         private int port;
-        
 
         public WssServer()
         {
@@ -46,7 +48,7 @@ namespace eCommerce_14a.Communication
             port = 443;
             var config1 = new ServerConfig();
             config1.Port = port;
-            config1.MaxConnectionNumber = 1000;
+            config1.MaxConnectionNumber = 100000;
             config1.Security = "Tls";
             config1.LogAllSocketException = false;
             config1.LogBasicSessionActivity = false;
@@ -103,6 +105,17 @@ namespace eCommerce_14a.Communication
             response = handler.HandleNotification(msg);
             session.Send(response, 0, response.Length);
         }
+
+        public void notifyStatistics(string admin, Statistic_View statistics)
+        {
+            byte[] response;
+            WebSocketSession session = handler.GetSession(admin);
+            if (session == null)
+                return;
+            response = handler.HandleStatisticsNotification(statistics);
+            session.Send(response, 0, response.Length);
+        }
+
 
         private void HandleMessage(WebSocketSession session, byte[] msg)
         {
@@ -330,6 +343,17 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.GET_STATISTICS:
+                    response = handler.HandleStatistics(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+                case Opcode.PURCHASE_NO_CONNECTION:
+                    response = handler.HandleNoConnectionPurchase(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+
                 default:
                     break;
             }
@@ -349,22 +373,10 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-
-
-            //SearchProductResponse res = new SearchProductResponse(new Dictionary<int, List<ProductData>>());
-            //res.SearchResults.Add(1, new List<ProductData>());
-            //string json = JsonConvert.SerializeObject(res);
-            //Console.WriteLine(json);
-            //SearchProductResponse jsonRes = JsonConvert.DeserializeObject<SearchProductResponse>(json);
-            //Console.WriteLine(jsonRes.SearchResults.Keys.ToList().Contains(1));
-            //RequestMaker req = new RequestMaker();
-            //req.GenerateBinReq();
-            //CommunicationHandler hand = new CommunicationHandler();
             StateInitiator init = new StateInitiator();
             WssServer server = new WssServer();
             init.InitSystemFromFile();
             server.InitServer();
-            
         }
     }
 }

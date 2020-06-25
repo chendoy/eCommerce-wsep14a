@@ -25,7 +25,7 @@ namespace TestingSystem.UnitTests.InventroyTest
         [TestInitialize]
         public void TestInitialize()
         {
-            validProductList = getValidInventroyProdList(1);
+            validProductList = getValidInventroyProdList();
             validInventory = getInventory(validProductList);
             validProdParamsNewId = new Dictionary<string, object>();
             existingProductIdParams = new Dictionary<string, object>();
@@ -95,16 +95,7 @@ namespace TestingSystem.UnitTests.InventroyTest
             Assert.AreEqual(CommonStr.InventoryErrorMessage.NegativeProductAmountErrMsg, isAppended.Item2);
         }
 
-        [TestMethod]
-        /// <test cref ="eCommerce_14a.Inventory.appendProduct(Dictionary{string, object}, int)
-        public void TestAppendProduct_AlreadyExistingProductId()
-        {
-            Tuple<bool, string> isAppended = AppendProductDriver(validInventory, existingProductIdParams, 100);
-            if (isAppended.Item1)
-                Assert.Fail();
-            Assert.AreEqual(CommonStr.InventoryErrorMessage.ProductAlreadyExistErrMsg, isAppended.Item2);
-        }
-
+   
         [TestMethod]
         /// <test cref ="eCommerce_14a.Inventory.appendProduct(Dictionary{string, object}, int)
         public void TestAppendProduct_negativePrice()
@@ -115,13 +106,7 @@ namespace TestingSystem.UnitTests.InventroyTest
             Assert.AreEqual(CommonStr.InventoryErrorMessage.ProductPriceErrMsg, isAppended.Item2);
         }
 
-        [TestMethod]
-        /// <test cref ="eCommerce_14a.Inventory.appendProduct(Dictionary{string, object}, int)
-        public void TestAppendProduct_Valid()
-        {
-            Tuple<bool, string> isAppended = AppendProductDriver(validInventory, validProdParamsNewId, 100);
-            Assert.IsTrue(isAppended.Item1);
-        }
+    
 
         private Tuple<bool, string> AppendProductDriver(Inventory inv, Dictionary<string, object> productParams, int amount)
         {
@@ -225,7 +210,7 @@ namespace TestingSystem.UnitTests.InventroyTest
 
         private Tuple<bool, string> AddProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.IncreaseProductAmount(productId, amount, 1);
+            return inv.IncreaseProductAmount(productId, amount, 1,false);
         }
 
 
@@ -283,7 +268,7 @@ namespace TestingSystem.UnitTests.InventroyTest
         /// <test cref ="eCommerce_14a.Inventory.DecraseProductAmount(Product, int)>
         private Tuple<bool, string> decraseProductAmountDriver(Inventory inv, int productId, int amount)
         {
-            return inv.DecraseProductAmount(productId, amount, 1);
+            return inv.DecraseProductAmount(productId, amount, 1,false);
         }
 
 
@@ -324,8 +309,8 @@ namespace TestingSystem.UnitTests.InventroyTest
         public void TestValidInventory_valid()
         {
             Dictionary<int, Tuple<Product, int>> inv = new Dictionary<int, Tuple<Product, int>>();
-            inv.Add(1, new Tuple<Product, int>(new Product(sid:1, details:"",price: 100), 100));
-            inv.Add(2, new Tuple<Product, int>(new Product(sid: 1, details: "",price:100), 100));
+            inv.Add(1, new Tuple<Product, int>(new Product(pid:1,sid:100, details:"",price: 100), 100));
+            inv.Add(2, new Tuple<Product, int>(new Product(pid:2,sid: 100, details: "",price:100), 100));
             Tuple<bool, string> isValidAns = ValidInventoryDriver(inv);
             Assert.IsTrue(isValidAns.Item1);
         }
@@ -448,13 +433,13 @@ namespace TestingSystem.UnitTests.InventroyTest
             inventory.loadInventory(inv_dict);
             return inventory;
         }
-        public static List<Tuple<Product, int>> getValidInventroyProdList(int store_id)
+        public static List<Tuple<Product, int>> getValidInventroyProdList()
         {
             List<Tuple<Product, int>> lstProds = new List<Tuple<Product, int>>();
-            lstProds.Add(new Tuple<Product, int>(new Product(1, price: 10000, name:"Dell Xps 9560", rank:4, category: CommonStr.ProductCategoty.Computers), 100));
-            lstProds.Add(new Tuple<Product, int>(new Product(2, name:"Ninja Blender V3", price:450, rank:2, category: CommonStr.ProductCategoty.Kitchen), 200));
-            lstProds.Add(new Tuple<Product, int>(new Product(3, "MegaMix", price:1000, rank:5, category: CommonStr.ProductCategoty.Kitchen), 300));
-            lstProds.Add(new Tuple<Product, int>(new Product(4, "Mask Kn95", price:200, rank:3, category: CommonStr.ProductCategoty.Health), 0));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:1, sid:100, price: 10000, name:"Dell Xps 9560", rank:4, category: CommonStr.ProductCategoty.Computers), 100));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:2, sid:100, name:"Ninja Blender V3", price:450, rank:2, category: CommonStr.ProductCategoty.Kitchen), 200));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:3, sid:100, "MegaMix", price:1000, rank:5, category: CommonStr.ProductCategoty.Kitchen), 300));
+            lstProds.Add(new Tuple<Product, int>(new Product(pid:4, sid:100, "Mask Kn95", price:200, rank:3, category: CommonStr.ProductCategoty.Health), 0));
             return lstProds;
         }
         

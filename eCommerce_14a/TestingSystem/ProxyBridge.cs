@@ -107,7 +107,7 @@ namespace TestingSystem
             return;
         }
 
-        public override Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address)
+        public override Tuple<bool, string> PerformPurchase(string user, string paymentDetails, string address, bool Failed = false)
         {
             return new Tuple<bool, String>(true, "");
         }

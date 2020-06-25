@@ -186,16 +186,28 @@
                     <sapn>For example: r:2:20</sapn>
                     <hr>
                     <h4>Conditional Basket Discount</h4>
-                    <span>Conditional basket discounts are denoted by the term</span>
-                    <span>cb:[pre condition]:[discount%]</span>
+                    <span>There are 3 types of conditional basket discount</span>
+                    <hr />
+                    <h5>Type I: Min Basket Price</h5>
+                    <span>cb_mbp:[pre condition]:[discount%]:[min basket price]</span>
                     <br />
-                    <sapn>For example: cb:3:20</sapn>
+                    <sapn>For example: cb_mbp:3:20:120</sapn>
+                    <hr>
+                    <h5>Type II: Min Product Price</h5>
+                    <span>cb_mpp:[pre condition]:[discount%]:[min product price]</span>
+                    <br />
+                    <sapn>For example: cb_mpp:3:20:50</sapn>
+                    <hr>
+                    <h5>Type III: Min Units at basket</h5>
+                    <span>cb_mub:[pre condition]:[discount%]:[minUnitsAtBasket]</span>
+                    <br />
+                    <sapn>For example: cb_mub:3:20:10</sapn>
                     <hr>
                     <h4>Conditional Product Discount</h4>
                     <span>Conditional product discounts are denoted by the term</span>
-                    <span>cp:[Produt ID]:[pre condition]:[discount%]</span>
+                    <span>cp:[minUnits]:[ProdutId]:[preCondition]:[discount%]</span>
                     <br />
-                    <sapn>For example: cp:3:2:20</sapn>
+                    <sapn>For example: cp:5:3:2:20</sapn>
                     <hr>
                     <h4>Compound Discount</h4>
                     <span>Compound discount are denoted by the term</span>
@@ -205,7 +217,7 @@
                     <span>Note the prefix operator!</span>
                     <span>child discoutns can be compund themselves, considier the following compound discount:</span>
                     <br />
-                    <span>(AND (XOR (OR r:20:1 cb:1:10) r:30:2) (OR cp:1:2:30 cb:5:15))</span>
+                    <span>(AND (XOR (OR r:20:13 cb_mub:1:13:5) r:30:13) (OR cp:10:14:2:30 cb_mpp:4:13:50))</span>
 
                 </RadzenCard>
             </div>
@@ -266,15 +278,27 @@
                 <RadzenCard Style="margin-bottom: 20px; height:200px; width:400px; overflow:scroll;">
                     <h4>Product Purchase Policy</h4>
                     <span>Product purchase policies are denoted by the term</span>
-                    <span>p:[precondition]:[productId]</span>
+                    <span>p_min:[precondition]:[productId]:[minAmount]</span>
+                    <span>when relating to minimum product price, and</span>
+                    <span>p_max:[precondition]:[productId]:[maxAmount]</span>
+                    <span>when relating to maximum product price.</span>
                     <br />
-                    <sapn>For example: p:3:546</sapn>
+                    <sapn>For example: p_min:3:2:100</sapn>
+                    <sapn>For example: p_max:2:3:90</sapn>
                     <hr>
                     <h4>Basket Purchase Policy</h4>
                     <span>Basket purchase policies are denoted by the term</span>
-                    <span>b:[pre condition]</span>
+                    <span>b_{type?}:[pre condition]:[optional parameter]</span>
+                    <span>where the optional parameter can be one of four:</span>
+                    <span>{maxBasketPrice, minBasketPrice, minItems, maxItems}</span>
+                    <span>and type can be one of four:</span>
+                    <span>{maxBasket, minBasket, minItems, maxItems}</span>
                     <br />
-                    <sapn>For example: b:6</sapn>
+                    <sapn>For example:</sapn>
+                    <span>b_minItems:3:50</span>
+                    <span>b_maxItems:4:40</span>
+                    <span>b_maxBasket:2:60</span>
+                    <span>b_minBasket:1:70</span>
                     <hr>
                     <h4>System Purchase Policy</h4>
                     <span>System purchase policies are denoted by the term</span>

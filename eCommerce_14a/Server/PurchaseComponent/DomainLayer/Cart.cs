@@ -41,7 +41,7 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
         {
             return this.baskets;
         }
-
+        
         /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-store-products-in-the-shopping-basket-26 </req>
         public Tuple<bool, string> AddProduct(Store store, int productId, int wantedAmount, bool exist)
         {
@@ -60,52 +60,91 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             {
                 if (exist)
                 {
-                    return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ProductNotExistInCartErrMsg);
+                    return new Tuple<bool, string>(false, CommonStr.PurchaseMangmentErrorMessage.ProducAlreadyExistInCartErrMsg);
                 }
 
                 basket = new PurchaseBasket(this.user, store);
-                baskets.Add(store, basket);
 
                 //Inserting new basket To db
-                if(!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
+                if(UserManager.Instance.GetAtiveUser(this.user)!=null && !UserManager.Instance.GetAtiveUser(this.user).IsGuest)
                 {
                     if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
                     {
-                        DbManager.Instance.InsertPurchaseBasket(StoreAdapter.Instance.ToDbPurchseBasket(basket, this.Id));
+                        try
+                        {
+                            DbManager.Instance.InsertPurchaseBasket(basket, this.Id, true);
+                        }
+                        catch(Exception ex)
+                        {
+                            Logger.logError("Cart_AddProduct db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                            return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+                        }
                     }
 
                 }
+
+                baskets.Add(store, basket);
             }
 
             Tuple<bool, string> res = basket.AddProduct(productId, wantedAmount, exist);
 
             if (basket.IsEmpty())
             {
-                baskets.Remove(store);
-                //Update DB delete purchase basket
+
                 if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
                 {
-                    DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id));
+                    try
+                    {
+                        DbManager.Instance.DeletePurchaseBasket(DbManager.Instance.GetDbPurchaseBasket(basket.Id), true);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.logError("Cart_AddProduct db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                        return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+                    }
                 }
+
+                baskets.Remove(store);
+            }
+            
+            Tuple<bool, string> updateCartPriceRes =  UpdateCartPrice(true);
+            if(!updateCartPriceRes.Item1)
+            {
+                return updateCartPriceRes;
             }
 
-            UpdateCartPrice();
             return res;
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-discount-policy-281</req>
-        internal void UpdateCartPrice()
+        public Tuple<bool, string> UpdateCartPrice(bool saveChanges)
         {
+            double oldPrice = Price;
             Price = 0;
+            
             foreach (var basket in baskets.Values)
             {
-                Price += basket.UpdateCartPrice();
+                Price += basket.UpdateCartPrice(saveChanges);
             }
+
+
             //Update CART PRICE AT DB
-            if (!UserManager.Instance.GetAtiveUser(this.user).IsGuest)
+            if (UserManager.Instance.GetAtiveUser(user)!=null && !UserManager.Instance.GetAtiveUser(this.user).IsGuest)
             {
-                DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this, IsPurchased);
+                try
+                {
+                    DbManager.Instance.UpdateDbCart(DbManager.Instance.GetDbCart(Id), this, IsPurchased, saveChanges);
+                }
+                catch (Exception ex)
+                {
+                    Price = oldPrice;
+                    Logger.logError("Cart_UpdateCartPrice db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                    return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+                }
             }
+            
+            return new Tuple<bool, string>(true, "");
+
         }
 
         /// <req>https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-purchase-product-28</req>
@@ -124,12 +163,17 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return new Tuple<bool, string>(true, "");
         }
 
-        internal void SetPurchaseTime(DateTime purchaseTime)
+        public Tuple<bool, string> SetPurchaseTime(DateTime purchaseTime, bool saveCahnges)
         {
             foreach (var basket in baskets.Values)
-            {
-                basket.SetPurchaseTime(purchaseTime);
+            { 
+                Tuple<bool, string> res = basket.SetPurchaseTime(purchaseTime, saveCahnges);
+                if(!res.Item1)
+                {
+                    return res;
+                }
             }
+            return new Tuple<bool, string>(true, "");
         }
 
         public bool IsEmpty()
@@ -137,19 +181,26 @@ namespace eCommerce_14a.PurchaseComponent.DomainLayer
             return baskets.Count == 0;
         }
 
-        internal void RemoveFromStoresStock()
+        public Tuple<bool, string> RemoveFromStoresStock(bool saveChanges)
         {
             foreach (var basket in baskets.Values)
             {
-                basket.RemoveFromStoreStock();
+                Tuple<bool, string> removedRes = basket.RemoveFromStoreStock(saveChanges);
+                if(!removedRes.Item1)
+                {
+                    return removedRes;
+                }
+
             }
+            return new Tuple<bool, string>(true, "");
+
         }
 
-        internal void RestoreItemsToStores()
+        public void RestoreItemsToStores(bool saveCahnges)
         {
             foreach (var basket in baskets.Values)
             {
-                basket.RestoreItemsToStore();
+                basket.RestoreItemsToStore(saveCahnges);
             }
         }
 

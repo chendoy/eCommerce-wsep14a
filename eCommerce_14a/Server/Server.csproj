@@ -83,6 +83,7 @@
     <Compile Include="Communication\DataObject\Requests\GetManagersPermissionRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetPurchasePolicyRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStaffOfStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\GetStatisticsRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreByIdRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoreHistoryRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\GetStoresOwnedByRequest.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Communication\DataObject\Message.cs" />
     <Compile Include="Communication\DataObject\Requests\MakeAdminRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\OpenStoreRequest.cs" />
+    <Compile Include="Communication\DataObject\Requests\NoConnectionPurchaseRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\ProductInfoRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\PurchaseRequest.cs" />
     <Compile Include="Communication\DataObject\Requests\RegisterRequest.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Communication\DataObject\Responses\GetStoreByIdResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetStoreHistoryResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\GetUserPermissionsResponse.cs" />
+    <Compile Include="Communication\DataObject\Responses\NotifyStatisticsData.cs" />
     <Compile Include="Communication\DataObject\Responses\SuccessFailResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointManagerResponse.cs" />
     <Compile Include="Communication\DataObject\Responses\AppointOwnerResponse.cs" />
@@ -158,12 +161,12 @@
     <Compile Include="DAL\PurchaseDb\DbPurchase.cs" />
     <Compile Include="DAL\PurchaseDb\DbPurchaseBasket.cs" />
     <Compile Include="DAL\PurchaseDb\ProductAtBasket.cs" />
+    <Compile Include="DAL\StatisticsDb\DbStatistics.cs" />
     <Compile Include="DAL\StoreDb\DbDiscountPolicy.cs" />
     <Compile Include="DAL\StoreDb\DbInventoryItem.cs" />
     <Compile Include="DAL\StoreDb\DbProduct.cs" />
     <Compile Include="DAL\StoreDb\DbPurchasePolicy.cs" />
     <Compile Include="DAL\StoreDb\DbStore.cs" />
-    <Compile Include="DAL\StoreDb\DbPreCondition.cs" />
     <Compile Include="DAL\StoreDb\StoreAdapter.cs" />
     <Compile Include="DAL\StoreDb\StoreManager.cs" />
     <Compile Include="DAL\StoreDb\StoreOwner.cs" />
@@ -176,16 +179,21 @@
     <Compile Include="DAL\UserDb\StoreOwnershipAppoint.cs" />
     <Compile Include="DAL\UserDb\StoreOwnertshipApprovalStatus.cs" />
     <Compile Include="DAL\UserDb\UserStorePermissions.cs" />
-    <Compile Include="Migrations\202006041213175_InitialCreate.cs" />
-    <Compile Include="Migrations\202006041213175_InitialCreate.designer.cs">
-      <DependentUpon>202006041213175_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202006240914372_InitialCreate.cs" />
+    <Compile Include="Migrations\202006240914372_InitialCreate.designer.cs">
+      <DependentUpon>202006240914372_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ServerStart.cs" />
     <Compile Include="StoreComponent\DomainLayer\PreCondition.cs" />
-    <Compile Include="StoreComponent\DomainLayer\PolicyValidator.cs" />
+    <Compile Include="UserComponent\DomainLayer\Appoitment.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
+    <Compile Include="UserComponent\DomainLayer\Candidation.cs" />
+    <Compile Include="UserComponent\DomainLayer\MockSystems\DeliverySystemMock.cs" />
+    <Compile Include="UserComponent\DomainLayer\MockSystems\PaymentSystemMock.cs" />
     <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
+    <Compile Include="UserComponent\DomainLayer\Statistics.cs" />
+    <Compile Include="UserComponent\DomainLayer\Statistic_View.cs" />
     <Compile Include="UserComponent\ServiceLayer\Appoitment_Service.cs" />
     <Compile Include="Utils\CommonStr.cs" />
     <Compile Include="UserComponent\DomainLayer\DeliveryHandler.cs" />
@@ -298,11 +306,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Utils\DefaultInitFile.txt" />
     <Content Include="Utils\State.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202006041213175_InitialCreate.resx">
-      <DependentUpon>202006041213175_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006240914372_InitialCreate.resx">
+      <DependentUpon>202006240914372_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -8,6 +8,7 @@ namespace eCommerce_14a.Utils
         public static class GeneralErrMessage
         {
             public static string UnKnownErr = "UnKnown Error Occured";
+            public static string DbErrorMessage = "There was error while editing the DB";
         }
         
         public static class StoreRoles
@@ -62,13 +63,12 @@ namespace eCommerce_14a.Utils
         public static class DiscountPreConditions
         {
             public static int pre_min = 0;
-            public static int pre_max = 5;
+            public static int pre_max = 4;
             public static int NoDiscount = 0;
-            public static int ProductPriceAbove100 = 1;
-            public static int ProductPriceAbove200 = 2;
-            public static int Above1Unit = 3;
-            public static int Above2Units = 4;
-            public static int basketPriceAbove1000 = 5;
+            public static int BasketProductPriceAboveEqX = 1; // parameters: product_price, pre_condition
+            public static int NumUnitsOfProductAboveEqX = 2; // parameters: product_id, MinUnits, pre_condition 
+            public static int BasketPriceAboveX = 3; // parameters: Price, pre_condition
+            public static int NumUnitsInBasketAboveEqX = 4; // parameters: Min_NumUnits, pre_condition
         }
 
         public static class PoliciesErrors
@@ -82,13 +82,16 @@ namespace eCommerce_14a.Utils
         public static class PurchasePreCondition
         {
             public static int pre_min = 0;
-            public static int pre_max = 5;
+            public static int pre_max = 8;
             public static int allwaysTrue = 0;
-            public static int singleOfProductType = 1;
-            public static int Max10ProductPerBasket = 2;
-            public static int StoreMustBeActive = 3;
-            public static int OwnerCantBuy = 4;
-            public static int AtLeat11ProductPerBasket = 5;
+            public static int MaxUnitsOfProductType = 1; // parameters: product_id, max_units, pre_condition
+            public static int MinUnitsOfProductType = 2; // parameters: porduct_id, min_units, pre_condition
+            public static int MaxItemsAtBasket = 3; // parameters: max_itesm_number, pre_condition
+            public static int MinItemsAtBasket = 4;// parameters: min_items_number, pre_condition
+            public static int StoreMustBeActive = 5; // parameters: store_id, precondition 
+            public static int OwnerCantBuy = 6; //parameters: precondition, pre_condition
+            public static int MinBasketPrice = 7; // parameter: min_price, pre_condition
+            public static int MaxBasketPrice = 8; // parameters: max_price, pre_condition
 
         }
         public static class StoreParams
@@ -151,6 +154,7 @@ namespace eCommerce_14a.Utils
             public static string NegativeProductAmountErrMsg = "Product amount cann't be negative in the inventory";
             public static string UnmatchedProductAnKeyErrMsg = " Proudct Id dos'nt matches his key";
             public static string InvalidInventory = "Invalid Inventory";
+            public static string DbErrMessage = "there was error while editing the db";
         }
 
         public static class StoreMangmentErrorMessage
@@ -195,7 +199,7 @@ namespace eCommerce_14a.Utils
             public static string BlankOrNullInputErrMsg = "Got null or blank input";
             public static string NegativeProductAmountErrMsg = "Cannot have negative amount of product in cart";
             public static string ZeroProductAmountErrMsg = "Cannot add zero amount of product to cart";
-            public static string ProductNotExistInCartErrMsg = "The product is not already in the shopping cart";
+            public static string ProducAlreadyExistInCartErrMsg = "The product is not already in the shopping cart";
             public static string ProductExistInCartErrMsg = "The product is already in the shopping cart";
             public static string NotValidPaymentErrMsg = "Not a valid paymentDetails";
             public static string NotValidAddressErrMsg = "Not a valid address";

@@ -336,6 +336,7 @@
         }
         else
         {
+            delta = -delta;
             response = await service.DecreaseProductAmount(StoreId, Username, productId, delta);
         }
 

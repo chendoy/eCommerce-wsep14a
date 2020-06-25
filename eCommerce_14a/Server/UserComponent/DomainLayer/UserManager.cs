@@ -64,6 +64,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!users.TryGetValue(username, out user))
                 return new Tuple<bool, string>(false, "user not found in register users!");
             user.IsAdmin = true;
+            try
+            {
+                DbManager.Instance.UpdateUserAdminStatus(user.getUserName(), true, true);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("couldn't save admin status to DB: " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Could not save to DB");
+            }
             return new Tuple<bool, string>(true, "Appoint to admin succeed!");
         }
 
@@ -87,6 +96,21 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 return null;
             return user.GetUserPermissions();
         }
+
+        public Statistic_View GetStatistics(string username, DateTime? startTime, DateTime? endTime)
+        {
+            if (startTime == null && endTime == null)
+                return Statistics.Instance.getViewDataAll(username);
+            if (startTime != null && endTime == null)
+                return Statistics.Instance.getViewDataStart(username, startTime);
+            if (startTime == null && endTime != null)
+                return Statistics.Instance.getViewDataEnd(username, endTime);
+            else
+                return Statistics.Instance.getViewData(username, startTime, endTime);
+
+
+        }
+
         //Checks if user name and password are legit and not exsist
         private Tuple<bool, string> name_and_pass_check(string u, string p)
         {
@@ -132,7 +156,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             //if user name exist return false
-            return Users_And_Hashes.ContainsKey(username);
+            return Users_And_Hashes.ContainsKey(username) || users.ContainsKey(username);
         }
         //Register the system admin
         public Tuple<bool, string> RegisterMaster(string username, string pass)
@@ -147,12 +171,11 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
             DbUser dbadmin = DbManager.Instance.GetUser(username);
-            if(dbadmin == null)
+            if (dbadmin == null)
             {
                 DbManager.Instance.InsertUser(AdapterUser.CreateDBUser(username, false, true, false));
-                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
+                DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1), true);
             }
-
             return new Tuple<bool, string>(true, "");
         }
         //Register regular user to the system 
@@ -172,8 +195,7 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             string sha1 = SB.CalcSha1(pass);
             Users_And_Hashes.Add(username, sha1);
-            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1));
-        
+            DbManager.Instance.InsertPassword(AdapterUser.CreateNewPasswordEntry(username, sha1),true);
             return new Tuple<bool, string>(true, "");
         }
         //Login to Unlogged Register User with valid user name and pass.
@@ -202,7 +224,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     return new Tuple<bool, string>(false, "The user: " + username + " is already logged in\n");
                 tUser.LogIn();
                 //Update LogginStatus
-                DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), true);
+                Statistics.Instance.InserRecord(username, DateTime.Now);
+                DbManager.Instance.UpdateUserLogInStatus(tUser.getUserName(), false);
                 Active_users.Add(tUser.getUserName(), tUser);
                 if (tUser.HasPendingMessages()) 
                 {
@@ -218,8 +241,10 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                     }
                     tUser.RemoveAllPendingMessages();
                 }
+                DbManager.Instance.SaveChanges();
                 return new Tuple<bool, string>(true, username + " Logged int\n");
             }
+            DbManager.Instance.SaveChanges();
             return new Tuple<bool, string>(false, "Wrong Credentials\n");
 
         }
@@ -240,25 +265,30 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             user.Logout();
             Active_users.Remove(user.getUserName());
             //Change LogInStatus at DB
-            DbManager.Instance.UpdateUserLogInStatus(user.getUserName(), false);
-            addGuest();
+            DbManager.Instance.UpdateUserLogInStatus(user.getUserName(), true);
+            addGuest(false);
             return new Tuple<bool, string>(true, sname + " Logged out succesuffly\n");
         }
         //Add Guest user to the system and to the relevant lists.
-        private string addGuest()
+        private string addGuest(bool islogout=true)
         {
+            lock (this)
+            {
+                    //Add Guest DO not Require DB Changes
+                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+                string tName = "Guest" + Available_ID;
+                User nUser = new User(Available_ID, tName);
+                Console.WriteLine(tName);
+                nUser.LogIn();
+                Active_users.Add(tName, nUser);
+                if (islogout)
+                {
+                    Statistics.Instance.InserRecord(tName, DateTime.Now);
+                }
+                Available_ID++;
 
-            if(0 == Interlocked.Exchange(ref usingResource, 1))
-            //Add Guest DO not Require DB Changes
-            Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
-            string tName = "Guest" + Available_ID;
-            User nUser = new User(Available_ID, tName);
-            Console.WriteLine(tName);
-            nUser.LogIn();
-            Active_users.Add(tName, nUser);
-            Available_ID++;
-            Interlocked.Exchange(ref usingResource, 0);
-            return tName;
+                return tName;
+            }
         }
         //Tries to get User from users list
         public User GetUser(string username)
@@ -356,8 +386,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
             return permissionsSet;
         }
-
+        public List<string> GetAllAdmins()
+        {
+            List<string> admins = new List<string>();
+            foreach(User usr in users.Values)
+            {
+                if (usr.IsAdmin && usr.LoggedStatus())
+                    admins.Add(usr.getUserName());
+            }
+            return admins;
+        }
     }
+    
 
 
 }

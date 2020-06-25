@@ -12,7 +12,7 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ChangeProductAmountStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID = 1;
         int storeID;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];

@@ -11,7 +11,7 @@ namespace TestingSystem.AcceptanceTests
     [TestClass]
     public class ManagerAddProductStoryTest : SystemTrackTest
     {
-        int productID = 3;
+        int productID = 1;
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
         string userManager = UserGenerator.GetValidUsernames()[1];
@@ -32,7 +32,7 @@ namespace TestingSystem.AcceptanceTests
             Login(username, password);
             storeID = OpenStore(username).Item1;
             AppointStoreManage(username, userManager, storeID);
-            ChangePermissions(username,userManager,storeID,new int[] { 1,1,1});
+            ChangePermissions(username,userManager,storeID,new int[] { 1,1,1, 0, 0});
         }
 
         [TestCleanup]
@@ -42,24 +42,7 @@ namespace TestingSystem.AcceptanceTests
             ClearAllShops();
         }
 
-        [TestMethod]
-        //happy
-        public void ValidProductAddToStoreTest()
-        {
-            Assert.IsTrue(AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
-        }
-
-        [TestMethod]
-        //sad
-        public void AddTwiceProductToStoreTest()
-        {
-            Assert.IsTrue(AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
-            Assert.IsFalse(AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item1,
-                AddProductToStore(storeID, userManager, productID, productDetails, productPrice, productName, productCategory, amount).Item2);
-        }
-
+      
         [TestMethod]
         //bad
         public void AddProductWithNegAmountToStoreTest()

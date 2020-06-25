@@ -7,12 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.Utils;
 using System.Globalization;
+using System.Numerics;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
     public interface DiscountPolicy
     {
-        double CalcDiscount(PurchaseBasket basket, PolicyValidator validator);
+        double CalcDiscount(PurchaseBasket basket);
         string Describe(int depth);
     }
 
@@ -29,13 +30,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.mergeType = mergeType;
         }
 
-        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
+        public double CalcDiscount(PurchaseBasket basket)
         {
             if (mergeType == CommonStr.DiscountMergeTypes.OR)
             {
                 double sum_discounts = 0;
                 foreach (DiscountPolicy child in children)
-                    sum_discounts += child.CalcDiscount(basket, validator);
+                    sum_discounts += child.CalcDiscount(basket);
                 return sum_discounts;
             } 
             else if (mergeType == CommonStr.DiscountMergeTypes.XOR)
@@ -43,7 +44,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 double maxDiscount = 0;
                 foreach(DiscountPolicy child in children)
                 {
-                    double discount = child.CalcDiscount(basket, validator);
+                    double discount = child.CalcDiscount(basket);
                     if (discount > maxDiscount)
                         maxDiscount = discount;
                 }
@@ -114,7 +115,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
        
         virtual
-        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
+        public double CalcDiscount(PurchaseBasket basket)
         {
             return 0;
         }
@@ -126,21 +127,31 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
     public class ConditionalProductDiscount : ConditionalDiscount
     {
         public int discountProdutId { get; set; }
-        public ConditionalProductDiscount(int discountProdutId, PreCondition preCondition, double discount) : base(preCondition, discount)
+        public int MinUnits { get; set; }
+
+        public ConditionalProductDiscount(PreCondition preCondition, double discount, int minUnits, int productId) : base(preCondition, discount)
         {
-            this.discountProdutId = discountProdutId;
+            this.discountProdutId = productId;
+            MinUnits = minUnits;
         }
 
-        public override double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
+        public override double CalcDiscount(PurchaseBasket basket)
         {
-            double reduction = 0;
-            if (PreCondition.IsFulfilled(basket, discountProdutId, validator))
+            if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX)
             {
-                int numProducts = basket.Products[discountProdutId];
-                double price = basket.Store.GetProductDetails(discountProdutId).Item1.Price;
-                reduction = numProducts * ((Discount / 100) * price);
+                double reduction = 0;
+                if(PreCondition.IsFufillledMinProductUnitDiscount(basket, discountProdutId, MinUnits))
+                {
+                    int amount = basket.Products[discountProdutId];
+                    reduction = (Discount / 100) * basket.Store.GetProductDetails(discountProdutId).Item1.Price * amount;
+                }
+                return reduction;
             }
-            return reduction;
+            else
+            {
+                return 0;
+            }
+            
         }
         public override string Describe(int depth)
         {
@@ -148,31 +159,106 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             //string productStr = inv.getProductDetails(discountProdutId).Item1.Name;
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
+            string cond = "if more than " + MinUnits + " units, ";
             string pad = "";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Conditional Product Discount: buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
+            return pad + "[Conditional Product Discount: " + cond + " buy product #" + discountProdutId + " ," + preStr + " and get "+ Discount + "% off]";
         }
     }
 
     public class ConditionalBasketDiscount : ConditionalDiscount
     {
-        public ConditionalBasketDiscount(PreCondition preCondition, double discount) : base(preCondition, discount)
+        public double MinBasketPrice { set; get; }
+        public double MinProductPrice { set; get; }
+        public int MinUnitsAtBasket { set; get; }
+
+        public ConditionalBasketDiscount(double minProductPrice, double discount, PreCondition preCondition) : base(preCondition, discount)
         {
+            MinProductPrice = minProductPrice;
+            MinUnitsAtBasket = int.MaxValue;
         }
 
-        public override double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
+        public ConditionalBasketDiscount(PreCondition preCondition, double discount, double minBasketPrice) : base(preCondition, discount)
         {
-            if (PreCondition.IsFulfilled(basket, -1, validator))
-                return (Discount / 100) * basket.GetBasketOrigPrice();
-            return 0;
+            MinBasketPrice = minBasketPrice;
+            MinUnitsAtBasket= int.MaxValue;
+        }
+
+        public ConditionalBasketDiscount(PreCondition preCondition, double discount, int minUnitsAtBasket): base(preCondition, discount)
+        {
+            MinUnitsAtBasket = minUnitsAtBasket;
+            MinBasketPrice = int.MaxValue;
+        }
+        public ConditionalBasketDiscount(double discount, PreCondition preCondition) : base(preCondition, discount)
+        {
+            MinUnitsAtBasket = int.MaxValue;
+            MinBasketPrice = int.MaxValue;
+        }
+
+        public override double CalcDiscount(PurchaseBasket basket)
+        {
+
+            if (PreCondition.preCondNumber == CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX)
+            {
+                double reduction = 0;
+                foreach (int pid in basket.Products.Keys)
+                {
+                    if (PreCondition.IsFulfilledProductPriceAboveEqXDiscount(basket, pid, MinProductPrice))
+                    {
+                        int amount = basket.products[pid];
+                        reduction += (Discount / 100) * basket.Store.GetProductDetails(pid).Item1.Price * amount;
+                    }
+                }
+                return reduction;
+            }
+            else if(PreCondition.PreConditionNumber == CommonStr.DiscountPreConditions.NoDiscount)
+            {
+                return 0;
+            }
+            else if (PreCondition.PreConditionNumber == CommonStr.DiscountPreConditions.BasketPriceAboveX)
+            {
+                if (PreCondition.IsFulfilledMinBasketPriceDiscount(basket, MinBasketPrice))
+                {
+                    return (Discount / 100) * basket.GetBasketOrigPrice();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else if(PreCondition.preCondNumber == CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX)
+            {
+                if(PreCondition.IsFulfilledMinUnitsAtBasketDiscount(basket, MinUnitsAtBasket))
+                {
+                    return (Discount / 100) * basket.GetBasketOrigPrice();
+
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        
         }
         public override string Describe(int depth)
         {
             Dictionary<int, string> dic = StoreManagment.Instance.GetAvilableRawDiscount();
             string preStr = dic[PreCondition.PreConditionNumber];
             string pad = "";
+            string cond = "";
+            // decide which type of ConditionalBasketDiscount we're describing
+            if (MinBasketPrice != int.MaxValue)
+                cond = "basket price above " + MinBasketPrice + ",";
+            if (MinProductPrice != 0)
+                cond = "min product price is above " + MinProductPrice + ",";
+            if (MinUnitsAtBasket != int.MaxValue)
+                cond = "basket has at least " + MinUnitsAtBasket + " products,";
             for (int i = 0; i < depth; i++) { pad += "    "; }
-            return pad + "[Conditional Basket Discount:" + preStr + " and get " + Discount + "% off]";
+            return pad + "[Conditional Basket Discount:" + "if " + cond + " " + preStr + " and get " + Discount + "% off]";
         }
 
     }
@@ -189,7 +275,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             this.discount = discount;
         }
 
-        public double CalcDiscount(PurchaseBasket basket, PolicyValidator validator)
+        public double CalcDiscount(PurchaseBasket basket)
         {
             double reduction = 0;
             if (basket.Products.ContainsKey(discountProdutId))
@@ -207,4 +293,8 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return pad + "[Reveald Discount: buy product #" + discountProdutId + " and get " + discount + "% off]";
         }
     }
+
+   
+
+
 }

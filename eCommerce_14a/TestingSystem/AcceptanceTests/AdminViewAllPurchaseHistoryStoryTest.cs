@@ -14,8 +14,8 @@ namespace TestingSystem.AcceptanceTests
     {
         string username = UserGenerator.GetValidUsernames()[0];
         string password = UserGenerator.GetPasswords()[0];
-        string paymentDetails = "311546777";
-        string address = "han";
+        string paymentDetails = "3333444455556666&4&11&Wolloloo&333&222222222";
+        string address = "dani&Wollu&Wollurberg&wolocountry&12345678";
         int storeID;
 
         [TestInitialize]
@@ -42,7 +42,7 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void ViewValidHistoryTest()
         {
-            AddProductToBasket(username, storeID, 3, 1);
+            AddProductToBasket(username, storeID, 1, 1);
             PerformPurchase(username, paymentDetails, address);
             Assert.AreNotEqual(0, GetAllUsersHistory("Admin").Item1.Count);
         }

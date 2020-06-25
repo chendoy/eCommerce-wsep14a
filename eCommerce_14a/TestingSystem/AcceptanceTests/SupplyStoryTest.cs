@@ -33,23 +33,24 @@ namespace TestingSystem.AcceptanceTests
         //happy
         public void LegalSupplyDetailsTest()
         {
-            Assert.IsTrue(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
-            
+            Assert.IsTrue(ProvideDeliveryForUser("BeerSheba&Israel&Rotenbereg&eser&ehadEsra", false).Item1);           
         }
 
         [TestMethod]
         //sad
         public void IllegalPaymentDetailsTest()
         {
-            Assert.IsFalse(ProvideDeliveryForUser(userID, false).Item1, ProvideDeliveryForUser(userID, false).Item2);
+            Assert.IsFalse(ProvideDeliveryForUser("BeerSheba&Israel&Rotenbereg", false).Item1);
+
         }
 
         [TestMethod]
         //bad
         public void ConnectionLostWithSupplySystemTest()
         {
-            SetSupplySystemConnection(false);
-            Assert.IsFalse(ProvideDeliveryForUser(userID, true).Item1, ProvideDeliveryForUser(userID, true).Item2);
+
+            Assert.IsFalse(ProvideDeliveryForUser("BeerSheba&Israel&Rotenbereg&eser&ehadEsra", true).Item1);
+
         }
     }
 }

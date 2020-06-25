@@ -9,6 +9,10 @@ using Server.Communication.DataObject.ThinObjects;
 using eCommerce_14a.PurchaseComponent.DomainLayer;
 using Server.DAL;
 using Server.Utils;
+using System.Data.Entity.Infrastructure;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace eCommerce_14a.StoreComponent.DomainLayer
 {
@@ -73,11 +77,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
         {
             Dictionary<int, string> avilableDiscount = new Dictionary<int, string>();
             avilableDiscount.Add(CommonStr.DiscountPreConditions.NoDiscount, "no discount at all");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above1Unit, "buy more Than 1 unit and get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.Above2Units, "buy more than 2 units and get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAbove100, "if product price above 100, get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.ProductPriceAbove200, "if product price above 200, get discount");
-            avilableDiscount.Add(CommonStr.DiscountPreConditions.basketPriceAbove1000, "if basket price above 1000, get discount");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketPriceAboveX, "Basket Price Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsInBasketAboveEqX, "Num Of Items At Basket Above 'X'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.BasketProductPriceAboveEqX, "Discount 'X' On All Products Their Price Above 'Y'");
+            avilableDiscount.Add(CommonStr.DiscountPreConditions.NumUnitsOfProductAboveEqX, "Discount 'X' On Product 'Y' If Num Units Of Product 'Y' Bigger Than 'Z'");
             return avilableDiscount;
         }
 
@@ -86,10 +89,13 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             Dictionary<int, string> avilablePurchasePolicy = new Dictionary<int, string>();
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.allwaysTrue, "No Condition");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.OwnerCantBuy, "Strore Owner Can't buy from the store");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.Max10ProductPerBasket, "Max 10 product per basket!");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.AtLeat11ProductPerBasket, "At Leat 11 product per basket");
-            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.singleOfProductType, "you can buy only single unit of product id");
             avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.StoreMustBeActive, "in order to buy store must be active");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxItemsAtBasket, "Max 'X' Items Per Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinItemsAtBasket, "Min 'X' Items Per Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxUnitsOfProductType, "Max 'X' Units Of Product 'Y' In Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinUnitsOfProductType, "Min 'X' Units Of Product 'Y' In Basket");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MaxBasketPrice, "Basket Price Is 'X' At Most");
+            avilablePurchasePolicy.Add(CommonStr.PurchasePreCondition.MinBasketPrice, "Basket Price Is 'X' At Least");
             return avilablePurchasePolicy;
         }
 
@@ -220,7 +226,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             return retList;
         }
 
-        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> addProductAmount(int storeId, string userName, int productId, int amount, bool saveChanges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -237,10 +243,10 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount);
+            return stores[storeId].IncreaseProductAmount(user: user, productId: productId, amount: amount, saveCahnges: saveChanges);
         }
 
-        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount)
+        public Tuple<bool, string> decraseProductAmount(int storeId, string userName, int productId, int amount, bool saveCahnges=false)
         {
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
 
@@ -257,12 +263,14 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
 
-            return stores[storeId].decrasePrdouctAmount(user: user, productId: productId, amount: amount);
+            return stores[storeId].decrasePrdouctAmount(user: user, productId: productId, amount: amount, saveCahnges: saveCahnges);
         }
 
 
         public Tuple<bool, string> UpdateDiscountPolicy(int storeId, string userName, string discountPolicy)
         {
+            //throw new NotImplementedException();
+
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
@@ -276,7 +284,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
             DiscountPolicy parsedDiscount = DiscountParser.Parse(discountPolicy);
-            if(!DiscountParser.checkDiscount(parsedDiscount))
+            if (!DiscountParser.checkDiscount(parsedDiscount))
             {
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.DiscountPolicyParsedFailed);
             }
@@ -287,6 +295,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
         public Tuple<bool, string> UpdatePurchasePolicy(int storeId, string userName, string purchasePolicy)
         {
+            //throw new NotImplementedException();
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             User user = userManager.GetAtiveUser(userName);
             if (user == null)
@@ -300,7 +309,7 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.nonExistingStoreErrMessage);
             }
             PurchasePolicy parsedPurchase = PurchasePolicyParser.Parse(purchasePolicy);
-            if(!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
+            if (!PurchasePolicyParser.CheckPurchasePolicy(parsedPurchase))
             {
                 return new Tuple<bool, string>(false, CommonStr.StoreMangmentErrorMessage.PurchasePolicyParsedFailed);
 
@@ -397,33 +406,21 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
 
 
             Dictionary<string, object> storeParam = new Dictionary<string, object>();
-            int next_id = DbManager.Instance.GetNextStoreId();
-            storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
-            storeParam.Add(CommonStr.StoreParams.StoreName, storename);
-            storeParam.Add(CommonStr.StoreParams.mainOwner, user.Name);
-            Store store = new Store(storeParam);
-            //DB Insert Store
-            DbManager.Instance.InsertStore(store);
-
-            Tuple<bool, string> ownershipAdded = user.addStoreOwnership(store.Id,userName);
-
-            if (!ownershipAdded.Item1)
+            lock (this)
             {
-                Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod(), ownershipAdded.Item2);
-                DbManager.Instance.DeleteFullStore(store);
-                return new Tuple<int, string>(-1, ownershipAdded.Item2);
+                int next_id = DbManager.Instance.GetNextStoreId();
+                storeParam.Add(CommonStr.StoreParams.StoreId, next_id);
+                storeParam.Add(CommonStr.StoreParams.StoreName, storename);
+                storeParam.Add(CommonStr.StoreParams.mainOwner, user.Name);
+                Store store = new Store(storeParam);
+                //DB Insert Store
+                Tuple<int, string> transactionRes = DbManager.Instance.InsertStoreTranscation(store, user, userName, next_id);
+                if (transactionRes.Item1 >= 0)
+                {
+                    stores.Add(next_id, store);
+                }
+                return transactionRes;
             }
-            else
-            {        
-                stores.Add(next_id, store);
-                
-                //Version 2 Addition
-                Tuple<bool, string> ans = Publisher.Instance.subscribe(userName, next_id);
-                if (!ans.Item1)
-                    return new Tuple<int, string>(-1, ans.Item2);
-                return new Tuple<int, string>(next_id, "");
-            }
-
         }
 
 
@@ -472,8 +469,18 @@ namespace eCommerce_14a.StoreComponent.DomainLayer
             if (!Publisher.Instance.RemoveSubscriptionStore(storeId))
                 return new Tuple<bool, string>(false,"Cannot Remove Subscription Store");
 
-            //DB addition 
-            DbManager.Instance.DeleteFullStore(stores[storeId]);
+
+            try
+            {
+                //DB addition 
+                DbManager.Instance.DeleteFullStoreTransaction(stores[storeId]);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("RemoveStore db error : " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, CommonStr.GeneralErrMessage.DbErrorMessage);
+            }
+
             stores.Remove(storeId);
             return new Tuple<bool, string>(true, "");
         }
