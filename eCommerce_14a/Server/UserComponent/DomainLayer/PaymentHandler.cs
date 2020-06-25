@@ -1,4 +1,5 @@
 ﻿using eCommerce_14a.Utils;
+using Server.UserComponent.DomainLayer;
 using SuperSocket.Common;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     public class PaymentHandler
     {
         bool connected;
+        public bool mock { get; set; }
+        public bool work { get; set; }
         //PaymentSystem paymentSystem;
         PaymentHandler()
         {
             connected = true;
             //paymentSystem = new PaymentSystem();
+            mock = false;
+            work = true;
         }
 
         private static readonly object padlock = new object();
@@ -61,6 +66,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             if (paymentDetails is null)
                 return -1;
+            if (mock && !work)
+                return  -1;
             if (!PaymentSystem.IsAlive(Failed))
                 return -1;
 
@@ -96,6 +103,14 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 if (sid.Length == 0)
                 {
                     return -1;
+                }
+                if (mock)
+                {
+                    if (work)
+                    {
+                        return PaymentSystemMock.Pay(cardNum, month, year, name, cvv, sid, 8);
+                    }
+                    return PaymentSystemMock.Pay(cardNum, month, year, name, cvv, sid, -1);
                 }
                 int transaction_num = PaymentSystem.Pay(cardNum, month, year, name, cvv, sid);
                 if (transaction_num < 0)
@@ -136,6 +151,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
 
 
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
+            if (mock)
+            {
+                if (work)
+                {
+                    if (PaymentSystemMock.CancelPayment(8,8) > 0)
+                        return new Tuple<bool, string>(true, "Works");
+                    return new Tuple<bool, string>(false, "not");
+                }
+                if (PaymentSystemMock.CancelPayment(8, -1) > 0)
+                    return new Tuple<bool, string>(false, "not");
+                return new Tuple<bool, string>(true, "Works");
+            }
             int cancel_res = PaymentSystem.CancelPayment(transactionId);
             if(cancel_res < 0)
                 return new Tuple<bool, string>(false, "refund failed");

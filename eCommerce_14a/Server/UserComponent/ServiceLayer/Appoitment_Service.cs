@@ -49,7 +49,7 @@ namespace eCommerce_14a.UserComponent.ServiceLayer
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
             return AppoitmentManager.Instance.RemoveStoreOwner(owner, PrevOwner, storeId);
         }
-
+        /// <req> https://github.com/chendoy/wsep_14a/wiki/Use-cases#use-case-appointing-store-owner-43 </req>
         internal Tuple<bool, string> ApproveAppointment(string owner, string appointed, int storeID, bool approval)
         {
             return AppoitmentManager.Instance.ApproveAppoitment(owner, appointed, storeID, approval);

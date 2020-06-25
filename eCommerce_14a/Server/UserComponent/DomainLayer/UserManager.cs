@@ -64,6 +64,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             if (!users.TryGetValue(username, out user))
                 return new Tuple<bool, string>(false, "user not found in register users!");
             user.IsAdmin = true;
+            try
+            {
+                DbManager.Instance.UpdateUserAdminStatus(user.getUserName(), true, true);
+            }
+            catch (Exception ex)
+            {
+                Logger.logError("couldn't save admin status to DB: " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return new Tuple<bool, string>(false, "Could not save to DB");
+            }
             return new Tuple<bool, string>(true, "Appoint to admin succeed!");
         }
 
@@ -72,15 +81,6 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             User user;
             if (!users.TryGetValue(username, out user))
                 return false;
-            try
-            {
-                DbManager.Instance.UpdateUserAdminStatus(user.getUserName(), true, true);
-            }
-            catch(Exception ex)
-            {
-                Logger.logError("couldn't save admin status to DB: " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
-                return false;
-            }
             return user.IsAdmin == true;
         }
 

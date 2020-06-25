@@ -189,6 +189,8 @@
     <Compile Include="UserComponent\DomainLayer\Appoitment.cs" />
     <Compile Include="UserComponent\DomainLayer\AppoitmentManager.cs" />
     <Compile Include="UserComponent\DomainLayer\Candidation.cs" />
+    <Compile Include="UserComponent\DomainLayer\MockSystems\DeliverySystemMock.cs" />
+    <Compile Include="UserComponent\DomainLayer\MockSystems\PaymentSystemMock.cs" />
     <Compile Include="UserComponent\DomainLayer\Permissions.cs" />
     <Compile Include="UserComponent\DomainLayer\Statistics.cs" />
     <Compile Include="UserComponent\DomainLayer\Statistic_View.cs" />

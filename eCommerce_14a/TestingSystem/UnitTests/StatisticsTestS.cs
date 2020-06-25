@@ -42,6 +42,7 @@ namespace TestingSystem.UnitTests
             Publisher.Instance.cleanup();
             
         }
+        ///// <function cref ="eCommerce_14a.UserComponent.DomainLayer.Statistics.getviewData(string name, DateTime start, DateTime end);
         [TestMethod]
         public void NotAdmin()
         {

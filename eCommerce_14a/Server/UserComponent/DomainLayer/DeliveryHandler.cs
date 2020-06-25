@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using eCommerce_14a.Utils;
+using Server.UserComponent.DomainLayer;
 
 namespace eCommerce_14a.UserComponent.DomainLayer
 
@@ -11,11 +12,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
     public class DeliveryHandler
     {
         bool connected;
+        public bool mock { get; set; }
+        public bool work { get; set; }
         //DeliverySystem deliverySystem;
         DeliveryHandler()
         {
             connected = true;
             //deliverySystem = new DeliverySystem();
+            mock = false;
+            work = true;
         }
 
         private static readonly object padlock = new object();
@@ -64,6 +69,8 @@ namespace eCommerce_14a.UserComponent.DomainLayer
         {
             if(deliveryDetails is null)
                 return new Tuple<bool, string>(false, "Null Delivery System");
+            if(mock && !work)
+                return new Tuple<bool, string>(false, "System Is Down");
             if (!DeliverySystem.IsAlive(Failed))
                 return new Tuple<bool, string>(false, "Not Connected Delivery System");
             Logger.logEvent(this, System.Reflection.MethodBase.GetCurrentMethod());
@@ -98,6 +105,18 @@ namespace eCommerce_14a.UserComponent.DomainLayer
                 if (zip.Length == 0)
                 {
                     return new Tuple<bool, string>(false, "Zip is Not good");
+                }
+                if (mock)
+                {
+                    if (work)
+                    {
+                        if (DeliverySystemMock.Supply(8) > 0)
+                            return new Tuple<bool, string>(true, "Works");
+                        return new Tuple<bool, string>(false, "not");
+                    }
+                    if (DeliverySystemMock.Supply(-1) > 0)
+                        return new Tuple<bool, string>(false, "not");
+                    return new Tuple<bool, string>(true, "Works");
                 }
                 int transaction_num = DeliverySystem.Supply(Name, add, city, country, zip);
                 if (transaction_num < 0)
