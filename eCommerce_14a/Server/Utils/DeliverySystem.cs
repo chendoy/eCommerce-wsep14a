@@ -15,7 +15,7 @@ namespace eCommerce_14a.Utils
 
         private static async Task<string> SendPostRequestAsyncTimeOut(Dictionary<string, string> request)
         {
-            int timeout = 1000;
+            int timeout = 20000;
             var task = SendPostRequestAsync(request);
             if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
             {

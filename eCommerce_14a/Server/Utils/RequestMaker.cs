@@ -21,15 +21,15 @@ namespace Server.Utils
         public RequestMaker() 
         {
             sec = new NetworkSecurity();
-            usernames = new string[REQ_NUM];
-            passwords = new string[REQ_NUM];
+            usernames = new string[10001];
+            passwords = new string[10001];
             InitUsers();
         }
 
         public void GenerateBinReq()
         {
             //generate register requests
-            for (int i = 1; i < REQ_NUM; i++)
+            for (int i = 1; i < 10001; i++)
             {
                 SaveData(MakeRegisterRequest(usernames[i], passwords[i]),"register" + i);
             }
@@ -58,7 +58,7 @@ namespace Server.Utils
             {
                 SaveData(MakePerformPurchaseRequset(usernames[i], "llegal address", "legal payment details"), "purchase" + i); //should insert legal payment details for users
             }
-            //generate perform purchase requests
+            //generate add product to store requests
             for (int i = 1; i < REQ_NUM; i++)
             {
                 SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 1000), "addprodtostore" + i); //should insert legal payment details for users
@@ -73,7 +73,7 @@ namespace Server.Utils
 
         public void InitUsers() 
         {
-            for (int i = 0; i < REQ_NUM; i++) 
+            for (int i = 1; i < 10001; i++) 
             {
                 usernames[i] = "Guy" + i;
                 passwords[i] = "Guy" + i;

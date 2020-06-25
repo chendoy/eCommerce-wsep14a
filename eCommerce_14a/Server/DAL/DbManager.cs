@@ -1361,11 +1361,11 @@ namespace Server.DAL
         {
             if (testingmode)
             {
-                List<int> storesids = StoreManagment.Instance.GetAllStores().Select(store=> store.Id).Distinct().ToList();
-                if(storesids.Count > 0)
+                List<int> storesids = StoreManagment.Instance.GetAllStores().Select(store => store.Id).Distinct().ToList();
+                if (storesids.Count > 0)
                 {
                     int max = storesids.Max(id => id);
-                    if(max > 0)
+                    if (max > 0)
                     {
                         return max + 1;
                     }
@@ -1380,7 +1380,7 @@ namespace Server.DAL
                 return 1;
             }
 
-            int max_storeId= dbConn.Stores.Max(store => store.Id);
+            int max_storeId = dbConn.Stores.Max(store => store.Id);
             return max_storeId + 1;
         }
 
