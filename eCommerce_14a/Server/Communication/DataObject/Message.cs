@@ -58,6 +58,7 @@ namespace Server.Communication.DataObject
         MAKE_ADMIN,
         GET_STATISTICS,
         STATISTICS,
+        PURCHASE_NO_CONNECTION,
         RESPONSE,
         ERROR
     }

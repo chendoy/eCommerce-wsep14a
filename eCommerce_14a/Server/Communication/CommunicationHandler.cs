@@ -241,6 +241,14 @@ namespace eCommerce_14a.Communication
             return security.Encrypt(jsonAns);
         }
 
+        public byte[] HandleNoConnectionPurchase(string json)
+        {
+            NoConnectionPurchaseRequest res = JsonConvert.DeserializeObject<NoConnectionPurchaseRequest>(json);
+            Tuple<bool, string> ans = purchService.PerformPurchase(res.Username, res.PaymentDetails, res.Address, true);
+            string jsonAns = Seralize(new SuccessFailResponse(ans.Item1, ans.Item2));
+            return security.Encrypt(jsonAns);
+        }
+
         internal byte[] HandleGetStoresOwnedBy(string json)
         {
             GetStoresOwnedByRequest res = JsonConvert.DeserializeObject<GetStoresOwnedByRequest>(json);

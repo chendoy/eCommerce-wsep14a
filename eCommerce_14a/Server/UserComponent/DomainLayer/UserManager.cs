@@ -72,6 +72,15 @@ namespace eCommerce_14a.UserComponent.DomainLayer
             User user;
             if (!users.TryGetValue(username, out user))
                 return false;
+            try
+            {
+                DbManager.Instance.UpdateUserAdminStatus(user.getUserName(), true, true);
+            }
+            catch(Exception ex)
+            {
+                Logger.logError("couldn't save admin status to DB: " + ex.Message, this, System.Reflection.MethodBase.GetCurrentMethod());
+                return false;
+            }
             return user.IsAdmin == true;
         }
 

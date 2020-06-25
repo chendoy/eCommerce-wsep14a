@@ -348,6 +348,12 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.PURCHASE_NO_CONNECTION:
+                    response = handler.HandleNoConnectionPurchase(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+
                 default:
                     break;
             }
