@@ -348,6 +348,12 @@ namespace eCommerce_14a.Communication
                     session.Send(response, 0, response.Length);
                     break;
 
+                case Opcode.PURCHASE_NO_CONNECTION:
+                    response = handler.HandleNoConnectionPurchase(json);
+                    session.Send(response, 0, response.Length);
+                    break;
+
+
                 default:
                     break;
             }
@@ -367,7 +373,7 @@ namespace eCommerce_14a.Communication
 
         public static void Main(string[] argv)
         {
-           // StateInitiator init = new StateInitiator();
+            // StateInitiator init = new StateInitiator();
             WssServer server = new WssServer();
             //init.InitSystemFromFile();
             server.InitServer();

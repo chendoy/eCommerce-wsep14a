@@ -1866,6 +1866,24 @@ namespace Server.DAL
             }
 
         }
+
+        public void UpdateUserAdminStatus(string user, bool status, bool savechanges = false)
+        {
+            if (testingmode)
+            {
+                return;
+            }
+            DbUser usr = dbConn.Users.Where(u => u.Name == user).SingleOrDefault();
+            if (usr != null)
+            {
+                usr.IsAdmin = status;
+                if (savechanges)
+                {
+                    dbConn.SaveChanges();
+                }
+
+            }
+        }
         public StoreOwnertshipApprovalStatus getApprovalStat(string cand, int storeID)
         {
             if (testingmode)

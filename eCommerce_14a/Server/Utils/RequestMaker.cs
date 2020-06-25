@@ -28,46 +28,52 @@ namespace Server.Utils
 
         public void GenerateBinReq()
         {
-            //generate register requests
-            for (int i = 1; i < 10001; i++)
-            {
-                SaveData(MakeRegisterRequest(usernames[i], passwords[i]),"register" + i);
-            }
-            //generate login requests
-            for (int i = 1; i < REQ_NUM; i++)
-            {
-                SaveData(MakeLoginRequest(usernames[i], passwords[i]), "login" + i);
-            }
-            //generate logout requests
-            for (int i = 1; i < REQ_NUM; i++)
-            {
-                SaveData(MakeLogoutRequest(usernames[i]), "logout" + i);
-            }
-            //generate open store requests
-            for (int i = 1; i < REQ_NUM; i++)
-            {
-                SaveData(MakeOpenStoreRequest(usernames[i], "Store" + i), "openstore" + i); //should insert legal payment details for users
-            }
-            //generate add to cart product requests
-            for (int i = 1; i < REQ_NUM; i++)
-            {
-                SaveData(MakeAddToCartRequest(usernames[i], 1, 1, 1), "addprodtocart" + i); //should exist store with id 1 and product id 1 with amount  > REQ_NUM
-            }
+            ////generate register requests
+            //for (int i = 1; i < 10001; i++)
+            //{
+            //    SaveData(MakeRegisterRequest(usernames[i], passwords[i]),"register" + i);
+            //}
+            ////generate login requests
+            //for (int i = 1; i < REQ_NUM; i++)
+            //{
+            //    SaveData(MakeLoginRequest(usernames[i], passwords[i]), "login" + i);
+            //}
+            ////generate logout requests
+            //for (int i = 1; i < REQ_NUM; i++)
+            //{
+            //    SaveData(MakeLogoutRequest(usernames[i]), "logout" + i);
+            //}
+            ////generate open store requests
+            //for (int i = 1; i < REQ_NUM; i++)
+            //{
+            //    SaveData(MakeOpenStoreRequest(usernames[i], "Store" + i), "openstore" + i); //should insert legal payment details for users
+            //}
+            ////generate add to cart product requests
+            //for (int i = 1; i < REQ_NUM; i++)
+            //{
+            //    SaveData(MakeAddToCartRequest(usernames[i], 1, 1, 1), "addprodtocart" + i); //should exist store with id 1 and product id 1 with amount  > REQ_NUM
+            //}
             //generate perform purchase requests
             for (int i = 1; i < REQ_NUM; i++)
             {
-                SaveData(MakePerformPurchaseRequset(usernames[i], "llegal address", "legal payment details"), "purchase" + i); //should insert legal payment details for users
+                SaveData(MakePerformPurchaseRequset(usernames[i], "Guy&Hanesher3&Eilat&Israel&88000", "12345698754&3&2021&Guy&104&20661314"), "purchase" + i); //should insert legal payment details for users
             }
-            //generate add product to store requests
-            for (int i = 1; i < REQ_NUM; i++)
-            {
-                SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 1000), "addprodtostore" + i); //should insert legal payment details for users
-            }
-            //generate login as guest requests
-            for (int i = 1; i < REQ_NUM; i++)
-            {
-                SaveData(MakeLoginAsGuestRequest(), "loginasguest" + i);
-            }
+            ////generate add product to store requests
+            //for (int i = 1; i < REQ_NUM; i++)
+            //{
+            //    SaveData(MakeAddProductToStoreRequset(i, usernames[i], "prodDetails", 10, "prodName", "prodCategory", 1000), "addprodtostore" + i); //should insert legal payment details for users
+            //}
+            ////generate login as guest requests
+            //for (int i = 1; i < REQ_NUM; i++)
+            //{
+            //    SaveData(MakeLoginAsGuestRequest(), "loginasguest" + i);
+            //}
+
+            //generate no connection purchase requests
+            //for (int i = 1; i < 101; i++)
+            //{
+            //    SaveData(MakePerformPurchaseNoConnectionRequset(usernames[i], "Guy&Hanesher3&Eilat&Israel&88000", "12345698754&3&2021&Guy&104&20661314"), "noconnectionpurchase" + i);
+            //}
 
         }
 
@@ -106,6 +112,13 @@ namespace Server.Utils
         public byte[] MakePerformPurchaseRequset(string username, string address, string paymentDetails)
         {
             PurchaseRequest req = new PurchaseRequest(username, address, paymentDetails);
+            string jsonString = JsonConvert.SerializeObject(req);
+            return sec.Encrypt(jsonString);
+        }
+
+        public byte[] MakePerformPurchaseNoConnectionRequset(string username, string address, string paymentDetails)
+        {
+            NoConnectionPurchaseRequest req = new NoConnectionPurchaseRequest(username, address, paymentDetails);
             string jsonString = JsonConvert.SerializeObject(req);
             return sec.Encrypt(jsonString);
         }
